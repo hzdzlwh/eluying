@@ -219,36 +219,36 @@
             date() {
                 // date = this.today;
                 if (this.flag) {
-                    this.fetchDate();
+                    this.getData();
                 }
             },
             userOriginType() {
                 this.pageNo = 1;
                 if (this.flag) {
-                    this.fetchDate();
+                    this.getData();
                 }
             },
             roomType() {
                 this.pageNo = 1;
                 if (this.flag) {
-                    this.fetchDate();
+                    this.getData();
                 }
             },
             pageNo() {
                 if (this.flag) {
-                    this.fetchDate();
+                    this.getData();
                 }
             },
             zoneType() {
                 this.pageNo = 1;
                 if (this.flag) {
-                    this.fetchDate();
+                    this.getData();
                 }
             },
             checkType() {
                 this.pageNo = 1;
                 if (this.flag) {
-                    this.fetchDate();
+                    this.getData();
                 }
             }
         },
@@ -320,17 +320,6 @@
                     }
                 });
             },
-            getData() {
-                http.get('/stat/getReserveStat', { date: this.today })
-                .then(res => {
-                    if (res.code === 1) {
-                        this.vips = res.data.list;
-                        this.count = res.data.count;
-                        this.pages = Math.ceil(res.data.orderAmount / 30);
-                    }
-                    this.flag = true;
-                });
-            },
             getOrigin() {
             // 获取全部客户来源渠道
                 http.get('/user/getChannels', { type: 2, isAll: true })
@@ -366,7 +355,7 @@
                           }
                       });
             },
-            fetchDate() {
+            getData() {
                 const obj = {
                     pageNo: this.pageNo,
                     zoneId: this.zoneType.split('~')[1],
@@ -389,7 +378,7 @@
                     if (res.code === 1) {
                         this.vips = res.data.list || [];
                         this.count = res.data.count;
-                        this.pages = Math.ceil(res.data.orderAmount / 30);
+                        this.pages = Math.ceil(res.data.count / 30);
                         // if (keyword) {
                         //     this.originId = -2;
                         //     this.endTime = undefined;
@@ -406,7 +395,7 @@
             },
             handlePageChange(internalCurrentPage) {
                 this.pageNo = internalCurrentPage;
-                this.fetchDate();
+                this.getData();
             }
         }
     };

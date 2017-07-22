@@ -108,7 +108,6 @@
                     </tbody>
                 </table>
             </div>
-
         </div>
     </div>
 </template>
@@ -201,7 +200,7 @@
                 statType: 0,
                 showTypeAll: [],
                 dayStat: [],
-                monStat: []
+                monStat: [],
             };
         },
         created() {
@@ -213,6 +212,9 @@
                 this.getData();
             },
             statType() {
+                this.getData();
+            },
+            pageNo() {
                 this.getData();
             }
         },

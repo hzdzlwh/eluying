@@ -183,18 +183,18 @@
             date() {
                 this.pageNo = 1;
                 if (this.flag) {
-                    this.fetchDate();
+                    this.getData();
                 }
             },
             pageNo() {
                 if (this.flag) {
-                    this.fetchDate();
+                    this.getData();
                 }
             },
             orderType() {
                 this.pageNo = 1;
                 if (this.flag) {
-                    this.fetchDate();
+                    this.getData();
                 }
             }
         },
@@ -233,22 +233,6 @@
                 return `${host}?${params}`;
             },
             getData() {
-                http.get('/stat/getTransferReceivable', {
-                    startDate: this.date.startDate,
-                    endDate: this.date.endDate
-                })
-                .then(res => {
-                    if (res.code === 1) {
-                        this.vips = res.data.items;
-                        this.receiptNum = res.data.totalCount;
-                        this.orderFree = res.data.totalOrderAmount;
-                        this.receiptFree = res.data.totalIncomeAmount;
-                        this.pages = Math.ceil(res.data.orderAmount / 30);
-                    }
-                    this.flag = true;
-                });
-            },
-            fetchDate() {
                 const obj = {
                     pageNo: this.pageNo,
                     operatorId: this.operatorType.split('~')[1],
@@ -270,14 +254,14 @@
                         this.receiptNum = res.data.totalCount;
                         this.orderFree = res.data.totalOrderAmount;
                         this.receiptFree = res.data.totalIncomeAmount;
-                        this.pages = Math.ceil(res.data.orderAmount / 30);
+                        this.pages = Math.ceil(res.data.totalCount / 30);
                     }
                     this.flag = true;
                 });
             },
             handlePageChange(internalCurrentPage) {
                 this.pageNo = internalCurrentPage;
-                this.fetchDate();
+                this.getData();
             }
         }
     };

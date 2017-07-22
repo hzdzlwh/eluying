@@ -182,30 +182,30 @@
             date() {
                 this.pageNo = 1;
                 if (this.flag) {
-                    this.fetchDate();
+                    this.getData();
                 }
             },
             channelType() {
                 this.pageNo = 1;
                 if (this.flag) {
-                    this.fetchDate();
+                    this.getData();
                 }
             },
             categoryType() {
                 this.pageNo = 1;
                 if (this.flag) {
-                    this.fetchDate();
+                    this.getData();
                 }
             },
             pageNo() {
                 if (this.flag) {
-                    this.fetchDate();
+                    this.getData();
                 }
             },
             type() {
                 this.pageNo = 1;
                 if (this.flag) {
-                    this.fetchDate();
+                    this.getData();
                 }
             }
         },
@@ -245,22 +245,6 @@
                 return `${host}?${params}`;
             },
             getData() {
-                http.get('/stat/getChargeLog', {
-                    startDate: this.date.startDate,
-                    toDate: this.date.endDate
-                })
-                .then(res => {
-                    if (res.code === 1) {
-                        this.vips = res.data.entityList;
-                        this.receiptNum = res.data.totalChargeCount;
-                        this.priceFree = res.data.totalFreeFee;
-                        this.receiptFree = res.data.totalChargeFee;
-                        this.pages = Math.ceil(res.data.orderAmount / 30);
-                    }
-                    this.flag = true;
-                });
-            },
-            fetchDate() {
                 const obj = {
                     pageNo: this.pageNo,
                     categoryId: this.categoryType.split('~')[1],
@@ -283,14 +267,14 @@
                         this.receiptNum = res.data.totalChargeCount;
                         this.priceFree = res.data.totalFreeFee;
                         this.receiptFree = res.data.totalChargeFee;
-                        this.pages = Math.ceil(res.data.orderAmount / 30);
+                        this.pages = Math.ceil(res.data.total / 30);
                     }
                     this.flag = true;
                 });
             },
             handlePageChange(internalCurrentPage) {
                 this.pageNo = internalCurrentPage;
-                this.fetchDate();
+                this.getData();
             }
         }
     };

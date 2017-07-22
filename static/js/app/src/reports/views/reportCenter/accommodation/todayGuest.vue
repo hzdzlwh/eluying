@@ -225,30 +225,36 @@
             date() {
                 this.pageNo = 1;
                 if (this.flag) {
-                    this.fetchDate();
+                    this.getData();
                 }
             },
             roomType() {
                 this.pageNo = 1;
                 if (this.flag) {
-                    this.fetchDate();
+                    this.getData();
                 }
             },
             pageNo() {
                 if (this.flag) {
-                    this.fetchDate();
+                    this.getData();
                 }
             },
             zoneType() {
                 this.pageNo = 1;
                 if (this.flag) {
-                    this.fetchDate();
+                    this.getData();
                 }
             },
             checkType() {
                 this.pageNo = 1;
                 if (this.flag) {
-                    this.fetchDate();
+                    this.getData();
+                }
+            },
+            userOriginType() {
+                this.pageNo = 1;
+                if (this.flag) {
+                    this.getData();
                 }
             }
         },
@@ -349,18 +355,6 @@
                 });
             },
             getData() {
-                http.get('/stat/getCurrentResident', { date: this.today })
-                .then(res => {
-                    if (res.code === 1) {
-                        this.vips = res.data.entityList || [];
-                        this.personCount = res.data.totalResident;
-                        this.roomCount = res.data.totalRoom;
-                        this.pages = Math.ceil(res.data.orderAmount / 30);
-                    }
-                    this.flag = true;
-                });
-            },
-            fetchDate() {
                 const obj = {
                     pageNum: this.pageNo,
                     zoneId: this.zoneType.split('~')[1],
@@ -384,14 +378,14 @@
                         this.vips = res.data.entityList;
                         this.personCount = res.data.totalResident;
                         this.roomCount = res.data.totalRoom;
-                        this.pages = Math.ceil(res.data.orderAmount / 30);
+                        this.pages = Math.ceil(res.data.total / 30);
                     }
                     this.flag = true;
                 });
             },
             handlePageChange(internalCurrentPage) {
                 this.pageNo = internalCurrentPage;
-                this.fetchDate();
+                this.getData();
             }
         }
     };

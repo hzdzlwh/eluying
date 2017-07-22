@@ -50,7 +50,7 @@
         <dd-table :columns="col" :data-source="vips" :bordered="true"></dd-table>
         <div class="foot footfix">
             <span style="font-size:16px;"><small style='width:16px;'>总房数 : </small> {{count}}</span>
-            <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :age-count="pages" :current-page="pageNo" />
+            <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo" />
         </div>
     </div>
 </template>
@@ -222,36 +222,36 @@
             date() {
                 // date = this.today;
                 if (this.flag) {
-                    this.fetchDate();
+                    this.getData();
                 }
             },
             userOriginType() {
                 this.pageNo = 1;
                 if (this.flag) {
-                    this.fetchDate();
+                    this.getData();
                 }
             },
             roomType() {
                 this.pageNo = 1;
                 if (this.flag) {
-                    this.fetchDate();
+                    this.getData();
                 }
             },
             pageNo() {
                 if (this.flag) {
-                    this.fetchDate();
+                    this.getData();
                 }
             },
             zoneType() {
                 this.pageNo = 1;
                 if (this.flag) {
-                    this.fetchDate();
+                    this.getData();
                 }
             },
             checkType() {
                 this.pageNo = 1;
                 if (this.flag) {
-                    this.fetchDate();
+                    this.getData();
                 }
             }
         },
@@ -324,17 +324,6 @@
                     }
                 });
             },
-            getData() {
-                http.get('/stat/getReserveStat', { date: this.morrow })
-                .then(res => {
-                    if (res.code === 1) {
-                        this.vips = res.data.list;
-                        this.count = res.data.count;
-                        this.pages = Math.ceil(res.data.orderAmount / 30);
-                    }
-                    this.flag = true;
-                });
-            },
             getOrigin() {
             // 获取全部客户来源渠道
                 http.get('/user/getChannels', { type: 2, isAll: true })
@@ -370,7 +359,7 @@
                           }
                       });
             },
-            fetchDate() {
+            getData() {
                 const obj = {
                     pageNo: this.pageNo,
                     zoneId: this.zoneType.split('~')[1],
@@ -393,14 +382,14 @@
                     if (res.code === 1) {
                         this.vips = res.data.list || [];
                         this.count = res.data.count;
-                        this.pages = Math.ceil(res.data.orderAmount / 30);
+                        this.pages = Math.ceil(res.data.count / 30);
                     }
                     this.flag = true;
                 });
             },
             handlePageChange(internalCurrentPage) {
                 this.pageNo = internalCurrentPage;
-                this.fetchDate();
+                this.getData();
             }
         }
     };

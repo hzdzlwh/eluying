@@ -54,6 +54,7 @@
                 </tr>
             </tbody>
         </table>
+        <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo" style="float:right;margin-top:20px;"/>
     </div>
 </template>
 <style lang="scss" scoped>
@@ -120,7 +121,7 @@
     }
 </style>
 <script>
-    import { DdDatepicker } from 'dd-vue-component';
+    import { DdDatepicker, DdPagination } from 'dd-vue-component';
     import http from 'http';
     import util from 'util';
     export default {
@@ -136,7 +137,8 @@
             };
         },
         components: {
-            DdDatepicker
+            DdDatepicker,
+            DdPagination
         },
         created() {
             const startTime = new Date();
@@ -152,6 +154,11 @@
             startTime() {
                 this.pageNo = 1;
                 this.getData();
+            },
+            pageNo() {
+                if (this.flag) {
+                    this.getData();
+                }
             }
         },
         methods: {
@@ -189,11 +196,30 @@
                 }
             },
             getData() {
-                http.get('/stat/getPredictionStat', { startDate: this.startTime, toDate: this.endTime }).then((res) => {
+                const obj = {
+                    pageNum: this.pageNo,
+                    startDate: this.startTime,
+                    toDate: this.endTime
+                };
+                if (this.type !== -1) {
+                    obj.type = this.type;
+                };
+                 // 后台要求如果为空就不传
+                for (const ob in obj) {
+                    if (obj[ob] === undefined || obj[ob] === '') {
+                        delete obj[ob];
+                    }
+                }
+                http.get('/stat/getPredictionStat', obj).then((res) => {
                     if (res.code === 1) {
                         this.vips = res.data.entityList;
+                        this.pages = Math.ceil(res.data.total / 30);
                     };
                 });
+            },
+            handlePageChange(internalCurrentPage) {
+                this.pageNo = internalCurrentPage;
+                this.getData();
             }
         }
     };

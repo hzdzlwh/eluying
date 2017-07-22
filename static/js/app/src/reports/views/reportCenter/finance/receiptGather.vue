@@ -6,9 +6,6 @@
             <div class="date">日期 : <i>{{date.startDate}} ~ {{date.endDate}}</i></div>
         </div>
         <dd-table :columns="col" :data-source="vips" :bordered="true"></dd-table>
-        <div class="foot footfix">
-            <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :age-count="pages" :current-page="pageNo" />
-        </div> 
     </div>
 </template>
 <style lang="scss" scoped>
@@ -81,12 +78,12 @@
             date() {
                 this.pageNo = 1;
                 if (this.flag) {
-                    this.fetchDate();
+                    this.getData();
                 }
             },
             pageNo() {
                 if (this.flag) {
-                    this.fetchDate();
+                    this.getData();
                 }
             }
         },
@@ -112,21 +109,7 @@
                 return `${host}?${params}`;
             },
             getData() {
-                http.get('/stat/getPaymentSummay', {
-                    startDate: this.date.startDate,
-                    endDate: this.date.endDate
-                })
-                .then(res => {
-                    if (res.code === 1) {
-                        this.vips = res.data.list;
-                        this.pages = Math.ceil(res.data.orderAmount / 30);
-                    }
-                    this.flag = true;
-                });
-            },
-            fetchDate() {
                 const obj = {
-                    pageNo: this.pageNo,
                     startDate: this.date.startDate,
                     endDate: this.date.endDate
                 };
@@ -139,24 +122,9 @@
                 http.get('/stat/getPaymentSummay', obj).then(res => {
                     if (res.code === 1) {
                         this.vips = res.data.list || [];
-                        this.pages = Math.ceil(res.data.orderAmount / 30);
-                        // if (keyword) {
-                        //     this.originId = -2;
-                        //     this.endTime = undefined;
-                        //     this.pageNo = 1;
-                        //     this.searchPattern = undefined;
-                        //     this.startTime = undefined;
-                        //     this.state = -1;
-                        //     this.timeType = 1;
-                        //     $("#search").val('');
-                        // }
                     }
                     this.flag = true;
                 });
-            },
-            handlePageChange(internalCurrentPage) {
-                this.pageNo = internalCurrentPage;
-                this.fetchDate();
             }
         }
 	};

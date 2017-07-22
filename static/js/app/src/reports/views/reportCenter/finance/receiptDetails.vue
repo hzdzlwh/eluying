@@ -30,9 +30,11 @@
         </div>
         <dd-table :columns="col" :data-source="vips" :bordered="true" style="margin-top: 20px;"></dd-table>
         <div class="foot footfix">
-            <p style="font-size:16px;"><small style='width:16px;'>总收款笔数 : </small> {{receiptNum}}</p>
-            <p style="font-size:16px;"><small style='width:16px;'>总收款金额 : </small> {{receiptFree}}</p>
-            <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :age-count="pages" :current-page="pageNo" />
+            <div style="float:left;">
+                <p style="font-size:16px;"><small style='width:16px;'>总收款笔数 : </small> {{receiptNum}}</p>
+                <p style="font-size:16px;"><small style='width:16px;'>总收款金额 : </small> {{receiptFree}}</p>
+            </div>
+            <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo" style="float:right;margin-top:20px;"/>
         </div>
     </div>
 </template>
@@ -197,18 +199,18 @@
             date() {
                 this.pageNo = 1;
                 if (this.flag) {
-                    this.fetchDate();
+                    this.getData();
                 }
             },
             pageNo() {
                 if (this.flag) {
-                    this.fetchDate();
+                    this.getData();
                 }
             },
             orderType() {
                 this.pageNo = 1;
                 if (this.flag) {
-                    this.fetchDate();
+                    this.getData();
                 }
             }
         },
@@ -248,23 +250,6 @@
                 return `${host}?${params}`;
             },
             getData() {
-                http.get('/stat/getPaymentList', {
-                    startDate: this.date.startDate,
-                    endDate: this.date.endDate
-                })
-                .then(res => {
-                    if (res.code === 1) {
-                        this.vips = res.data.items;
-                        this.receiptNum = res.data.totalCount;
-                        this.receiptFree = res.data.totalAmount;
-                        this.pages = Math.ceil(res.data.totalCount / 30);
-                    }
-                    this.flag = true;
-                    console.log(this.pages);
-                });
-                console.log(this.pages);
-            },
-            fetchDate() {
                 const obj = {
                     pageNo: this.pageNo,
                     channelId: this.channelType.split('~')[1],
@@ -303,7 +288,7 @@
             },
             handlePageChange(internalCurrentPage) {
                 this.pageNo = internalCurrentPage;
-                this.fetchDate();
+                this.getData();
             }
         }
     };

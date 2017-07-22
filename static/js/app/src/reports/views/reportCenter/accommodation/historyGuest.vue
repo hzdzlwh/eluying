@@ -224,42 +224,42 @@
             date() {
                 this.pageNo = 1;
                 if (this.flag) {
-                    this.fetchDate();
+                    this.getData();
                 }
             },
             toTime() {
                 this.pageNo = 1;
                 if (this.flag) {
-                    this.fetchDate();
+                    this.getData();
                 }
             },
             userOriginType() {
                 this.pageNo = 1;
                 if (this.flag) {
-                    this.fetchDate();
+                    this.getData();
                 }
             },
             roomType() {
                 this.pageNo = 1;
                 if (this.flag) {
-                    this.fetchDate();
+                    this.getData();
                 }
             },
             pageNo() {
                 if (this.flag) {
-                    this.fetchDate();
+                    this.getData();
                 }
             },
             zoneType() {
                 this.pageNo = 1;
                 if (this.flag) {
-                    this.fetchDate();
+                    this.getData();
                 }
             },
             checkType() {
                 this.pageNo = 1;
                 if (this.flag) {
-                    this.fetchDate();
+                    this.getData();
                 }
             }
         },
@@ -304,20 +304,6 @@
                 pa.params = JSON.parse(pa.params);
                 const params = http.paramsToString(pa);
                 return `${host}?${params}`;
-            },
-            getData() {
-                http.get('/stat/getHistoryResident', {
-                    startDate: this.date.startDate,
-                    toDate: this.date.endDate
-                })
-                .then(res => {
-                    if (res.code === 1) {
-                        this.vips = res.data.entityList;
-                        this.personCount = res.data.total;
-                        this.pages = Math.ceil(res.data.orderAmount / 30);
-                    }
-                    this.flag = true;
-                });
             },
             getZoneType() {
                 http.get('/room/getZoneList')
@@ -384,7 +370,7 @@
                     }
                 });
             },
-            fetchDate() {
+            getData() {
                 const obj = {
                     pageNum: this.pageNo,
                     zoneId: this.zoneType.split('~')[1],
@@ -408,14 +394,14 @@
                     if (res.code === 1) {
                         this.vips = res.data.entityList;
                         this.personCount = res.data.total;
-                        this.pages = Math.ceil(res.data.orderAmount / 30);
+                        this.pages = Math.ceil(res.data.totalResident / 30);
                     }
                     this.flag = true;
                 });
             },
             handlePageChange(internalCurrentPage) {
                 this.pageNo = internalCurrentPage;
-                this.fetchDate();
+                this.getData();
             }
         }
     };
