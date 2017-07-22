@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-19 09:56:55
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-07-21 20:22:10
+* @Last Modified time: 2017-07-22 15:44:13
 * @email: 783384903@qq.com
 */
 <!-- 有问题找产品，这个模块的功能一般人解释不清楚 -->
@@ -55,7 +55,7 @@
                             <span>本次{{ga.type === 0 ? '使用' : '退还'}}： <inputVaild v-model='ga.fee' :max='Math.min(ga.ableNum, ga.lastNum)' :isInt=true @input='changeAbeldFee' v-if='ga.type === 0'/>
                             <inputVaild v-model='ga.fee' :max='ga.paidNum' :min='ga.paidNum' :isInt=true @input='changeAbeldFee' v-if='ga.type === 2'/>个</span>
                             <span class="cashier-tip-text">
-                                抵扣￥{{(ga.fee / ga.rate).toFixed(2)}}
+                                抵扣￥{{(ga.fee * ga.rate).toFixed(2)}}
                                 </span>
                         </div>
                     </div>
@@ -94,7 +94,7 @@
                         </dd-option>
                     </dd-select>
                     <span v-if='me.type === 0' class="cashier-tip-text">余额¥{{me.lastFee}}，最多可收取¥{{me.ableFee}}</span>
-                    <span v-if='me.type === 2'>已收取¥{{me.paidFee}}</span> 本次{{me.type === 0 ? '收取' : '退还'}}：
+                    <span v-if='me.type === 2' class="cashier-tip-text">已收取¥{{me.paidFee}}</span> 本次{{me.type === 0 ? '收取' : '退还'}}：
                     <inputVaild @input='changeAbeldFee' v-model='me.fee' :max='Math.min(me.ableFee, me.lastFee)' v-if='me.type === 0' />
                     <inputVaild @input='changeAbeldFee' v-model='me.fee' :max='me.paidFee' :min='me.paidFee' v-if='me.type === 2' />
                 </div>
@@ -133,7 +133,7 @@
                                 </dd-option>
                             </dd-select>
                             <span v-if='payment.type === 0' class="cashier-tip-text">余额¥{{getCardLastFee(payment.accountId)}}，最多可收取¥{{payment.ableFee || 0}}</span>
-                            <span v-if='payment.type === 2'>已收取¥{{getCardPaied(payment.accountId)}}</span> 本次{{payment.type === 0 ? '收取' : '退还'}}：
+                            <span v-if='payment.type === 2' class="cashier-tip-text">已收取¥{{getCardPaied(payment.accountId)}}</span> 本次{{payment.type === 0 ? '收取' : '退还'}}：
                             <inputVaild v-model="payment.fee" :max='Math.min(payment.ableFee, getCardLastFee(payment.accountId))' @input='changeAbeldFee' v-if='payment.type === 0'/>
                             <inputVaild v-model="payment.fee" @input='changeAbeldFee' :max='getCardPaied(payment.accountId)' v-else/>
                             <span class="cashier-delBtn-icon" @click="deleteCard(index)" v-if='!payment.disabled'></span>
@@ -175,7 +175,7 @@
             <div class="content-item">
                 <div class="cashier-all">
                     <div v-if='type !== "collect"'><span>本次应收:</span><span>¥{{orderPayment.price}}</span></div>
-                    <div v-if='orderPayment.game'><span>星球币抵扣:</span><span>¥{{gameTotal}}</span></div>
+                    <div v-if='orderPayment.game'><span>{{orderPayment.game[0].accountName}}抵扣:</span><span>¥{{gameTotal}}</span></div>
                     <div v-if='orderPayment.member'><span>会员余额抵扣:</span><span>¥{{memberTotal}}</span></div>
                     <div v-if='orderPayment.company'><span>企业余额抵扣:</span><span>¥{{companyTotal}}</span></div>
                     <div v-if='orderPayment.card'><span>会员卡余额抵扣:</span><span>¥{{cardsTotal}}</span></div>
@@ -429,9 +429,9 @@ export default {
             if (this.orderPayment && this.orderPayment.game && this.orderPayment.game.length) {
                 this.orderPayment.game.forEach(el => {
                     if (el.type === 0) {
-                        sum += (el.fee / el.rate || 0);
+                        sum += (el.fee * el.rate || 0);
                     } else {
-                        sum -= (el.fee / el.rate || 0);
+                        sum -= (el.fee * el.rate || 0);
                     }
                 });
             }
@@ -559,14 +559,14 @@ export default {
             // 首先统计出所有要退还的
             if (this.orderPayment && this.orderPayment.game && this.orderPayment.game.length) {
                 this.orderPayment.game.forEach(el => {
-                    if (el.type === 2 && el.fee) {
-                        needPay = (needPay + el.fee / el.rate).toFixed(2) * 1;
+                    if (el.type === 2) {
+                        needPay = (needPay + el.fee * el.rate).toFixed(2) * 1;
                     }
                 });
             }
             if (this.orderPayment && this.orderPayment.member && this.orderPayment.member.length) {
                 this.orderPayment.member.forEach(el => {
-                    if (el.type === 2 && el.fee) {
+                    if (el.type === 2) {
                         needPay = (needPay + el.fee).toFixed(2) * 1;
                     }
                 });
@@ -575,7 +575,7 @@ export default {
             if (this.orderPayment && this.orderPayment.card && this.orderPayment.card.length) {
                 this.paycard.length && this.paycard.forEach(card => {
                     if (card.accountId) {
-                        if (card.type === 2 && card.fee) {
+                        if (card.type === 2) {
                             needPay = (needPay + card.fee).toFixed(2) * 1;
                         }
                     }
@@ -584,7 +584,7 @@ export default {
             // 会员卡
             if (this.orderPayment && this.orderPayment.company && this.orderPayment.company.length) {
                 this.orderPayment.company.forEach(el => {
-                    if (el.type === 2 && el.fee) {
+                    if (el.type === 2) {
                         needPay = (needPay + el.fee).toFixed(2) * 1;
                     }
                 });
@@ -595,10 +595,10 @@ export default {
                     if (el.type === 0) {
                         // const abelFee = Math.min(needPay, el.lastFee);
                         const abelFee = Math.max(0, needPay);
-                        const payed = Math.min(abelFee * el.rate, el.fee);
-                        el.ableNum = parseInt(abelFee * el.rate);
+                        const payed = Math.min(abelFee / el.rate, el.fee);
+                        el.ableNum = parseInt(abelFee / el.rate);
                         el.fee = parseInt(payed);
-                        needPay = (needPay - (payed / el.rate).toFixed(2)).toFixed(2) * 1;
+                        needPay = (needPay - (payed * el.rate).toFixed(2)).toFixed(2) * 1;
                         // 为了和显示一致
                     }
                 });
@@ -610,7 +610,7 @@ export default {
                         // const abelFee = Math.min(needPay, el.lastFee);
                         const abelFee = Math.max(0, needPay);;
                         const payed = Math.min(abelFee, el.fee);
-                        el.ableNum = abelFee;
+                        el.ableFee = abelFee;
                         el.fee = payed;
                         needPay = (needPay - payed).toFixed(2) * 1;
                     }
@@ -1111,6 +1111,7 @@ export default {
         payMoney() {
             let invalid = false;
             let numvaild = false;
+            let loss = 0;
             if (this.payments.length > 0) {
                 this.payments.forEach(payment => {
                     if (payment.fee < 0) {
@@ -1118,6 +1119,22 @@ export default {
                     }
                     if (!payment.payChannelId) {
                         invalid = true;
+                        if (!loss && payment.type === 2) {
+                            loss = 2;
+                        }
+                    }
+                });
+            }
+            if (this.paycard && this.paycard.length) {
+                this.paycard.forEach(pay => {
+                    if (pay.fee < 0) {
+                        numvaild = true;
+                    }
+                    if (!pay.accountId) {
+                        invalid = true;
+                        if (!loss && pay.type === 2) {
+                            loss = 2;
+                        }
                     }
                 });
             }
@@ -1129,8 +1146,7 @@ export default {
             //     invalid = true;
             // }
             if (invalid) {
-                const loss = this.orderState;
-                modal.warn(`请选择${loss ? '收款' : '退款'}方式！`);
+                modal.warn(`请选择${loss ? '退款' : '收款'}方式！`);
                 return false;
             }
             // 功能一次结清，现在改为允许多次收款
@@ -1147,7 +1163,7 @@ export default {
                     name: `企业挂帐(${this.companyName || ''})`
                 }].concat(this.payChannels);
             }
-            if (Number(this.needPayed) !== 0 && this.type !== 'resetOrder' && !allowGetMoneyTimes) {
+            if (Number(this.needPayed) !== 0 && !allowGetMoneyTimes) {
                 modal.warn('订单未结清，无法完成收银！');
                 return false;
             }
@@ -1262,7 +1278,7 @@ export default {
                     tokenPayments.push({
                         'accountId': el.accountId,
                         'accountType': 0,
-                        fee: el.fee / el.rate,
+                        fee: el.fee * el.rate,
                         num: el.fee,
                         type: el.type
                     });
