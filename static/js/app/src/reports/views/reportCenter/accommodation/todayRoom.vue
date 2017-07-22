@@ -47,7 +47,7 @@
                 </dd-dropdown>
             </div>
         </div>
-        <dd-table :columns="col" :data-source="vips" :bordered="true" id="table"></dd-table>
+        <dd-table :columns="col" :data-source="vips" :bordered="true"></dd-table>
         <div class="foot footfix">
             <p style="font-size:16px;"><small style='width:16px;'>总房数 : </small> {{roomCount}}</p>
             <p style="font-size:16px;"><small style="width:16px;">当日房费合计 : </small>{{freeCount}}</p>
@@ -83,11 +83,6 @@
             float: left;
             margin-left:20px;
         }
-    }
-    #table {
-        margin-top: 20px;
-        max-height: 400px;
-        padding-bottom: 12px;
     }
 </style>
 <script>
@@ -168,7 +163,7 @@
                     {
                         title: '房号',
                         dataIndex: 'roomNo',
-                        width: 80
+                        width: 60
                     },
                     {
                         title: '入住类型',
@@ -183,7 +178,7 @@
                     {
                         title: '总房费',
                         dataIndex: 'totalPrice',
-                        width: 100
+                        width: 80
                     },
                     {
                         title: '联系人',
@@ -296,7 +291,6 @@
                 const pa = http.getDataWithToken(paramsObj);
                 pa.params = JSON.parse(pa.params);
                 const params = http.paramsToString(pa);
-                console.log(`${host}?${params}`);
                 return `${host}?${params}`;
             },
             getData() {

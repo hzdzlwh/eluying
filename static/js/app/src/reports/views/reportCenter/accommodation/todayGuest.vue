@@ -47,7 +47,7 @@
                 </dd-dropdown>
             </div>
         </div>
-        <dd-table :columns="col" :data-source="vips" :bordered="true" id="table"></dd-table>
+        <dd-table :columns="col" :data-source="vips" :bordered="true"></dd-table>
         <div class="foot footfix">
             <p style="font-size:16px;"><small style='width:16px;'>总人数 : </small> {{personCount}}</p>
             <p style="font-size:16px;"><small style="width:16px;">总房数 : </small>{{roomCount}}</p>

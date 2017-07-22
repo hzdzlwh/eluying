@@ -21,12 +21,13 @@
                 </div>
             </div>
         </div>
-        <table class="report-dishesStat" border="1">
+        <dd-table :columns="col" :data-source="restAll" :bordered="true" id="report-table-1"></dd-table>
+        <table border="1" class="report-dishesStat-table">
             <thead>
                 <tr>
                     <th>餐厅名称</th>
                     <th>菜品种类</th>
-                    <th>菜名</th>
+                    <th>菜品名称</th>
                     <th>总数</th>
                     <th>售卖数量</th>
                     <th>赠送数量</th>
@@ -36,27 +37,42 @@
                 <tr v-for="(rest, index) in restAll">
                     <td>{{rest.restName}}</td>
                     <td>
-                        <div v-for="(dishType, i) in rest.dishTypeList">{{dishType.dishType}}</div>
-                    </td>
-                    <!-- <td>
-                        <div v-for="(dish, j) in rest.dishTypeList[i].dishList">{{dish.dishName}}</div>
+                        <div v-for="(dishType, index) in restAll[index].dishTypeList">{{dishType.dishType}}</div>
                     </td>
                     <td>
-                        <div v-for="(dish, index) in dishesAll">{{dish.totalAmount}}</div>
+                        <div v-for="(dish, index) in restAll[index].dishesList">{{dish.dishName}}</div>
                     </td>
                     <td>
-                        <div v-for="(dish, index) in dishesAll">{{dish.sellNum}}</div>
+                        <div v-for="(dish, index) in restAll[index].dishesList">{{dish.totalAmount}}</div>
                     </td>
                     <td>
-                        <div v-for="(dish, index) in dishesAll">{{dish.sendNum}}</div>
-                    </td> -->
+                        <div v-for="(dish, index) in restAll[index].dishesList">{{dish.sellNum}}</div>
+                    </td>
+                    <td>
+                        <div v-for="(dish, index) in restAll[index].dishesList">{{dish.sendNum}}</div>
+                    </td>
                 </tr>
             </tbody>
         </table>
-        <!-- <dd-table :columns="col1" :data-source="vips" :bordered="true" id="report-table-1"></dd-table>
-        <dd-table :columns="col2" :data-source="dishesAll" :bordered="true" id="report-table-2"></dd-table> -->
-
-    </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>餐厅名称</th>
+                    <th>菜品种类</th>
+                    <th>菜品名称</th>
+                    <th>总数</th>
+                    <th>售卖数量</th>
+                    <th>赠送数量</th>
+                </tr>
+            </thead>
+            <tbody v-for="(rest, restIndex) in restAll">
+                <tr v-for="(dish, dishIndex) in restAll[restIndex].dishesList">
+                    <td rowspan="restAll[restIndex].dishesList.length">{{rest.restName}}</td>
+                    <td rowspan=""></td>
+                </tr>
+            </tbody>
+        </table>
+    </div> 
 </template>
 <style lang="scss">
     .report-dishesStat{
@@ -85,28 +101,34 @@
         color: #746D66;
         text-align: center;
         font-family: border;
-      }
-      .report-reportCenter-top {
+    }
+    .report-reportCenter-top {
         width: 100%;
         height: 32px;
         padding: 5px 0;
         .date {
-          float: left;
-          line-height: 25.44px;
+            float: left;
+            line-height: 25.44px;
         }
         .select-box {
-          float: left;
-          .fr {
             float: left;
-            margin-left: 20px;
-          }
+            .fr {
+                float: left;
+                margin-left: 20px;
+            }
         }
-      }
-  #table {
-    margin-top: 20px;
-    max-height: 400px;
-    padding-bottom: 12px;
-  }
+    }
+    #table {
+        margin-top: 20px;
+        max-height: 400px;
+        padding-bottom: 12px;
+    }
+    .report-dishesStat-table{
+        div{
+            line-height: 24px;
+            border-bottom: 1px solid #ccc;
+        }
+    }
 </style>
 <script>
     import http from 'http';
@@ -141,44 +163,46 @@
                 restAll: [],
                 dishesNum: [],
                 showDishType: [],
-                dishesAll: [],
+                dishesList: [],
                 restNum: [],
-                dishTypeNum: []
-                // col1: [
-                //     {
-                //         title: '餐厅名称',
-                //         dataIndex: 'restName',
-                //         width: 100
-                //     },
-                //     {
-                //         title: '菜品种类',
-                //         render: (h, row) => <div>{row.dishTypeList && row.dishTypeList.map(function(item) {
-                //             return <div style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;" title={item.dishType} key={item.dishType}>{item.dishType}</div>;
-                //         })}</div>
-                //     }
-                // ],
-                // col2: [
-                //     {
-                //         title: '菜品名称',
-                //         dataIndex: 'dishName',
-                //         width: 100
-                //     },
-                //     {
-                //         title: '总数',
-                //         dataIndex: 'totalAmount',
-                //         width: 80
-                //     },
-                //     {
-                //         title: '售卖数量',
-                //         dataIndex: 'sellNum',
-                //         width: 80
-                //     },
-                //     {
-                //         title: '赠送数量',
-                //         dataIndex: 'sendNum',
-                //         width: 80
-                //     }
-                // ]
+                dishTypeNum: [],
+                col: [
+                    {
+                        title: '餐厅名称',
+                        dataIndex: 'restName',
+                        width: 100
+                    },
+                    {
+                        title: '菜品种类',
+                        render: (h, row) => <div>{row.dishTypeList && row.dishTypeList.map(function(item) {
+                            return <div style="border-bottom:1px solid #ccc;" title={item.dishType} key={item.dishType}>{item.dishType}</div>;
+                        })}</div>
+                    },
+                    {
+                        title: '菜品名称',
+                        render: (h,row) => <div>{row.dishesList && row.dishesList.map(function(item) {
+                            return <div style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;" title={item.dishName} key={item.dishName}>{item.dishName}</div>;
+                        })}</div>
+                    },
+                    {
+                        title: '总数',
+                        render: (h,row) => <div>{row.dishesList && row.dishesList.map(function(item) {
+                            return <div style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;" title={item.totalAmount} key={item.totalAmount}>{item.totalAmount}</div>;
+                        })}</div>
+                    },
+                    {
+                        title: '售卖数量',
+                        render: (h,row) => <div>{row.dishesList && row.dishesList.map(function(item) {
+                            return <div style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;" title={item.sellNum} key={item.sellNum}>{item.sellNum}</div>;
+                        })}</div>
+                    },
+                    {
+                        title: '赠送数量',
+                        render: (h,row) => <div>{row.dishesList && row.dishesList.map(function(item) {
+                            return <div style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;" title={item.sendNum} key={item.sendNum}>{item.sendNum}</div>;
+                        })}</div>
+                    }
+                ]
             };
         },
         created() {
@@ -249,25 +273,22 @@
             getData() {
                 http.get('/stat/getDishGather', { startDate: this.date.startDate, endDate: this.date.endDate, showPackageDish: 0 }).then(res => {
                     if (res.code === 1) {
-                        this.vips = res.data.list;
-                        let index = 0;
                         res.data.list.forEach(rest => {
-                            this.restAll.push(rest);
+                            this.dishesList = [];
                             rest.dishTypeList.forEach(dishType => {
-                                dishType.restName = rest.restName;
-                                this.showDishType.push(dishType);
+                                let dishTypeNum = 0;
                                 dishType.dishList.forEach(dish => {
                                     dish.restName = rest.restName;
                                     dish.dishType = dishType.dishType;
-                                    this.dishesAll.push(dish);
-                                    console.log(this.dishesAll);
-                                    index ++;
+                                    this.dishesList.push(dish);
                                 });
-                                 console.log(this.showDishType);
-                                console.log(index);
+                                this.showDishType.push(dishType);
                             });
+                            rest.dishesList = this.dishesList;
+                            this.restAll.push(rest);
                             console.log(this.restAll);
                         });
+                        console.log(this.dishesList);
                     };
                 });
             }

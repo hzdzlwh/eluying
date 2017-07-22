@@ -23,7 +23,7 @@
                 </dd-dropdown>
             </div>
         </div>
-        <dd-table :columns="col" :data-source="vips" :bordered="true" id="table"></dd-table>
+        <dd-table :columns="col" :data-source="vips" :bordered="true"></dd-table>
         <div class="foot footfix">
             <p style="font-size:16px;"><small style='width:16px;'>总入账次数 : </small> {{receiptNum}}</p>
             <p style="font-size:16px;"><small style='width:16px;'>总订单金额 : </small> {{orderFree}}</p>

@@ -28,7 +28,7 @@
                 </dd-dropdown>
             </div>
         </div>
-        <dd-table :columns="col" :data-source="vips" :bordered="true" id="table"></dd-table>
+        <dd-table :columns="col" :data-source="vips" :bordered="true" style="margin-top: 20px;"></dd-table>
         <div class="foot footfix">
             <p style="font-size:16px;"><small style='width:16px;'>总收款笔数 : </small> {{receiptNum}}</p>
             <p style="font-size:16px;"><small style='width:16px;'>总收款金额 : </small> {{receiptFree}}</p>
@@ -257,10 +257,12 @@
                         this.vips = res.data.items;
                         this.receiptNum = res.data.totalCount;
                         this.receiptFree = res.data.totalAmount;
-                        this.pages = Math.ceil(res.data.orderAmount / 30);
+                        this.pages = Math.ceil(res.data.totalCount / 30);
                     }
                     this.flag = true;
+                    console.log(this.pages);
                 });
+                console.log(this.pages);
             },
             fetchDate() {
                 const obj = {
@@ -284,7 +286,7 @@
                         this.vips = res.data.items || [];
                         this.receiptNum = res.data.totalCount;
                         this.receiptFree = res.data.totalAmount;
-                        this.pages = Math.ceil(res.data.orderAmount / 30);
+                        this.pages = Math.ceil(res.data.totalCount / 30);
                         // if (keyword) {
                         //     this.originId = -2;
                         //     this.endTime = undefined;

@@ -47,7 +47,7 @@
                 </dd-dropdown>
             </div>
         </div>
-        <dd-table :columns="col" :data-source="vips" :bordered="true" id="table"></dd-table>
+        <dd-table :columns="col" :data-source="vips" :bordered="true"></dd-table>
         <div class="foot footfix">
             <span style="font-size:16px;"><small style='width:16px;'>总房数 : </small> {{count}}</span>
             <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :age-count="pages" :current-page="pageNo" />
@@ -292,7 +292,6 @@
                 const pa = http.getDataWithToken(paramsObj);
                 pa.params = JSON.parse(pa.params);
                 const params = http.paramsToString(pa);
-                console.log(`${host}?${params}`);
                 return `${host}?${params}`;
             },
             getZoneType() {
