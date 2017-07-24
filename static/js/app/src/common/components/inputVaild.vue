@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-18 19:49:19
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-07-24 20:10:33
+* @Last Modified time: 2017-07-24 20:34:01
 * @email: 783384903@qq.com
 */
 <template>
@@ -77,8 +77,9 @@ height:23px;
                         this.num = parseInt(this.num);
                     } else {
                         this.num = Math.floor(100 * this.num) / 100;
-                        if (this.$refs.inputVaild.value.indexOf('.') === this.$refs.inputVaild.value.length - 3 &&  this.$refs.inputVaild.value.length >= 4) {
-                            this.$refs.inputVaild.value = this.num;
+                        if (this.$refs.inputVaild.value.indexOf('.') === this.$refs.inputVaild.value.length - 3 && this.$refs.inputVaild.value.length >= 4) {
+                            this.$refs.inputVaild.value = Number(this.$refs.inputVaild.value);
+                            this.num = Number(this.$refs.inputVaild.value);
                         }
                         // 20.0000的情况
                     }
