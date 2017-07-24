@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="width: 1000px;margin:0 auto;">
         <div class="report-reportCenter-date">
             <DateSelect/>
             <a :href="collect" class="report-btn">点击收藏</a>
@@ -15,13 +15,12 @@
                     </dd-select>
                 </div>
                 <div style="margin-right:20px;width: 120px;" class="fr region" >
-                    <dd-select v-model="dishType" >
-                        <dd-option :key="item.id" v-for="item in dishTypeAll" :value="item.dishType" :label="item.name"></dd-option>
+                    <dd-select v-model="name" >
+                        <dd-option :key="item.id" v-for="item in dishTypeAll" :value="item.name" :label="item.name"></dd-option>
                     </dd-select>
                 </div>
             </div>
         </div>
-        <dd-table :columns="col" :data-source="restAll" :bordered="true" id="report-table-1"></dd-table>
         <table border="1" class="report-dishesStat-table">
             <thead>
                 <tr>
@@ -33,42 +32,22 @@
                     <th>赠送数量</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr v-for="(rest, index) in restAll">
-                    <td>{{rest.restName}}</td>
+            <tbody v-for="(rest, restIndex) in vips">
+                <tr v-for="(dishType, dishTypeIndex) in rest.dishTypeList">
+                    <td :rowspan="rest.dishTypeList.length" :class=" dishTypeIndex > 0 && dishTypeIndex <= rest.dishTypeList.length ?'table-desplay-rest':''">{{rest.restName}}</td>
+                    <td>{{dishType.dishType}}</td>
                     <td>
-                        <div v-for="(dishType, index) in restAll[index].dishTypeList">{{dishType.dishType}}</div>
+                        <div v-for="(dish, dishIndex) in dishType.dishList">{{dish.dishName}}</div>
                     </td>
                     <td>
-                        <div v-for="(dish, index) in restAll[index].dishesList">{{dish.dishName}}</div>
+                        <div v-for="(dish, dishIndex) in dishType.dishList">{{dish.totalAmount}}</div>
                     </td>
                     <td>
-                        <div v-for="(dish, index) in restAll[index].dishesList">{{dish.totalAmount}}</div>
+                        <div v-for="(dish, dishIndex) in dishType.dishList">{{dish.sellNum}}</div>
                     </td>
                     <td>
-                        <div v-for="(dish, index) in restAll[index].dishesList">{{dish.sellNum}}</div>
+                        <div v-for="(dish, dishIndex) in dishType.dishList">{{dish.sendNum}}</div>
                     </td>
-                    <td>
-                        <div v-for="(dish, index) in restAll[index].dishesList">{{dish.sendNum}}</div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <table>
-            <thead>
-                <tr>
-                    <th>餐厅名称</th>
-                    <th>菜品种类</th>
-                    <th>菜品名称</th>
-                    <th>总数</th>
-                    <th>售卖数量</th>
-                    <th>赠送数量</th>
-                </tr>
-            </thead>
-            <tbody v-for="(rest, restIndex) in restAll">
-                <tr v-for="(dish, dishIndex) in restAll[restIndex].dishesList">
-                    <td rowspan="restAll[restIndex].dishesList.length">{{rest.restName}}</td>
-                    <td rowspan=""></td>
                 </tr>
             </tbody>
         </table>
@@ -77,8 +56,6 @@
 <style lang="scss">
     .report-dishesStat{
         border:1px solid #ccc;
-        width: 1000px;
-        margin: 0 auto;
         thead{
             background: #99CCFF;
         }
@@ -118,14 +95,25 @@
             }
         }
     }
-    #table {
-        margin-top: 20px;
-        max-height: 400px;
-        padding-bottom: 12px;
-    }
     .report-dishesStat-table{
+        width: 1000px;
+        margin: 0 auto;
+        margin-top: 20px;
+        th{
+            height: 30px;
+            background: #99CCFF;
+            text-align:center;
+        }
+        .table-desplay-rest{
+            display:none;
+        }
+        td{
+            text-align:center;
+        }
         div{
-            line-height: 24px;
+            height: 30px;
+            line-height: 28px;
+            text-align:center;
             border-bottom: 1px solid #ccc;
         }
     }
@@ -147,62 +135,15 @@
                     name: '全部餐厅',
                     restType: '-1~'
                 }],
-                restTypeOther: [],
                 restType: '-1~',
                 dishTypeAll: [{
                     id: -1,
-                    name: '全部菜品分类',
-                    dishType: '-1~'
+                    name: '全部菜品分类'
                 }],
-                dishTypeOther: [],
-                dishType: '-1~',
+                name: '全部菜品分类',
                 pages: 0,
-                personCount: 0,
                 pageNo: 1,
-                vips: [],
-                restAll: [],
-                dishesNum: [],
-                showDishType: [],
-                dishesList: [],
-                restNum: [],
-                dishTypeNum: [],
-                col: [
-                    {
-                        title: '餐厅名称',
-                        dataIndex: 'restName',
-                        width: 100
-                    },
-                    {
-                        title: '菜品种类',
-                        render: (h, row) => <div>{row.dishTypeList && row.dishTypeList.map(function(item) {
-                            return <div style="border-bottom:1px solid #ccc;" title={item.dishType} key={item.dishType}>{item.dishType}</div>;
-                        })}</div>
-                    },
-                    {
-                        title: '菜品名称',
-                        render: (h,row) => <div>{row.dishesList && row.dishesList.map(function(item) {
-                            return <div style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;" title={item.dishName} key={item.dishName}>{item.dishName}</div>;
-                        })}</div>
-                    },
-                    {
-                        title: '总数',
-                        render: (h,row) => <div>{row.dishesList && row.dishesList.map(function(item) {
-                            return <div style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;" title={item.totalAmount} key={item.totalAmount}>{item.totalAmount}</div>;
-                        })}</div>
-                    },
-                    {
-                        title: '售卖数量',
-                        render: (h,row) => <div>{row.dishesList && row.dishesList.map(function(item) {
-                            return <div style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;" title={item.sellNum} key={item.sellNum}>{item.sellNum}</div>;
-                        })}</div>
-                    },
-                    {
-                        title: '赠送数量',
-                        render: (h,row) => <div>{row.dishesList && row.dishesList.map(function(item) {
-                            return <div style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;" title={item.sendNum} key={item.sendNum}>{item.sendNum}</div>;
-                        })}</div>
-                    }
-                ]
+                vips: []
             };
         },
         created() {
@@ -221,13 +162,33 @@
         computed: {
             ...mapState(['date'])
         },
+        watch: {
+            restType() {
+                this.pageNo = 1;
+                this.getData();
+            },
+            name() {
+                this.pageNo = 1;
+                this.getData();
+            },
+            startDate() {
+                this.pageNo = 1;
+                this.getData();
+            },
+            endDate() {
+                this.pageNo = 1;
+                this.getData();
+            },
+            pageNo() {
+                this.getData();
+            }
+        },
         methods: {
             getRestType() {
                 http.get('/restaurant/listSimple')
                 .then(res => {
                     if (res.code === 1) {
                         const restList = res.data.list;
-                        this.restTypeOther = restList;
                         restList.forEach(rest => {
                             rest.id = rest.restId;
                             rest.name = rest.restName;
@@ -254,13 +215,26 @@
                 });
             },
             exportUrl(type) {
-                const originParam = {
-                    date: this.today
+                const obj = {
+                    pageNo: this.pageNo,
+                    restId: this.restType.split('~')[1],
+                    startDate: this.date.startDate,
+                    endDate: this.date.endDate,
+                    showPackageDish: 0
+                };
+                if (this.name !== '全部菜品分类') {
+                    obj.name = this.name;
+                };
+                 // 后台要求如果为空就不传
+                for (const ob in obj) {
+                    if (obj[ob] === undefined || obj[ob] === '') {
+                        delete obj[ob];
+                    }
                 };
                 const paramsObj = {
                     exportType: type,
-                    reportType: 18,
-                    params: JSON.stringify(originParam)
+                    reportType: 502,
+                    params: JSON.stringify(obj)
                 };
                 const host = http.getUrl('/stat/exportReport');
                 const pa = http.getDataWithToken(paramsObj);
@@ -271,26 +245,32 @@
             collect() {
             },
             getData() {
-                http.get('/stat/getDishGather', { startDate: this.date.startDate, endDate: this.date.endDate, showPackageDish: 0 }).then(res => {
+                const obj = {
+                    pageNo: this.pageNo,
+                    restId: this.restType.split('~')[1],
+                    startDate: this.date.startDate,
+                    endDate: this.date.endDate,
+                    showPackageDish: 0
+                };
+                if (this.name !== '全部菜品分类') {
+                    obj.name = this.name;
+                };
+                 // 后台要求如果为空就不传
+                for (const ob in obj) {
+                    if (obj[ob] === undefined || obj[ob] === '') {
+                        delete obj[ob];
+                    }
+                };
+                http.post('/stat/getDishGather', obj).then(res => {
                     if (res.code === 1) {
-                        res.data.list.forEach(rest => {
-                            this.dishesList = [];
-                            rest.dishTypeList.forEach(dishType => {
-                                let dishTypeNum = 0;
-                                dishType.dishList.forEach(dish => {
-                                    dish.restName = rest.restName;
-                                    dish.dishType = dishType.dishType;
-                                    this.dishesList.push(dish);
-                                });
-                                this.showDishType.push(dishType);
-                            });
-                            rest.dishesList = this.dishesList;
-                            this.restAll.push(rest);
-                            console.log(this.restAll);
-                        });
-                        console.log(this.dishesList);
+                        this.vips = res.data.list;
+                        this.pages = Math.ceil(res.data.count / 30);
                     };
                 });
+            },
+            handlePageChange(internalCurrentPage) {
+                this.pageNo = internalCurrentPage;
+                this.getData();
             }
         }
     };

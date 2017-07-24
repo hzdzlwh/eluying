@@ -11,8 +11,8 @@
                     </dd-select>
                 </div>
                 <div style="margin-right:20px;width: 120px;" class="fr region" >
-                    <dd-select v-model="dishType" >
-                        <dd-option :key="item.id" v-for="item in dishTypeAll" :value="item.dishType" :label="item.name"></dd-option>
+                    <dd-select v-model="name" >
+                        <dd-option :key="item.id" v-for="item in dishTypeAll" :value="item.name" :label="item.name"></dd-option>
                     </dd-select>
                 </div>
                 <div style="margin-right:20px;width: 140px;" class="fr check" >
@@ -30,7 +30,7 @@
         <dd-table :columns="col" :data-source="vips" :bordered="true"></dd-table>
         <div class="foot footfix">
             <p style="font-size:16px;"><small style='width:16px;'>总赠送数量 : </small> {{receiptNum}}</p>
-            <p style="font-size:16px;"><small style='width:16px;'>总赠送金额 : </small> {{priceFree}}</p>
+            <p style="font-size:16px;"><small style='width:16px;'>总赠送金额 : </small> {{receiptFree}}</p>
             <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :age-count="pages" :current-page="pageNo" />
         </div>
     </div>
@@ -64,11 +64,6 @@
       margin-left:20px;
     }
   }
-  #table {
-    margin-top: 20px;
-    max-height: 400px;
-    padding-bottom: 12px;
-  }
 </style>
 <script>
     import { DdTable, DdPagination, DdDropdown, DdDropdownItem, DdSelect, DdOption, DdGroupOption } from 'dd-vue-component';
@@ -82,89 +77,88 @@
         },
         data() {
             return {
-                typeAll: [{
+                restTypeAll: [{
                     id: -1,
-                    name: '全部类型',
-                    type: -1
-                }, {
-                    id: 0,
-                    name: '会员',
-                    type: 0
-                }, {
-                    id: 1,
-                    name: '会员卡',
-                    type: 1
+                    name: '全部餐厅',
+                    restType: '-1~'
                 }],
-                type: -1,
-                channelTypeAll: [{
+                restType: '-1~',
+                dishTypeAll: [{
                     id: -1,
-                    name: '全部付款方式',
-                    channelType: '-1~'
+                    name: '全部菜品分类'
                 }],
-                channelType: '-1~',
-                categoryTypeAll: [{
+                name: '全部菜品分类',
+                operatorTypeAll: [{
                     id: -1,
-                    name: '会员卡/等级',
-                    categoryType: '-1~'
+                    name: '全部操作人',
+                    operatorType: '-1~'
                 }],
-                categoryType: '-1~',
+                operatorType: '-1~',
                 vips: [],
-                vip: {},
                 pages: 0,
                 receiptNum: 0,
-                priceFree: 0,
                 receiptFree: 0,
                 pageNo: 1,
                 col: [
                     {
-                        title: '类型',
-                        dataIndex: 'type',
+                        title: '订单号',
+                        dataIndex: 'orderNum',
                         width: 180
                     },
                     {
-                        title: '会员卡/等级',
-                        dataIndex: 'name',
+                        title: '餐厅名称',
+                        dataIndex: 'restName',
                         width: 80
                     },
                     {
-                        title: '联系人',
-                        dataIndex: 'userName',
+                        title: '桌位',
+                        dataIndex: 'boardName',
                         width: 80
                     },
                     {
-                        title: '手机号',
-                        dataIndex: 'phone',
+                        title: '菜品分类',
+                        dataIndex: 'dishType',
                         width: 100
                     },
                     {
-                        title: '充值金额',
-                        dataIndex: 'price',
+                        title: '菜名',
+                        dataIndex: 'dishName',
                         width: 80
                     },
                     {
-                        title: '赠送金额',
-                        dataIndex: 'freePrice',
+                        title: '单价',
+                        dataIndex: 'price',
                         width: 100
                     },
     
                     {
-                        title: '充值时间',
-                        dataIndex: 'creationTime',
+                        title: '数量',
+                        dataIndex: 'bookNum',
                         width: 80
                     },
                     {
-                        title: '付款方式',
-                        dataIndex: 'channel',
+                        title: '总价',
+                        dataIndex: 'totalPrice',
+                        width: 120
+                    },
+                    {
+                        title: '操作时间',
+                        dataIndex: 'operationDate',
                         width: 120
                     },
                     {
                         title: '操作人',
-                        dataIndex: 'operator',
+                        dataIndex: 'operatorName',
                         width: 120
                     }
                 ],
                 flag: true
             };
+        },
+        created() {
+            this.getData();
+            this.getRestType();
+            this.getDishType();
         },
         components: {
             DdTable,
@@ -177,63 +171,87 @@
             DateSelect
         },
         watch: {
-            date() {
+            restType() {
                 this.pageNo = 1;
-                if (this.flag) {
-                    this.getData();
-                }
+                this.getData();
             },
-            channelType() {
+            name() {
                 this.pageNo = 1;
-                if (this.flag) {
-                    this.getData();
-                }
+                this.getData();
             },
-            categoryType() {
+            startDate() {
                 this.pageNo = 1;
-                if (this.flag) {
-                    this.getData();
-                }
+                this.getData();
+            },
+            endDate() {
+                this.pageNo = 1;
+                this.getData();
+            },
+            operatorType() {
+                this.pageNo = 1;
+                this.getData();
             },
             pageNo() {
-                if (this.flag) {
-                    this.getData();
-                }
-            },
-            type() {
-                this.pageNo = 1;
-                if (this.flag) {
-                    this.getData();
-                }
+                this.getData();
             }
-        },
-        created() {
-            this.getData();
         },
         computed: {
             ...mapState(['date'])
         },
         methods: {
+            getRestType() {
+                http.get('/restaurant/listSimple')
+                .then(res => {
+                    if (res.code === 1) {
+                        const restList = res.data.list;
+                        this.restTypeOther = restList;
+                        restList.forEach(rest => {
+                            rest.id = rest.restId;
+                            rest.name = rest.restName;
+                            rest.restType = `-1~${rest.restId}`;
+                            this.restTypeAll.push(rest);
+                        });
+                    }
+                });
+            },
+            getDishType() {
+                http.get('/dish/getDishTypes')
+                .then(res => {
+                    if (res.code === 1) {
+                        const dishType = res.data.list;
+                        const dict = {};
+                        dishType.forEach(dish => {
+                            dish.name = dish.dishType;
+                            if (!dict[dish.name]) {
+                                dish.dishType = `-1~{dish.name}`;
+                                this.dishTypeAll.push(dish);
+                                dict[dish.name] = 1;
+                            }
+                        });
+                    }
+                });
+            },
             exportUrl(type) {
                 const obj = {
                     pageNo: this.pageNo,
-                    categoryId: this.categoryType.split('~')[1],
-                    channelId: this.channelType.split('~')[1],
+                    restId: this.restType.split('~')[1],
                     startDate: this.date.startDate,
-                    toDate: this.date.endDate
+                    endDate: this.date.endDate,
+                    showPackageDish: 0,
+                    operatorId: this.operatorType.split('~')[1]
                 };
-                if (this.type !== -1) {
-                    obj.type = this.type;
+                if (this.name !== '全部菜品分类') {
+                    obj.name = this.name;
                 };
                  // 后台要求如果为空就不传
                 for (const ob in obj) {
                     if (obj[ob] === undefined || obj[ob] === '') {
                         delete obj[ob];
                     }
-                }
+                };
                 const paramsObj = {
                     exportType: type,
-                    reportType: 305,
+                    reportType: 501,
                     params: JSON.stringify(obj)
                 };
                 const host = http.getUrl('/stat/exportReport');
@@ -245,27 +263,27 @@
             getData() {
                 const obj = {
                     pageNo: this.pageNo,
-                    categoryId: this.categoryType.split('~')[1],
-                    channelId: this.channelType.split('~')[1],
+                    restId: this.restType.split('~')[1],
                     startDate: this.date.startDate,
-                    toDate: this.date.endDate
+                    endDate: this.date.endDate,
+                    showPackageDish: 0,
+                    operatorId: this.operatorType.split('~')[1]
                 };
-                if (this.type !== -1) {
-                    obj.type = this.type;
+                if (this.name !== '全部菜品分类') {
+                    obj.name = this.name;
                 };
                  // 后台要求如果为空就不传
                 for (const ob in obj) {
                     if (obj[ob] === undefined || obj[ob] === '') {
                         delete obj[ob];
                     }
-                }
-                http.get('/stat/getChargeLog', obj).then(res => {
+                };
+                http.post('/stat/getDishSendDetail', obj).then(res => {
                     if (res.code === 1) {
-                        this.vips = res.data.entityList || [];
-                        this.receiptNum = res.data.totalChargeCount;
-                        this.priceFree = res.data.totalFreeFee;
-                        this.receiptFree = res.data.totalChargeFee;
-                        this.pages = Math.ceil(res.data.orderAmount / 30);
+                        this.vips = res.data.list || [];
+                        this.receiptNum = res.data.count;
+                        this.receiptFree = res.data.totalPrice;
+                        this.pages = Math.ceil(res.data.count / 30);
                     }
                     this.flag = true;
                 });

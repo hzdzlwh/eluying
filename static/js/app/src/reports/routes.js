@@ -82,19 +82,19 @@ export const routes = [
                 children: [
                     {
                         path: '/dataCenter/overview/operation',
-                        component: childContainer,
+                        // component: childContainer,
+                        component: operation,
                         meta: {
                             name: '运营'
-                        },
-                        redirect: '/dataCenter/overview/operation/operation',
-                        children: [
-                            {
-                                path: '/dataCenter/overview/operation/operation',
-                                component: operation,
-                                meta: {
-                                    name: '统计'
-                                }
-                            }
+                        }
+                        // redirect: '/dataCenter/overview/operation/operation',
+                        // children: [
+                            // {
+                                // path: '/dataCenter/overview/operation/operation',
+                                // meta: {
+                                //     name: '统计'
+                                // }
+                            // }
                             // {
                             //     path: '/dataCenter/overview/operation/dailyReport',
                             //     component: dailyReport,
@@ -102,7 +102,7 @@ export const routes = [
                             //         name: '日报'
                             //     }
                             // }
-                        ]
+                        // ]
                     },
                     {
                         path: '/dataCenter/overview/flow',

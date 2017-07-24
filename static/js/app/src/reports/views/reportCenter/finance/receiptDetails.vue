@@ -10,14 +10,14 @@
                         <dd-option :key="item.id" v-for="item in orderTypeAll" :value="item.orderType" :label="item.name"></dd-option>
                     </dd-select>
                 </div>
-                <div style="margin-right:20px;width: 120px;" class="fr room" >
-                    <dd-select v-model="channelType" >
-                        <dd-option :key="item.id" v-for="item in channelTypeAll" :value="item.channelType" :label="item.name"></dd-option>
+                <div style="margin-right:20px;width: 120px;" class="fr region" >
+                    <dd-select v-model="channelId" >
+                        <dd-option :key="item.id" v-for="item in channels" :value="item.channelId" :label="item.name"></dd-option>
                     </dd-select>
                 </div>
-                <div style="margin-right:20px;width: 140px;" class="fr check" >
-                    <dd-select v-model="operatorType" >
-                        <dd-option :key="item.id" v-for="item in operatorTypeAll" :value="item.operatorType" :label="item.name"></dd-option>
+                <div style="margin-right:20px;width: 120px;" class="fr region" >
+                    <dd-select v-model="operatorId" >
+                        <dd-option :key="item.employeeId" v-for="item in employeeList" :value="item.employeeId" :label="item.name"></dd-option>
                     </dd-select>
                 </div>
             </div>
@@ -73,6 +73,72 @@
     padding-bottom: 12px;
   }
 </style>
+<!-- <div style="width: 120px;margin-right: 10px">
+    <dd-select v-model="channelId">
+        <dd-option v-for="channel in channels" :key="channel.id" :value="channel.id" :label="channel.name"></dd-option>
+    </dd-select>
+</div>
+
+
+channelId() {
+    this.page = 1;
+    this.queryCashierInfo();
+},
+
+employeeList: [
+    {
+        realName: '全部操作人',
+        employeeId: 'ALL'
+    },
+    /* {
+        realName: '一码通自助充值',
+        employeeId: 'ONE'
+    }, */
+    {
+        realName: '游客线上付款',
+        employeeId: 'VISITOR'
+    },
+    {
+        realName: '全部员工',
+        employeeId: 'EMPLOYEE'
+    }
+],
+operatorId: 'ALL',
+
+
+getEmployeeList() {
+    http.get('/user/getEmployeeList', {})
+        .then(res => {
+            if (res.code === 1) {
+                this.employeeList = [...this.employeeList, ...res.data.list];
+            }
+        });
+}, -->
+
+<!-- <div style="width: 120px;margin-right: 10px">
+    <dd-select v-model="operatorId">
+        <dd-option v-for="employee in employeeList" :key="employee.employeeId" :value="employee.employeeId" :label="employee.realName"></dd-option>
+    </dd-select>
+</div>
+
+operatorId() {
+    this.page = 1;
+    this.queryCashierInfo();
+},
+
+
+channels: [{ id: 'ALL', name: '全部收款方式' }],
+channelId: 'ALL',
+
+
+getChannels() {
+    http.get('/user/getChannels', { type: 1, isAll: true })
+        .then(res => {
+            if (res.code === 1) {
+                this.channels = [...this.channels, ...res.data.list];
+            }
+        });
+}, -->
 <script>
     import { DdTable, DdPagination, DdDropdown, DdDropdownItem, DdSelect, DdOption, DdGroupOption } from 'dd-vue-component';
     import http from 'http';
@@ -111,20 +177,28 @@
                     orderType: 3
                 }],
                 orderType: -2,
-                channelTypeAll: [{
-                    id: -1,
-                    name: '全部付款方式',
-                    channelType: '-1~'
-                }],
-                channelType: '-1~',
-                operatorTypeAll: [{
-                    id: -1,
-                    name: '全部操作人',
-                    operatorType: '-1~'
-                }],
-                operatorType: '-1~',
+                employeeList: [
+                    {
+                        realName: '全部操作人',
+                        employeeId: 'ALL'
+                    },
+                    /* {
+                        realName: '一码通自助充值',
+                        employeeId: 'ONE'
+                    }, */
+                    {
+                        realName: '游客线上付款',
+                        employeeId: 'VISITOR'
+                    },
+                    {
+                        realName: '全部员工',
+                        employeeId: 'EMPLOYEE'
+                    }
+                ],
+                operatorId: 'ALL',
+                channels: [{ id: 'ALL', name: '全部收款方式' }],
+                channelId: 'ALL',
                 vips: [],
-                vip: {},
                 pages: 0,
                 receiptNum: 0,
                 receiptFree: 0,
@@ -195,6 +269,14 @@
             DdGroupOption,
             DateSelect
         },
+        created() {
+            this.getData();
+            this.getEmployeeList();
+            this.getChannels();
+        },
+        computed: {
+            ...mapState(['date'])
+        },
         watch: {
             date() {
                 this.pageNo = 1;
@@ -212,20 +294,22 @@
                 if (this.flag) {
                     this.getData();
                 }
+            },
+            channelId() {
+                this.page = 1;
+                this.queryCashierInfo();
+            },
+            operatorId() {
+                this.page = 1;
+                this.queryCashierInfo();
             }
-        },
-        created() {
-            this.getData();
-        },
-        computed: {
-            ...mapState(['date'])
         },
         methods: {
             exportUrl(type) {
                 const obj = {
                     pageNo: this.pageNo,
-                    channelId: this.channelType.split('~')[1],
-                    operatorId: this.operatorType.split('~')[1],
+                    channelId: this.channelId,
+                    operatorId: this.operatorId,
                     startDate: this.date.startDate,
                     endDate: this.date.endDate
                 };
@@ -249,11 +333,27 @@
                 const params = http.paramsToString(pa);
                 return `${host}?${params}`;
             },
+            getEmployeeList() {
+                http.get('/user/getEmployeeList', {})
+                    .then(res => {
+                        if (res.code === 1) {
+                            this.employeeList = [...this.employeeList, ...res.data.list];
+                        }
+                    });
+            },
+            getChannels() {
+                http.get('/user/getChannels', { type: 1, isAll: true })
+                    .then(res => {
+                        if (res.code === 1) {
+                            this.channels = [...this.channels, ...res.data.list];
+                        }
+                    });
+            },
             getData() {
                 const obj = {
                     pageNo: this.pageNo,
-                    channelId: this.channelType.split('~')[1],
-                    operatorId: this.operatorType.split('~')[1],
+                    channelId: this.channelId,
+                    operatorId: this.operatorId,
                     startDate: this.date.startDate,
                     endDate: this.date.endDate
                 };
@@ -272,16 +372,6 @@
                         this.receiptNum = res.data.totalCount;
                         this.receiptFree = res.data.totalAmount;
                         this.pages = Math.ceil(res.data.totalCount / 30);
-                        // if (keyword) {
-                        //     this.originId = -2;
-                        //     this.endTime = undefined;
-                        //     this.pageNo = 1;
-                        //     this.searchPattern = undefined;
-                        //     this.startTime = undefined;
-                        //     this.state = -1;
-                        //     this.timeType = 1;
-                        //     $("#search").val('');
-                        // }
                     }
                     this.flag = true;
                 });
