@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-19 09:56:55
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-07-24 11:03:47
+* @Last Modified time: 2017-07-24 14:22:42
 * @email: 783384903@qq.com
 */
 <!-- 有问题找产品，这个模块的功能一般人解释不清楚 -->
@@ -508,7 +508,7 @@ export default {
             return Math.abs(Number(payMoney).toFixed(2));
         },
         needPayed() {
-            return Number(this.orderPayment.price - (this.cashTotal || 0) - (this.companyTotal || 0) - (this.memberTotal || 0) - (this.gameTotal || 0) - (this.cardsTotal || 0)).toFixed(2);
+            return (Number(this.orderPayment.price * 100 - (this.cashTotal || 0) * 100 - (this.companyTotal || 0) * 100 - (this.memberTotal || 0) * 100 - (this.gameTotal || 0) * 100 - (this.cardsTotal || 0) * 100) / 100).toFixed(2);
         }
     },
     created() {
@@ -593,7 +593,7 @@ export default {
                 this.orderPayment.game.forEach(el => {
                     if (el.type === 0) {
                         // const abelFee = Math.min(needPay, el.lastFee);
-                        const abelFee = Math.max(0, needPay, el.max);
+                        const abelFee = Math.min(el.max, Math.max(0, needPay));
                         const payed = Math.min(abelFee / el.rate, el.fee);
                         el.ableNum = parseInt(abelFee / el.rate);
                         el.fee = parseInt(payed);
