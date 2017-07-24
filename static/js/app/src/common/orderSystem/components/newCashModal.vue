@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-19 09:56:55
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-07-24 14:22:42
+* @Last Modified time: 2017-07-24 14:38:39
 * @email: 783384903@qq.com
 */
 <!-- 有问题找产品，这个模块的功能一般人解释不清楚 -->
@@ -362,7 +362,6 @@ export default {
     },
     data() {
         return {
-            // showDeposit: false,
             cashier: [],
             getOrReturn: [{
                 val: 0,
@@ -375,9 +374,6 @@ export default {
             deleteIds: [],
             paylogs: [],
             payChannels: [],
-            // depositPayChannels: [],
-            // depositPayChannel: undefined,
-            // deposit: undefined,
             orderPayment: {},
             uniqueId: 0,
             isCompany: false,
@@ -767,9 +763,6 @@ export default {
         },
         resetData() {
             this.payments = [];
-            // this.showDeposit = false;
-            // this.deposit = undefined;
-            // this.depositPayChannel = undefined;
             this.isCompany = false;
             this.companyCityLedger = false;
             this.companyBalance = undefined;
@@ -780,13 +773,8 @@ export default {
             this.cardList = [];
             this.paycard = [];
             this.orderPayment = [];
-            // this.business = {};
         },
         getPayChannels(item, index) {
-            // this.type === 'register' && this.business.cashierType === 'finish') 补录
-            // if (!this.orderState) {
-            //     return this.depositPayChannels;
-            // }
             let payBack = JSON.parse(JSON.stringify(this.payChannels));
             if (item.type === 2) {
                 if (item.payChannelId === -14) {
@@ -840,11 +828,6 @@ export default {
             // 今日房费
             return http.get('/order/getOrderPayment', params)
                 .then(res => {
-                    // this.orderPayment = res.data;
-                    // const paiedFee = this.orderPayment.paid.balance + this.orderPayment.paid.game + this.orderPayment.paid.normal;
-                    // this.onePassAmount = res.data.onePassAmount || 0;
-                    // this.companyAmount = res.data.companyAmount || 0;
-                    // this.paiedMoney = paiedFee.toFixed(2);
                     this.gameShowtip = undefined;
                     this.cardShowtip = undefined;
                     this.campanyShowtip = undefined;
@@ -899,76 +882,6 @@ export default {
                     });
                     this.cardList = cardList;
                 });
-            // return http.get('/room/getTips')
-            //     .then(res => {
-            //         res.data = {
-            //             card: [{
-            //                 ableFee: 8900,
-            //                 cards: [{
-            //                     accountId: 123,
-            //                     accountName: '123123',
-            //                     lastFee: 6000,
-            //                     paidFee: 100
-            //                 }],
-            //                 paidFee: 100,
-            //                 type: 2
-            //             }, {
-            //                 ableFee: 8900,
-            //                 cards: [{
-            //                     accountId: 12323123,
-            //                     accountName: 'ass2123123',
-            //                     lastFee: 5000,
-            //                     paidFee: 0
-            //                 }],
-            //                 paidFee: 0,
-            //                 type: 0
-            //             }],
-            //             company: [{
-            //                 ableFee: 8900,
-            //                 accountId: 22222,
-            //                 accountName: '23123',
-            //                 lastFee: 2000,
-            //                 paidFee: 400,
-            //                 type: 2
-            //             }, {
-            //                 ableFee: 8900,
-            //                 accountId: 33333,
-            //                 accountName: '23123',
-            //                 lastFee: 3000,
-            //                 paidFee: 0,
-            //                 type: 0
-            //             }],
-            //             dateTime: new Date().getMilliseconds(),
-            //             game: [{
-            //                 ableFee: 9000,
-            //                 ableNum: 900,
-            //                 accountId: 22222,
-            //                 accountName: '1231234',
-            //                 lastFee: 9000,
-            //                 paidFee: 0,
-            //                 paidNum: 0,
-            //                 rate: 10,
-            //                 type: 0
-            //             }],
-            //             member: [{
-            //                 ableFee: 8900,
-            //                 accountId: 123123,
-            //                 accountName: 'sadasd',
-            //                 lastFee: 2000,
-            //                 paidFee: 0,
-            //                 type: 0
-            //             }],
-            //             need: {
-            //                 penalty: 2000,
-            //                 total: 10000
-            //             },
-            //             paid: {
-            //                 balance: 1000,
-            //                 game: 1000,
-            //                 normal: 1000
-            //             },
-            //             price: 9900
-            //         };
         },
         /**
          * 获取支付列表
@@ -987,9 +900,6 @@ export default {
                     });
                     this.payChannels = channels;
                     this.companyName = res.data.companyName;
-                    // this.depositPayChannels = channels.filter(channel => {
-                    //     return channel.channelId > 0;
-                    // });
                     this.isCompany = !!res.data.contractCompany;
                     this.companyCityLedger = res.data.contractCompany ? res.data.contractCompany.companyCityLedger : false;
                     this.companyBalance = res.data.contractCompany ? res.data.contractCompany.companyBalance : undefined;
@@ -1001,7 +911,6 @@ export default {
          * @return {[type]}       [description]
          */
         getSelect(index) {
-            // const serialNum = this.paycard[index].serialNum;
             const paycard = this.paycard;
             const selectCards = this.cardList.filter(function(item) {
                 return !paycard.filter(function(it) {
@@ -1038,14 +947,7 @@ export default {
         },
         addPayMent() {
             // const collectPayMany = ((this.type === 'cancel' ? 0 : this.orderPayment.payableFee) - Number(this.paiedMoney) + this.penalty).toFixed(2);
-            
             const payMoney = Math.abs(this.needPayed);
-            let paidMoney = 0;
-            if (this.payments.length > 0) {
-                this.payments.forEach(pay => {
-                    paidMoney += Number(pay.fee);
-                });
-            }
             this.uniqueId += 1;
             // const fee = this.type === 'collect' ? (collectPayMany - Number(paidMoney)).toFixed(2) > 0 ? (collectPayMany - Number(paidMoney)).toFixed(2) : 0 : Math.abs(Number((payMoney - Number(paidMoney)).toFixed(2)));
             this.payments.push({
@@ -1324,14 +1226,10 @@ export default {
             // }
             // 判断是否进行扫码收款
             let payWithAlipay = 0;
-            let payWithCompany = 0;
             this.payments.forEach(pay => {
                 const id = pay.payChannelId;
                 if (id === -6 || id === -7 || id === -11 || id === -12) {
                     payWithAlipay += Number(pay.fee);
-                }
-                if (id === -15) {
-                    payWithCompany += Number(pay.fee);
                 }
             });
             // if (payWithCompany > 0 && (this.companyBalance ? this.companyBalance : 0) < payWithCompany) {
