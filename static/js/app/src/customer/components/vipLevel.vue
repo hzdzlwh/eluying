@@ -52,7 +52,7 @@
             <div class="vipLevelBox" v-if="isShowVirturlCurrency">
                 <div class="vipLevelBoxtitle" style="height:61px;line-height:61px;">{{data.virtualCurrencyName}}</div>
                 <div style="padding:15px 20px;" class="vipLevelBoxContent">
-                    <div class="topLimit currency-item">
+                    <!-- <div class="topLimit currency-item">
                         <div class="currency-sub-title">使用上限</div>
                         <div class="currency-sub-content">
                             <p style="height:32px;line-height:32px;">每日使用上限<span style="margin-left:30px;color:#999999;">不填表示没有上限</span></p>
@@ -67,7 +67,7 @@
                                 </tr>
                             </table>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="charge currency-item" style="margin-top:16px;">
                         <div class="currency-sub-title">{{data.virtualCurrencyName}}充值</div>
                         <div class="currency-sub-content" style="display:inline-block;">

@@ -34,7 +34,8 @@
                                 <input type="number"
                                        class="dd-input"
                                        style="width: 133px"
-                                       v-model="rechargeMoney" />
+                                       v-model="rechargeMoney"
+                                       @input="inputValide('rechargeMoney')" />
                                 元
                             </span>
                             <div>
@@ -42,7 +43,8 @@
                                 <input type="number"
                                        style="width: 115px"
                                        v-model="givingMoney"
-                                       class="dd-input" />
+                                       class="dd-input"
+                                       @input="inputValide('givingMoney')" />
                                 <span class="giving-money">元</span>
                             </div>
                         </div>
@@ -185,6 +187,17 @@
                                 this.$emit('refreshView');
                             }
                         });
+                }
+            },
+            inputValide(type) {
+                if (type === 'rechargeMoney') {
+                    if (!(/^((?!0)\d+(\.\d{1,2})?)$/g.test(this.rechargeMoney))) {
+                        this.rechargeMoney = this.rechargeMoney.substring(0, this.rechargeMoney.indexOf('.') + 3);
+                    }
+                } else if (type === 'givingMoney') {
+                    if (!(/^((?!0)\d+(\.\d{1,2})?)$/g.test(this.givingMoney))) {
+                        this.givingMoney = this.givingMoney.substring(0, this.givingMoney.indexOf('.') + 3);
+                    }
                 }
             }
         },
