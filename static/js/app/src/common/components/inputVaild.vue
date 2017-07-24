@@ -2,11 +2,11 @@
 * @Author: lxj
 * @Date:   2017-07-18 19:49:19
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-07-22 15:24:29
+* @Last Modified time: 2017-07-24 11:59:27
 * @email: 783384903@qq.com
 */
 <template>
-     <input class="dd-input inputVaild" v-model='num'  type='Number' @input='changeNum' :disabled='disabled' ref='inputVaild'></input>
+     <input class="dd-input inputVaild" v-model='num'  type='Number' @input='changeNum' :disabled='disabled' ref='inputVaild' placeholder='placeholder'></input>
 </template>
 <style lang="scss" rel="stylesheet/scss" type="text/css">
 .inputVaild{
@@ -20,6 +20,7 @@ height:23px;
 <script>
     export default{
         props: {
+            placeholder: String,
             min: {
                 type: Number,
                 default: 0
@@ -54,6 +55,9 @@ height:23px;
         },
         methods: {
             changeNum() {
+            if (!this.num && this.num !== 0 && this.placeholder) {
+                this.$emit('input', undefined);
+            } else {
                 if (!this.num && this.num !== 0) {
                     this.num = 0;
                 }
@@ -88,5 +92,6 @@ height:23px;
                 }
             }
         }
+    }
     };
 </script>
