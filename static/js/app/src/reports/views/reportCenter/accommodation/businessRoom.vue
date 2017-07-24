@@ -200,7 +200,7 @@
                 statType: 0,
                 showTypeAll: [],
                 dayStat: [],
-                monStat: [],
+                monStat: []
             };
         },
         created() {

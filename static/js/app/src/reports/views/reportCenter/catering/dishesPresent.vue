@@ -15,9 +15,9 @@
                         <dd-option :key="item.id" v-for="item in dishTypeAll" :value="item.name" :label="item.name"></dd-option>
                     </dd-select>
                 </div>
-                <div style="margin-right:20px;width: 140px;" class="fr check" >
-                    <dd-select v-model="operatorType" >
-                        <dd-option :key="item.id" v-for="item in operatorTypeAll" :value="item.operatorType" :label="item.name"></dd-option>
+                <div style="margin-right:20px;width: 120px;" class="fr region" >
+                    <dd-select v-model="operatorId" >
+                        <dd-option :key="item.employeeId" v-for="item in employeeList" :value="item.employeeId" :label="item.realName"></dd-option>
                     </dd-select>
                 </div>
             </div>
@@ -88,12 +88,21 @@
                     name: '全部菜品分类'
                 }],
                 name: '全部菜品分类',
-                operatorTypeAll: [{
-                    id: -1,
-                    name: '全部操作人',
-                    operatorType: '-1~'
-                }],
-                operatorType: '-1~',
+                employeeList: [
+                    {
+                        realName: '全部操作人',
+                        employeeId: 'ALL'
+                    },
+                    {
+                        realName: '游客线上付款',
+                        employeeId: -2
+                    },
+                    {
+                        realName: '全部员工',
+                        employeeId: -1
+                    }
+                ],
+                operatorId: 'ALL',
                 vips: [],
                 pages: 0,
                 receiptNum: 0,
@@ -158,6 +167,7 @@
         created() {
             this.getData();
             this.getRestType();
+            this.getEmployeeList();
             this.getDishType();
         },
         components: {
@@ -187,8 +197,8 @@
                 this.pageNo = 1;
                 this.getData();
             },
-            operatorType() {
-                this.pageNo = 1;
+            operatorId() {
+                this.page = 1;
                 this.getData();
             },
             pageNo() {
@@ -231,17 +241,27 @@
                     }
                 });
             },
+            getEmployeeList() {
+                http.get('/user/getEmployeeList', {})
+                    .then(res => {
+                        if (res.code === 1) {
+                            this.employeeList = [...this.employeeList, ...res.data.list];
+                        }
+                    });
+            },
             exportUrl(type) {
                 const obj = {
                     pageNo: this.pageNo,
                     restId: this.restType.split('~')[1],
                     startDate: this.date.startDate,
                     endDate: this.date.endDate,
-                    showPackageDish: 0,
-                    operatorId: this.operatorType.split('~')[1]
+                    showPackageDish: 0
                 };
                 if (this.name !== '全部菜品分类') {
-                    obj.name = this.name;
+                    obj.dishType = this.name;
+                };
+                if (this.operatorId !== 'ALL') {
+                    obj.operatorId = this.operatorId;
                 };
                  // 后台要求如果为空就不传
                 for (const ob in obj) {
@@ -266,11 +286,13 @@
                     restId: this.restType.split('~')[1],
                     startDate: this.date.startDate,
                     endDate: this.date.endDate,
-                    showPackageDish: 0,
-                    operatorId: this.operatorType.split('~')[1]
+                    showPackageDish: 0
                 };
                 if (this.name !== '全部菜品分类') {
-                    obj.name = this.name;
+                    obj.dishType = this.name;
+                };
+                if (this.operatorId !== 'ALL') {
+                    obj.operatorId = this.operatorId;
                 };
                  // 后台要求如果为空就不传
                 for (const ob in obj) {

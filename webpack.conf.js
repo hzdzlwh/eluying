@@ -19,7 +19,8 @@ var webpackConf = {
     entry: config.js,
     output: {
         filename: '[name].js',
-        publicPath: './dist/'
+        publicPath: './dist/',
+        sourceMapFilename: '[name].js.map'
     },
     eslint: {
         failOnWarning: false,

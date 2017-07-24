@@ -53,6 +53,8 @@ import reportManage from './views/reportCenter/manage/manage.vue';
 import reportDaily from './views/reportCenter/manage/dailyReport.vue';
 // import reportBazaar from './views/reportCenter/bazaar/bazaar.vue';
 // import reportMember from './views/reportCenter/member/member.vue';
+import collect from './views/reportCenter/collect/collect.vue';
+import noCollect from './views/reportCenter/collect/noCollect.vue';
 import auth from '../common/auth';
 
 const insuranceAuth = auth.checkSwitch(auth.INSURANCE_ID);
@@ -310,7 +312,25 @@ export const routes = [
                 path: '/reportCenter/collect',
                 meta: {
                     name: '收藏'
-                }
+                },
+                component: collect,
+                redirect: '/reportCenter/collect/:id',
+                children: [
+                    {
+                        path: '',
+                        component: noCollect,
+                        meta: {
+                            name: ''
+                        }
+                    },
+                    {
+                        path: '/reportCenter/accommodation/todayRoom',
+                        meta: {
+                            name: '当前在住房报表'
+                        },
+                        component: todayGuest
+                    }
+                ]
             },
             {
                 path: '/reportCenter/accommodation',

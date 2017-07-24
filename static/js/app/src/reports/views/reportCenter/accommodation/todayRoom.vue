@@ -46,6 +46,10 @@
                     <dd-dropdown-item><span><a :href="exportUrl(0)">导出Excel</a></span></dd-dropdown-item>
                 </dd-dropdown>
             </div>
+            <div class="export">
+                <a href="collectUrl">加入收藏</a>
+                <a href="disCollectUrl">取消收藏</a>
+            </div>
         </div>
         <dd-table :columns="col" :data-source="vips" :bordered="true"></dd-table>
         <div class="foot footfix">
@@ -56,7 +60,7 @@
     </div>
 </template>
 <style lang='scss' scoped>
-    .title {
+    .report-title {
         width: 100%;
         line-height: 56px;
         font-size: 1.5em;
@@ -325,38 +329,27 @@
             },
             getOrigin() {
             // 获取全部客户来源渠道
-                http.get('/user/getChannels', { type: 2, isAll: true })
-                      .then((res) => {
-                          // 拼接originType 企业渠道：企业id~-5 会员-4～-4 自定义渠道 渠道id～渠道id
-                          if (res.code === 1) {
-                              const originsList = res.data.list;
-                              const otherOrigins = [];
-                              this.userOrigins = originsList;
-                              originsList.forEach(origin => {
-                                  if (origin.id === -1 || origin.id === -4) {
-                                      origin.originType = `${origin.id}~${origin.id}`;
-                                      this.userSelfOrigins.push(origin);
-                                  } else if (origin.id === -5) {
-                                      origin.companyList.forEach(company => {
-                                          const companyName = `企业名称:${company.companyName}(${company.companyType ? '  可挂帐' : '不可挂帐'})`;
-                                          const number = `企业编号:${company.contractNum || ''}`;
-                                          const name = `联系人:${company.contactName || ''}`;
-                                          const phone = `联系人电话:${company.contactPhone || ''}`;
-                                          company.name = company.companyName;
-                                          company.originType = `${company.id}~${origin.id}`;
-                                          company.info = `${companyName}\n${number}\n${name}\n${phone}`;
-                                      });
-                                      this.userGroupOrigins.push({ label: '企业', origins: origin.companyList });
-                                  } else if (origin.id > 0) {
-                                      origin.originType = `${origin.id}~${origin.id}`;
-                                      origin.info = origin.name;
-                                      otherOrigins.push(origin);
-                                  }
-                              });
-                              this.userGroupOrigins.push({ label: '其他', origins: otherOrigins });
-                              // this.userOriginType = this.userSelfOrigins[0].originType;
-                          }
-                      });
+                http.get('/user/getChannels', { type: 2, isAll: false })
+                .then((res) => {
+                    // 拼接originType 企业渠道：企业id~-5 会员-4～-4 自定义渠道 渠道id～渠道id
+                    if (res.code === 1) {
+                        const originsList = res.data.list;
+                        const otherOrigins = [];
+                        this.userOrigins = originsList;
+                        originsList.forEach(origin => {
+                            if (origin.id < 0) {
+                                origin.originType = `${origin.id}~${origin.id}`;
+                                this.userSelfOrigins.push(origin);
+                            } else if (origin.id > 0) {
+                                origin.originType = `${origin.id}~${origin.id}`;
+                                origin.info = origin.name;
+                                otherOrigins.push(origin);
+                            }
+                        });
+                        this.userGroupOrigins.push({ label: '其他', origins: otherOrigins });
+                        // this.userOriginType = this.userSelfOrigins[0].originType;
+                    }
+                });
             },
             getData() {
                 const obj = {

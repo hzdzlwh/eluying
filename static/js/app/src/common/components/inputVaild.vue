@@ -2,11 +2,11 @@
 * @Author: lxj
 * @Date:   2017-07-18 19:49:19
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-07-24 14:57:47
+* @Last Modified time: 2017-07-24 20:10:33
 * @email: 783384903@qq.com
 */
 <template>
-     <input class="dd-input inputVaild" v-model='num'  type='Number' @input='changeNum' :disabled='disabled' ref='inputVaild' placeholder='placeholder'></input>
+     <input class="dd-input inputVaild" v-model='num'  type='Number' @input='changeNum' :disabled='disabled' ref='inputVaild' :placeholder='placeholder'></input>
 </template>
 <style lang="scss" rel="stylesheet/scss" type="text/css">
 .inputVaild{
@@ -45,7 +45,8 @@ height:23px;
         },
         data() {
             return {
-                num: this.value
+                num: this.value,
+                flag: true
             };
         },
         computed: {
@@ -62,13 +63,24 @@ height:23px;
                         this.num = 0;
                     }
                     const valStr = this.$refs.inputVaild.value;
-                    if (valStr.length === 2) {
+                    if (((valStr.length === 2 && this.flag) || (this.$refs.inputVaild.value.length !== String(Number(this.num)).length)) && this.$refs.inputVaild.value.indexOf('.') === -1) {
+                        this.flag = false;
                         this.$refs.inputVaild.value = Number(this.num);
+                    } else {
+                        if (valStr.length >= 2) {
+                            this.flag = false;
+                        } else {
+                            this.flag = true;
+                        }
                     }
                     if (this.isInt) {
                         this.num = parseInt(this.num);
                     } else {
-                        this.num = Number(Number(this.num).toFixed(2));
+                        this.num = Math.floor(100 * this.num) / 100;
+                        if (this.$refs.inputVaild.value.indexOf('.') === this.$refs.inputVaild.value.length - 3 &&  this.$refs.inputVaild.value.length >= 4) {
+                            this.$refs.inputVaild.value = this.num;
+                        }
+                        // 20.0000的情况
                     }
                     if (this.num >= this.max) {
                         this.$emit('input', this.max);

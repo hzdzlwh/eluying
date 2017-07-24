@@ -92,6 +92,7 @@
 <script>
     import { DdTable, DdPagination, DdDropdown, DdDropdownItem, DdSelect, DdOption, DdGroupOption } from 'dd-vue-component';
     import http from 'http';
+    import { checkTypeAll } from '../../../../common/orderSystem/roomCheckType.js';
     import util from 'util';
     export default {
         data() {
@@ -99,14 +100,12 @@
                 today: undefined,
                 morrow: undefined,
                 zoneType: '-1~',
-                zoneTypeOther: [],
                 zoneTypeAll: [{
                     id: -1,
                     name: '全部区域',
                     zoneType: '-1~'
                 }],
                 roomType: '-1~',
-                roomTypeOther: [],
                 roomTypeAll: [{
                     id: -1,
                     name: '全部房型',
@@ -171,7 +170,12 @@
                     },
                     {
                         title: '入住类型',
-                        dataIndex: 'checkType',
+                        render: (h, row) => {
+                            return <div> { checkTypeAll.find(function(el) {
+                                return Number(el.id) === row.checkType;
+                            }).name }
+                            </div>;
+                        },
                         width: 100
                     },
                     {
@@ -219,39 +223,26 @@
         },
         watch: {
             date() {
-                // date = this.today;
-                if (this.flag) {
-                    this.getData();
-                }
+                this.getData();
             },
             userOriginType() {
                 this.pageNo = 1;
-                if (this.flag) {
-                    this.getData();
-                }
+                this.getData();
             },
             roomType() {
                 this.pageNo = 1;
-                if (this.flag) {
-                    this.getData();
-                }
+                this.getData();
             },
             pageNo() {
-                if (this.flag) {
-                    this.getData();
-                }
+                this.getData();
             },
             zoneType() {
                 this.pageNo = 1;
-                if (this.flag) {
-                    this.getData();
-                }
+                this.getData();
             },
             checkType() {
                 this.pageNo = 1;
-                if (this.flag) {
-                    this.getData();
-                }
+                this.getData();
             }
         },
         created() {
@@ -299,7 +290,6 @@
                 .then(res => {
                     if (res.code === 1) {
                         const zoneList = res.data.list;
-                        this.zoneTypeOther = zoneList;
                         zoneList.forEach(zone => {
                             zone.id = zone.zoneId;
                             zone.name = zone.zoneName;
@@ -314,7 +304,6 @@
                 .then(res => {
                     if (res.code === 1) {
                         const roomList = res.data.list;
-                        this.roomTypeOther = roomList;
                         roomList.forEach(room => {
                             room.id = room.cId;
                             room.name = room.cName;
@@ -326,38 +315,27 @@
             },
             getOrigin() {
             // 获取全部客户来源渠道
-                http.get('/user/getChannels', { type: 2, isAll: true })
-                      .then((res) => {
-                          // 拼接originType 企业渠道：企业id~-5 会员-4～-4 自定义渠道 渠道id～渠道id
-                          if (res.code === 1) {
-                              const originsList = res.data.list;
-                              const otherOrigins = [];
-                              this.userOrigins = originsList;
-                              originsList.forEach(origin => {
-                                  if (origin.id === -1 || origin.id === -4) {
-                                      origin.originType = `${origin.id}~${origin.id}`;
-                                      this.userSelfOrigins.push(origin);
-                                  } else if (origin.id === -5) {
-                                      origin.companyList.forEach(company => {
-                                          const companyName = `企业名称:${company.companyName}(${company.companyType ? '可挂帐' : '不可挂帐'})`;
-                                          const number = `企业编号:${company.contractNum || ''}`;
-                                          const name = `联系人:${company.contactName || ''}`;
-                                          const phone = `联系人电话:${company.contactPhone || ''}`;
-                                          company.name = company.companyName;
-                                          company.originType = `${company.id}~${origin.id}`;
-                                          company.info = `${companyName}\n${number}\n${name}\n${phone}`;
-                                      });
-                                      this.userGroupOrigins.push({ label: '企业', origins: origin.companyList });
-                                  } else if (origin.id > 0) {
-                                      origin.originType = `${origin.id}~${origin.id}`;
-                                      origin.info = origin.name;
-                                      otherOrigins.push(origin);
-                                  }
-                              });
-                              this.userGroupOrigins.push({ label: '其他', origins: otherOrigins });
-                              // this.userOriginType = this.userSelfOrigins[0].originType;
-                          }
-                      });
+                http.get('/user/getChannels', { type: 2, isAll: false })
+                .then((res) => {
+                    // 拼接originType 企业渠道：企业id~-5 会员-4～-4 自定义渠道 渠道id～渠道id
+                    if (res.code === 1) {
+                        const originsList = res.data.list;
+                        const otherOrigins = [];
+                        this.userOrigins = originsList;
+                        originsList.forEach(origin => {
+                            if (origin.id < 0) {
+                                origin.originType = `${origin.id}~${origin.id}`;
+                                this.userSelfOrigins.push(origin);
+                            } else if (origin.id > 0) {
+                                origin.originType = `${origin.id}~${origin.id}`;
+                                origin.info = origin.name;
+                                otherOrigins.push(origin);
+                            }
+                        });
+                        this.userGroupOrigins.push({ label: '其他', origins: otherOrigins });
+                        // this.userOriginType = this.userSelfOrigins[0].originType;
+                    }
+                });
             },
             getData() {
                 const obj = {
