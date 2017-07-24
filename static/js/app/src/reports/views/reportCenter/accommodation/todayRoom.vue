@@ -60,7 +60,7 @@
     </div>
 </template>
 <style lang='scss' scoped>
-    .title {
+    .report-title {
         width: 100%;
         line-height: 56px;
         font-size: 1.5em;
