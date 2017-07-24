@@ -46,6 +46,10 @@
                     <dd-dropdown-item><span><a :href="exportUrl(0)">导出Excel</a></span></dd-dropdown-item>
                 </dd-dropdown>
             </div>
+            <div class="export">
+                <a href="collectUrl">加入收藏</a>
+                <a href="disCollectUrl">取消收藏</a>
+            </div>
         </div>
         <dd-table :columns="col" :data-source="vips" :bordered="true"></dd-table>
         <div class="foot footfix">
