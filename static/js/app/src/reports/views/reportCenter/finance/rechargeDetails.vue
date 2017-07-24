@@ -15,9 +15,9 @@
                         <dd-option :key="item.id" v-for="item in categoryTypeAll" :value="item.categoryType" :label="item.name"></dd-option>
                     </dd-select>
                 </div>
-                <div style="margin-right:20px;width: 120px;" class="fr room" >
-                    <dd-select v-model="channelType" >
-                        <dd-option :key="item.id" v-for="item in channelTypeAll" :value="item.channelType" :label="item.name"></dd-option>
+                <div style="margin-right:20px;width: 120px;" class="fr region" >
+                    <dd-select v-model="channelId" >
+                        <dd-option :key="item.id" v-for="item in channels" :value="item.id" :label="item.name"></dd-option>
                     </dd-select>
                 </div>
             </div>
@@ -98,12 +98,13 @@
                     type: 1
                 }],
                 type: -1,
-                channelTypeAll: [{
-                    id: -1,
-                    name: '全部付款方式',
-                    channelType: '-1~'
-                }],
-                channelType: '-1~',
+                channels: [
+                    {
+                        id: 'ALL',
+                        name: '全部收款方式'
+                    }
+                ],
+                channelId: 'ALL',
                 categoryTypeAll: [{
                     id: -1,
                     name: '会员卡/等级',
@@ -185,11 +186,9 @@
                     this.getData();
                 }
             },
-            channelType() {
-                this.pageNo = 1;
-                if (this.flag) {
-                    this.getData();
-                }
+            channelId() {
+                this.page = 1;
+                this.getData();
             },
             categoryType() {
                 this.pageNo = 1;
@@ -204,12 +203,18 @@
             },
             type() {
                 this.pageNo = 1;
-                if (this.flag) {
-                    this.getData();
-                }
+                this.getData();
+                this.categoryTypeAll = [{
+                    id: -1,
+                    name: '会员卡/等级',
+                    categoryType: '-1~'
+                }];
+                this.categoryType = '-1~';
+                this.getCategoryTypeAll();
             }
         },
         created() {
+            this.getChannels();
             this.getData();
         },
         computed: {
@@ -220,12 +225,14 @@
                 const obj = {
                     pageNo: this.pageNo,
                     categoryId: this.categoryType.split('~')[1],
-                    channelId: this.channelType.split('~')[1],
                     startDate: this.date.startDate,
                     toDate: this.date.endDate
                 };
                 if (this.type !== -1) {
                     obj.type = this.type;
+                };
+                if (this.channelId !== 'ALL') {
+                    obj.payChannel = this.channelId;
                 };
                  // 后台要求如果为空就不传
                 for (const ob in obj) {
@@ -244,16 +251,55 @@
                 const params = http.paramsToString(pa);
                 return `${host}?${params}`;
             },
+            getChannels() {
+                http.get('/user/getChannels', { type: 1, isAll: true })
+                    .then(res => {
+                        if (res.code === 1) {
+                            this.channels = [...this.channels, ...res.data.list];
+                        }
+                    });
+            },
+            getCategoryTypeAll() {
+                if (this.type === 0) {
+                    http.get('/vipUser/getVipLevels')
+                    .then(res => {
+                        if (res.code === 1) {
+                            const categoryList = res.data.list;
+                            categoryList.forEach(category => {
+                                category.id = category.vipLevelId;
+                                category.name = category.vipLevelName;
+                                category.categoryType = `-1~${category.vipLevelId}`;
+                                this.categoryTypeAll.push(category);
+                            });
+                        }
+                    });
+                } else if (this.type === 1) {
+                    http.get('/vipCard/getVipCardSettings')
+                    .then(res => {
+                        if (res.code === 1) {
+                            const categoryList = res.data.list;
+                            categoryList.forEach(category => {
+                                category.id = category.categoryId;
+                                category.name = category.name;
+                                category.categoryType = `-1~${category.categoryId}`;
+                                this.categoryTypeAll.push(category);
+                            });
+                        }
+                    });
+                }
+            },
             getData() {
                 const obj = {
                     pageNo: this.pageNo,
                     categoryId: this.categoryType.split('~')[1],
-                    channelId: this.channelType.split('~')[1],
                     startDate: this.date.startDate,
                     toDate: this.date.endDate
                 };
                 if (this.type !== -1) {
                     obj.type = this.type;
+                };
+                if (this.channelId !== 'ALL') {
+                    obj.payChannel = this.channelId;
                 };
                  // 后台要求如果为空就不传
                 for (const ob in obj) {

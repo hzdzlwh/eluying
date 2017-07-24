@@ -2,8 +2,18 @@
     <div style="width: 1000px;margin:0 auto;">
         <div class="report-reportCenter-date">
             <DateSelect/>
-            <a :href="collect" class="report-btn">点击收藏</a>
-            <a :href="exportUrl(0)" class="report-btn">导出Excel</a>
+            <div class="export" style="float:right;margin-left:20px;margin-top:-20px;">
+                <dd-dropdown text="导出明细" trigger="click" style="width:100px;">
+                  <!-- <dd-dropdown-item><span><a :href="exportUrl(1)">导出PDF</a></span></dd-dropdown-item> -->
+                  <dd-dropdown-item><span><a :href="exportUrl(0)">导出Excel</a></span></dd-dropdown-item>
+                </dd-dropdown>
+            </div>
+            <!-- <div class="export" style="float:right;margin-left:20px;">
+                <dd-dropdown text="收藏" trigger="click" style="width:100px;">
+                  <dd-dropdown-item><span><a :href="exportUrl(1)">导出PDF</a></span></dd-dropdown-item>
+                  <dd-dropdown-item><span><a :href="exportUrl(0)">导出Excel</a></span></dd-dropdown-item>
+                </dd-dropdown>
+            </div> -->
         </div>
         <h2 class="report-reportCenter-title">{{$route.meta.name}}</h2>
         <div class="report-reportCenter-top">
