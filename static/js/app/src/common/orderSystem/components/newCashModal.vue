@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-19 09:56:55
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-07-24 14:53:38
+* @Last Modified time: 2017-07-24 19:14:13
 * @email: 783384903@qq.com
 */
 <!-- 有问题找产品，这个模块的功能一般人解释不清楚 -->
@@ -128,8 +128,8 @@
                                 </dd-option>
                             </dd-select>
                             <dd-select class='cashier-card' v-model='payment.accountId' @input='changeAbeldFee'>
-                                <dd-option v-for="payChannel in getSelect(index)" :key="payChannel.accountId" :value="payChannel.accountId" :label="payChannel.accountName + payChannel.accountId">
-                                    <span :title='payChannel.accountId'>{{payChannel.accountName + payChannel.accountId}}</span>
+                                <dd-option v-for="payChannel in getSelect(index)" :key="payChannel.accountId" :value="payChannel.accountId" :label="payChannel.accountName">
+                                    <span :title='payChannel.accountId'>{{payChannel.accountName}}</span>
                                 </dd-option>
                             </dd-select>
                             <span v-if='payment.type === 0' class="cashier-tip-text">余额¥{{getCardLastFee(payment.accountId)}}，最多可收取¥{{payment.ableFee || 0}}</span>
