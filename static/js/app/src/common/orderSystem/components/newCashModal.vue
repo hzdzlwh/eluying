@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-19 09:56:55
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-07-22 15:44:13
+* @Last Modified time: 2017-07-24 11:03:47
 * @email: 783384903@qq.com
 */
 <!-- 有问题找产品，这个模块的功能一般人解释不清楚 -->
@@ -216,6 +216,50 @@
 .cashier-card .dd-input{
     width:250px!important;
 }
+.cashier-deposit-info {
+    display: flex;
+    align-items: center;
+}
+
+.cashier-addBtn {
+    height: 24px;
+    display: inline-flex;;
+    align-items: center;
+    cursor: pointer;
+    margin-top:6px;
+}
+
+.cashier-addBtn-icon {
+    width: 16px;
+    height: 16px;
+    background: url("../../../../../../image/modal/room_modal_add.png");
+    background-size: contain;
+    margin-right: 4px;
+    cursor: pointer;
+}
+
+.cashier-delBtn-icon {
+    width: 16px;
+    height: 16px;
+    background: url("../../../../../../image/modal/room_modal_min.png");
+    background-size: contain;
+    margin-left: 8px;
+    margin-right: 24px;
+    cursor: pointer;
+}
+.cashier-getMoney-channels {
+    display: flex;
+    flex-direction: column;
+}
+
+.cashier-getMoney-channel {
+    display: flex;
+    align-items: center;
+    &:not(:last-child) {
+        margin-bottom: 16px;
+    }
+}
+
 </style>
 <style lang="scss" scoped>
 #cashier .modal-dialog {
@@ -270,19 +314,6 @@
     align-items: center;
 }
 
-.cashier-getMoney-channels {
-    display: flex;
-    flex-direction: column;
-}
-
-.cashier-getMoney-channel {
-    display: flex;
-    align-items: center;
-    &:not(:last-child) {
-        margin-bottom: 16px;
-    }
-}
-
 .content-item-title {
     margin-bottom: 18px;
     span {
@@ -296,38 +327,6 @@
             }
         }
     }
-}
-
-.cashier-deposit-info {
-    display: flex;
-    align-items: center;
-}
-
-.cashier-addBtn {
-    height: 24px;
-    display: inline-flex;;
-    align-items: center;
-    cursor: pointer;
-    margin-top:6px;
-}
-
-.cashier-addBtn-icon {
-    width: 16px;
-    height: 16px;
-    background: url("../../../../../../image/modal/room_modal_add.png");
-    background-size: contain;
-    margin-right: 4px;
-    cursor: pointer;
-}
-
-.cashier-delBtn-icon {
-    width: 16px;
-    height: 16px;
-    background: url("../../../../../../image/modal/room_modal_min.png");
-    background-size: contain;
-    margin-left: 8px;
-    margin-right: 24px;
-    cursor: pointer;
 }
 </style>
 <script>
@@ -555,7 +554,7 @@ export default {
          * @return {[type]} [description]
          */
         changeAbeldFee() {
-            let needPay = this.orderPayment.price;
+            let needPay = this.orderPayment.price + this.orderPayment.paid.normal;
             // 首先统计出所有要退还的
             if (this.orderPayment && this.orderPayment.game && this.orderPayment.game.length) {
                 this.orderPayment.game.forEach(el => {
@@ -594,7 +593,7 @@ export default {
                 this.orderPayment.game.forEach(el => {
                     if (el.type === 0) {
                         // const abelFee = Math.min(needPay, el.lastFee);
-                        const abelFee = Math.max(0, needPay);
+                        const abelFee = Math.max(0, needPay, el.max);
                         const payed = Math.min(abelFee / el.rate, el.fee);
                         el.ableNum = parseInt(abelFee / el.rate);
                         el.fee = parseInt(payed);
@@ -608,7 +607,7 @@ export default {
                 this.orderPayment.member.forEach(el => {
                     if (el.type === 0) {
                         // const abelFee = Math.min(needPay, el.lastFee);
-                        const abelFee = Math.max(0, needPay);;
+                        const abelFee = Math.max(0, needPay);
                         const payed = Math.min(abelFee, el.fee);
                         el.ableFee = abelFee;
                         el.fee = payed;
@@ -623,7 +622,7 @@ export default {
                         const selectCard = this.cardList.find(cards => cards.accountId === card.accountId);
                         if (card.type === 0) {
                             // const abelFee = Math.min(needPay, selectCard.lastFee);
-                            const abelFee = Math.max(0, needPay);;
+                            const abelFee = Math.max(0, needPay);
                             const payed = Math.min(abelFee, card.fee);
                             card.ableFee = abelFee;
                             card.fee = payed;
@@ -882,6 +881,9 @@ export default {
                     this.paiedMoney = paiedFee.toFixed(2);
                     const cardHash = {};
                     const cardList = [];
+                    res.data.game && res.data.game.forEach(element => {
+                        element.max = element.ableNum * element.rate;
+                    });
                     res.data.card && res.data.card.forEach(element => {
                         element.cards.forEach(el => {
                             if (!cardHash[el.accountId]) {
