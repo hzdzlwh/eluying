@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-19 09:56:55
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-07-24 14:38:39
+* @Last Modified time: 2017-07-24 14:53:38
 * @email: 783384903@qq.com
 */
 <!-- 有问题找产品，这个模块的功能一般人解释不清楚 -->
@@ -185,8 +185,7 @@
             </div>
         </div>
         <div class="roomModals-footer">
-            <div class="dd-btn dd-btn-primary" @click="back" v-if='remainderDate' style="margin-right:20px;">上一步</div>
-            <div @click="returnPreStep" v-else class="btn-back"><img src="/static/image/modal/back.png" alt=""></div>
+            <div @click="returnPreStep" class="btn-back"><img src="/static/image/modal/back.png" alt=""></div>
             <!--                             <span class="footer-label">
                                 {{orderState ? '需补金额:' : '需退金额:'}}
                                 <span class="order-price-num" :class="orderState ? 'green' : 'red'">
@@ -382,9 +381,6 @@ export default {
             paiedMoney: 0,
             onePassAmount: 0,
             companyAmount: 0,
-            ReaminderParams: {}, // 余额付款传来的参数,
-            ramainShow: false,
-            remainderDate: undefined,
             companyName: '',
             paycard: [],
             cardList: [],
@@ -647,26 +643,6 @@ export default {
             this.hideModal();
             bus.$emit('back');
         },
-        // getReaminderParams(params) {
-        //     if (params) {
-        //         this.ReaminderParams = {};
-        //         this.ReaminderParams.params = params.paycard;
-        //         this.ReaminderParams.type = params.type;
-        //         this.ReaminderParams.total = params.payTotal;
-        //     } else {
-        //         this.ReaminderParams = undefined;
-        //     }
-        //     this.ramainShow = false;
-        //     this.cashierShow();
-        // },
-        hideReaminder() {
-            this.ramainShow = false;
-            this.hideModal();
-        },
-        back() {
-            $('#cashier').modal('hide');
-            this.ramainShow = true;
-        },
         getpParms(flag) {
             let params;
             if (this.type === 'register') {
@@ -706,38 +682,6 @@ export default {
             }
             return params;
         },
-        getRemainder() {
-            const params = this.getpParms();
-            if (this.business.PenaltyFee && this.business.penalty) {
-                params.balancePenaltyBtn = true;
-                params.penalty = this.business.penalty;
-            }
-            if (this.business.todayFeeMap) {
-                params.todayFeeMap = this.business.todayFeeMap;
-            }
-            // 今日房费
-            if (this.type === 'collect') {
-                params.isSettle = false;
-                // 收银的时候传false
-                this.remainderDate = undefined;
-                this.cashierShow();
-                return;
-            }
-            // 如果是结算就只弹出收银台
-            http.get('/order/getBalancePayment', params).then(res => {
-                if (res.data.balancePay) {
-                    // this.getOrderPayment().then(() => {
-                    //     this.ramainShow = true;
-                    //     this.remainderDate = res.data.balancePay;
-                    // });
-                    this.ramainShow = true;
-                    this.remainderDate = res.data.balancePay;
-                } else {
-                    this.remainderDate = undefined;
-                    this.cashierShow();
-                }
-            });
-        },
         cashierShow() {
             const params = {
                 type: 1
@@ -767,9 +711,6 @@ export default {
             this.companyCityLedger = false;
             this.companyBalance = undefined;
             this.deleteIds = [];
-            this.ReaminderParams = {}; // 余额参数,
-            this.ramainShow = false;
-            this.remainderDate = undefined;
             this.cardList = [];
             this.paycard = [];
             this.orderPayment = [];
@@ -1232,17 +1173,6 @@ export default {
                     payWithAlipay += Number(pay.fee);
                 }
             });
-            // if (payWithCompany > 0 && (this.companyBalance ? this.companyBalance : 0) < payWithCompany) {
-            //     const payStr = `企业余额不足（余额¥${this.companyBalance})，请选择其他支付方式`;
-            //     modal.warn(payStr);
-            //     return false;
-            // }
-            // if (this.ReaminderParams) {
-            //     params.balancePay = JSON.stringify({
-            //         cards: this.ReaminderParams.params,
-            //         type: this.ReaminderParams.type
-            //     });
-            // }
             if (payWithAlipay <= 0) {
                 http.post('/order/addOrderPayment', params)
                     .then(result => {
