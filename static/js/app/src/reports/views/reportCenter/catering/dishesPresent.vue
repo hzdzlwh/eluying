@@ -258,7 +258,7 @@
                     showPackageDish: 0
                 };
                 if (this.name !== '全部菜品分类') {
-                    obj.name = this.name;
+                    obj.dishType = this.name;
                 };
                 if (this.operatorId !== 'ALL') {
                     obj.operatorId = this.operatorId;
@@ -289,7 +289,7 @@
                     showPackageDish: 0
                 };
                 if (this.name !== '全部菜品分类') {
-                    obj.name = this.name;
+                    obj.dishType = this.name;
                 };
                 if (this.operatorId !== 'ALL') {
                     obj.operatorId = this.operatorId;

@@ -233,7 +233,7 @@
                     showPackageDish: 0
                 };
                 if (this.name !== '全部菜品分类') {
-                    obj.name = this.name;
+                    obj.dishType = this.name;
                 };
                  // 后台要求如果为空就不传
                 for (const ob in obj) {
@@ -263,7 +263,7 @@
                     showPackageDish: 0
                 };
                 if (this.name !== '全部菜品分类') {
-                    obj.name = this.name;
+                    obj.dishType = this.name;
                 };
                  // 后台要求如果为空就不传
                 for (const ob in obj) {
