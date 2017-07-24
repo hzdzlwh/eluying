@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-19 09:56:55
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-07-24 11:03:47
+* @Last Modified time: 2017-07-24 14:53:38
 * @email: 783384903@qq.com
 */
 <!-- 有问题找产品，这个模块的功能一般人解释不清楚 -->
@@ -185,8 +185,7 @@
             </div>
         </div>
         <div class="roomModals-footer">
-            <div class="dd-btn dd-btn-primary" @click="back" v-if='remainderDate' style="margin-right:20px;">上一步</div>
-            <div @click="returnPreStep" v-else class="btn-back"><img src="/static/image/modal/back.png" alt=""></div>
+            <div @click="returnPreStep" class="btn-back"><img src="/static/image/modal/back.png" alt=""></div>
             <!--                             <span class="footer-label">
                                 {{orderState ? '需补金额:' : '需退金额:'}}
                                 <span class="order-price-num" :class="orderState ? 'green' : 'red'">
@@ -362,7 +361,6 @@ export default {
     },
     data() {
         return {
-            // showDeposit: false,
             cashier: [],
             getOrReturn: [{
                 val: 0,
@@ -375,9 +373,6 @@ export default {
             deleteIds: [],
             paylogs: [],
             payChannels: [],
-            // depositPayChannels: [],
-            // depositPayChannel: undefined,
-            // deposit: undefined,
             orderPayment: {},
             uniqueId: 0,
             isCompany: false,
@@ -386,9 +381,6 @@ export default {
             paiedMoney: 0,
             onePassAmount: 0,
             companyAmount: 0,
-            ReaminderParams: {}, // 余额付款传来的参数,
-            ramainShow: false,
-            remainderDate: undefined,
             companyName: '',
             paycard: [],
             cardList: [],
@@ -508,7 +500,7 @@ export default {
             return Math.abs(Number(payMoney).toFixed(2));
         },
         needPayed() {
-            return Number(this.orderPayment.price - (this.cashTotal || 0) - (this.companyTotal || 0) - (this.memberTotal || 0) - (this.gameTotal || 0) - (this.cardsTotal || 0)).toFixed(2);
+            return (Number(this.orderPayment.price * 100 - (this.cashTotal || 0) * 100 - (this.companyTotal || 0) * 100 - (this.memberTotal || 0) * 100 - (this.gameTotal || 0) * 100 - (this.cardsTotal || 0) * 100) / 100).toFixed(2);
         }
     },
     created() {
@@ -593,7 +585,7 @@ export default {
                 this.orderPayment.game.forEach(el => {
                     if (el.type === 0) {
                         // const abelFee = Math.min(needPay, el.lastFee);
-                        const abelFee = Math.max(0, needPay, el.max);
+                        const abelFee = Math.min(el.max, Math.max(0, needPay));
                         const payed = Math.min(abelFee / el.rate, el.fee);
                         el.ableNum = parseInt(abelFee / el.rate);
                         el.fee = parseInt(payed);
@@ -651,26 +643,6 @@ export default {
             this.hideModal();
             bus.$emit('back');
         },
-        // getReaminderParams(params) {
-        //     if (params) {
-        //         this.ReaminderParams = {};
-        //         this.ReaminderParams.params = params.paycard;
-        //         this.ReaminderParams.type = params.type;
-        //         this.ReaminderParams.total = params.payTotal;
-        //     } else {
-        //         this.ReaminderParams = undefined;
-        //     }
-        //     this.ramainShow = false;
-        //     this.cashierShow();
-        // },
-        hideReaminder() {
-            this.ramainShow = false;
-            this.hideModal();
-        },
-        back() {
-            $('#cashier').modal('hide');
-            this.ramainShow = true;
-        },
         getpParms(flag) {
             let params;
             if (this.type === 'register') {
@@ -710,38 +682,6 @@ export default {
             }
             return params;
         },
-        getRemainder() {
-            const params = this.getpParms();
-            if (this.business.PenaltyFee && this.business.penalty) {
-                params.balancePenaltyBtn = true;
-                params.penalty = this.business.penalty;
-            }
-            if (this.business.todayFeeMap) {
-                params.todayFeeMap = this.business.todayFeeMap;
-            }
-            // 今日房费
-            if (this.type === 'collect') {
-                params.isSettle = false;
-                // 收银的时候传false
-                this.remainderDate = undefined;
-                this.cashierShow();
-                return;
-            }
-            // 如果是结算就只弹出收银台
-            http.get('/order/getBalancePayment', params).then(res => {
-                if (res.data.balancePay) {
-                    // this.getOrderPayment().then(() => {
-                    //     this.ramainShow = true;
-                    //     this.remainderDate = res.data.balancePay;
-                    // });
-                    this.ramainShow = true;
-                    this.remainderDate = res.data.balancePay;
-                } else {
-                    this.remainderDate = undefined;
-                    this.cashierShow();
-                }
-            });
-        },
         cashierShow() {
             const params = {
                 type: 1
@@ -767,26 +707,15 @@ export default {
         },
         resetData() {
             this.payments = [];
-            // this.showDeposit = false;
-            // this.deposit = undefined;
-            // this.depositPayChannel = undefined;
             this.isCompany = false;
             this.companyCityLedger = false;
             this.companyBalance = undefined;
             this.deleteIds = [];
-            this.ReaminderParams = {}; // 余额参数,
-            this.ramainShow = false;
-            this.remainderDate = undefined;
             this.cardList = [];
             this.paycard = [];
             this.orderPayment = [];
-            // this.business = {};
         },
         getPayChannels(item, index) {
-            // this.type === 'register' && this.business.cashierType === 'finish') 补录
-            // if (!this.orderState) {
-            //     return this.depositPayChannels;
-            // }
             let payBack = JSON.parse(JSON.stringify(this.payChannels));
             if (item.type === 2) {
                 if (item.payChannelId === -14) {
@@ -840,11 +769,6 @@ export default {
             // 今日房费
             return http.get('/order/getOrderPayment', params)
                 .then(res => {
-                    // this.orderPayment = res.data;
-                    // const paiedFee = this.orderPayment.paid.balance + this.orderPayment.paid.game + this.orderPayment.paid.normal;
-                    // this.onePassAmount = res.data.onePassAmount || 0;
-                    // this.companyAmount = res.data.companyAmount || 0;
-                    // this.paiedMoney = paiedFee.toFixed(2);
                     this.gameShowtip = undefined;
                     this.cardShowtip = undefined;
                     this.campanyShowtip = undefined;
@@ -899,76 +823,6 @@ export default {
                     });
                     this.cardList = cardList;
                 });
-            // return http.get('/room/getTips')
-            //     .then(res => {
-            //         res.data = {
-            //             card: [{
-            //                 ableFee: 8900,
-            //                 cards: [{
-            //                     accountId: 123,
-            //                     accountName: '123123',
-            //                     lastFee: 6000,
-            //                     paidFee: 100
-            //                 }],
-            //                 paidFee: 100,
-            //                 type: 2
-            //             }, {
-            //                 ableFee: 8900,
-            //                 cards: [{
-            //                     accountId: 12323123,
-            //                     accountName: 'ass2123123',
-            //                     lastFee: 5000,
-            //                     paidFee: 0
-            //                 }],
-            //                 paidFee: 0,
-            //                 type: 0
-            //             }],
-            //             company: [{
-            //                 ableFee: 8900,
-            //                 accountId: 22222,
-            //                 accountName: '23123',
-            //                 lastFee: 2000,
-            //                 paidFee: 400,
-            //                 type: 2
-            //             }, {
-            //                 ableFee: 8900,
-            //                 accountId: 33333,
-            //                 accountName: '23123',
-            //                 lastFee: 3000,
-            //                 paidFee: 0,
-            //                 type: 0
-            //             }],
-            //             dateTime: new Date().getMilliseconds(),
-            //             game: [{
-            //                 ableFee: 9000,
-            //                 ableNum: 900,
-            //                 accountId: 22222,
-            //                 accountName: '1231234',
-            //                 lastFee: 9000,
-            //                 paidFee: 0,
-            //                 paidNum: 0,
-            //                 rate: 10,
-            //                 type: 0
-            //             }],
-            //             member: [{
-            //                 ableFee: 8900,
-            //                 accountId: 123123,
-            //                 accountName: 'sadasd',
-            //                 lastFee: 2000,
-            //                 paidFee: 0,
-            //                 type: 0
-            //             }],
-            //             need: {
-            //                 penalty: 2000,
-            //                 total: 10000
-            //             },
-            //             paid: {
-            //                 balance: 1000,
-            //                 game: 1000,
-            //                 normal: 1000
-            //             },
-            //             price: 9900
-            //         };
         },
         /**
          * 获取支付列表
@@ -987,9 +841,6 @@ export default {
                     });
                     this.payChannels = channels;
                     this.companyName = res.data.companyName;
-                    // this.depositPayChannels = channels.filter(channel => {
-                    //     return channel.channelId > 0;
-                    // });
                     this.isCompany = !!res.data.contractCompany;
                     this.companyCityLedger = res.data.contractCompany ? res.data.contractCompany.companyCityLedger : false;
                     this.companyBalance = res.data.contractCompany ? res.data.contractCompany.companyBalance : undefined;
@@ -1001,7 +852,6 @@ export default {
          * @return {[type]}       [description]
          */
         getSelect(index) {
-            // const serialNum = this.paycard[index].serialNum;
             const paycard = this.paycard;
             const selectCards = this.cardList.filter(function(item) {
                 return !paycard.filter(function(it) {
@@ -1038,14 +888,7 @@ export default {
         },
         addPayMent() {
             // const collectPayMany = ((this.type === 'cancel' ? 0 : this.orderPayment.payableFee) - Number(this.paiedMoney) + this.penalty).toFixed(2);
-            
             const payMoney = Math.abs(this.needPayed);
-            let paidMoney = 0;
-            if (this.payments.length > 0) {
-                this.payments.forEach(pay => {
-                    paidMoney += Number(pay.fee);
-                });
-            }
             this.uniqueId += 1;
             // const fee = this.type === 'collect' ? (collectPayMany - Number(paidMoney)).toFixed(2) > 0 ? (collectPayMany - Number(paidMoney)).toFixed(2) : 0 : Math.abs(Number((payMoney - Number(paidMoney)).toFixed(2)));
             this.payments.push({
@@ -1324,27 +1167,12 @@ export default {
             // }
             // 判断是否进行扫码收款
             let payWithAlipay = 0;
-            let payWithCompany = 0;
             this.payments.forEach(pay => {
                 const id = pay.payChannelId;
                 if (id === -6 || id === -7 || id === -11 || id === -12) {
                     payWithAlipay += Number(pay.fee);
                 }
-                if (id === -15) {
-                    payWithCompany += Number(pay.fee);
-                }
             });
-            // if (payWithCompany > 0 && (this.companyBalance ? this.companyBalance : 0) < payWithCompany) {
-            //     const payStr = `企业余额不足（余额¥${this.companyBalance})，请选择其他支付方式`;
-            //     modal.warn(payStr);
-            //     return false;
-            // }
-            // if (this.ReaminderParams) {
-            //     params.balancePay = JSON.stringify({
-            //         cards: this.ReaminderParams.params,
-            //         type: this.ReaminderParams.type
-            //     });
-            // }
             if (payWithAlipay <= 0) {
                 http.post('/order/addOrderPayment', params)
                     .then(result => {

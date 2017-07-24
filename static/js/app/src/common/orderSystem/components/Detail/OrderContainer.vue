@@ -1345,7 +1345,6 @@
                     this.order.timeRoomTransform = true;
                 }
                 $('#orderDetail').one('hidden.bs.modal', () => { bus.$emit('editOrder', 'editOrder', this.order); });
-                
             },
             cancelOrder() {
                 this.hideModal();
@@ -1386,7 +1385,7 @@
                         }
                         bus.$emit('changeBack', this.show);
                         this.hideModal();
-                });
+                    });
             },
             checkoutTimeOut(room) {
                 const outRoom = room.filter(function(room) {

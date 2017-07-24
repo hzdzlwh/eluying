@@ -190,7 +190,7 @@
                 this.orderEditorVisible = true;
                 this.orderDetail = order;
                 if (noBack === 'hidePreStep') {
-                    this.noBack = false
+                    this.noBack = false;
                 }
             },
             showCashier({ type, business }) {

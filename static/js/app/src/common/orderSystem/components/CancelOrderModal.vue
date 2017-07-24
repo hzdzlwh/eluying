@@ -18,7 +18,7 @@
                             <p class="content-item-title"><span>违约信息</span></p>
                             <div v-if="order && order.type !== -1" >
                                 <span>违约金：</span>
-                                <input v-model="penalty" type="number" class="dd-input" placeholder="请输入违约金">
+                                <inputVaild v-model="penalty"  :placeholder="'请输入违约金'"/>
                             </div>
                             <div v-if="order && order.type === -1">
                                 <div class="cashier-getMoney-channels" v-if="subOrderPenaltys.length > 0">
@@ -27,7 +27,7 @@
                                             <dd-option :key="subOrder.nodeId" v-for="subOrder in subOrders" :value="subOrder.nodeId" :label="`${subOrder.nodeName}(¥${subOrder.totalPrice})`">
                                             </dd-option>
                                         </dd-select>
-                                        <input type="number" class="dd-input" v-model="subOrderPenalty.penalty" style="margin-left: 12px" placeholder="请输入违约金">
+                                        <inputVaild  v-model="subOrderPenalty.penalty" style="margin-left: 12px" :placeholder="'请输入违约金'"/>
                                         <span class="cashier-delBtn-icon" @click="deletePenalty(index)"></span>
                                     </div>
                                 </div>
@@ -64,6 +64,7 @@
     import { getOrderId } from '../utils/order';
     import { mapState } from 'vuex';
     import { DdSelect, DdOption } from 'dd-vue-component';
+    import inputVaild from '../../components/inputVaild.vue';
     export default{
         props: {
             show: Boolean
@@ -159,7 +160,7 @@
                     business.subOrderPenaltys = JSON.stringify(this.subOrderPenaltys);
                 }
                 this.backPenalty = this.penalty;
-                this.backSubOrderPenaltys = this.backSubOrderPenaltys.slice(0);
+                this.backSubOrderPenaltys = this.subOrderPenaltys.slice(0);
                 if (Number(this.need) === 0 && !this.PenaltyFee) {
                     http.get('/order/cancel', business)
                         .then(res => {
@@ -183,7 +184,8 @@
         },
         components: {
             DdSelect,
-            DdOption
+            DdOption,
+            inputVaild
         }
     };
 </script>

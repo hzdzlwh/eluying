@@ -38,7 +38,7 @@ import {
 } from '../../roomCheckType';
 import {
     DdSelect,
-    DdOption,
+    DdOption
 } from 'dd-vue-component';
 import {
     DatePicker
@@ -56,7 +56,7 @@ export default {
     },
     data() {
         return {
-            checkType: roomCheckType,
+            checkType: roomCheckType
             // startDate: String,
             // endDate: String,
             // roomCheckType: Number
@@ -64,7 +64,7 @@ export default {
     },
     watch: {
         value(newval) {
-            this.$emit('change', newval)
+            this.$emit('change', newval);
         }
     },
     // computed: { // // interStartDate: { // // get: function () { // // return this.startDate // // }, // // set: function(newval) { // // bus.$emit('OrderExtInfochange', { // // name: 'StartDate', // // val: newval // // }) // // } // // } // },
@@ -77,7 +77,7 @@ export default {
     methods: {
         handleRoomChange() {
             const duration = this.dateDiff(this.value.startDate, this.value.endDate);
-            if (duration < 1 && value.roomCheckType !== 1) {
+            if (duration < 1 && this.value.roomCheckType !== 1) {
                 this.value.endDate = util.diffDate(new Date(this.value.endDate), 1);
                 return false;
             }
@@ -125,8 +125,7 @@ export default {
             return (date) => {
                 return (date.valueOf() < (new Date(arr[0], arr[1] - 1, Number(arr[2]) + 1)).valueOf() || date.valueOf() > (new Date(arr[0], arr[1] - 1, arr[2])).valueOf() + 99 * 24 * 60 * 60 * 1000);
             };
-
-        },
+        }
     }
-}
+};
 </script>
