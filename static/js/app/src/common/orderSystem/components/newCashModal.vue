@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-19 09:56:55
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-07-24 10:14:59
+* @Last Modified time: 2017-07-24 11:03:47
 * @email: 783384903@qq.com
 */
 <!-- 有问题找产品，这个模块的功能一般人解释不清楚 -->
@@ -593,7 +593,7 @@ export default {
                 this.orderPayment.game.forEach(el => {
                     if (el.type === 0) {
                         // const abelFee = Math.min(needPay, el.lastFee);
-                        const abelFee = Math.max(0, needPay);
+                        const abelFee = Math.max(0, needPay, el.max);
                         const payed = Math.min(abelFee / el.rate, el.fee);
                         el.ableNum = parseInt(abelFee / el.rate);
                         el.fee = parseInt(payed);
@@ -607,7 +607,7 @@ export default {
                 this.orderPayment.member.forEach(el => {
                     if (el.type === 0) {
                         // const abelFee = Math.min(needPay, el.lastFee);
-                        const abelFee = Math.max(0, needPay);;
+                        const abelFee = Math.max(0, needPay);
                         const payed = Math.min(abelFee, el.fee);
                         el.ableFee = abelFee;
                         el.fee = payed;
@@ -622,7 +622,7 @@ export default {
                         const selectCard = this.cardList.find(cards => cards.accountId === card.accountId);
                         if (card.type === 0) {
                             // const abelFee = Math.min(needPay, selectCard.lastFee);
-                            const abelFee = Math.max(0, needPay);;
+                            const abelFee = Math.max(0, needPay);
                             const payed = Math.min(abelFee, card.fee);
                             card.ableFee = abelFee;
                             card.fee = payed;
@@ -881,6 +881,9 @@ export default {
                     this.paiedMoney = paiedFee.toFixed(2);
                     const cardHash = {};
                     const cardList = [];
+                    res.data.game && res.data.game.forEach(element => {
+                        element.max = element.ableNum * element.rate;
+                    });
                     res.data.card && res.data.card.forEach(element => {
                         element.cards.forEach(el => {
                             if (!cardHash[el.accountId]) {
