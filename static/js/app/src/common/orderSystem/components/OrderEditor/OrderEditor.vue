@@ -627,7 +627,7 @@ export default {
             types.LOAD_OTHER_GOODS_LIST
         ]),
         OrderExtInfochange(date) {
-            this.$set(this, date.name, date.val)
+            this.$set(this, date.name, date.val);
                 // this[date.name] = date.val;
         },
         returnPreStep() {
@@ -692,7 +692,7 @@ export default {
             };
             http.get('/vipUser/getVipDiscount', params)
                 .then(res => {
-                    this.vipDiscountDetail = {...res.data,
+                    this.vipDiscountDetail = { ...res.data,
                         phone: phone,
                         tag: res.data.vipDetail && res.data.vipDetail.level
                     };
@@ -773,9 +773,9 @@ export default {
         },
         getData() {
             http.get('/user/getChannels', {
-                    type: 2,
-                    isAll: true
-                })
+                type: 2,
+                isAll: true
+            })
                 .then((res) => {
                     const originsList = res.data.list;
                     const otherOrigins = [];
@@ -955,10 +955,10 @@ export default {
             if (vipDetail && vipDetail.discountList && vipDetail.discountList.length > 0) {
                 vipDetail.discountList.forEach(list => {
                     if ((nodeType === 0 || nodeType === 3) && list.nodeId === 0 && list.nodeType === nodeType) {
-                        item = {...list
+                        item = { ...list
                         };
                     } else if ((nodeType !== 0 && nodeType !== 3) && (list.nodeId === nodeId && list.nodeType === nodeType)) {
-                        item = {...list
+                        item = { ...list
                         };
                     }
                 });
@@ -1105,7 +1105,7 @@ export default {
                 .then(res => {
                     this.hideModal();
                     bus.$emit('refreshView');
-                    bus.$emit('onShowDetail', {...this.order,
+                    bus.$emit('onShowDetail', { ...this.order,
                         orderId: getOrderId(this.order)
                     });
                 });
@@ -1119,7 +1119,6 @@ export default {
             } else {
                 callback();
             }
-            
         },
         modifyFoodOrder() {
             const params = {
@@ -1130,7 +1129,7 @@ export default {
                 .then(res => {
                     this.hideModal();
                     bus.$emit('refreshView');
-                    bus.$emit('onShowDetail', {...this.order,
+                    bus.$emit('onShowDetail', { ...this.order,
                         orderId: getOrderId(this.order)
                     });
                 });
@@ -1152,7 +1151,7 @@ export default {
                 .then(res => {
                     this.hideModal();
                     bus.$emit('refreshView');
-                    bus.$emit('onShowDetail', {...this.order,
+                    bus.$emit('onShowDetail', { ...this.order,
                         orderId: getOrderId(this.order)
                     });
                 });
@@ -1168,7 +1167,7 @@ export default {
                 .then(res => {
                     this.hideModal();
                     bus.$emit('refreshView');
-                    bus.$emit('onShowDetail', {...this.order,
+                    bus.$emit('onShowDetail', { ...this.order,
                         orderId: getOrderId(this.order)
                     });
                 });
@@ -1219,13 +1218,13 @@ export default {
                 whenCheckInDeleteRooms: JSON.stringify(this.whenCheckInDeleteRooms),
                 ...this.getDiscountRelatedIdAndOrigin()
             };
-            
+
             const callback = function() {
                 http.post('/order/modify', params)
                 .then(res => {
                     this.hideModal();
                     bus.$emit('refreshView');
-                    bus.$emit('onShowDetail', {...this.order,
+                    bus.$emit('onShowDetail', { ...this.order,
                         orderId: getOrderId(this.order)
                     });
                 });
@@ -1338,7 +1337,7 @@ export default {
                     business.businessJson = JSON.parse(JSON.stringify(params));
                     business.businessJson.functionType = 1;
                     business.businessJson.orderId = res.data.orderId;
-                    business.orderDetail = {...res.data
+                    business.orderDetail = { ...res.data
                     };
                     business.cashierType = this.checkState;
                     if (this.checkState === 'ing') {
@@ -1367,7 +1366,6 @@ export default {
             } else {
                 callback();
             }
-            
         },
         submitInfo() {
             // 获取 shopGoodsItems enterItems rooms
@@ -1379,40 +1377,40 @@ export default {
 
             const rooms = this.getOverTimeRooms();
             // 编辑订单根据不同的type调用不同的接口
-            
-                if (this.checkState === 'editOrder' || this.checkState === 'checkIn') {
+
+            if (this.checkState === 'editOrder' || this.checkState === 'checkIn') {
                     // 住宿订单
-                    if (this.order.type === ORDER_TYPE.ACCOMMODATION && this.order.isCombinationOrder) {
-                        this.modifyRoomOrder();
-                    }
+                if (this.order.type === ORDER_TYPE.ACCOMMODATION && this.order.isCombinationOrder) {
+                    this.modifyRoomOrder();
+                }
 
                     // 餐饮订单
-                    if (this.order.type === ORDER_TYPE.CATERING) {
-                        this.modifyFoodOrder();
-                    }
+                if (this.order.type === ORDER_TYPE.CATERING) {
+                    this.modifyFoodOrder();
+                }
 
                     // 娱乐订单
-                    if (this.order.type === ORDER_TYPE.ENTERTAINMENT) {
-                        this.modifyEntertainmentOrder();
-                    }
+                if (this.order.type === ORDER_TYPE.ENTERTAINMENT) {
+                    this.modifyEntertainmentOrder();
+                }
 
                     // 商超订单
-                    if (this.order.type === ORDER_TYPE.RETAIL) {
-                        this.modifyShopOrder();
-                    }
+                if (this.order.type === ORDER_TYPE.RETAIL) {
+                    this.modifyShopOrder();
+                }
 
                     // 住宿独立订单使用组合订单编辑接口
-                    if (this.order.type === ORDER_TYPE.COMBINATION || (this.order.type === ORDER_TYPE.ACCOMMODATION && !this.order.isCombinationOrder)) {
-                        this.modifyCombinationOrder();
-                    }
-                } else {
-                    // 住宿业务
-                    this.handleRoomBusiness();
+                if (this.order.type === ORDER_TYPE.COMBINATION || (this.order.type === ORDER_TYPE.ACCOMMODATION && !this.order.isCombinationOrder)) {
+                    this.modifyCombinationOrder();
                 }
+            } else {
+                    // 住宿业务
+                this.handleRoomBusiness();
+            }
 
             // 判断钟点房时是否超时
             // const outRome = this.checkoutTimeOut(rooms);
-            /*if (outRome.length) {
+            /* if (outRome.length) {
                 const name = outRome[0].roomeName;
                 const roomeType = outRome[0].checktypeName;
                 modal.confirm({ title: '提示', message: roomeType + '[' + name + ']已超时，确定保存订单吗？' }, callback);
