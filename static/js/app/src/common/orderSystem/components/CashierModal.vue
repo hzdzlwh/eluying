@@ -229,7 +229,7 @@ export default {
         },
         needPayed() {
             return (this.notPay - this.payments.reduce((o, n, i) => {
-                return o + Number(n.fee)
+                return o + Number(n.fee);
             }, 0)).toFixed(2);
         }
     },
@@ -310,7 +310,7 @@ export default {
             return params;
         },
         getRemainder() {
-            let params = this.getpParms();
+            const params = this.getpParms();
             if (this.business.PenaltyFee && this.business.penalty) {
                 params.balancePenaltyBtn = true;
                 params.penalty = this.business.penalty;
@@ -531,7 +531,7 @@ export default {
                 });
             }
             this.uniqueId += 1;
-            const fee = this.type === 'collect' ? (collectPayMany - Number(paidMoney)).toFixed(2) > 0 ? (collectPayMany - Number(paidMoney)).toFixed(2) : 0 : Math.abs(Number((payMoney - Number(paidMoney)).toFixed(2)))
+            const fee = this.type === 'collect' ? (collectPayMany - Number(paidMoney)).toFixed(2) > 0 ? (collectPayMany - Number(paidMoney)).toFixed(2) : 0 : Math.abs(Number((payMoney - Number(paidMoney)).toFixed(2)));
             this.payments.push({
                 fee: fee,
                 payChannelId: undefined,
@@ -584,7 +584,6 @@ export default {
                 this.payments.forEach(payment => {
                     if (payment.fee < 0) {
                         numvaild = true;
-                        
                     }
                     if (!payment.payChannelId) {
                         invalid = true;

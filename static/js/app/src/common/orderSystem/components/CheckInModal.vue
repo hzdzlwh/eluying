@@ -65,138 +65,138 @@ import bus from '../../eventBus';
 import http from 'http';
 export default {
     data() {
-            return {};
-        },
-        created() {
-            bus.$on('changeOutOrInSelect', this.changeOutOrInSelect);
-        },
-        beforeDestroy() {
-            bus.$off('changeOutOrInSelect', this.changeOutOrInSelect);
-        },
-        computed: {
-            ...mapState({
-                orderDetail: state => state.orderSystem.orderDetail,
-                roomBusinessInfo: state => state.orderSystem.roomBusinessInfo
-            }),
-            roomsList() {
-                if (this.roomBusinessInfo.roomOrderInfoList) {
-                    const rooms = this.roomBusinessInfo.roomOrderInfoList.filter((room) => {
-                        return util.isSameDay(new Date(room.checkInDate), new Date()) || new Date(room.checkInDate) <= new Date();
-                    });
-                    rooms.forEach(item => {
-                            this.$set(item, 'selected', true);
+        return {};
+    },
+    created() {
+        bus.$on('changeOutOrInSelect', this.changeOutOrInSelect);
+    },
+    beforeDestroy() {
+        bus.$off('changeOutOrInSelect', this.changeOutOrInSelect);
+    },
+    computed: {
+        ...mapState({
+            orderDetail: state => state.orderSystem.orderDetail,
+            roomBusinessInfo: state => state.orderSystem.roomBusinessInfo
+        }),
+        roomsList() {
+            if (this.roomBusinessInfo.roomOrderInfoList) {
+                const rooms = this.roomBusinessInfo.roomOrderInfoList.filter((room) => {
+                    return util.isSameDay(new Date(room.checkInDate), new Date()) || new Date(room.checkInDate) <= new Date();
+                });
+                rooms.forEach(item => {
+                    this.$set(item, 'selected', true);
                         // 独立住宿订单和子订单只选择一个房间
-                        const roomInfo = this.orderDetail.roomInfo;
-                        if (roomInfo && roomInfo.roomId !== item.roomId) {
-                            this.$set(item, 'selected', false);
-                        }
-                    });
-                    return rooms;
-                }
+                    const roomInfo = this.orderDetail.roomInfo;
+                    if (roomInfo && roomInfo.roomId !== item.roomId) {
+                        this.$set(item, 'selected', false);
+                    }
+                });
+                return rooms;
             }
-        },
-        methods: {
-            changeOutOrInSelect(id) {
-                if (this.roomBusinessInfo.roomOrderInfoList) {
-                    this.roomBusinessInfo.roomOrderInfoList.forEach((room) => {
-                        if (room.roomId !== id) {
-                            room.selected = false;
-                        }
-                    });
-                }
-            },
-            returnPreStep() {
-                this.hideModal();
-                bus.$emit('back');
-            },
-            hideModal() {
-                $('#checkIn').modal('hide');
-            },
-            toggleRoomSelectedState(room) {
-                room.selected = !room.selected;
-            },
-            addPerson(id, obj) {
-                this.roomsList.forEach((item, index) => {
-                    if (index === id) {
-                        if (item.idCardList && item.idCardList.length >= 20) {
-                            modal.warn('一间房最多添加20个入住人');
-                            return false;
-                        }
-                        if (item.idCardList) {
-                            item.idCardList.push(obj);
-                        } else {
-                            item.idCardList = [];
-                            item.idCardList.push(obj);
-                        }
-                    }
-                });
-            },
-            deletePerson(id, num) {
-                this.roomsList.forEach((item, index) => {
-                    if (index === id) {
-                        item.idCardList.splice(num, 1);
-                    }
-                });
-            },
-            finishCheckIn() {
-                const selectedRoom = this.roomsList.filter(room => {
-                    return room.selected;
-                });
-                if (selectedRoom.length <= 0) {
-                    modal.warn('请选择入住的房间！');
-                    return false;
-                }
-                let roomPersonValid = true;
-                selectedRoom.forEach(item => {
-                    if (item.idCardList && item.idCardList.length > 0) {
-                        item.idCardList.forEach(person => {
-                            if (person.idCardNum === '' || person.name === '') {
-                                roomPersonValid = false;
-                            }
-                        });
-                    }
-                });
-                if (!roomPersonValid) {
-                    modal.warn('请完善入住人信息！');
-                    return false;
-                }
-                const subOrderIds = [];
-                if (this.roomBusinessInfo.roomOrderInfoList) {
-                    this.roomsList.forEach(item => {
-                        if (item.selected) {
-                            subOrderIds.push(item.roomOrderId);
-                        }
-                    });
-                }
-                const rooms = this.roomsList.map(room => {
-                    if (room.selected) {
-                        return {
-                            startDate: room.checkInDate,
-                            endDate: room.checkOutDate,
-                            idCardList: room.idCardList,
-                            roomId: room.roomId,
-                            roomOrderId: room.roomOrderId
-                        };
-                    }
-                });
-                const business = {
-                    functionType: 1,
-                    type: 0,
-                    orderId: this.roomBusinessInfo.orderId,
-                    rooms: JSON.stringify(rooms.filter((room) => {
-                        return room;
-                    }))
-                };
-                http.get('/order/checkInOrCheckout', business).then(res => {
-                    $('#checkIn').modal('hide');
-                    bus.$emit('refreshView');
-                    bus.$emit('onShowDetail', { ...this.orderDetail, orderId: getOrderId(this.orderDetail) });
-                });
-                // bus.$emit('showCashier', { type: 'checkIn', business });
-            }
-        },
-        components: {
-            CheckInPerson
         }
+    },
+    methods: {
+        changeOutOrInSelect(id) {
+            if (this.roomBusinessInfo.roomOrderInfoList) {
+                this.roomBusinessInfo.roomOrderInfoList.forEach((room) => {
+                    if (room.roomId !== id) {
+                        room.selected = false;
+                    }
+                });
+            }
+        },
+        returnPreStep() {
+            this.hideModal();
+            bus.$emit('back');
+        },
+        hideModal() {
+            $('#checkIn').modal('hide');
+        },
+        toggleRoomSelectedState(room) {
+            room.selected = !room.selected;
+        },
+        addPerson(id, obj) {
+            this.roomsList.forEach((item, index) => {
+                if (index === id) {
+                    if (item.idCardList && item.idCardList.length >= 20) {
+                        modal.warn('一间房最多添加20个入住人');
+                        return false;
+                    }
+                    if (item.idCardList) {
+                        item.idCardList.push(obj);
+                    } else {
+                        item.idCardList = [];
+                        item.idCardList.push(obj);
+                    }
+                }
+            });
+        },
+        deletePerson(id, num) {
+            this.roomsList.forEach((item, index) => {
+                if (index === id) {
+                    item.idCardList.splice(num, 1);
+                }
+            });
+        },
+        finishCheckIn() {
+            const selectedRoom = this.roomsList.filter(room => {
+                return room.selected;
+            });
+            if (selectedRoom.length <= 0) {
+                modal.warn('请选择入住的房间！');
+                return false;
+            }
+            let roomPersonValid = true;
+            selectedRoom.forEach(item => {
+                if (item.idCardList && item.idCardList.length > 0) {
+                    item.idCardList.forEach(person => {
+                        if (person.idCardNum === '' || person.name === '') {
+                            roomPersonValid = false;
+                        }
+                    });
+                }
+            });
+            if (!roomPersonValid) {
+                modal.warn('请完善入住人信息！');
+                return false;
+            }
+            const subOrderIds = [];
+            if (this.roomBusinessInfo.roomOrderInfoList) {
+                this.roomsList.forEach(item => {
+                    if (item.selected) {
+                        subOrderIds.push(item.roomOrderId);
+                    }
+                });
+            }
+            const rooms = this.roomsList.map(room => {
+                if (room.selected) {
+                    return {
+                        startDate: room.checkInDate,
+                        endDate: room.checkOutDate,
+                        idCardList: room.idCardList,
+                        roomId: room.roomId,
+                        roomOrderId: room.roomOrderId
+                    };
+                }
+            });
+            const business = {
+                functionType: 1,
+                type: 0,
+                orderId: this.roomBusinessInfo.orderId,
+                rooms: JSON.stringify(rooms.filter((room) => {
+                    return room;
+                }))
+            };
+            http.get('/order/checkInOrCheckout', business).then(res => {
+                $('#checkIn').modal('hide');
+                bus.$emit('refreshView');
+                bus.$emit('onShowDetail', { ...this.orderDetail, orderId: getOrderId(this.orderDetail) });
+            });
+                // bus.$emit('showCashier', { type: 'checkIn', business });
+        }
+    },
+    components: {
+        CheckInPerson
+    }
 };
 </script>
