@@ -1,6 +1,3 @@
-/**
- * Created by lingchenxuan on 2017/2/21.
- */
 require('core-js');
 require('promise.prototype.finally').shim();
 
@@ -12,7 +9,7 @@ import util from '../common/util';
 import modal from '../common/modal';
 import Raven from 'raven-js';
 
-export default function (option) {
+export default function(option) {
     const defaultOption = {
         header: true, // 顶部导航栏
         leftMenu: true, // 网络设置左侧菜单
@@ -24,11 +21,10 @@ export default function (option) {
         clearModal: false
     };
     // 错误检测
-    if (process.env.NODE_ENV === 'production') {
+    // if (process.env.NODE_ENV === 'production') {
         Raven
-            .config('https://f0d4f573999d49fea1d02f5ed205ba26@sentry.io/148237', {
-                ignoreUrls: [/dingdandao\.com:\d+/]
-            })
+            // .config('https://f0d4f573999d49fea1d02f5ed205ba26@sentry.io/148237', {
+            .config('https://3a6a5620495a4df197f70dd2296fa6ad@sentry.io/194886')
             .install();
         Raven.setUserContext({
             uid: localStorage.getItem('uid'),
@@ -40,9 +36,9 @@ export default function (option) {
             userName: localStorage.getItem('userName'),
             campName: localStorage.getItem('campName')
         });
-    }
+    // }
 
-    option = { ...defaultOption, ...option};
+    option = { ...defaultOption, ...option };
     option.id && auth.checkAuth(option.id, option.noAuthUrl);
 
     $(function() {

@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-18 19:49:19
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-07-24 14:57:47
+* @Last Modified time: 2017-07-24 17:33:00
 * @email: 783384903@qq.com
 */
 <template>
@@ -45,7 +45,8 @@ height:23px;
         },
         data() {
             return {
-                num: this.value
+                num: this.value,
+                flag: true
             };
         },
         computed: {
@@ -62,8 +63,15 @@ height:23px;
                         this.num = 0;
                     }
                     const valStr = this.$refs.inputVaild.value;
-                    if (valStr.length === 2) {
+                    if ((valStr.length === 2 && this.flag) || (this.$refs.inputVaild.value.length !== String(Number(this.num)).length)) {
+                        this.flag = false;
                         this.$refs.inputVaild.value = Number(this.num);
+                    } else {
+                        if (valStr.length >= 2) {
+                            this.flag = false;
+                        } else {
+                            this.flag = true;
+                        }
                     }
                     if (this.isInt) {
                         this.num = parseInt(this.num);
