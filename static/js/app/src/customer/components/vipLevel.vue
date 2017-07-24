@@ -409,18 +409,35 @@ export default {
                     }
                 }
             }
+            if (this.vipLevel.vipRechargeItems) {
+                for (let i = 0; i < this.vipLevel.vipRechargeItems.length; i ++) {
+                    if (isNaN(this.vipLevel.vipRechargeItems[i].rechargeFee) || isNaN(this.vipLevel.vipRechargeItems[i].freeFee)) {
+                        modal.warn('储值账户充值规则必填');
+                        return false;
+                    }
+                }
+            }
+            if (this.vipLevel.virCurrencyRechargeItems) {
+                for (let i = 0; i < this.vipLevel.virCurrencyRechargeItems.length; i ++) {
+                    if (isNaN(this.vipLevel.virCurrencyRechargeItems[i].rechargeNum) || isNaN(this.vipLevel.virCurrencyRechargeItems[i].freeNum)) {
+                        modal.warn('虚拟币充值规则必填');
+                        return false;
+                    }
+                }
+            }
             const data = Object.assign({}, this.vipLevel);
             data.discountListReq = JSON.stringify(data.discountInfoList);
             delete data.discountInfoList;
+            const processWeekLimit = [-1, -1, -1, -1, -1, -1, -1];
             data.weekLimit.forEach((i, index) => {
-                if (i === '') {
-                    data.weekLimit[index] = -1;
+                if (i) {
+                    processWeekLimit[index] = data.weekLimit[index];
                 }
             });
             data.vipPayItems = JSON.stringify(data.vipPayItems);
             data.vipRechargeItems = JSON.stringify(data.vipRechargeItems);
             data.virCurrencyRechargeItems = JSON.stringify(data.virCurrencyRechargeItems);
-            data.weekLimit = JSON.stringify(data.weekLimit);
+            data.weekLimit = JSON.stringify(processWeekLimit);
             if (this.type) {
                 data.consumeListReq = JSON.stringify(data.consumeItems);
                 delete data.consumeItems;
@@ -470,9 +487,15 @@ export default {
         },
         inputValide(type, field, index) {
             this.vipLevel[type][index][field] = parseInt(this.vipLevel[type][index][field]);
+            if (this.vipLevel[type][index][field] > 20000000) {
+                this.vipLevel[type][index][field] = 20000000;
+            }
         },
         weekLimitInt(index) {
             this.vipLevel.weekLimit[index] = parseInt(this.vipLevel.weekLimit[index]);
+            if (this.vipLevel.weekLimit[index] > 20000000) {
+                this.vipLevel.weekLimit[index] = 20000000;
+            }
         }
     },
     watch: {
