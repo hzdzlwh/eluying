@@ -18,7 +18,7 @@
                             <p class="content-item-title"><span>违约信息</span></p>
                             <div v-if="order && order.type !== -1" >
                                 <span>违约金：</span>
-                                <inputVaild v-model="penalty"  :placeholder="请输入违约金"/>
+                                <inputVaild v-model="penalty"  :placeholder="'请输入违约金'"/>
                             </div>
                             <div v-if="order && order.type === -1">
                                 <div class="cashier-getMoney-channels" v-if="subOrderPenaltys.length > 0">
@@ -27,7 +27,7 @@
                                             <dd-option :key="subOrder.nodeId" v-for="subOrder in subOrders" :value="subOrder.nodeId" :label="`${subOrder.nodeName}(¥${subOrder.totalPrice})`">
                                             </dd-option>
                                         </dd-select>
-                                        <inputVaild  v-model="subOrderPenalty.penalty" style="margin-left: 12px" placeholder="请输入违约金"/>
+                                        <inputVaild  v-model="subOrderPenalty.penalty" style="margin-left: 12px" :placeholder="'请输入违约金'"/>
                                         <span class="cashier-delBtn-icon" @click="deletePenalty(index)"></span>
                                     </div>
                                 </div>
