@@ -160,7 +160,7 @@
                     business.subOrderPenaltys = JSON.stringify(this.subOrderPenaltys);
                 }
                 this.backPenalty = this.penalty;
-                this.backSubOrderPenaltys = this.backSubOrderPenaltys.slice(0);
+                this.backSubOrderPenaltys = this.subOrderPenaltys.slice(0);
                 if (Number(this.need) === 0 && !this.PenaltyFee) {
                     http.get('/order/cancel', business)
                         .then(res => {
