@@ -12,12 +12,12 @@
                 </div>
                 <div style="margin-right:20px;width: 120px;" class="fr region" >
                     <dd-select v-model="channelId" >
-                        <dd-option :key="item.id" v-for="item in channels" :value="item.channelId" :label="item.name"></dd-option>
+                        <dd-option :key="item.id" v-for="item in channels" :value="item.id" :label="item.name"></dd-option>
                     </dd-select>
                 </div>
                 <div style="margin-right:20px;width: 120px;" class="fr region" >
                     <dd-select v-model="operatorId" >
-                        <dd-option :key="item.employeeId" v-for="item in employeeList" :value="item.employeeId" :label="item.name"></dd-option>
+                        <dd-option :key="item.employeeId" v-for="item in employeeList" :value="item.employeeId" :label="item.realName"></dd-option>
                     </dd-select>
                 </div>
             </div>
@@ -73,72 +73,6 @@
     padding-bottom: 12px;
   }
 </style>
-<!-- <div style="width: 120px;margin-right: 10px">
-    <dd-select v-model="channelId">
-        <dd-option v-for="channel in channels" :key="channel.id" :value="channel.id" :label="channel.name"></dd-option>
-    </dd-select>
-</div>
-
-
-channelId() {
-    this.page = 1;
-    this.queryCashierInfo();
-},
-
-employeeList: [
-    {
-        realName: '全部操作人',
-        employeeId: 'ALL'
-    },
-    /* {
-        realName: '一码通自助充值',
-        employeeId: 'ONE'
-    }, */
-    {
-        realName: '游客线上付款',
-        employeeId: 'VISITOR'
-    },
-    {
-        realName: '全部员工',
-        employeeId: 'EMPLOYEE'
-    }
-],
-operatorId: 'ALL',
-
-
-getEmployeeList() {
-    http.get('/user/getEmployeeList', {})
-        .then(res => {
-            if (res.code === 1) {
-                this.employeeList = [...this.employeeList, ...res.data.list];
-            }
-        });
-}, -->
-
-<!-- <div style="width: 120px;margin-right: 10px">
-    <dd-select v-model="operatorId">
-        <dd-option v-for="employee in employeeList" :key="employee.employeeId" :value="employee.employeeId" :label="employee.realName"></dd-option>
-    </dd-select>
-</div>
-
-operatorId() {
-    this.page = 1;
-    this.queryCashierInfo();
-},
-
-
-channels: [{ id: 'ALL', name: '全部收款方式' }],
-channelId: 'ALL',
-
-
-getChannels() {
-    http.get('/user/getChannels', { type: 1, isAll: true })
-        .then(res => {
-            if (res.code === 1) {
-                this.channels = [...this.channels, ...res.data.list];
-            }
-        });
-}, -->
 <script>
     import { DdTable, DdPagination, DdDropdown, DdDropdownItem, DdSelect, DdOption, DdGroupOption } from 'dd-vue-component';
     import http from 'http';
@@ -174,7 +108,7 @@ getChannels() {
                 }, {
                     id: 3,
                     name: '住宿',
-                    orderType: 3
+                    orderType: 35
                 }],
                 orderType: -2,
                 employeeList: [
@@ -182,21 +116,22 @@ getChannels() {
                         realName: '全部操作人',
                         employeeId: 'ALL'
                     },
-                    /* {
-                        realName: '一码通自助充值',
-                        employeeId: 'ONE'
-                    }, */
                     {
                         realName: '游客线上付款',
-                        employeeId: 'VISITOR'
+                        employeeId: -2
                     },
                     {
                         realName: '全部员工',
-                        employeeId: 'EMPLOYEE'
+                        employeeId: -1
                     }
                 ],
                 operatorId: 'ALL',
-                channels: [{ id: 'ALL', name: '全部收款方式' }],
+                channels: [
+                    {
+                        id: 'ALL',
+                        name: '全部收款方式'
+                    }
+                ],
                 channelId: 'ALL',
                 vips: [],
                 pages: 0,
@@ -297,31 +232,35 @@ getChannels() {
             },
             channelId() {
                 this.page = 1;
-                this.queryCashierInfo();
+                this.getData();
             },
             operatorId() {
                 this.page = 1;
-                this.queryCashierInfo();
+                this.getData();
             }
         },
         methods: {
             exportUrl(type) {
                 const obj = {
                     pageNo: this.pageNo,
-                    channelId: this.channelId,
-                    operatorId: this.operatorId,
                     startDate: this.date.startDate,
                     endDate: this.date.endDate
                 };
                 if (this.orderType !== -2) {
                     obj.orderType = this.orderType;
                 }
-                 // 后台要求如果为空就不传
+                if (this.channelId !== 'ALL') {
+                    obj.channelId = this.channelId;
+                };
+                if (this.operatorId !== 'ALL') {
+                    obj.operatorId = this.operatorId;
+                };
+                // 后台要求如果为空就不传
                 for (const ob in obj) {
                     if (obj[ob] === undefined || obj[ob] === '') {
                         delete obj[ob];
                     }
-                };
+                }
                 const paramsObj = {
                     exportType: type,
                     reportType: 401,
@@ -352,15 +291,19 @@ getChannels() {
             getData() {
                 const obj = {
                     pageNo: this.pageNo,
-                    channelId: this.channelId,
-                    operatorId: this.operatorId,
                     startDate: this.date.startDate,
                     endDate: this.date.endDate
                 };
                 if (this.orderType !== -2) {
                     obj.orderType = this.orderType;
                 }
-                 // 后台要求如果为空就不传
+                if (this.channelId !== 'ALL') {
+                    obj.channelId = this.channelId;
+                };
+                if (this.operatorId !== 'ALL') {
+                    obj.operatorId = this.operatorId;
+                };
+                // 后台要求如果为空就不传
                 for (const ob in obj) {
                     if (obj[ob] === undefined || obj[ob] === '') {
                         delete obj[ob];
