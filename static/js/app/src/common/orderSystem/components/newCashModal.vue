@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-19 09:56:55
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-07-22 15:44:13
+* @Last Modified time: 2017-07-24 10:14:59
 * @email: 783384903@qq.com
 */
 <!-- 有问题找产品，这个模块的功能一般人解释不清楚 -->
@@ -216,6 +216,50 @@
 .cashier-card .dd-input{
     width:250px!important;
 }
+.cashier-deposit-info {
+    display: flex;
+    align-items: center;
+}
+
+.cashier-addBtn {
+    height: 24px;
+    display: inline-flex;;
+    align-items: center;
+    cursor: pointer;
+    margin-top:6px;
+}
+
+.cashier-addBtn-icon {
+    width: 16px;
+    height: 16px;
+    background: url("../../../../../../image/modal/room_modal_add.png");
+    background-size: contain;
+    margin-right: 4px;
+    cursor: pointer;
+}
+
+.cashier-delBtn-icon {
+    width: 16px;
+    height: 16px;
+    background: url("../../../../../../image/modal/room_modal_min.png");
+    background-size: contain;
+    margin-left: 8px;
+    margin-right: 24px;
+    cursor: pointer;
+}
+.cashier-getMoney-channels {
+    display: flex;
+    flex-direction: column;
+}
+
+.cashier-getMoney-channel {
+    display: flex;
+    align-items: center;
+    &:not(:last-child) {
+        margin-bottom: 16px;
+    }
+}
+
 </style>
 <style lang="scss" scoped>
 #cashier .modal-dialog {
@@ -270,19 +314,6 @@
     align-items: center;
 }
 
-.cashier-getMoney-channels {
-    display: flex;
-    flex-direction: column;
-}
-
-.cashier-getMoney-channel {
-    display: flex;
-    align-items: center;
-    &:not(:last-child) {
-        margin-bottom: 16px;
-    }
-}
-
 .content-item-title {
     margin-bottom: 18px;
     span {
@@ -296,38 +327,6 @@
             }
         }
     }
-}
-
-.cashier-deposit-info {
-    display: flex;
-    align-items: center;
-}
-
-.cashier-addBtn {
-    height: 24px;
-    display: inline-flex;;
-    align-items: center;
-    cursor: pointer;
-    margin-top:6px;
-}
-
-.cashier-addBtn-icon {
-    width: 16px;
-    height: 16px;
-    background: url("../../../../../../image/modal/room_modal_add.png");
-    background-size: contain;
-    margin-right: 4px;
-    cursor: pointer;
-}
-
-.cashier-delBtn-icon {
-    width: 16px;
-    height: 16px;
-    background: url("../../../../../../image/modal/room_modal_min.png");
-    background-size: contain;
-    margin-left: 8px;
-    margin-right: 24px;
-    cursor: pointer;
 }
 </style>
 <script>
@@ -555,7 +554,7 @@ export default {
          * @return {[type]} [description]
          */
         changeAbeldFee() {
-            let needPay = this.orderPayment.price;
+            let needPay = this.orderPayment.price + this.orderPayment.paid.normal;
             // 首先统计出所有要退还的
             if (this.orderPayment && this.orderPayment.game && this.orderPayment.game.length) {
                 this.orderPayment.game.forEach(el => {

@@ -76,7 +76,9 @@
                 subOrderPenaltys: [],
                 oldPenalty: undefined,
                 subOrders: [],
-                PenaltyFee: true
+                PenaltyFee: true,
+                backPenalty: undefined,
+                backSubOrderPenaltys: []
             };
         },
         computed: {
@@ -98,6 +100,8 @@
         },
         methods: {
             showModal() {
+                this.penalty = this.backPenalty;
+                this.subOrderPenaltys = this.backSubOrderPenaltys.slice(0);
                 bus.$emit('showCancelOrder');
             },
             returnPreStep() {
@@ -154,25 +158,27 @@
                     });
                     business.subOrderPenaltys = JSON.stringify(this.subOrderPenaltys);
                 }
-                // if (this.need === 0 && !this.PenaltyFee) {
-                //     http.get('/order/cancel', business)
-                //         .then(res => {
-                //             modal.success('取消成功');
-                //             this.hideModal();
-                //             bus.$emit('refreshView');
-                //             bus.$emit('showOrder', this.orderId);
-                //         });
-                // } else {
-                bus.$emit('changeBack', this.showModal);
-                business.penalty = Number(totalPenalty);
-                business.functionType = 0;
-                if (this.PenaltyFee) {
-                    business.PenaltyFee = Number(totalPenalty);
+                this.backPenalty = this.penalty;
+                this.backSubOrderPenaltys = this.backSubOrderPenaltys.slice(0);
+                if (Number(this.need) === 0 && !this.PenaltyFee) {
+                    http.get('/order/cancel', business)
+                        .then(res => {
+                            modal.success('取消成功');
+                            this.hideModal();
+                            bus.$emit('refreshView');
+                            bus.$emit('showOrder', this.orderId);
+                        });
+                } else {
+                    bus.$emit('changeBack', this.showModal);
+                    business.penalty = Number(totalPenalty);
+                    business.functionType = 0;
+                    if (this.PenaltyFee) {
+                        business.PenaltyFee = Number(totalPenalty);
+                    }
+                    this.PenaltyFee = true;
+                    this.hideModal();
+                    bus.$emit('showCashier', { type: 'cancel', business });
                 }
-                this.PenaltyFee = true;
-                this.hideModal();
-                bus.$emit('showCashier', { type: 'cancel', business });
-                // }
             }
         },
         components: {
