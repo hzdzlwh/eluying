@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-19 09:56:55
 * @Last Modified by:   linxinjian
-* @Last Modified time: 2017-07-25 19:07:00
+* @Last Modified time: 2017-07-25 19:09:02
 * @email: 783384903@qq.com
 */
 <!-- 有问题找产品，这个模块的功能一般人解释不清楚 -->
@@ -805,7 +805,7 @@ export default {
                     this.paiedMoney = paiedFee.toFixed(2);
                     const cardHash = {};
                     const cardList = [];
-                    const needpay = res.data.price + res.data.paid.normal;
+                    const needpay = Math.abs(res.data.price + res.data.paid.normal);
                     res.data.game && res.data.game.forEach(element => {
                         element.max = Math.abs(element.ableFee - element.paidFee).toFixed(2);
                         const MaxNum = parseInt(needpay / element.rate);
