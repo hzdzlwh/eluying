@@ -683,7 +683,7 @@
     import http from '../../common/http';
     import Clickoutside from 'dd-vue-component/src/utils/clickoutside';
     import bus from '../../common/eventBus';
-    import modal from '../../common/modal';
+    // import modal from '../../common/modal';
     import contextmenu from '../../common/components/contextmenu';
     import dayOrderForm from './dayOrderForm.vue';
     import { roomCheckType } from '../../common/orderSystem/roomCheckType.js';
