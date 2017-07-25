@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-19 09:56:55
 * @Last Modified by:   linxinjian
-* @Last Modified time: 2017-07-25 14:34:17
+* @Last Modified time: 2017-07-25 17:11:58
 * @email: 783384903@qq.com
 */
 <!-- 有问题找产品，这个模块的功能一般人解释不清楚 -->
@@ -806,7 +806,7 @@ export default {
                     const cardHash = {};
                     const cardList = [];
                     res.data.game && res.data.game.forEach(element => {
-                        element.max = element.ableNum * element.rate;
+                        element.max = Math.abs(element.ableFee - element.paidFee).toFixed(2);
                     });
                     res.data.card && res.data.card.forEach(element => {
                         element.cards.forEach(el => {
