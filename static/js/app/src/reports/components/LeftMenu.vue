@@ -42,7 +42,6 @@
                 this.collectList = res.data.list;
             });
             bus.$on('changeList', this.changeRouter);
-            window.console.log(this.collectLinkList[this.$route.params.id].name);
             if (reg1.test(this.$route.fullPath)) {
                 this.routes = this.$router.options.routes[1].children;
             } else if (reg2.test(this.$route.fullPath)) {
