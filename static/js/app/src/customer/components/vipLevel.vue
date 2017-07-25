@@ -434,6 +434,25 @@ export default {
                     processWeekLimit[index] = data.weekLimit[index];
                 }
             });
+            data.vipPayItems.map(item => {
+                if (item.nodeType === 0) {
+                    switch(item.nodeName)
+                    {
+                        case '正常入住':
+                            item.nodeSubType = 0;
+                            break;
+                        case '钟点房':
+                            item.nodeSubType = 1;
+                            break;
+                        case '自用房':
+                            item.nodeSubType = 2;
+                            break;
+                        case '免费房':
+                            item.nodeSubType = 3;
+                            break;
+                    }
+                }
+            });
             data.vipPayItems = JSON.stringify(data.vipPayItems);
             data.vipRechargeItems = JSON.stringify(data.vipRechargeItems);
             data.virCurrencyRechargeItems = JSON.stringify(data.virCurrencyRechargeItems);
