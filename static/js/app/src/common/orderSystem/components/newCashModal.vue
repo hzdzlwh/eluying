@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-19 09:56:55
 * @Last Modified by:   linxinjian
-* @Last Modified time: 2017-07-25 12:41:15
+* @Last Modified time: 2017-07-25 19:09:02
 * @email: 783384903@qq.com
 */
 <!-- 有问题找产品，这个模块的功能一般人解释不清楚 -->
@@ -24,7 +24,7 @@
                                     <span class="cashier-money-text" v-if="orderPayment.need.penalty">违约金:<span>¥{{orderPayment.need.penalty}}</span></span>
                                 </div>
                                 <div style='margin-top:12px;'>
-                                    <span class="cashier-money-text" v-if='orderPayment.paid.game'>{{orderPayment.paid.game[0].accountName}}已抵扣:<span>¥{{orderPayment.paid.game}}</span></span>
+                                    <span class="cashier-money-text" v-if='orderPayment.paid.game'>{{orderPayment.game[0].accountName}}已抵扣:<span>¥{{orderPayment.paid.game}}</span></span>
                                     <span class="cashier-money-text" v-if='orderPayment.paid.balance'>余额已抵扣:<span>¥{{orderPayment.paid.balance}}</span></span>
                                     <span class="cashier-money-text">现金已收:<span>¥{{ orderPayment.paid.normal }}</span></span>
                                 </div>
@@ -500,7 +500,7 @@ export default {
             return Math.abs(Number(payMoney).toFixed(2));
         },
         needPayed() {
-            return (Number(this.orderPayment.price * 100 - (this.cashTotal || 0) * 100 - (this.companyTotal || 0) * 100 - (this.memberTotal || 0) * 100 - (this.gameTotal || 0) * 100 - (this.cardsTotal || 0) * 100) / 100).toFixed(2);
+            return (Number(this.orderPayment.price * 100 - ((this.cashTotal || 0) * 100).toFixed(0) - ((this.companyTotal || 0) * 100).toFixed(0) - ((this.memberTotal || 0) * 100).toFixed(0) - ((this.gameTotal || 0) * 100).toFixed(0) - ((this.cardsTotal || 0) * 100)).toFixed(0) / 100).toFixed(2);
         }
     },
     created() {
@@ -805,10 +805,20 @@ export default {
                     this.paiedMoney = paiedFee.toFixed(2);
                     const cardHash = {};
                     const cardList = [];
+                    const needpay = Math.abs(res.data.price + res.data.paid.normal);
                     res.data.game && res.data.game.forEach(element => {
-                        element.max = element.ableNum * element.rate;
+                        element.max = Math.abs(element.ableFee - element.paidFee).toFixed(2);
+                        const MaxNum = parseInt(needpay / element.rate);
+                        element.ableNum = Math.min(Math.abs(element.ableNum - element.paidNum).toFixed(0), MaxNum);
+                    });
+                    res.data.company && res.data.company.forEach(element => {
+                        element.ableFee = Math.min(Math.abs(element.ableFee - element.paidFee), needpay);
+                    });
+                    res.data.member && res.data.member.forEach(element => {
+                        element.ableFee = Math.min(Math.abs(element.ableFee - element.paidFee), needpay);
                     });
                     res.data.card && res.data.card.forEach(element => {
+                        element.ableFee = Math.min(Math.abs(element.ableFee - element.paidFee), needpay);
                         element.cards.forEach(el => {
                             if (!cardHash[el.accountId]) {
                                 if (element.type === 2) {
