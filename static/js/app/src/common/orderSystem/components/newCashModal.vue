@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-19 09:56:55
 * @Last Modified by:   linxinjian
-* @Last Modified time: 2017-07-25 18:55:16
+* @Last Modified time: 2017-07-25 19:07:00
 * @email: 783384903@qq.com
 */
 <!-- 有问题找产品，这个模块的功能一般人解释不清楚 -->
@@ -809,7 +809,7 @@ export default {
                     res.data.game && res.data.game.forEach(element => {
                         element.max = Math.abs(element.ableFee - element.paidFee).toFixed(2);
                         const MaxNum = parseInt(needpay / element.rate);
-                        element.ableNum = Math.min(Math.abs(element.ableNum - element.paidFee).toFixed(0), MaxNum);
+                        element.ableNum = Math.min(Math.abs(element.ableNum - element.paidNum).toFixed(0), MaxNum);
                     });
                     res.data.company && res.data.company.forEach(element => {
                         element.ableFee = Math.min(Math.abs(element.ableFee - element.paidFee), needpay);
