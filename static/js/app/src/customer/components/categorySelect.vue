@@ -243,7 +243,7 @@
                     i.selected = !!node;
                 });
                 this.roomNodeList.map(i => {
-                    const node = list.find(item => item.id === i.id);
+                    const node = list.find(item => item.id === i.id && item.nodeType === 0);
                     i.selected = !!node;
                 });
                 const shop = list.find(item => item.nodeType === 3);
