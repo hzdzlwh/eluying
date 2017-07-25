@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-19 09:56:55
 * @Last Modified by:   linxinjian
-* @Last Modified time: 2017-07-25 14:22:51
+* @Last Modified time: 2017-07-25 14:34:17
 * @email: 783384903@qq.com
 */
 <!-- 有问题找产品，这个模块的功能一般人解释不清楚 -->
@@ -500,7 +500,7 @@ export default {
             return Math.abs(Number(payMoney).toFixed(2));
         },
         needPayed() {
-            return (Number(this.orderPayment.price * 100 - (this.cashTotal || 0) * 100 - (this.companyTotal || 0) * 100 - (this.memberTotal || 0) * 100 - (this.gameTotal || 0) * 100 - (this.cardsTotal || 0) * 100) / 100).toFixed(2);
+            return (Number(this.orderPayment.price * 100 - ((this.cashTotal || 0) * 100).toFixed(0) - ((this.companyTotal || 0) * 100).toFixed(0) - ((this.memberTotal || 0) * 100).toFixed(0) - ((this.gameTotal || 0) * 100).toFixed(0) - ((this.cardsTotal || 0) * 100)).toFixed(0) / 100).toFixed(2);
         }
     },
     created() {
