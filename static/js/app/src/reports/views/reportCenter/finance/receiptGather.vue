@@ -5,6 +5,9 @@
         <div class="top">
             <div class="date">日期 : <i>{{date.startDate}} ~ {{date.endDate}}</i></div>
         </div>
+        <div :class="collectClass" @click="collectUrl(collectNum)">
+            {{collectName}}
+        </div>
         <dd-table :columns="col" :data-source="vips" :bordered="true"></dd-table>
     </div>
 </template>
@@ -31,6 +34,22 @@
     max-height: 400px;
     padding-bottom: 12px;
   }
+    .report-collect {
+        float: left;
+        margin-left:20px;
+        height: 24px;
+        width: 100px;
+        border-radius:2px;
+        text-align: center;
+        line-height:24px;
+        cursor:pointer;
+    }
+    .report-collect-add {
+        background:#178ce6;
+    }
+    .report-collect-dis {
+        background:#f39c30;
+    }
 </style>
 <script>
     import { DdTable, DdPagination } from 'dd-vue-component';
@@ -48,6 +67,8 @@
                 vip: {},
                 pages: 0,
                 pageNo: 1,
+                collectNum: 0,
+                collectName: '加入收藏',
                 col: [
                     {
                         title: '收款方式',
@@ -70,9 +91,17 @@
         },
         created() {
             this.getData();
+            this.getCollectStatus();
         },
         computed: {
-            ...mapState(['date'])
+            ...mapState(['date']),
+            collectClass: function () {
+                return {
+                    'report-collect': true,
+                    'report-collect-add': this.collectNum === 0,
+                    'report-collect-dis': this.collectNum === 1
+                }
+            }
         },
         watch: {
             date() {
@@ -93,6 +122,31 @@
             DdPagination
         },
         methods: {
+            collectUrl(num) {
+                if (num === 0) {
+                    this.collectNum = 1;
+                    this.collectName = '已收藏';
+                    http.get('/stat/addToCollect',{statValue: 301});
+                } else if (num === 1) {
+                    http.get('/stat/removeFromCollection',{statValue: 301});
+                    this.collectNum = 0;
+                    this.collectName = '加入收藏';
+                }
+            },
+            getCollectStatus() {
+                http.get('/stat/getCollection')
+                    .then(res => {
+                        if(res.code === 1) {
+                            const collectList = res.data.list;
+                            for(let i=0;i<collectList.length;i++){
+                                if (collectList[i] === 301) {
+                                    this.collectNum = 1;
+                                    this.collectName = '已收藏';
+                                }
+                            }
+                        }
+                    })
+            },
             exportUrl(type) {
                 const originParam = {
                     date: this.today

@@ -57,11 +57,21 @@ import collect from './views/reportCenter/collect/collect.vue';
 import noCollect from './views/reportCenter/collect/noCollect.vue';
 import auth from '../common/auth';
 export const routeList = {
-    accommodation,
+    todayRoom,
+    todayGuest,
+    todayArrive,
+    todayLeave,
+    morrowArrive,
+    morrowLeave,
     businessRoom,
-    dishesStatistics,
     forecastRoom,
-    historyGuest
+    dishesStatistics,
+    dishesPresent,
+    receiptDetails,
+    receiptGather,
+    rechargeDetails,
+    transferDetails,
+    ARGather
 };
 const insuranceAuth = auth.checkSwitch(auth.INSURANCE_ID);
 export const routes = [
