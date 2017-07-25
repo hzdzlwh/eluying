@@ -1,8 +1,8 @@
 /*
 * @Author: lxj
 * @Date:   2017-07-19 09:56:55
-* @Last Modified by:   lxj
-* @Last Modified time: 2017-07-24 19:14:13
+* @Last Modified by:   linxinjian
+* @Last Modified time: 2017-07-25 11:47:31
 * @email: 783384903@qq.com
 */
 <!-- 有问题找产品，这个模块的功能一般人解释不清楚 -->
@@ -53,7 +53,7 @@
                                 已收取{{ga.paidNum}}个
                                 </span>
                             <span>本次{{ga.type === 0 ? '使用' : '退还'}}： <inputVaild v-model='ga.fee' :max='Math.min(ga.ableNum, ga.lastNum)' :isInt=true @input='changeAbeldFee' v-if='ga.type === 0'/>
-                            <inputVaild v-model='ga.fee' :max='ga.paidNum' :min='ga.paidNum' :isInt=true @input='changeAbeldFee' v-if='ga.type === 2'/>个</span>
+                            <inputVaild v-model='ga.fee' :max='ga.paidNum'  :isInt=true @input='changeAbeldFee' v-if='ga.type === 2'/>个</span>
                             <span class="cashier-tip-text">
                                 抵扣￥{{(ga.fee * ga.rate).toFixed(2)}}
                                 </span>
@@ -76,7 +76,7 @@
                         <span v-if='co.type === 0' class="cashier-tip-text">余额¥{{co.lastFee}}，最多可收取¥{{co.ableFee}}</span>
                         <span v-if='co.type === 2' class="cashier-tip-text">已收取¥{{co.paidFee}}</span> 本次{{co.type === 0 ? '收取' : '退还'}}：
                         <inputVaild v-model='co.fee' :max='Math.min(co.ableFee, co.lastFee)' @input='changeAbeldFee' v-if='co.type === 0' />
-                        <inputVaild v-model='co.fee' :max='co.paidFee' :min='co.paidFee' @input='changeAbeldFee' v-if='co.type === 2' />
+                        <inputVaild v-model='co.fee' :max='co.paidFee'  @input='changeAbeldFee' v-if='co.type === 2' />
                     </div>
                 </div>
                 <div class="content-item" v-if='orderPayment.member'>
@@ -96,7 +96,7 @@
                     <span v-if='me.type === 0' class="cashier-tip-text">余额¥{{me.lastFee}}，最多可收取¥{{me.ableFee}}</span>
                     <span v-if='me.type === 2' class="cashier-tip-text">已收取¥{{me.paidFee}}</span> 本次{{me.type === 0 ? '收取' : '退还'}}：
                     <inputVaild @input='changeAbeldFee' v-model='me.fee' :max='Math.min(me.ableFee, me.lastFee)' v-if='me.type === 0' />
-                    <inputVaild @input='changeAbeldFee' v-model='me.fee' :max='me.paidFee' :min='me.paidFee' v-if='me.type === 2' />
+                    <inputVaild @input='changeAbeldFee' v-model='me.fee' :max='me.paidFee'  v-if='me.type === 2' />
                 </div>
             </div>
             <div class="content-item" v-if='orderPayment.card'>

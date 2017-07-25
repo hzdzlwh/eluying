@@ -10,4 +10,6 @@ export default {
     'LOAD_SHOP_LIST': 'loadShopList',
     'SET_ENTER_LIST': 'setEnterList',
     'LOAD_ENTER_LIST': 'loadEnterList',
+    'SET_CENTER_LIST': 'setCenterList',
+    'LOAD_CENTER_LIST': 'loadCenterList'
 };

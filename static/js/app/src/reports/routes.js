@@ -56,7 +56,13 @@ import reportDaily from './views/reportCenter/manage/dailyReport.vue';
 import collect from './views/reportCenter/collect/collect.vue';
 import noCollect from './views/reportCenter/collect/noCollect.vue';
 import auth from '../common/auth';
-
+export const routeList = {
+    accommodation,
+    businessRoom,
+    dishesStatistics,
+    forecastRoom,
+    historyGuest
+};
 const insuranceAuth = auth.checkSwitch(auth.INSURANCE_ID);
 export const routes = [
     {
@@ -313,22 +319,15 @@ export const routes = [
                 meta: {
                     name: '收藏'
                 },
-                component: collect,
-                redirect: '/reportCenter/collect/:id',
+                component: noCollect,
+                redirect: '',
                 children: [
                     {
-                        path: '',
-                        component: noCollect,
+                        path: ':id',
+                        component: collect,
                         meta: {
-                            name: ''
+                            name: 'collect'
                         }
-                    },
-                    {
-                        path: '/reportCenter/accommodation/todayRoom',
-                        meta: {
-                            name: '当前在住房报表'
-                        },
-                        component: todayGuest
                     }
                 ]
             },
