@@ -13,10 +13,14 @@ const store = new Vuex.Store({
         shopList: [],
         enterList: [],
         orderDetail: {},
-        roomBusinessInfo: {}
+        roomBusinessInfo: {},
+        centerList: []
     },
 
     mutations: {
+        [types.SET_CENTER_LIST](state, { centerList }) {
+            state.centerList = centerList;
+        },
         [types.SET_SHOP_LIST](state, { shopList }) {
             state.shopList = shopList;
         },
@@ -32,6 +36,19 @@ const store = new Vuex.Store({
     },
 
     actions: {
+        [types.LOAD_CENTER_LIST]({ commit }) {
+            return new Promise((resolve, reject) => {
+                http.get('/stat/getCollection', {})
+                    .then(res => {
+                        if (res.code === 1) {
+                            commit(types.SET_CENTER_LIST, { centerList: res.data.list });
+                            resolve(res);
+                        } else {
+                            reject(res);
+                        }
+                    });
+            });
+        },
         [types.LOAD_SHOP_LIST]({ commit }) {
             return new Promise((resolve, reject) => {
                 http.get('/shop/list', {})
