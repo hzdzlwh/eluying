@@ -436,8 +436,7 @@ export default {
             });
             data.vipPayItems.map(item => {
                 if (item.nodeType === 0) {
-                    switch(item.nodeName)
-                    {
+                    switch (item.nodeName) {
                         case '正常入住':
                             item.nodeSubType = 0;
                             break;
