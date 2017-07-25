@@ -426,6 +426,24 @@ export default {
                 }
             }
             const data = Object.assign({}, this.vipLevel);
+            data.discountInfoList.map(item => {
+                if (item.nodeType === 0) {
+                    switch (item.nodeName) {
+                        case '正常入住':
+                            item.nodeSubType = 0;
+                            break;
+                        case '钟点房':
+                            item.nodeSubType = 1;
+                            break;
+                        case '自用房':
+                            item.nodeSubType = 2;
+                            break;
+                        case '免费房':
+                            item.nodeSubType = 3;
+                            break;
+                    }
+                }
+            });
             data.discountListReq = JSON.stringify(data.discountInfoList);
             delete data.discountInfoList;
             const processWeekLimit = [-1, -1, -1, -1, -1, -1, -1];
@@ -457,6 +475,24 @@ export default {
             data.virCurrencyRechargeItems = JSON.stringify(data.virCurrencyRechargeItems);
             data.weekLimit = JSON.stringify(processWeekLimit);
             if (this.type) {
+                data.consumeItems.map(item => {
+                    if (item.nodeType === 0) {
+                        switch (item.nodeName) {
+                            case '正常入住':
+                                item.nodeSubType = 0;
+                                break;
+                            case '钟点房':
+                                item.nodeSubType = 1;
+                                break;
+                            case '自用房':
+                                item.nodeSubType = 2;
+                                break;
+                            case '免费房':
+                                item.nodeSubType = 3;
+                                break;
+                        }
+                    }
+                });
                 data.consumeListReq = JSON.stringify(data.consumeItems);
                 delete data.consumeItems;
             }
