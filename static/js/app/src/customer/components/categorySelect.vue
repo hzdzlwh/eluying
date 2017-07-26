@@ -235,11 +235,11 @@
             },
             initList(list) {
                 this.restNodeList.map(i => {
-                    const node = list.find(item => item.id === i.id);
+                    const node = list.find(item => item.id === i.id && item.nodeType === 1);
                     i.selected = !!node;
                 });
                 this.enterNodeList.map(i => {
-                    const node = list.find(item => item.id === i.id);
+                    const node = list.find(item => item.id === i.id && item.nodeType === 2);
                     i.selected = !!node;
                 });
                 this.roomNodeList.map(i => {
