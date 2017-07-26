@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-19 09:56:55
 * @Last Modified by:   linxinjian
-* @Last Modified time: 2017-07-26 15:41:30
+* @Last Modified time: 2017-07-26 15:48:52
 * @email: 783384903@qq.com
 */
 <!-- 有问题找产品，这个模块的功能一般人解释不清楚 -->
@@ -153,7 +153,7 @@
                 <p class="content-item-title"><span>现金收款</span></p>
                 <div class="cashier-getMoney-channels" v-if="payments.length > 0">
                     <div class="cashier-getMoney-channel" v-for="(payment, index) in payments" :key="payment.uniqueId">
-                        <dd-select v-model="payment.type" class='dd-select-with' :disabled='type === "collect"'>
+                        <dd-select v-model="payment.type" class='dd-select-with'>
                             <dd-option v-for="way in getOrReturn" :key="way.val" :value="way.val" :label="way.name" :title='way.name'>
                             </dd-option>
                         </dd-select>
