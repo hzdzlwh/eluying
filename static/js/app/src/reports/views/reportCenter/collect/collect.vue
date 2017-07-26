@@ -53,6 +53,22 @@
                 currentView: 'noCollect'
             };
         },
+        created() {
+            console.log(this.collectList);
+            http.get('/stat/getCollection', {})
+                .then(res => {
+                    if (res.code === 1) {
+                        const centerList = res.data.list;
+                        if (centerList.length) {
+                            console.log(centerList);
+                            this.$router.push('/reportCenter/collect/' + res.data.list[0]);
+                            this.currentView = ''
+                        }
+                    } else {
+                        window.alert('请求失败');
+                    }
+                });
+        },
         components: {
             noCollect,
             morrowArrive,
@@ -72,22 +88,6 @@
             transferDetails,
             ARGather,
             dailyReport
-        },
-        created() {
-            console.log(this.collectList);
-            http.get('/stat/getCollection', {})
-                .then(res => {
-                    if (res.code === 1) {
-                        const centerList = res.data.list;
-                        if (centerList.length) {
-                            console.log(centerList);
-                            this.$router.push('/reportCenter/collect/' + res.data.list[0]);
-                            this.currentView = ''
-                        }
-                    } else {
-                        window.alert('请求失败');
-                    }
-                });
         },
         methods: {
             ...mapActions([

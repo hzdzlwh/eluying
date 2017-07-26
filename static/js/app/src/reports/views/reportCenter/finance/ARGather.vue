@@ -11,7 +11,7 @@
             </div>
         </div>
 
-        <dd-table :columns="col" :data-source="vips" :bordered="true" style="margin-top:20px;"></dd-table>
+        <dd-table :columns="col" :data-source="vips" :bordered="true" style="margin:20px 0 10px;"></dd-table>
         <div class="foot footfix">
             <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :age-count="pages" :current-page="pageNo" />
         </div> 
