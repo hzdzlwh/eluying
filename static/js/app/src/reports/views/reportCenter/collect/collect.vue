@@ -91,7 +91,12 @@
         },
         watch: {
             '$route.path'() {
-                this.currentView = collectList[this.$route.params.id].component;
+                if (this.$route.params.id) {
+                    this.currentView = collectList[this.$route.params.id].component;
+                } else {
+                    this.currentView = 'noCollect';
+                }
+                
             }
         }
         // beforeRouteUpdate(to, from, next) {
