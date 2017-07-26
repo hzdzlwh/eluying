@@ -426,7 +426,7 @@ export default {
                 }
             }
             const data = Object.assign({}, this.vipLevel);
-            data.discountInfoList.map(item => {
+            /* data.discountInfoList.map(item => {
                 if (item.nodeType === 0) {
                     switch (item.nodeName) {
                         case '正常入住':
@@ -443,7 +443,7 @@ export default {
                             break;
                     }
                 }
-            });
+            }); */
             data.discountListReq = JSON.stringify(data.discountInfoList);
             delete data.discountInfoList;
             const processWeekLimit = [-1, -1, -1, -1, -1, -1, -1];
@@ -452,7 +452,7 @@ export default {
                     processWeekLimit[index] = data.weekLimit[index];
                 }
             });
-            data.vipPayItems.map(item => {
+            /* data.vipPayItems.map(item => {
                 if (item.nodeType === 0) {
                     switch (item.nodeName) {
                         case '正常入住':
@@ -469,13 +469,13 @@ export default {
                             break;
                     }
                 }
-            });
+            }); */
             data.vipPayItems = JSON.stringify(data.vipPayItems);
             data.vipRechargeItems = JSON.stringify(data.vipRechargeItems);
             data.virCurrencyRechargeItems = JSON.stringify(data.virCurrencyRechargeItems);
             data.weekLimit = JSON.stringify(processWeekLimit);
             if (this.type) {
-                data.consumeItems.map(item => {
+                /* data.consumeItems.map(item => {
                     if (item.nodeType === 0) {
                         switch (item.nodeName) {
                             case '正常入住':
@@ -492,7 +492,7 @@ export default {
                                 break;
                         }
                     }
-                });
+                }); */
                 data.consumeListReq = JSON.stringify(data.consumeItems);
                 delete data.consumeItems;
             }
