@@ -1,6 +1,5 @@
 <template>
     <div style="height:100px;">
-        没有收藏
         <router-view></router-view>
     </div>
 </template>

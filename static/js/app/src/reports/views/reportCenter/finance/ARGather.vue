@@ -130,9 +130,9 @@
                 if (num === 0) {
                     this.collectNum = 1;
                     this.collectName = '已收藏';
-                    http.get('/stat/addToCollect',{statValue: 301});
+                    http.get('/stat/addToCollect',{statValue: 405});
                 } else if (num === 1) {
-                    http.get('/stat/removeFromCollection',{statValue: 301});
+                    http.get('/stat/removeFromCollection',{statValue: 405});
                     this.collectNum = 0;
                     this.collectName = '加入收藏';
                 }
@@ -143,7 +143,7 @@
                         if(res.code === 1) {
                             const collectList = res.data.list;
                             for(let i=0;i<collectList.length;i++){
-                                if (collectList[i] === 301) {
+                                if (collectList[i] === 405) {
                                     this.collectNum = 1;
                                     this.collectName = '已收藏';
                                 }

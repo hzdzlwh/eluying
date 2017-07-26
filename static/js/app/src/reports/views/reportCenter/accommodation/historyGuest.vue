@@ -298,6 +298,7 @@
             this.getOrigin();
             this.getRoomType();
             this.getZoneType();
+            this.getCollectStatus();
         },
         computed: {
             ...mapState(['date']),
