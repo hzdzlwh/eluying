@@ -7,7 +7,7 @@
                     <router-link :to="child.path">{{child.meta.name}}</router-link>
                 </li>
                 <li v-for="child in collectList" v-if='$route.meta.name === "collect"'>
-                    <router-link :to='"/reportCenter/collects/" + child'>{{getcollect(child).name}}</router-link>
+                    <router-link :to='"/reportCenter/collect/" + child'>{{getcollect(child).name}}</router-link>
                 </li>
             </ul>
         </li>
@@ -25,9 +25,6 @@
     const reg2 = /^\/reportCenter/;
     import http from 'http';
     import collectLinkList from '../collectList.js';
-    // const AsyncComp = () => ({
-    //     component: import('./MyComp.vue')
-    // })
     export default{
         data() {
             return {

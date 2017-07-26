@@ -2,18 +2,15 @@
     <div style="width: 1000px;margin:0 auto;">
         <div class="report-reportCenter-date">
             <DateSelect/>
+            <div :class="collectClass" @click="collectUrl(collectNum)" style="float:right;margin-top:-20px;margin-left:20px;">
+                {{collectName}}
+            </div>
             <div class="export" style="float:right;margin-left:20px;margin-top:-20px;">
                 <dd-dropdown text="导出明细" trigger="click" style="width:100px;">
                   <!-- <dd-dropdown-item><span><a :href="exportUrl(1)">导出PDF</a></span></dd-dropdown-item> -->
                   <dd-dropdown-item><span><a :href="exportUrl(0)">导出Excel</a></span></dd-dropdown-item>
                 </dd-dropdown>
             </div>
-            <!-- <div class="export" style="float:right;margin-left:20px;">
-                <dd-dropdown text="收藏" trigger="click" style="width:100px;">
-                  <dd-dropdown-item><span><a :href="exportUrl(1)">导出PDF</a></span></dd-dropdown-item>
-                  <dd-dropdown-item><span><a :href="exportUrl(0)">导出Excel</a></span></dd-dropdown-item>
-                </dd-dropdown>
-            </div> -->
         </div>
         <h2 class="report-reportCenter-title">{{$route.meta.name}}</h2>
         <div class="report-reportCenter-top">
@@ -63,7 +60,7 @@
         </table>
     </div> 
 </template>
-<style lang="scss">
+<style lang="scss" scoped>
     .report-dishesStat{
         border:1px solid #ccc;
         thead{
@@ -80,6 +77,22 @@
             }  
         }
         
+    }
+    .report-collect {
+        float: left;
+        margin-left:20px;
+        height: 24px;
+        width: 100px;
+        border-radius:2px;
+        text-align: center;
+        line-height:24px;
+        cursor:pointer;
+    }
+    .report-collect-add {
+        background:#178ce6;
+    }
+    .report-collect-dis {
+        background:#f39c30;
     }
     .report-reportCenter-title {
         width: 100%;
@@ -152,6 +165,8 @@
                 }],
                 name: '全部菜品分类',
                 pages: 0,
+                collectNum: 0,
+                collectName: '加入收藏',
                 pageNo: 1,
                 vips: []
             };
@@ -160,6 +175,7 @@
             this.getRestType();
             this.getDishType();
             this.getData();
+            this.getCollectStatus();
         },
         components: {
             DdDropdown,
@@ -170,7 +186,14 @@
             DdTable
         },
         computed: {
-            ...mapState(['date'])
+            ...mapState(['date']),
+            collectClass: function () {
+                return {
+                    'report-collect': true,
+                    'report-collect-add': this.collectNum === 0,
+                    'report-collect-dis': this.collectNum === 1
+                }
+            }
         },
         watch: {
             restType() {
@@ -194,6 +217,31 @@
             }
         },
         methods: {
+            collectUrl(num) {
+                if (num === 0) {
+                    this.collectNum = 1;
+                    this.collectName = '已收藏';
+                    http.get('/stat/addToCollect',{statValue: 301});
+                } else if (num === 1) {
+                    http.get('/stat/removeFromCollection',{statValue: 301});
+                    this.collectNum = 0;
+                    this.collectName = '加入收藏';
+                }
+            },
+            getCollectStatus() {
+                http.get('/stat/getCollection')
+                    .then(res => {
+                        if(res.code === 1) {
+                            const collectList = res.data.list;
+                            for(let i=0;i<collectList.length;i++){
+                                if (collectList[i] === 301) {
+                                    this.collectNum = 1;
+                                    this.collectName = '已收藏';
+                                }
+                            }
+                        }
+                    })
+            },
             getRestType() {
                 http.get('/restaurant/listSimple')
                 .then(res => {

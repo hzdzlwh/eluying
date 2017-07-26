@@ -46,6 +46,9 @@
                     <dd-dropdown-item><span><a :href="exportUrl(0)">导出Excel</a></span></dd-dropdown-item>
                 </dd-dropdown>
             </div>
+            <div :class="collectClass" @click="collectUrl(collectNum)">
+                {{collectName}}
+            </div>
         </div>
         <div style="overflow:auto;">
             <dd-table :columns="col" :data-source="vips" :bordered="true"></dd-table>
@@ -83,6 +86,22 @@
         .export {
             float: left;
             margin-left:20px;
+        }
+        .report-collect {
+            float: left;
+            margin-left:20px;
+            height: 24px;
+            width: 100px;
+            border-radius:2px;
+            text-align: center;
+            line-height:24px;
+            cursor: pointer;
+        }
+        .report-collect-add {
+            background:#178ce6;
+        }
+        .report-collect-dis {
+            background:#f39c30;
         }
     }
     #table {
@@ -150,6 +169,8 @@
                 pages: 0,
                 count: 0,
                 pageNo: 1,
+                collectNum: 0,
+                collectName: '加入收藏',
                 col: [
                     {
                         title: '订单号',
@@ -267,8 +288,29 @@
             this.getZoneType();
             this.getRoomType();
             this.getOrigin();
+            this.getCollectStatus();
+        },
+        computed: {
+            collectClass: function () {
+                return {
+                    'report-collect': true,
+                    'report-collect-add': this.collectNum === 0,
+                    'report-collect-dis': this.collectNum === 1
+                }
+            }
         },
         methods: {
+            collectUrl(num) {
+                if (num === 0) {
+                    this.collectNum = 1;
+                    this.collectName = '已收藏';
+                    http.get('/stat/addToCollect',{statValue: 20});
+                } else if (num === 1) {
+                    http.get('/stat/removeFromCollection',{statValue: 20});
+                    this.collectNum = 0;
+                    this.collectName = '加入收藏';
+                }
+            },
             exportUrl(type) {
                 const originParam = {
                     pageNo: this.pageNo,
@@ -391,6 +433,20 @@
                     }
                     this.flag = true;
                 });
+            },
+            getCollectStatus() {
+                http.get('/stat/getCollection')
+                    .then(res => {
+                        if(res.code === 1) {
+                            const collectList = res.data.list;
+                            for(let i=0;i<collectList.length;i++){
+                                if (collectList[i] === 20) {
+                                    this.collectNum = 1;
+                                    this.collectName = '已收藏';
+                                }
+                            }
+                        }
+                    })
             },
             handlePageChange(internalCurrentPage) {
                 this.pageNo = internalCurrentPage;

@@ -27,6 +27,9 @@
                   <dd-dropdown-item><span><a :href="exportUrl(0)">导出Excel</a></span></dd-dropdown-item>
                 </dd-dropdown>
             </div>
+            <div :class="collectClass" @click="collectUrl(collectNum)">
+                {{collectName}}
+            </div>
         </div>
         <dd-table :columns="col" :data-source="vips" :bordered="true" style="margin-top: 20px;"></dd-table>
         <div class="foot footfix">
@@ -72,6 +75,22 @@
     max-height: 400px;
     padding-bottom: 12px;
   }
+  .report-collect {
+      float: left;
+      margin-left:20px;
+      height: 24px;
+      width: 100px;
+      border-radius:2px;
+      text-align: center;
+      line-height:24px;
+      cursor:pointer;
+  }
+  .report-collect-add {
+      background:#178ce6;
+  }
+  .report-collect-dis {
+      background:#f39c30;
+  }
 </style>
 <script>
     import { DdTable, DdPagination, DdDropdown, DdDropdownItem, DdSelect, DdOption, DdGroupOption } from 'dd-vue-component';
@@ -110,6 +129,8 @@
                     name: '住宿',
                     orderType: 35
                 }],
+                collectNum: 0,
+                collectName: '加入收藏',
                 orderType: -2,
                 employeeList: [
                     {
@@ -208,9 +229,17 @@
             this.getData();
             this.getEmployeeList();
             this.getChannels();
+            this.getCollectStatus();
         },
         computed: {
-            ...mapState(['date'])
+            ...mapState(['date']),
+            collectClass: function () {
+                return {
+                    'report-collect': true,
+                    'report-collect-add': this.collectNum === 0,
+                    'report-collect-dis': this.collectNum === 1
+                }
+            }
         },
         watch: {
             date() {
@@ -240,6 +269,31 @@
             }
         },
         methods: {
+            collectUrl(num) {
+                if (num === 0) {
+                    this.collectNum = 1;
+                    this.collectName = '已收藏';
+                    http.get('/stat/addToCollect',{statValue: 401});
+                } else if (num === 1) {
+                    http.get('/stat/removeFromCollection',{statValue: 401});
+                    this.collectNum = 0;
+                    this.collectName = '加入收藏';
+                }
+            },
+            getCollectStatus() {
+                http.get('/stat/getCollection')
+                    .then(res => {
+                        if(res.code === 1) {
+                            const collectList = res.data.list;
+                            for(let i=0;i<collectList.length;i++){
+                                if (collectList[i] === 401) {
+                                    this.collectNum = 1;
+                                    this.collectName = '已收藏';
+                                }
+                            }
+                        }
+                    })
+            },
             exportUrl(type) {
                 const obj = {
                     pageNo: this.pageNo,
