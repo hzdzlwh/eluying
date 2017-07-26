@@ -38,11 +38,11 @@
                         <div class="content-item">
                             <p class="content-item-title"><span>客户信息</span></p>
                             <div class="userInfo-items">
-                                <div class="userInfo-item">
+                                <div class="userInfo-text-item">
                                     <label class="label-text">联系人</label>
                                     <span>{{ order.customerName }}</span>
                                 </div>
-                                <div class="userInfo-item vip-level-container">
+                                <div class="userInfo-text-item vip-level-container">
                                     <label class="label-text">手机号</label>
                                     <span style="position: relative">
                                         <span>{{ order.customerPhone }}</span>
@@ -52,11 +52,11 @@
                                         </span>
                                     </span>
                                 </div>
-                                <div class="userInfo-item">
+                                <div class="userInfo-text-item">
                                     <label class="label-text">客源渠道</label>
                                     <span>{{ order.origin }}</span>
                                 </div>
-                                <div v-if="order.originId === -4 || order.discountChannel === 4 || order.discountChannel === 1" class="userInfo-item">
+                                <div v-if="order.originId === -4 || order.discountChannel === 4 || order.discountChannel === 1" class="userInfo-text-item text-hidden" :title='order.discountRelatedName'>
                                     <label class="label-text">会员卡</label>
                                     <span>{{ order.discountRelatedName || '不使用' }}</span>
                                 </div>
@@ -780,6 +780,19 @@
             &:last-of-type {
                 margin-right: 0;
             }
+        }
+        .userInfo-text-item {
+            margin-right: 32px;
+            min-width: 135px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 200px;
+            &:last-of-type {
+                margin-right: 0;
+            }
+        }
+        text-hidden {
+            overflow: hidden;
         }
         .userVip-list {
             position: absolute;
