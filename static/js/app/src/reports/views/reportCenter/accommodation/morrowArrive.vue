@@ -1,7 +1,7 @@
 <template>
     <div>
         <p style="font-weight: bold;font-size:24px;color:#178ce6;text-align:center;margin: 20px 0 26px">
-            {{$route.meta.name}}
+            次日预抵房间报表
         </p>
         <div class="top">
             <div class="date">日期 : <i>{{morrow}}</i></div>
@@ -102,6 +102,10 @@
         text-align: center;
         line-height:24px;
         cursor:pointer;
+        font-family:MicrosoftYaHei;
+        font-size:14px;
+        color:#ffffff;
+        text-align:center;
     }
     .report-collect-add {
         background:#178ce6;

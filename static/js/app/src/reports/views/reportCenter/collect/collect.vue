@@ -61,8 +61,8 @@
                         const centerList = res.data.list;
                         if (centerList.length) {
                             console.log(centerList);
-                            this.$router.push('/reportCenter/collect/' + res.data.list[0]);
-                            this.currentView = ''
+                            // this.$router.push('/reportCenter/collect/' + res.data.list[0]);
+                            // this.currentView = ''
                         }
                     } else {
                         window.alert('请求失败');
@@ -89,10 +89,14 @@
             ARGather,
             dailyReport
         },
-        methods: {
-            ...mapActions([
-                'loadCenterList'
-            ])
+        watch: {
+            '$route.path'() {
+                this.currentView = collectList[this.$route.params.id].component;
+            }
         }
+        // beforeRouteUpdate(to, from, next) {
+        //     this.componentName = this.$routes.params.id;
+        //     next();
+        // }
     };
 </script>

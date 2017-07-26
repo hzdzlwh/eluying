@@ -1,7 +1,7 @@
 <template>
     <div>
         <p style="font-weight: bold;font-size:24px;color:#178ce6;text-align:center;margin: 20px 0 26px">
-            {{$route.meta.name}}
+            当前在住客人报表
         </p>
         <div class="top">
             <div class="date">日期 : <i>{{today}}</i></div>
@@ -56,7 +56,7 @@
         <div class="foot footfix">
             <p style="font-size:16px;"><small style='width:16px;'>总人数 : </small> {{personCount}}</p>
             <p style="font-size:16px;"><small style="width:16px;">总房数 : </small>{{roomCount}}</p>
-            <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :age-count="pages" :current-page="pageNo" />
+            <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo" />
         </div>
     </div>
 </template>
@@ -103,6 +103,10 @@
         text-align: center;
         line-height:24px;
         cursor:pointer;
+        font-family:MicrosoftYaHei;
+        font-size:14px;
+        color:#ffffff;
+        text-align:center;
     }
     .report-collect-add {
         background:#178ce6;

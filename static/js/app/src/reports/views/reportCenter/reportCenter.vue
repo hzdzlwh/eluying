@@ -2,6 +2,9 @@
     <div class="reports-container">
         <LeftMenu></LeftMenu>
         <div class="view-container">
+            <div v-if="dataSelect">
+                <DateSelect />
+            </div>
             <router-view></router-view>
         </div>
         <OrderSystem></OrderSystem>
@@ -11,7 +14,7 @@
     @import "~dd-common-css/src/variables";
     .reports-container {
         padding-top: 89px;
-        padding-left: 244px;
+        padding-left: 260px;
         padding-bottom: 50px;
         position: relative;
         .text-right {
@@ -25,7 +28,18 @@
     .view-container {
         position: relative;
         width: 1200px;
-        margin: 0 auto;
+    }
+    @media screen and (min-width:1470px) {
+        .view-container {
+            width: 1000px;
+            margin-left:0;
+        }
+    }
+    @media screen and (min-width:980px) {
+        .view-container {
+            width:1200px;
+            margin:0 auto;
+        }
     }
     .card {
         box-shadow:0 0 5px 0 rgba(0,0,0,0.15);
@@ -57,10 +71,34 @@
 <script>
     import LeftMenu from '../../components/LeftMenu.vue';
     import { OrderSystem } from '../../../common/orderSystem';
+    import { list } from '../../collectList.js';
+    import DateSelect from '../../components/DateSelect.vue';
     export default{
+        data() {
+            return {
+                dataSelect: undefined
+            }
+        },
         components: {
             LeftMenu,
-            OrderSystem
+            OrderSystem,
+            DateSelect
+        },
+        created() {
+            this.getDataSelect();
+        },
+        methods: {
+            getDataSelect() {
+                list.forEach(item => {
+                    console.log(item.name, this.$route.meta.name);
+                    if (item.name === this.$route.meta.name) {
+                        this.dataSelect = true;
+                        console.log(this.dataSelect);
+                    } else {
+                        this.dataSelect = false;
+                    }
+                })
+            }
         }
     };
 </script>

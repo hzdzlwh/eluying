@@ -26,3 +26,29 @@ export default {
     '501': { component: 'dishesPresent', name: '菜品赠送明细表' },
     '18': { component: 'dailyReport', name: '营业日报表' }
 };
+export const list = [
+    {
+        'name': '历史入住客人报表'
+    },
+    {
+        'name': '收款明细表'
+    },
+    {
+        'name': '收款汇总表'
+    },
+    {
+        'name': '转应收帐明细表'
+    },
+    {
+        'name': 'AR结算汇总表'
+    },
+    {
+        'name': '充值明细表'
+    },
+    {
+        'name': '菜品统计汇总表'
+    },
+    {
+        'name': '菜品赠送明细表'
+    }
+];

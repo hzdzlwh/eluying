@@ -336,7 +336,7 @@ export const routes = [
                         path: ':id',
                         component: collect,
                         meta: {
-                            name: ''
+                            name: 'collect'
                         }
                     }
                 ]
@@ -352,7 +352,7 @@ export const routes = [
                     {
                         path: '/reportCenter/accommodation/todayRoom',
                         meta: {
-                            name: '当前在住房报表'
+                            name: '当前在住房间报表'
                         },
                         component: todayRoom
                     },

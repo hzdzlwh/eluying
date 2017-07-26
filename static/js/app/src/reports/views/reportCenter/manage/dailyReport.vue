@@ -6,11 +6,14 @@
                 <DdDatepicker v-model="today" :disabled-date="disabledDate" />
                 <span style="margin-left: 10px;"> 单位:人民币元</span>
             </div>
-            <div>
-                <dd-dropdown text="导出明细" trigger="click">
+            <div style="height:inherit;">
+                <dd-dropdown text="导出明细" trigger="click" style="float:left;">
                     <!-- <dd-dropdown-item><span><a :href="exportUrl(1)">导出PDF</a></span></dd-dropdown-item> -->
                     <dd-dropdown-item><span><a :href="exportUrl(0)">导出Excel</a></span></dd-dropdown-item>
                 </dd-dropdown>
+                <div :class="collectClass" @click="collectUrl(collectNum)" style="float:left;">
+                    {{collectName}}
+                </div>
             </div>
         </div>
         <div class="content">
@@ -92,6 +95,8 @@
     export default {
         data() {
             return {
+                collectNum: 0,
+                collectName: '加入收藏',
                 today: undefined,
                 credit: [],
                 creditSummary: {},
@@ -102,6 +107,7 @@
         created() {
             this.today = util.dateFormat(new Date());
             this.getDailyReportData();
+            this.getCollectStatus();
         },
         computed: {
             debitSupplymentTr() {
@@ -109,9 +115,41 @@
             },
             creditSupplymentTr() {
                 return this.debit.length > this.credit.length ? this.debit.length - this.credit.length : 0;
+            },
+            collectClass: function () {
+                return {
+                    'report-collect': true,
+                    'report-collect-add': this.collectNum === 0,
+                    'report-collect-dis': this.collectNum === 1
+                }
             }
         },
         methods: {
+            collectUrl(num) {
+                if (num === 0) {
+                    this.collectNum = 1;
+                    this.collectName = '已收藏';
+                    http.get('/stat/addToCollect',{statValue: 18});
+                } else if (num === 1) {
+                    http.get('/stat/removeFromCollection',{statValue: 18});
+                    this.collectNum = 0;
+                    this.collectName = '加入收藏';
+                }
+            },
+            getCollectStatus() {
+                http.get('/stat/getCollection')
+                    .then(res => {
+                        if(res.code === 1) {
+                            const collectList = res.data.list;
+                            for(let i=0;i<collectList.length;i++){
+                                if (collectList[i] === 18) {
+                                    this.collectNum = 1;
+                                    this.collectName = '已收藏';
+                                }
+                            }
+                        }
+                    })
+            },
             getDailyReportData() {
                 http.get('/stat/getDailyStat', { date: this.today }).then(res => {
                     if (res.code === 1) {
@@ -167,6 +205,26 @@
         display: flex;
         justify-content: space-between;
         margin-top: 22px;
+    }
+    .report-collect {
+        float: left;
+        margin-left:20px;
+        height: 24px;
+        width: 100px;
+        border-radius:2px;
+        text-align: center;
+        line-height:24px;
+        cursor:pointer;
+        font-family:MicrosoftYaHei;
+        font-size:14px;
+        color:#ffffff;
+        text-align:center;
+    }
+    .report-collect-add {
+        background:#178ce6;
+    }
+    .report-collect-dis {
+        background:#f39c30;
     }
     .content{
         padding-top: 20px;
