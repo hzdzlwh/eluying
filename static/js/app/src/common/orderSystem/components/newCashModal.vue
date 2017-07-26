@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-19 09:56:55
 * @Last Modified by:   linxinjian
-* @Last Modified time: 2017-07-26 13:54:22
+* @Last Modified time: 2017-07-26 15:41:30
 * @email: 783384903@qq.com
 */
 <!-- 有问题找产品，这个模块的功能一般人解释不清楚 -->
@@ -387,7 +387,8 @@ export default {
             gameShowtip: undefined,
             cardShowtip: undefined,
             campanyShowtip: undefined,
-            memberShowtip: undefined
+            memberShowtip: undefined,
+            serialNum: undefined
 
         };
     },
@@ -614,12 +615,13 @@ export default {
                 });
             }
             // 会员余额
+            const cardMax = this.orderPayment.card.find(card => card.type === 0);
             if (this.orderPayment && this.orderPayment.card && this.orderPayment.card.length) {
                 this.paycard.length && this.paycard.forEach(card => {
                     if (card.accountId) {
                         const selectCard = this.cardList.find(cards => cards.accountId === card.accountId);
                         if (card.type === 0) {
-                            const abelFee = Math.min(card.max, Math.max(0, needPay));
+                            const abelFee = Math.min((cardMax ? cardMax.max : 0), Math.max(0, needPay));
                             // const abelFee = Math.min(needPay, selectCard.lastFee);
                             const payed = Math.min(abelFee, card.fee);
                             card.ableFee = abelFee;
@@ -841,6 +843,7 @@ export default {
                         });
                     });
                     this.cardList = cardList;
+                    this.serialNum = res.data.serialNum;
                 });
         },
         /**
@@ -1181,6 +1184,7 @@ export default {
                 });
             }
             params.tokenPayments = JSON.stringify(tokenPayments);
+            params.serialNum = this.serialNum;
             // if (this.type === 'orderDetail') {
             //     params.isSettle = true;
             // }
