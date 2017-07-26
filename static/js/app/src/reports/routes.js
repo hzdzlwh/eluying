@@ -333,6 +333,13 @@ export const routes = [
                 redirect: '',
                 children: [
                     {
+                        path: '',
+                        component: collect,
+                        meta: {
+                            name: 'collect'
+                        }
+                    },
+                    {
                         path: ':id',
                         component: collect,
                         meta: {
