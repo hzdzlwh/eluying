@@ -132,7 +132,7 @@
                 }, {
                     id: 3,
                     name: '住宿',
-                    orderType: 35
+                    orderType: 3
                 }],
                 collectNum: 0,
                 collectName: '加入收藏',

@@ -56,7 +56,7 @@
         <div class="foot footfix">
             <p style="font-size:16px;"><small style='width:16px;'>总房数 : </small> {{roomCount}}</p>
             <p style="font-size:16px;"><small style="width:16px;">当日房费合计 : </small>{{freeCount}}</p>
-            <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo" />
+            <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo" style="float:right;"/>
         </div>
     </div>
 </template>
