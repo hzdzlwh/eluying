@@ -10,7 +10,7 @@
                 {{collectName}}
             </div>
         </div>
-        <dd-table :columns="col" :data-source="vips" :bordered="true" style="margin-top:20px;"></dd-table>
+        <dd-table :columns="col" :data-source="vips" :bordered="true" style="margin:20px 0 10px;"></dd-table>
     </div>
 </template>
 <style lang="scss" scoped>

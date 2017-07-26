@@ -28,11 +28,14 @@
             </span>
         </p>
         <div class="report-business-top">
-            <div class="date">{{date}}</div>
-            <div style="margin-right:20px;width: 120px;" class="fr report-business-select" >
-                <dd-select v-model="statType" >
-                    <dd-option :key="item.id" v-for="item in statTypeAll" :value="item.statType" :label="item.name"></dd-option>
-                </dd-select>
+            <div class="date" style="float:left;line-height:24px;">{{date}}</div>
+            <div style="float:left;height:inherit;overflow:hidden;line-height:24px;">
+                <span style="float:left;margin-right:10px;">统计维度</span>
+                <div style="margin-right:20px;width: 120px;float:left;" class="fr report-business-select">
+                    <dd-select v-model="statType" style="float:right;">
+                        <dd-option :key="item.id" v-for="item in statTypeAll" :value="item.statType" :label="item.name"></dd-option>
+                    </dd-select>
+            `   </div>
             </div>
         </div>
         <div style="display: flex;margin:10px auto;">

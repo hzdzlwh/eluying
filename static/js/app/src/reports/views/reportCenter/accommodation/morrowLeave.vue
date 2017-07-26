@@ -52,7 +52,7 @@
                 {{collectName}}
             </div>
         </div>
-        <dd-table :columns="col" :data-source="vips" :bordered="true"></dd-table>
+        <dd-table :columns="col" :data-source="vips" :bordered="true" style="margin:20px 0 10px;"></dd-table>
         <div class="foot footfix">
             <span style="font-size:16px;"><small style='width:16px;'>总房数 : </small> {{count}}</span>
             <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :age-count="pages" :current-page="pageNo" />
@@ -405,7 +405,7 @@
                         delete obj[ob];
                     }
                 }
-                http.post('/stat/getReserveStat', obj).then(res => {
+                http.post('/stat/getDueoutStat', obj).then(res => {
                     if (res.code === 1) {
                         this.vips = res.data.list || [];
                         this.count = res.data.count;
