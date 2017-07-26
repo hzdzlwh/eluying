@@ -782,17 +782,17 @@
             }
         }
         .userInfo-text-item {
-            margin-right: 32px;
+            margin-right: 24px;
             min-width: 135px;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            max-width: 200px;
             &:last-of-type {
                 margin-right: 0;
             }
         }
-        text-hidden {
+        userInfo-text-overflow {
+            max-width: 170px;
             overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
         }
         .userVip-list {
             position: absolute;

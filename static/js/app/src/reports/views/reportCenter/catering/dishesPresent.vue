@@ -1,7 +1,6 @@
 <template>
     <div>
         <div class="report-reportCenter-date">
-            <DateSelect/>
             <div :class="collectClass" @click="collectUrl(collectNum)" style="float:right;margin-top:-20px;margin-left:20px;">
                 {{collectName}}
             </div>
@@ -13,7 +12,7 @@
             </div>
         </div>
         <p style="font-weight: bold;font-size:24px;color:#178ce6;text-align:center;margin: 20px 0 26px">
-            {{$route.meta.name}}
+            菜品赠送明细表
         </p>
         <div class="top">
             <div class="date">日期 : <i>{{date.startDate}} ~ {{date.endDate}}</i></div>
@@ -39,7 +38,7 @@
         <div class="foot footfix">
             <p style="font-size:16px;"><small style='width:16px;'>总赠送数量 : </small> {{receiptNum}}</p>
             <p style="font-size:16px;"><small style='width:16px;'>总赠送金额 : </small> {{receiptFree}}</p>
-            <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :age-count="pages" :current-page="pageNo" />
+            <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo" />
         </div>
     </div>
 </template>
@@ -81,6 +80,10 @@
       text-align: center;
       line-height:24px;
       cursor:pointer;
+      font-family:MicrosoftYaHei;
+      font-size:14px;
+      color:#ffffff;
+      text-align:center;
   }
   .report-collect-add {
       background:#178ce6;
