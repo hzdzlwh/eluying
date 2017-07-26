@@ -411,7 +411,7 @@
                         this.totalMany = res.data.orderTotalPrice;
                         this.roomCount = res.data.totalRoom;
                         this.freeCount = res.data.totalFee;
-                        this.pages = Math.ceil(res.data.totalRoom / 30);
+                        this.pages = Math.ceil(res.data.total / 30);
                     }
                     this.flag = true;
                 });

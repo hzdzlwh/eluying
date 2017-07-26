@@ -445,7 +445,7 @@
                     if (res.code === 1) {
                         this.vips = res.data.entityList;
                         this.personCount = res.data.total;
-                        this.pages = Math.ceil(res.data.totalResident / 30);
+                        this.pages = Math.ceil(res.data.total / 30);
                     }
                     this.flag = true;
                 });
