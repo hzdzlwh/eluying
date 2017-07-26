@@ -405,7 +405,7 @@
                         delete obj[ob];
                     }
                 }
-                http.post('/stat/getReserveStat', obj).then(res => {
+                http.post('/stat/getDueoutStat', obj).then(res => {
                     if (res.code === 1) {
                         this.vips = res.data.list || [];
                         this.count = res.data.count;
