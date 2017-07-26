@@ -37,7 +37,7 @@ export const list = [
         'name': '收款汇总表'
     },
     {
-        'name': '转应收帐明细表'
+        'name': '转应收账明细表'
     },
     {
         'name': 'AR结算汇总表'
