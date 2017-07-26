@@ -84,8 +84,8 @@
                                 <div class="userInfo-item" v-show="showVipCardSelect">
                                     <label>销售员：</label>
                                     <span  style="width: 150px">
-                                        <dd-select v-model="saleId" :disabled="(this.checkState === 'editOrder' || this.checkState === 'checkIn')">
-                                            <dd-option :value="-1" label="不使用">
+                                        <dd-select v-model="saleId">
+                                            <dd-option :value="-1" label="无">
                                                 无
                                             </dd-option>
                                             <dd-option v-for="sale in saleList" :key="sale.employeeId"
@@ -807,9 +807,9 @@ export default {
                 });
         },
         getSaleList() {
-            http.get('/user/getChannels', {
+            http.get('/user/getEmployeeList', {
                 salerType: 2
-            }).then(res => this.vipList = res.data.list);
+            }).then(res => this.saleList = res.data.list);
         },
         getData() {
             http.get('/user/getChannels', {

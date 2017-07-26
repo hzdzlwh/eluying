@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-19 09:56:55
 * @Last Modified by:   linxinjian
-* @Last Modified time: 2017-07-26 17:54:28
+* @Last Modified time: 2017-07-26 18:06:17
 * @email: 783384903@qq.com
 */
 <!-- 有问题找产品，这个模块的功能一般人解释不清楚 -->
@@ -615,8 +615,8 @@ export default {
                 });
             }
             // 会员余额
-            const cardMax = this.orderPayment.card.find(card => card.type === 0);
             if (this.orderPayment && this.orderPayment.card && this.orderPayment.card.length) {
+                const cardMax = this.orderPayment.card.find(card => card.type === 0);
                 this.paycard.length && this.paycard.forEach(card => {
                     if (card.accountId) {
                         const selectCard = this.cardList.find(cards => cards.accountId === card.accountId);
