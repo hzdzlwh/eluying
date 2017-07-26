@@ -4,12 +4,9 @@
             <DdDatepicker placeholder="开始时间" v-model="startTime" :disabled-date="disableStartDate"/>
             <span style="color:#999;font-size:14px;">～</span>
             <DdDatepicker placeholder="结束时间" v-model="endTime" :disabled-date="disableEndDate" />
-            <!-- <div>
-                <dd-dropdown text="导出明细" trigger="click">
-                    <dd-dropdown-item><span><a :href="exportUrl(1)" download>导出PDF</a></span></dd-dropdown-item>
-                    <dd-dropdown-item><span><a :href="exportUrl(0)" download>导出Excel</a></span></dd-dropdown-item>
-                </dd-dropdown>
-            </div> -->
+            <div :class="collectClass" @click="collectUrl(collectNum)" style="float:right;">
+                {{collectName}}
+            </div>
         </div>
         <div class="report-forecastRoom-title">
             {{$route.meta.name}}
@@ -119,6 +116,22 @@
             }
         }
     }
+    .report-collect {
+        float: left;
+        margin-left:20px;
+        height: 24px;
+        width: 100px;
+        border-radius:2px;
+        text-align: center;
+        line-height:24px;
+        cursor:pointer;
+    }
+    .report-collect-add {
+        background:#178ce6;
+    }
+    .report-collect-dis {
+        background:#f39c30;
+    }
 </style>
 <script>
     import { DdDatepicker, DdPagination } from 'dd-vue-component';
@@ -133,7 +146,9 @@
                 totalMany: 0,
                 pageNo: 1,
                 startTime: '',
-                endTime: ''
+                endTime: '',
+                collectNum: 0,
+                collectName: '加入收藏',
             };
         },
         components: {
@@ -145,6 +160,7 @@
             this.startTime = util.dateFormat(startTime);
             this.endTime = util.dateFormat(util.diffDate(startTime, 30));
             this.getData();
+            this.getCollectStatus();
         },
         watch: {
             endTime() {
@@ -162,22 +178,31 @@
             }
         },
         methods: {
-            // exportUrl(type) {
-            //     const originParam = {
-            //         startDate: this.startTime,
-            //         toDate: this.endTime
-            //     };
-            //     const paramsObj = {
-            //         exportType: type,
-            //         reportType: 304,
-            //         params: JSON.stringify(originParam)
-            //     };
-            //     const host = http.getUrl('/stat/exportReport');
-            //     const pa = http.getDataWithToken(paramsObj);
-            //     pa.params = JSON.parse(pa.params);
-            //     const params = http.paramsToString(pa);
-            //     return `${host}?${params}`;
-            // },
+            collectUrl(num) {
+                if (num === 0) {
+                    this.collectNum = 1;
+                    this.collectName = '已收藏';
+                    http.get('/stat/addToCollect',{statValue: 304});
+                } else if (num === 1) {
+                    http.get('/stat/removeFromCollection',{statValue: 304});
+                    this.collectNum = 0;
+                    this.collectName = '加入收藏';
+                }
+            },
+            getCollectStatus() {
+                http.get('/stat/getCollection')
+                    .then(res => {
+                        if(res.code === 1) {
+                            const collectList = res.data.list;
+                            for(let i=0;i<collectList.length;i++){
+                                if (collectList[i] === 304) {
+                                    this.collectNum = 1;
+                                    this.collectName = '已收藏';
+                                }
+                            }
+                        }
+                    })
+            },
             disableStartDate(date) {
                 if (this.startDate !== '') {
                     const arr1 = util.dateFormat(new Date()).split('-');
@@ -220,6 +245,15 @@
             handlePageChange(internalCurrentPage) {
                 this.pageNo = internalCurrentPage;
                 this.getData();
+            }
+        },
+        computed: {
+            collectClass: function () {
+                return {
+                    'report-collect': true,
+                    'report-collect-add': this.collectNum === 0,
+                    'report-collect-dis': this.collectNum === 1
+                }
             }
         }
     };

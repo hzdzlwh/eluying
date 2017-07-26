@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-19 09:56:55
 * @Last Modified by:   linxinjian
-* @Last Modified time: 2017-07-25 17:51:09
+* @Last Modified time: 2017-07-26 09:51:32
 * @email: 783384903@qq.com
 */
 <!-- 有问题找产品，这个模块的功能一般人解释不清楚 -->
@@ -599,7 +599,7 @@ export default {
                 this.orderPayment.member.forEach(el => {
                     if (el.type === 0) {
                         // const abelFee = Math.min(needPay, el.lastFee);
-                        const abelFee = Math.max(0, needPay);
+                        const abelFee = Math.min(el.max, Math.max(0, needPay));
                         const payed = Math.min(abelFee, el.fee);
                         el.ableFee = abelFee;
                         el.fee = payed;
@@ -614,7 +614,7 @@ export default {
                         const selectCard = this.cardList.find(cards => cards.accountId === card.accountId);
                         if (card.type === 0) {
                             // const abelFee = Math.min(needPay, selectCard.lastFee);
-                            const abelFee = Math.max(0, needPay);
+                            const abelFee = Math.min(card.max, Math.max(0, needPay));
                             const payed = Math.min(abelFee, card.fee);
                             card.ableFee = abelFee;
                             card.fee = payed;
@@ -628,7 +628,7 @@ export default {
                 this.orderPayment.company.forEach(el => {
                     if (el.type === 0) {
                         // const abelFee = Math.min(needPay, el.lastFee);
-                        const abelFee = Math.max(0, needPay);
+                        const abelFee = Math.min(el.max, Math.max(0, needPay));
                         const payed = Math.min(abelFee, el.fee);
                         el.ableFee = abelFee;
                         el.fee = payed;
@@ -805,18 +805,23 @@ export default {
                     this.paiedMoney = paiedFee.toFixed(2);
                     const cardHash = {};
                     const cardList = [];
+                    const needpay = Math.abs(res.data.price + res.data.paid.normal);
                     res.data.game && res.data.game.forEach(element => {
                         element.max = Math.abs(element.ableFee - element.paidFee).toFixed(2);
-                        element.ableNum = Math.abs(element.ableNum - element.paidNum).toFixed(0);
+                        const MaxNum = parseInt(needpay / element.rate);
+                        element.ableNum = Math.min(Math.abs(element.ableNum - element.paidNum).toFixed(0), MaxNum);
                     });
                     res.data.company && res.data.company.forEach(element => {
-                        element.ableNum = Math.abs(element.ableNum - element.paidNum).toFixed(0);
+                        element.max = element.ableFee;
+                        element.ableFee = Math.min(Math.abs(element.ableFee - element.paidFee), needpay);
                     });
                     res.data.member && res.data.member.forEach(element => {
-                        element.ableNum = Math.abs(element.ableNum - element.paidNum).toFixed(0);
+                        element.max = element.ableFee;
+                        element.ableFee = Math.min(Math.abs(element.ableFee - element.paidFee), needpay);
                     });
                     res.data.card && res.data.card.forEach(element => {
-                        element.ableNum = Math.abs(element.ableNum - element.paidNum).toFixed(0);
+                        element.max = element.ableFee;
+                        element.ableFee = Math.min(Math.abs(element.ableFee - element.paidFee), needpay);
                         element.cards.forEach(el => {
                             if (!cardHash[el.accountId]) {
                                 if (element.type === 2) {
