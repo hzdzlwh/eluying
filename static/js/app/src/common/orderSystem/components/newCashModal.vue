@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-19 09:56:55
 * @Last Modified by:   linxinjian
-* @Last Modified time: 2017-07-26 15:48:52
+* @Last Modified time: 2017-07-26 17:54:28
 * @email: 783384903@qq.com
 */
 <!-- 有问题找产品，这个模块的功能一般人解释不清楚 -->
@@ -24,7 +24,7 @@
                                     <span class="cashier-money-text" v-if="orderPayment.need.penalty">违约金:<span>¥{{orderPayment.need.penalty}}</span></span>
                                 </div>
                                 <div style='margin-top:12px;'>
-                                    <span class="cashier-money-text" v-if='orderPayment.paid.game'>{{orderPayment.game[0].accountName}}已抵扣:<span>¥{{orderPayment.paid.game}}</span></span>
+                                    <span class="cashier-money-text" v-if='orderPayment.paid.game && orderPayment.game'>{{orderPayment.game[0].accountName}}已抵扣:<span>¥{{orderPayment.paid.game}}</span></span>
                                     <span class="cashier-money-text" v-if='orderPayment.paid.balance'>余额已抵扣:<span>¥{{orderPayment.paid.balance}}</span></span>
                                     <span class="cashier-money-text">现金已收:<span>¥{{ orderPayment.paid.normal }}</span></span>
                                 </div>

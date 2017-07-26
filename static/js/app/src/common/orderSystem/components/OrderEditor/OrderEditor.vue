@@ -81,6 +81,20 @@
                                     </dd-select>
                                     </span>
                                 </div>
+                                <div class="userInfo-item" v-show="showVipCardSelect">
+                                    <label>销售员：</label>
+                                    <span  style="width: 150px">
+                                        <dd-select v-model="saleId" :disabled="(this.checkState === 'editOrder' || this.checkState === 'checkIn')">
+                                            <dd-option :value="-1" label="不使用">
+                                                无
+                                            </dd-option>
+                                            <dd-option v-for="sale in saleList" :key="sale.employeeId"
+                                                           :value="sale.employeeId" :label="sale.realName + (sale.phone ? '(' + sale.phone+ ')' : '')">
+                                            <span :title="sale.realName + (sale.phone ? '(' + sale.phone+ ')' : '')">{{sale.realName + (sale.phone ? '(' + sale.phone+ ')' : '')}}</span>
+                                            </dd-option>
+                                    </dd-select>
+                                    </span>
+                                </div>
                                <!--  <div class="userInfo-item" v-show="showVipCardSelect">
                                     <label>会员卡</label>
                                     <span  style="width: 150px">
@@ -336,7 +350,9 @@ export default {
             vipCardId: undefined,
             vipCardInfo: {},
             hasBack: false,
-            whenCheckInDeleteRooms: []
+            whenCheckInDeleteRooms: [],
+            saleList: [],
+            saleId: -1
         };
     },
     props: {
@@ -483,6 +499,7 @@ export default {
     },
     created() {
         this.getData();
+        this.getSaleList();
         bus.$on('OrderExtInfochange', this.OrderExtInfochange);
         bus.$on('setBack', this.setBack);
     },
@@ -602,6 +619,7 @@ export default {
                 if (this.checkState === 'editOrder' || this.checkState === 'checkIn') {
                     this.name = this.order.customerName;
                     this.phone = this.order.customerPhone;
+                    this.saleId = this.order.salerId || '-1';
                     this.remark = this.order.remark || '';
 
                     this.userOriginType = this.getOrigin(this.order.originId, this.order.discountRelatedId);
@@ -787,6 +805,11 @@ export default {
                         tag: '企业折扣'
                     };
                 });
+        },
+        getSaleList() {
+            http.get('/user/getChannels', {
+                salerType: 2
+            }).then(res => this.vipList = res.data.list);
         },
         getData() {
             http.get('/user/getChannels', {
