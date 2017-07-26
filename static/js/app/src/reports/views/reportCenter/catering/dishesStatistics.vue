@@ -12,7 +12,9 @@
                 </dd-dropdown>
             </div>
         </div>
-        <h2 class="report-reportCenter-title">{{$route.meta.name}}</h2>
+        <p style="font-weight: bold;font-size:24px;color:#178ce6;text-align:center;margin: 20px 0 26px">
+            {{$route.meta.name}}
+        </p>
         <div class="report-reportCenter-top">
             <div class="date">日期 : <i>{{date.startDate}} ~ {{date.endDate}}</i></div>
             <div class="select-box">
@@ -164,7 +166,6 @@
                     name: '全部菜品分类'
                 }],
                 name: '全部菜品分类',
-                pages: 0,
                 collectNum: 0,
                 collectName: '加入收藏',
                 pageNo: 1,
@@ -197,22 +198,15 @@
         },
         watch: {
             restType() {
-                this.pageNo = 1;
                 this.getData();
             },
             name() {
-                this.pageNo = 1;
                 this.getData();
             },
             startDate() {
-                this.pageNo = 1;
                 this.getData();
             },
             endDate() {
-                this.pageNo = 1;
-                this.getData();
-            },
-            pageNo() {
                 this.getData();
             }
         },
@@ -274,7 +268,6 @@
             },
             exportUrl(type) {
                 const obj = {
-                    pageNo: this.pageNo,
                     restId: this.restType.split('~')[1],
                     startDate: this.date.startDate,
                     endDate: this.date.endDate,
@@ -304,7 +297,6 @@
             },
             getData() {
                 const obj = {
-                    pageNo: this.pageNo,
                     restId: this.restType.split('~')[1],
                     startDate: this.date.startDate,
                     endDate: this.date.endDate,
@@ -322,13 +314,8 @@
                 http.post('/stat/getDishGather', obj).then(res => {
                     if (res.code === 1) {
                         this.vips = res.data.list;
-                        this.pages = Math.ceil(res.data.count / 30);
                     };
                 });
-            },
-            handlePageChange(internalCurrentPage) {
-                this.pageNo = internalCurrentPage;
-                this.getData();
             }
         }
     };

@@ -1,7 +1,9 @@
 <template>
     <div>
         <DateSelect/>
-        <h2 class="title">{{$route.meta.name}}</h2>
+        <p style="font-weight: bold;font-size:24px;color:#178ce6;text-align:center;margin: 20px 0 26px">
+            {{$route.meta.name}}
+        </p>
         <div class="top">
             <div class="date">日期 : <i>{{date.startDate}} ~ {{date.endDate}}</i></div>
             <div class="select-box">
@@ -26,7 +28,7 @@
                 {{collectName}}
             </div>
         </div>
-        <dd-table :columns="col" :data-source="vips" :bordered="true"></dd-table>
+        <dd-table :columns="col" :data-source="vips" :bordered="true" style="margin-top:20px;"></dd-table>
         <div class="foot footfix">
             <p style="font-size:16px;"><small style='width:16px;'>总入账次数 : </small> {{receiptNum}}</p>
             <p style="font-size:16px;"><small style='width:16px;'>总订单金额 : </small> {{orderFree}}</p>
@@ -216,11 +218,6 @@
                     this.getData();
                 }
             },
-            pageNo() {
-                if (this.flag) {
-                    this.getData();
-                }
-            },
             orderType() {
                 this.pageNo = 1;
                 if (this.flag) {
@@ -275,7 +272,7 @@
             },
             exportUrl(type) {
                 const obj = {
-                    pageNo: this.pageNo,
+                    page: this.pageNo,
                     startDate: this.date.startDate,
                     endDate: this.date.endDate
                 };
@@ -312,7 +309,7 @@
             },
             getData() {
                 const obj = {
-                    pageNo: this.pageNo,
+                    page: this.pageNo,
                     startDate: this.date.startDate,
                     endDate: this.date.endDate
                 };

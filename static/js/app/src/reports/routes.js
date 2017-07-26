@@ -336,7 +336,7 @@ export const routes = [
                         path: ':id',
                         component: collect,
                         meta: {
-                            name: 'collect'
+                            name: ''
                         }
                     }
                 ]

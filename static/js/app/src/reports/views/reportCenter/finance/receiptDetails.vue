@@ -248,11 +248,6 @@
                     this.getData();
                 }
             },
-            pageNo() {
-                if (this.flag) {
-                    this.getData();
-                }
-            },
             orderType() {
                 this.pageNo = 1;
                 if (this.flag) {
@@ -296,7 +291,7 @@
             },
             exportUrl(type) {
                 const obj = {
-                    pageNo: this.pageNo,
+                    page: this.pageNo,
                     startDate: this.date.startDate,
                     endDate: this.date.endDate
                 };
@@ -344,7 +339,7 @@
             },
             getData() {
                 const obj = {
-                    pageNo: this.pageNo,
+                    page: this.pageNo,
                     startDate: this.date.startDate,
                     endDate: this.date.endDate
                 };

@@ -56,14 +56,15 @@
             <div style="flex: 1;">
                 <table style="width: 100%" class="c">
                     <colgroup>
-                        <col width="25%">
-                        <col width="25%">
-                        <col width="25%">
-                        <col width="25%">
+                        <col width="20%">
+                        <col width="20%">
+                        <col width="20%">
+                        <col width="20%">
+                        <col width="20%">
                     </colgroup>
                     <thead>
                     <tr>
-                        <th colspan="4">本日</th>
+                        <th colspan="5">本日</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -72,12 +73,14 @@
                         <td>房费</td>
                         <td>平均房价</td>
                         <td>出租率</td>
+                        <td>RevPAR</td>
                     </tr>
                     <tr v-for="r in dayStat" :class="{b: r.name === '合计'}">
                         <td>{{r.night}}</td>
                         <td>{{r.fee}}</td>
                         <td>{{r.avg}}</td>
                         <td>{{r.rate}}</td>
+                        <td>{{r.revPAR}}</td>
                     </tr>
                     </tbody>
                 </table>
@@ -85,14 +88,15 @@
             <div style="flex: 1">
                 <table style="width: 100%" class="r">
                     <colgroup>
-                        <col width="25%">
-                        <col width="25%">
-                        <col width="25%">
-                        <col width="25%">
+                        <col width="20%">
+                        <col width="20%">
+                        <col width="20%">
+                        <col width="20%">
+                        <col width="20%">
                     </colgroup>
                     <thead>
                     <tr>
-                        <th colspan="4">本月</th>
+                        <th colspan="5">本月</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -101,12 +105,14 @@
                         <td>房费</td>
                         <td>平均房价</td>
                         <td>出租率</td>
+                        <td>RevPAR</td>
                     </tr>
                     <tr v-for="r in monStat" :class="{b: r.name === '合计'}">
                         <td>{{r.night}}</td>
                         <td>{{r.fee}}</td>
                         <td>{{r.avg}}</td>
                         <td>{{r.rate}}</td>
+                        <td>{{r.revPAR}}</td>
                     </tr>
                     </tbody>
                 </table>

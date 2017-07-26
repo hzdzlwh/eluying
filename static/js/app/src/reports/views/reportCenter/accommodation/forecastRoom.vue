@@ -8,9 +8,9 @@
                 {{collectName}}
             </div>
         </div>
-        <div class="report-forecastRoom-title">
+        <p style="font-weight: bold;font-size:24px;color:#178ce6;text-align:center;margin: 20px 0 26px">
             {{$route.meta.name}}
-        </div>
+        </p>
         <div class="report-forecastRoom-date">
             {{startTime}} ~ {{endTime}}
         </div>
