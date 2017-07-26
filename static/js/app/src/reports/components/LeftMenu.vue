@@ -6,8 +6,11 @@
                 <li v-for="child in route.children" v-if='$route.meta.name !== "collect"'>
                     <router-link :to="child.path">{{child.meta.name}}</router-link>
                 </li>
-                <li v-for="child in collectList" v-if='$route.meta.name === "collect"'>
+                <!-- <li v-for="child in collectList" v-if='$route.meta.name === "collect"'>
                     <router-link :to='"/reportCenter/collect/" + child'>{{getcollect(child).name}}</router-link>
+                </li> -->
+                <li v-for="(item, index) in $router.options.routes[2].children[0].children" v-if="index !== 0 && $route.meta.name === 'collect'">
+                    <router-link :to='"/reportCenter/collect/" + item.meta.id'>{{item.meta.name}}</router-link>
                 </li>
             </ul>
         </li>
@@ -34,10 +37,10 @@
             };
         },
         created() {
-            http.get('/stat/getCollection', {})
+            /* http.get('/stat/getCollection', {})
             .then(res => {
                 this.collectList = res.data.list;
-            });
+            }); */
             bus.$on('changeList', this.changeRouter);
             if (reg1.test(this.$route.fullPath)) {
                 this.routes = this.$router.options.routes[1].children;

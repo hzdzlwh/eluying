@@ -66,6 +66,11 @@
             ARDetails,
             dailyReport
         },
+        watch: {
+            '$route.path'() {
+                this.componentName = this.$route.params.id;
+            }
+        }
         // beforeRouteUpdate(to, from, next) {
         //     this.componentName = this.$routes.params.id;
         //     next();
