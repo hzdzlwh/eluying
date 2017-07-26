@@ -1,6 +1,8 @@
 <template>
     <div>
-        <h2 class="title">{{$route.meta.name}}</h2>
+        <p style="font-weight: bold;font-size:24px;color:#178ce6;text-align:center;margin: 20px 0 26px">
+            {{$route.meta.name}}
+        </p>
         <div class="top">
             <div class="date">日期 : <i>{{today}}</i></div>
             <div class="select-box">
@@ -51,7 +53,7 @@
             </div>
         </div>
         <div style="overflow:auto;">
-            <dd-table :columns="col" :data-source="vips" :bordered="true"></dd-table>
+            <dd-table :columns="col" :data-source="vips" :bordered="true" style="margin:20px 0 10px;"></dd-table>
         </div>
         <div class="foot footfix">
             <span style="font-size:16px;"><small style='width:16px;'>总房数 : </small> {{count}}</span>
@@ -420,16 +422,6 @@
                         this.totalMany = res.data.orderTotalPrice;
                         this.count = res.data.count;
                         this.pages = Math.ceil(res.data.count / 30);
-                        // if (keyword) {
-                        //     this.originId = -2;
-                        //     this.endTime = undefined;
-                        //     this.pageNo = 1;
-                        //     this.searchPattern = undefined;
-                        //     this.startTime = undefined;
-                        //     this.state = -1;
-                        //     this.timeType = 1;
-                        //     $("#search").val('');
-                        // }
                     }
                     this.flag = true;
                 });

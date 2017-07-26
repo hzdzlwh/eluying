@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-19 09:56:55
 * @Last Modified by:   linxinjian
-* @Last Modified time: 2017-07-26 09:51:32
+* @Last Modified time: 2017-07-26 15:48:52
 * @email: 783384903@qq.com
 */
 <!-- 有问题找产品，这个模块的功能一般人解释不清楚 -->
@@ -153,7 +153,7 @@
                 <p class="content-item-title"><span>现金收款</span></p>
                 <div class="cashier-getMoney-channels" v-if="payments.length > 0">
                     <div class="cashier-getMoney-channel" v-for="(payment, index) in payments" :key="payment.uniqueId">
-                        <dd-select v-model="payment.type" class='dd-select-with' :disabled='type === "collect"'>
+                        <dd-select v-model="payment.type" class='dd-select-with'>
                             <dd-option v-for="way in getOrReturn" :key="way.val" :value="way.val" :label="way.name" :title='way.name'>
                             </dd-option>
                         </dd-select>
@@ -387,7 +387,8 @@ export default {
             gameShowtip: undefined,
             cardShowtip: undefined,
             campanyShowtip: undefined,
-            memberShowtip: undefined
+            memberShowtip: undefined,
+            serialNum: undefined
 
         };
     },
@@ -581,6 +582,7 @@ export default {
                 });
             }
             // 然后去分别俺优先级收取
+            let gameTotal = 0;
             if (this.orderPayment && this.orderPayment.game && this.orderPayment.game.length) {
                 this.orderPayment.game.forEach(el => {
                     if (el.type === 0) {
@@ -590,7 +592,7 @@ export default {
                         el.ableNum = parseInt(abelFee / el.rate);
                         el.fee = parseInt(payed);
                         needPay = (needPay - (payed * el.rate).toFixed(2)).toFixed(2) * 1;
-                        // 为了和显示一致
+                        gameTotal += (el.fee * el.rate);
                     }
                 });
             }
@@ -598,8 +600,13 @@ export default {
             if (this.orderPayment && this.orderPayment.member && this.orderPayment.member.length) {
                 this.orderPayment.member.forEach(el => {
                     if (el.type === 0) {
+                        let abelFee = 0;
+                        if (this.orderPayment.gameFeeMemberAble) {
+                            abelFee = Math.min(el.max - gameTotal, Math.max(0, needPay));
+                        } else {
+                            abelFee = Math.min(el.max, Math.max(0, needPay));
+                        }
                         // const abelFee = Math.min(needPay, el.lastFee);
-                        const abelFee = Math.min(el.max, Math.max(0, needPay));
                         const payed = Math.min(abelFee, el.fee);
                         el.ableFee = abelFee;
                         el.fee = payed;
@@ -608,13 +615,14 @@ export default {
                 });
             }
             // 会员余额
+            const cardMax = this.orderPayment.card.find(card => card.type === 0);
             if (this.orderPayment && this.orderPayment.card && this.orderPayment.card.length) {
                 this.paycard.length && this.paycard.forEach(card => {
                     if (card.accountId) {
                         const selectCard = this.cardList.find(cards => cards.accountId === card.accountId);
                         if (card.type === 0) {
+                            const abelFee = Math.min((cardMax ? cardMax.max : 0), Math.max(0, needPay));
                             // const abelFee = Math.min(needPay, selectCard.lastFee);
-                            const abelFee = Math.min(card.max, Math.max(0, needPay));
                             const payed = Math.min(abelFee, card.fee);
                             card.ableFee = abelFee;
                             card.fee = payed;
@@ -835,6 +843,7 @@ export default {
                         });
                     });
                     this.cardList = cardList;
+                    this.serialNum = res.data.serialNum;
                 });
         },
         /**
@@ -1175,6 +1184,7 @@ export default {
                 });
             }
             params.tokenPayments = JSON.stringify(tokenPayments);
+            params.serialNum = this.serialNum;
             // if (this.type === 'orderDetail') {
             //     params.isSettle = true;
             // }

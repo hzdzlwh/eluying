@@ -25,7 +25,7 @@
                                         </p>
                                     </div>
                                     <label for="name">联系人</label>
-                                    <input class="dd-input" type="text" maxlength="16" placeholder="联系人姓名" id="name" autocomplete="off" :disabled="(this.checkState === 'editOrder' || this.checkState === 'checkIn') && !(order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder))" v-model="name" @input="changeVipList(1)">
+                                    <input style="width:90px" class="dd-input" type="text" maxlength="16" placeholder="联系人姓名" id="name" autocomplete="off" :disabled="(this.checkState === 'editOrder' || this.checkState === 'checkIn') && !(order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder))" v-model="name" @input="changeVipList(1)">
                                 </div>
                                 <div class="userInfo-item userInfo-phone vip-level-container">
                                     <label for="phone">手机号</label>
@@ -66,7 +66,7 @@
                                 </div>
                                 <div class="userInfo-item" v-show="showVipCardSelect">
                                     <label>会员卡</label>
-                                    <span class="vipcard-select" style="width: 210px">
+                                    <span  style="width: 150px">
                                         <dd-select v-model="vipCardId" :disabled="(this.checkState === 'editOrder' || this.checkState === 'checkIn') && !(order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder))">
                                             <dd-option :value="0" label="不使用">
                                                 不使用
@@ -81,6 +81,23 @@
                                     </dd-select>
                                     </span>
                                 </div>
+                               <!--  <div class="userInfo-item" v-show="showVipCardSelect">
+                                    <label>会员卡</label>
+                                    <span  style="width: 150px">
+                                        <dd-select v-model="vipCardId" :disabled="(this.checkState === 'editOrder' || this.checkState === 'checkIn') && !(order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder))">
+                                            <dd-option :value="0" label="不使用">
+                                                不使用
+                                            </dd-option>
+                                            <dd-group-option v-for="item in vipCardsAndLevel" :label="item.label"
+                                                             :key="item" v-if="item.levels && item.levels.length > 0">
+                                                <dd-option v-for="level in item.levels" :key="level"
+                                                           :value="level.id" :label="level.name+(level.serialNum || '')">
+                                                    <span :title="level.serialNum">{{level.name}} {{level.serialNum}}</span>
+                                    </dd-option>
+                                    </dd-group-option>
+                                    </dd-select>
+                                    </span>
+                                </div> -->
                             </div>
                             <orderExtInfo :checkState='"team"' v-model='ExtInDate' v-if='checkState === "team"'></orderExtInfo>
                             <!-- checkstate先放着，以后应该能复用到 -->

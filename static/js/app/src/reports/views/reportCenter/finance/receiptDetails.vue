@@ -31,7 +31,7 @@
                 {{collectName}}
             </div>
         </div>
-        <dd-table :columns="col" :data-source="vips" :bordered="true" style="margin-top: 20px;"></dd-table>
+        <dd-table :columns="col" :data-source="vips" :bordered="true" style="margin: 20px 0 10px;"></dd-table>
         <div class="foot footfix">
             <div style="float:left;">
                 <p style="font-size:16px;"><small style='width:16px;'>总收款笔数 : </small> {{receiptNum}}</p>
@@ -248,11 +248,6 @@
                     this.getData();
                 }
             },
-            pageNo() {
-                if (this.flag) {
-                    this.getData();
-                }
-            },
             orderType() {
                 this.pageNo = 1;
                 if (this.flag) {
@@ -296,7 +291,7 @@
             },
             exportUrl(type) {
                 const obj = {
-                    pageNo: this.pageNo,
+                    page: this.pageNo,
                     startDate: this.date.startDate,
                     endDate: this.date.endDate
                 };
@@ -344,7 +339,7 @@
             },
             getData() {
                 const obj = {
-                    pageNo: this.pageNo,
+                    page: this.pageNo,
                     startDate: this.date.startDate,
                     endDate: this.date.endDate
                 };

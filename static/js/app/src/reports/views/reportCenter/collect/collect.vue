@@ -1,27 +1,32 @@
 <template>
     <div>
-        <morrowArrive v-if='componentName === "23"'></morrowArrive>
-        <todayArrive v-if='componentName === "22"'></todayArrive>
-        <todayLeave v-if='componentName === "20"'></todayLeave>
-        <morrowLeave v-if='componentName === "21"'></morrowLeave>
-        <todayRoom v-if='componentName === "301"'></todayRoom>
-        <todayGuest v-if='componentName === "302"'></todayGuest>
-        <historyGuest v-if='componentName === "303"'></historyGuest>
-        <businessRoom v-if='componentName === "19"'></businessRoom>
-        <forecastRoom v-if='componentName === "304"'></forecastRoom>
-        <dishesPresent v-if='componentName === "501"'></dishesPresent>
-        <dishesStatistics v-if='componentName === "502"'></dishesStatistics>
-        <receiptDetails v-if='componentName === "401"'></receiptDetails>
-        <!--<receiptGather v-if='componentName === "302"'></receiptGather>-->
-        <transferDetails v-if='componentName === "403"'></transferDetails>
-        <rechargeDetails v-if='componentName === "305"'></rechargeDetails>
-        <ARDetails v-if='componentName === "404"'></ARDetails>
-        <dailyReport v-if='componentName === "18"'></dailyReport>
+        <component v-bind:is="currentView"></component>
+        <!--<morrowArrive :is='componentName === "23"'></morrowArrive>-->
+        <!--<todayArrive :is='componentName === "22"'></todayArrive>-->
+        <!--<todayLeave :is='componentName === "20"'></todayLeave>-->
+        <!--<morrowLeave :is='componentName === "21"'></morrowLeave>-->
+        <!--<todayRoom :is='componentName === "301"'></todayRoom>-->
+        <!--<todayGuest :is='componentName === "302"'></todayGuest>-->
+        <!--<historyGuest :is='componentName === "303"'></historyGuest>-->
+        <!--<businessRoom :is='componentName === "19"'></businessRoom>-->
+        <!--<forecastRoom :is='componentName === "304"'></forecastRoom>-->
+        <!--<dishesPresent :is='componentName === "501"'></dishesPresent>-->
+        <!--<dishesStatistics :is='componentName === "502"'></dishesStatistics>-->
+        <!--<receiptDetails :is='componentName === "401"'></receiptDetails>-->
+        <!--<receiptGather :is='componentName === "402"'></receiptGather>-->
+        <!--<transferDetails :is='componentName === "403"'></transferDetails>-->
+        <!--<rechargeDetails :is='componentName === "305"'></rechargeDetails>-->
+        <!--<ARGather :is='componentName === "405"'></ARGather>-->
+        <!--<dailyReport :is='componentName === "18"'></dailyReport>-->
     </div>
 </template>
 <style lang="scss" scoped>
 </style>
 <script>
+    import http from 'http';
+    import { mapActions } from 'vuex';
+    import bus from '../../../bus.js';
+    import noCollect from './noCollect.vue';
     import morrowArrive from '../accommodation/morrowArrive.vue';
     import todayArrive from '../accommodation/todayArrive.vue';
     import todayLeave from '../accommodation/todayLeave.vue';
@@ -34,21 +39,38 @@
     import dishesPresent from '../catering/dishesPresent.vue';
     import dishesStatistics from '../catering/dishesStatistics.vue';
     import receiptDetails from '../finance/receiptDetails.vue';
-//    import receiptGather from '../finance/receiptGather.vue';
+    import receiptGather from '../finance/receiptGather.vue';
     import rechargeDetails from '../finance/rechargeDetails.vue';
     import transferDetails from '../finance/transferDetails.vue';
-    import ARDetails from '../finance/ARDetails.vue';
+    import ARGather from '../finance/ARGather.vue';
     import dailyReport from '../manage/dailyReport.vue';
-//    import recordedDetails from '../recordedDetails.vue';
     import collectList from '../../../collectList.js';
     export default {
         data() {
             return {
                 collectList,
-                componentName: this.$route.params.id
+                componentName: this.$route.params.id,
+                currentView: 'noCollect'
             };
         },
+        created() {
+            console.log(this.collectList);
+            http.get('/stat/getCollection', {})
+                .then(res => {
+                    if (res.code === 1) {
+                        const centerList = res.data.list;
+                        if (centerList.length) {
+                            console.log(centerList);
+                            // this.$router.push('/reportCenter/collect/' + res.data.list[0]);
+                            // this.currentView = ''
+                        }
+                    } else {
+                        window.alert('请求失败');
+                    }
+                });
+        },
         components: {
+            noCollect,
             morrowArrive,
             todayArrive,
             todayLeave,
@@ -61,14 +83,15 @@
             dishesPresent,
             dishesStatistics,
             receiptDetails,
+            receiptGather,
             rechargeDetails,
             transferDetails,
-            ARDetails,
+            ARGather,
             dailyReport
         },
         watch: {
             '$route.path'() {
-                this.componentName = this.$route.params.id;
+                this.currentView = collectList[this.$route.params.id].component;
             }
         }
         // beforeRouteUpdate(to, from, next) {

@@ -1,7 +1,9 @@
 <template>
     <div>
         <DateSelect/>
-        <h2 class="title">{{$route.meta.name}}</h2>
+        <p style="font-weight: bold;font-size:24px;color:#178ce6;text-align:center;margin: 20px 0 26px">
+            {{$route.meta.name}}
+        </p>
         <div class="top">
             <div class="date">日期 : <i>{{date.startDate}} ~ {{date.endDate}}</i></div>
             <div class="select-box">
@@ -31,7 +33,7 @@
                 {{collectName}}
             </div>
         </div>
-        <dd-table :columns="col" :data-source="vips" :bordered="true"></dd-table>
+        <dd-table :columns="col" :data-source="vips" :bordered="true" style="margin:20px 0 10px;"></dd-table>
         <div class="foot footfix">
             <p style="font-size:16px;"><small style='width:16px;'>总充值笔数 : </small> {{receiptNum}}</p>
             <p style="font-size:16px;"><small style='width:16px;'>总充值金额 : </small> {{receiptFree}}</p>
@@ -68,11 +70,6 @@
       float: left;
       margin-left:20px;
     }
-  }
-  #table {
-    margin-top: 20px;
-    max-height: 400px;
-    padding-bottom: 12px;
   }
   .report-collect {
       float: left;
@@ -277,7 +274,7 @@
             },
             exportUrl(type) {
                 const obj = {
-                    pageNo: this.pageNo,
+                    pageNum: this.pageNo,
                     categoryId: this.categoryType.split('~')[1],
                     startDate: this.date.startDate,
                     toDate: this.date.endDate
@@ -344,7 +341,7 @@
             },
             getData() {
                 const obj = {
-                    pageNo: this.pageNo,
+                    pageNum: this.pageNo,
                     categoryId: this.categoryType.split('~')[1],
                     startDate: this.date.startDate,
                     toDate: this.date.endDate

@@ -12,7 +12,9 @@
                 </dd-dropdown>
             </div>
         </div>
-        <h2 class="title">{{$route.meta.name}}</h2>
+        <p style="font-weight: bold;font-size:24px;color:#178ce6;text-align:center;margin: 20px 0 26px">
+            {{$route.meta.name}}
+        </p>
         <div class="top">
             <div class="date">日期 : <i>{{date.startDate}} ~ {{date.endDate}}</i></div>
             <div class="select-box">
@@ -33,7 +35,7 @@
                 </div>
             </div>
         </div>
-        <dd-table :columns="col" :data-source="vips" :bordered="true" style="margin-top:20px;"></dd-table>
+        <dd-table :columns="col" :data-source="vips" :bordered="true" style="margin:20px 0 10px;"></dd-table>
         <div class="foot footfix">
             <p style="font-size:16px;"><small style='width:16px;'>总赠送数量 : </small> {{receiptNum}}</p>
             <p style="font-size:16px;"><small style='width:16px;'>总赠送金额 : </small> {{receiptFree}}</p>

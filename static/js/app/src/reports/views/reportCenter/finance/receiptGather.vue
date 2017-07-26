@@ -1,14 +1,16 @@
 <template>
 	<div>
         <DateSelect/>
-        <h2 class="title">{{$route.meta.name}}</h2>
+        <p style="font-weight: bold;font-size:24px;color:#178ce6;text-align:center;margin: 20px 0 26px">
+            {{$route.meta.name}}
+        </p>
         <div class="top">
             <div class="date">日期 : <i>{{date.startDate}} ~ {{date.endDate}}</i></div>
+            <div :class="collectClass" @click="collectUrl(collectNum)" style="float:right;">
+                {{collectName}}
+            </div>
         </div>
-        <div :class="collectClass" @click="collectUrl(collectNum)">
-            {{collectName}}
-        </div>
-        <dd-table :columns="col" :data-source="vips" :bordered="true"></dd-table>
+        <dd-table :columns="col" :data-source="vips" :bordered="true" style="margin:20px 0 10px;"></dd-table>
     </div>
 </template>
 <style lang="scss" scoped>

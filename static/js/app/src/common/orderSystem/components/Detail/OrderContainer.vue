@@ -775,8 +775,8 @@
             align-items: center;
         }
         .userInfo-item {
-            margin-right: 32px;
-            min-width: 165px;
+            margin-right: 24px;
+            // min-width: 165px;
             &:last-of-type {
                 margin-right: 0;
             }

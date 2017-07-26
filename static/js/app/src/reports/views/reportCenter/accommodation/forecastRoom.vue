@@ -8,13 +8,13 @@
                 {{collectName}}
             </div>
         </div>
-        <div class="report-forecastRoom-title">
+        <p style="font-weight: bold;font-size:24px;color:#178ce6;text-align:center;margin: 20px 0 26px">
             {{$route.meta.name}}
-        </div>
-        <div class="report-forecastRoom-date">
+        </p>
+        <div class="report-forecastRoom-date" style="line-height:24px;">
             {{startTime}} ~ {{endTime}}
         </div>
-        <table class="report-forecastRoom-table" border="1">
+        <table class="report-forecastRoom-table" border="1" style="margin:10px 0;">
             <thead>
                 <tr>
                     <th rowspan="2">营业日期</th>
