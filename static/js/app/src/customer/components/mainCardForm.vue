@@ -59,6 +59,20 @@
                             </div>
                         </div>
                     </div>
+                    <div class="cardList-body-item" v-if="cardTypes">
+                        <span class="cardList-body-itemLeft">销售员</span>
+                        <div class="cardList-body-itemRight">
+                             <dd-select v-model="saleId">
+                                    <dd-option :value="-1" label="无">
+                                        无
+                                    </dd-option>
+                                    <dd-option v-for="sale in saleList" :key="sale.employeeId"
+                                                   :value="sale.employeeId" :label="sale.realName + (sale.phone ? '(' + sale.phone+ ')' : '')">
+                                    <span :title="sale.realName + (sale.phone ? '(' + sale.phone+ ')' : '')">{{sale.realName + (sale.phone ? '(' + sale.phone+ ')' : '')}}</span>
+                                    </dd-option>
+                            </dd-select>
+                        </div>
+                    </div>
                     <div class="cardList-body-item" style="background: #e1effa;height: 50px" >
                         <span>卡费:<span>{{ selectedCard.cardFee }}</span>元</span>
                         <span style="margin-left: 16px">充值:<span>{{ selectedCard.rechargeFee }}</span>元</span>
@@ -132,11 +146,14 @@
                     rechargeFee: 0,
                     freeFee: 0
                 },
-                phoneIsWrite: false
+                phoneIsWrite: false,
+                saleId: -1,
+                saleList: []
             };
         },
         created() {
             this.getCardTypes();
+            this.getSaleList();
         },
         methods: {
             resetData() {
@@ -156,6 +173,12 @@
                     rechargeFee: 0,
                     freeFee: 0
                 };
+                this.saleId = -1;
+            },
+            getSaleList() {
+                http.get('/user/getEmployeeList', {
+                    salerType: 2
+                }).then(res => this.saleList = res.data.list);
             },
             getCardTypes() {
                 http.get('/vipCard/getApplyVipCardCategoryList', {})
@@ -226,7 +249,8 @@
                     phone: this.phone,
                     vipCardNum: this.cardNum,
                     payChannel: this.payChannel,
-                    payChannelId: this.payChannelId
+                    payChannelId: this.payChannelId,
+                    salerId: this.saleId
                 };
                 if (!params.categoryId) {
                     modal.warn('请选择会员卡！');

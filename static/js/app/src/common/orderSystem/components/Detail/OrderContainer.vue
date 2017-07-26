@@ -60,6 +60,10 @@
                                     <label class="label-text">会员卡</label>
                                     <span>{{ order.discountRelatedName || '不使用' }}</span>
                                 </div>
+                                <div class="userInfo-text-item">
+                                    <label class="label-text">销售员</label>
+                                    <span>{{ order.salerStr || '无' }}</span>
+                                </div>
                             </div>
                         </div>
                         <slot></slot>
@@ -775,7 +779,7 @@
             align-items: center;
         }
         .userInfo-item {
-            margin-right: 24px;
+            margin-right: 22px;
             // min-width: 165px;
             &:last-of-type {
                 margin-right: 0;

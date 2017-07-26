@@ -81,7 +81,7 @@
                                     </dd-select>
                                     </span>
                                 </div>
-                                <div class="userInfo-item" v-show="showVipCardSelect">
+                                <div class="userInfo-item">
                                     <label>销售员：</label>
                                     <span  style="width: 150px">
                                         <dd-select v-model="saleId">
@@ -1138,7 +1138,8 @@ export default {
                 extraItems: JSON.stringify(room.extraItems),
                 whenCheckIn: this.checkState === 'checkIn',
                 ...this.getDiscountRelatedIdAndOrigin(),
-                checkType: room.checkType
+                checkType: room.checkType,
+                saleId: this.saleId
             };
             const callback = function() {
                 http.post('/order/modifyRoomOrder', params)
@@ -1185,6 +1186,7 @@ export default {
                 timeAmount: enterItems.timeAmount,
                 totalPrice: enterItems.totalPrice,
                 date: enterItems.date,
+                saleId: this.saleId,
                 ...this.getDiscountRelatedIdAndOrigin()
             };
             http.post('/order/modifyEnterOrder', params)
@@ -1256,7 +1258,8 @@ export default {
                 orderId: this.order.orderId,
                 whenCheckIn: this.checkState === 'checkIn',
                 whenCheckInDeleteRooms: JSON.stringify(this.whenCheckInDeleteRooms),
-                ...this.getDiscountRelatedIdAndOrigin()
+                ...this.getDiscountRelatedIdAndOrigin(),
+                saleId: this.saleId
             };
 
             const callback = function() {
@@ -1296,7 +1299,8 @@ export default {
                 entertainmentItems: JSON.stringify(entertainmentItems),
                 items: JSON.stringify(this.newGoodItems),
                 goods: JSON.stringify(this.previousGoods),
-                ...this.getDiscountRelatedIdAndOrigin()
+                ...this.getDiscountRelatedIdAndOrigin(),
+                saleId: this.saleId
             };
             if (type && type === 'auto') {
                 params.type = 1;
@@ -1351,7 +1355,8 @@ export default {
                 entertainmentItems: JSON.stringify(entertainmentItems),
                 items: JSON.stringify(this.newGoodItems),
                 goods: JSON.stringify(this.previousGoods),
-                ...this.getDiscountRelatedIdAndOrigin()
+                ...this.getDiscountRelatedIdAndOrigin(),
+                saleId: this.saleId
             };
             // const str = util.dateFormat(new Date());
             // const arr = str.split('-');
