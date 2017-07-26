@@ -1,7 +1,7 @@
 <template>
     <div>
         <p style="font-weight: bold;font-size:24px;color:#178ce6;text-align:center;margin: 20px 0 26px">
-            {{$route.meta.name}}
+            次日预离房间报表
         </p>
         <div class="top">
             <div class="date">日期 : <i>{{morrow}}</i></div>
@@ -55,7 +55,7 @@
         <dd-table :columns="col" :data-source="vips" :bordered="true" style="margin:20px 0 10px;"></dd-table>
         <div class="foot footfix">
             <span style="font-size:16px;"><small style='width:16px;'>总房数 : </small> {{count}}</span>
-            <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :age-count="pages" :current-page="pageNo" />
+            <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo" />
         </div>
     </div>
 </template>
@@ -102,6 +102,10 @@
         text-align: center;
         line-height:24px;
         cursor:pointer;
+        font-family:MicrosoftYaHei;
+        font-size:14px;
+        color:#ffffff;
+        text-align:center;
     }
     .report-collect-add {
         background:#178ce6;

@@ -29,10 +29,10 @@
         </p>
         <div class="report-business-top">
             <div class="date" style="float:left;line-height:24px;">{{date}}</div>
-            <div style="float:left;height:inherit;overflow:hidden;line-height:24px;">
+            <div style="float:left;height:inherit;line-height:24px;">
                 <span style="float:left;margin-right:10px;">统计维度</span>
                 <div style="margin-right:20px;width: 120px;float:left;" class="fr report-business-select">
-                    <dd-select v-model="statType" style="float:right;">
+                    <dd-select v-model="statType">
                         <dd-option :key="item.id" v-for="item in statTypeAll" :value="item.statType" :label="item.name"></dd-option>
                     </dd-select>
             `   </div>
@@ -196,6 +196,10 @@
         text-align: center;
         line-height:24px;
         cursor:pointer;
+        font-family:MicrosoftYaHei;
+        font-size:14px;
+        color:#ffffff;
+        text-align:center;
     }
     .report-collect-add {
         background:#178ce6;

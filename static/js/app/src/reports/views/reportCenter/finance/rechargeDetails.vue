@@ -1,8 +1,7 @@
 <template>
     <div>
-        <DateSelect/>
         <p style="font-weight: bold;font-size:24px;color:#178ce6;text-align:center;margin: 20px 0 26px">
-            {{$route.meta.name}}
+            充值明细表
         </p>
         <div class="top">
             <div class="date">日期 : <i>{{date.startDate}} ~ {{date.endDate}}</i></div>
@@ -80,6 +79,10 @@
       text-align: center;
       line-height:24px;
       cursor:pointer;
+      font-family:MicrosoftYaHei;
+      font-size:14px;
+      color:#ffffff;
+      text-align:center;
   }
   .report-collect-add {
       background:#178ce6;
@@ -306,7 +309,12 @@
                 http.get('/user/getChannels', { type: 1, isAll: true })
                     .then(res => {
                         if (res.code === 1) {
-                            this.channels = [...this.channels, ...res.data.list];
+                            const channelList = res.data.list;
+                            channelList.forEach(channel => {
+                                if (channel.name !== '企业挂账' && channel.name !== '企业余额' && channel.name !== '一码通' && channel.name !== '会员余额' && channel.name !== '会员卡余额' && channel.name !== '虚拟币抵扣') {
+                                    this.channels.push(channel);
+                                }
+                            });
                         }
                     });
             },

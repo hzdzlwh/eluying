@@ -1,7 +1,6 @@
 <template>
     <div style="width: 1000px;margin:0 auto;">
         <div class="report-reportCenter-date">
-            <DateSelect/>
             <div :class="collectClass" @click="collectUrl(collectNum)" style="float:right;margin-top:-20px;margin-left:20px;">
                 {{collectName}}
             </div>
@@ -13,7 +12,7 @@
             </div>
         </div>
         <p style="font-weight: bold;font-size:24px;color:#178ce6;text-align:center;margin: 20px 0 26px">
-            {{$route.meta.name}}
+            菜品统计汇总表
         </p>
         <div class="report-reportCenter-top">
             <div class="date">日期 : <i>{{date.startDate}} ~ {{date.endDate}}</i></div>
@@ -89,6 +88,10 @@
         text-align: center;
         line-height:24px;
         cursor:pointer;
+        font-family:MicrosoftYaHei;
+        font-size:14px;
+        color:#ffffff;
+        text-align:center;
     }
     .report-collect-add {
         background:#178ce6;

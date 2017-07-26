@@ -1,8 +1,7 @@
 <template>
     <div>
-        <DateSelect/>
         <p style="font-weight: bold;font-size:24px;color:#178ce6;text-align:center;margin: 20px 0 26px">
-            {{$route.meta.name}}
+            历史入住客人报表
         </p>
         <div class="report-reportCenter-top">
             <div class="date">日期 : <i>{{date.startDate}} ~ {{date.endDate}}</i></div>
@@ -43,20 +42,23 @@
                     </dd-select>
                 </div>
             </div>
-            <div class="export">
-                <dd-dropdown text="导出明细" trigger="click" style="width:100px;">
-                  <!-- <dd-dropdown-item><span><a :href="exportUrl(1)">导出PDF</a></span></dd-dropdown-item> -->
-                  <dd-dropdown-item><span><a :href="exportUrl(0)">导出Excel</a></span></dd-dropdown-item>
-                </dd-dropdown>
+            <div>
+                <div class="export">
+                    <dd-dropdown text="导出明细" trigger="click" style="width:100px;">
+                        <!-- <dd-dropdown-item><span><a :href="exportUrl(1)">导出PDF</a></span></dd-dropdown-item> -->
+                        <dd-dropdown-item><span><a :href="exportUrl(0)">导出Excel</a></span></dd-dropdown-item>
+                    </dd-dropdown>
+                </div>
+                <div :class="collectClass" @click="collectUrl(collectNum)">
+                    {{collectName}}
+                </div>
             </div>
-            <div :class="collectClass" @click="collectUrl(collectNum)">
-                {{collectName}}
-            </div>
+
         </div>
         <dd-table :columns="col" :data-source="vips" :bordered="true" style="margin:20px 0 10px;"></dd-table>
         <div class="foot footfix">
             <p style="font-size:16px;"><small style='width:16px;'>总人次 : </small> {{personCount}}</p>
-            <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :age-count="pages" :current-page="pageNo" />
+            <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo" />
         </div>
     </div>
 </template>
@@ -103,6 +105,10 @@
       text-align: center;
       line-height:24px;
       cursor:pointer;
+      font-family:MicrosoftYaHei;
+      font-size:14px;
+      color:#ffffff;
+      text-align:center;
   }
   .report-collect-add {
       background:#178ce6;
