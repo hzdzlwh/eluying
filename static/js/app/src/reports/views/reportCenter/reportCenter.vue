@@ -71,7 +71,7 @@
 <script>
     import LeftMenu from '../../components/LeftMenu.vue';
     import { OrderSystem } from '../../../common/orderSystem';
-    import { list } from '../../collectList.js';
+    import { list, collectDateList } from '../../collectList.js';
     import DateSelect from '../../components/DateSelect.vue';
     export default{
         data() {
@@ -94,26 +94,26 @@
         },
         methods: {
             getDataSelect() {
-                for (let i=0;i<list.length;i++) {
-                    console.log(list[i].name,this.$route.meta.name);
-                    if (list[i].name === this.$route.meta.name) {
-                        this.dataSelect = true;
-                        return;
-                    } else {
-                         this.dataSelect = false;
+                const reg = /^\/reportCenter\/collect/;
+                if (reg.test(this.$route.path)) {
+                    for (let i=0;i<collectDateList.length;i++) {
+                        if (collectDateList[i].reportType === this.$route.params.id) {
+                            this.dataSelect = true;
+                            return;
+                        } else {
+                            this.dataSelect = false;
+                        }
                     }
-                    console.log(this.dataSelect);
+                } else {
+                    for (let i=0;i<list.length;i++) {
+                        if (list[i].name === this.$route.meta.name) {
+                            this.dataSelect = true;
+                            return;
+                        } else {
+                            this.dataSelect = false;
+                        }
+                    }
                 }
-//                list.forEach(item => {
-//                    this.dataSelect = undefined;
-//                    console.log(item.name, this.$route.meta.name);
-//                    if (item.name === this.$route.meta.name) {
-//                        this.dataSelect = true;
-//                    } else {
-//                        this.dataSelect = false;
-//                    }
-//                    console.log(this.dataSelect);
-//                })
             }
         }
     };

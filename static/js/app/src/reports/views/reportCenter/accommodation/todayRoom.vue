@@ -300,7 +300,7 @@
                     http.get('/stat/removeFromCollection',{statValue: 301}).then(res => {
                         this.collectNum = 0;
                         this.collectName = '加入收藏';
-                        var removeIndex = null;
+                        let removeIndex = null;
                         this.$router.options.routes[2].children[0].children.map((item, index) => {
                             if (item.meta.id === 301) {
                                 removeIndex = index;

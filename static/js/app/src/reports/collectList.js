@@ -52,3 +52,29 @@ export const list = [
         'name': '菜品赠送明细表'
     }
 ];
+export const collectDateList = [
+    {
+        'reportType': '303'
+    },
+    {
+        'reportType': '401'
+    },
+    {
+        'reportType': '402'
+    },
+    {
+        'reportType': '403'
+    },
+    {
+        'reportType': '405'
+    },
+    {
+        'reportType': '305'
+    },
+    {
+        'reportType': '502'
+    },
+    {
+        'reportType': '501'
+    }
+];
