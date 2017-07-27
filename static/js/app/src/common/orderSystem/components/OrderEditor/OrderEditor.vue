@@ -84,11 +84,11 @@
                                 <div class="userInfo-item">
                                     <label>销售员：</label>
                                     <span  style="width: 150px">
-                                        <dd-select v-model="saleId">
+                                        <dd-select v-model="saleId" :disabled="(this.checkState === 'editOrder' || this.checkState === 'checkIn') && !(order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder))">
                                             <dd-option :value="-1" label="无">
                                                 无
                                             </dd-option>
-                                            <dd-option v-for="sale in saleList" :key="sale.employeeId" :disabled="(this.checkState === 'editOrder' || this.checkState === 'checkIn') && !(order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder))" :value="sale.employeeId" :label="sale.realName + (sale.phone ? '(' + sale.phone+ ')' : '')">
+                                            <dd-option v-for="sale in saleList" :key="sale.employeeId"  :value="sale.employeeId" :label="sale.realName + (sale.phone ? '(' + sale.phone+ ')' : '')">
                                             <span class="text-over-ellips" :title="sale.realName + (sale.phone ? '(' + sale.phone+ ')' : '')">{{sale.realName + (sale.phone ? '(' + sale.phone+ ')' : '')}}</span>
                                             </dd-option>
                                     </dd-select>
