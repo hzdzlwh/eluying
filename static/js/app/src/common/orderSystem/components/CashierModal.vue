@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-19 09:56:55
 * @Last Modified by:   linxinjian
-* @Last Modified time: 2017-07-27 11:23:34
+* @Last Modified time: 2017-07-27 15:28:49
 * @email: 783384903@qq.com
 */
 <!-- 有问题找产品，这个模块的功能一般人解释不清楚 -->
@@ -837,6 +837,7 @@ export default {
                                     el.type = 2;
                                     this.paycard.push(el);
                                 }
+                                el.ableFee = element.ableFee;
                                 cardList.push(el);
                                 cardHash[el.accountId] = true;
                             }

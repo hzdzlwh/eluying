@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-19 09:56:55
 * @Last Modified by:   linxinjian
-* @Last Modified time: 2017-07-27 11:49:04
+* @Last Modified time: 2017-07-27 17:44:49
 * @email: 783384903@qq.com
 */
 <!-- 有问题找产品，这个模块的功能一般人解释不清楚 -->
@@ -622,7 +622,8 @@ export default {
                     if (card.accountId) {
                         const selectCard = this.cardList.find(cards => cards.accountId === card.accountId);
                         if (card.type === 0) {
-                            const abelFee = Math.min((cardMax ? cardMax.max : 0), Math.max(0, needPay));
+                            // const abelFee = Math.min((cardMax ? cardMax.max : 0), Math.max(0, needPay));
+                            const abelFee = cardMax ? cardMax.max : 0;
                             // const abelFee = Math.min(needPay, selectCard.lastFee);
                             const payed = Math.min(abelFee, card.fee);
                             card.ableFee = abelFee;
