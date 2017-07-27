@@ -60,9 +60,7 @@
                     if (res.code === 1) {
                         const centerList = res.data.list;
                         if (centerList.length) {
-                            console.log(centerList);
-                            // this.$router.push('/reportCenter/collect/' + res.data.list[0]);
-                            // this.currentView = ''
+                            this.currentView = collectList[centerList[0]].component;
                         }
                     } else {
                         window.alert('请求失败');
