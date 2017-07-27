@@ -52,7 +52,9 @@ import rechargeDetails from './views/reportCenter/finance/rechargeDetails.vue';
 import reportManage from './views/reportCenter/manage/manage.vue';
 import reportDaily from './views/reportCenter/manage/dailyReport.vue';
 // import reportBazaar from './views/reportCenter/bazaar/bazaar.vue';
-// import reportMember from './views/reportCenter/member/member.vue';
+import reportMember from './views/reportCenter/member/member.vue';
+import saleCollect from './views/reportCenter/member/saleCollect.vue';
+import saleDetail from './views/reportCenter/member/saleDetail.vue'
 import collect from './views/reportCenter/collect/collect.vue';
 import noCollect from './views/reportCenter/collect/noCollect.vue';
 import auth from '../common/auth';
@@ -541,7 +543,7 @@ export const routes = [
                         component: reportDaily
                     }
                 ]
-            }
+            },
             // {
             //     path: '/reportCenter/bazaar',
             //     meta: {
@@ -549,13 +551,30 @@ export const routes = [
             //     },
             //     component: reportBazaar
             // },
-            // {
-            //     path: '/reportCenter/member',
-            //     meta: {
-            //         name: '会员'
-            //     },
-            //     component: reportMember
-            // }
+            {
+                path: '/reportCenter/member',
+                meta: {
+                    name: '会员'
+                },
+                component: reportMember,
+                redirect: '/reportCenter/member/saleCollect',
+                children: [
+                    {
+                        path: '/reportCenter/member/saleCollect',
+                        meta: {
+                            name: '会员卡销售汇总表'
+                        },
+                        component: saleCollect
+                    },
+                    {
+                        path: '/reportCenter/member/saleDetail',
+                        meta: {
+                            name: '会员卡销售明细表'
+                        },
+                        component: saleDetail
+                    }
+                ]
+            }
         ]
     }
 ];
