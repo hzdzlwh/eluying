@@ -1,21 +1,22 @@
 <template>
-    <ul class='topMenu'>
+    <ul class='report-top-menu'>
         <li v-if="!route.meta.invisible" v-for="route in $router.options.routes" class="topMenu-item">
             <router-link :to="route.path">{{route.meta.name}}</router-link>
         </li>
     </ul>
 </template>
 <style lang="scss" scoped>
-    .topMenu{
+    .report-top-menu{
       position:fixed;
       width:100%;
-      height:60px;
-      z-index:999;
-      background:#fff;
+      height:50px;
+      z-index:9999;
+      background:#fbfbfb;
       display:flex;
       justify-content:center;
       align-items:center;  
       border-bottom:1px solid #ccc;
+      box-shadow:0px 1px 3px #dadada;
       .topMenu-item{
         height:100%;
       }
@@ -28,7 +29,7 @@
           text-decoration: none;
           display: inline-block;
           text-align: center;
-          line-height:60px;
+          line-height:50px;
           cursor: pointer;
         }
         a.active {
