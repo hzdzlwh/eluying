@@ -1138,7 +1138,7 @@ export default {
                 whenCheckIn: this.checkState === 'checkIn',
                 ...this.getDiscountRelatedIdAndOrigin(),
                 checkType: room.checkType,
-                saleId: this.saleId
+                salerId: this.saleId
             };
             const callback = function() {
                 http.post('/order/modifyRoomOrder', params)
@@ -1185,7 +1185,7 @@ export default {
                 timeAmount: enterItems.timeAmount,
                 totalPrice: enterItems.totalPrice,
                 date: enterItems.date,
-                saleId: this.saleId,
+                salerId: this.saleId,
                 ...this.getDiscountRelatedIdAndOrigin()
             };
             http.post('/order/modifyEnterOrder', params)
@@ -1258,7 +1258,7 @@ export default {
                 whenCheckIn: this.checkState === 'checkIn',
                 whenCheckInDeleteRooms: JSON.stringify(this.whenCheckInDeleteRooms),
                 ...this.getDiscountRelatedIdAndOrigin(),
-                saleId: this.saleId
+                salerId: this.saleId
             };
 
             const callback = function() {
@@ -1299,7 +1299,7 @@ export default {
                 items: JSON.stringify(this.newGoodItems),
                 goods: JSON.stringify(this.previousGoods),
                 ...this.getDiscountRelatedIdAndOrigin(),
-                saleId: this.saleId
+                salerId: this.saleId
             };
             if (type && type === 'auto') {
                 params.type = 1;
@@ -1355,7 +1355,7 @@ export default {
                 items: JSON.stringify(this.newGoodItems),
                 goods: JSON.stringify(this.previousGoods),
                 ...this.getDiscountRelatedIdAndOrigin(),
-                saleId: this.saleId
+                salerId: this.saleId
             };
             // const str = util.dateFormat(new Date());
             // const arr = str.split('-');

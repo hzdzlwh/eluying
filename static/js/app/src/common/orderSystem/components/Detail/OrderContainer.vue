@@ -62,7 +62,7 @@
                                 </div>
                                 <div class="userInfo-text-item">
                                     <label class="label-text">销售员</label>
-                                    <span>{{ order.salerStr || '无' }}</span>
+                                    <span>{{ order.salerString || '无' }}</span>
                                 </div>
                             </div>
                         </div>
