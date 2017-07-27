@@ -80,7 +80,7 @@
                                                 @change='()=>handleRoomChange(item, index, "endDate")'
                                                 :clearable='false'
                                                 :disabled='order.orderState === 8 || item.checkType === 1'
-                                                :picker-options='{disabledDate:disabledEndDate(item.room.endDate)}'
+                                                :picker-options='{disabledDate:disabledEndDate(new Date(new Date(item.room.startDate).getTime() + 24 * 60 * 60 * 1000))}'
                                                 type="datetime"
                                                 placeholder="选择日期时间"
                                                 format='yyyy-MM-dd HH:mm'>
@@ -831,7 +831,7 @@ export default {
                         const str = util.dateFormat(new Date(startDate));
                         const arr = str.split('-');
                         return (date) => {
-                            return date.valueOf() < (new Date(arr[0], arr[1] - 1, arr[2] - 1)).valueOf();
+                            return date.valueOf() < (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
                         };
                     } else {
                         const str = util.dateFormat(new Date(startDate));
