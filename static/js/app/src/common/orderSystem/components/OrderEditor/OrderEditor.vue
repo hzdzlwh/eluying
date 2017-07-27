@@ -75,7 +75,7 @@
                                                              :key="item" v-if="item.levels && item.levels.length > 0">
                                                 <dd-option v-for="level in item.levels" :key="level"
                                                            :value="level.id" :label="level.name+(level.serialNum || '')">
-                                                    <span :title="level.serialNum">{{level.name}} {{level.serialNum}}</span>
+                                                    <span :title="level.serialNum" class="text-over-ellips">{{level.name}} {{level.serialNum}}</span>
                                     </dd-option>
                                     </dd-group-option>
                                     </dd-select>
@@ -90,7 +90,7 @@
                                             </dd-option>
                                             <dd-option v-for="sale in saleList" :key="sale.employeeId"
                                                            :value="sale.employeeId" :label="sale.realName + (sale.phone ? '(' + sale.phone+ ')' : '')">
-                                            <span :title="sale.realName + (sale.phone ? '(' + sale.phone+ ')' : '')">{{sale.realName + (sale.phone ? '(' + sale.phone+ ')' : '')}}</span>
+                                            <span class="text-over-ellips" :title="sale.realName + (sale.phone ? '(' + sale.phone+ ')' : '')">{{sale.realName + (sale.phone ? '(' + sale.phone+ ')' : '')}}</span>
                                             </dd-option>
                                     </dd-select>
                                     </span>
