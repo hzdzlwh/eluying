@@ -37,7 +37,7 @@
             <p style="font-size:16px;"><small style='width:16px;'>总充值笔数 : </small> {{receiptNum}}</p>
             <p style="font-size:16px;"><small style='width:16px;'>总充值金额 : </small> {{receiptFree}}</p>
             <p style="font-size:16px;"><small style='width:16px;'>总赠送金额 : </small> {{priceFree}}</p>
-            <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :age-count="pages" :current-page="pageNo" />
+            <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo" />
         </div>
     </div>
 </template>

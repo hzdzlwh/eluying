@@ -58,7 +58,7 @@
         <dd-table :columns="col" :data-source="vips" :bordered="true" style="margin:20px 0 10px;"></dd-table>
         <div class="foot footfix">
             <p style="font-size:16px;"><small style='width:16px;'>总人次 : </small> {{personCount}}</p>
-            <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo" />
+            <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo" style="float:right;"/>
         </div>
     </div>
 </template>
@@ -298,6 +298,7 @@
             this.getOrigin();
             this.getRoomType();
             this.getZoneType();
+            this.getCollectStatus();
         },
         computed: {
             ...mapState(['date']),
@@ -444,7 +445,7 @@
                     if (res.code === 1) {
                         this.vips = res.data.entityList;
                         this.personCount = res.data.total;
-                        this.pages = Math.ceil(res.data.totalResident / 30);
+                        this.pages = Math.ceil(res.data.total / 30);
                     }
                     this.flag = true;
                 });

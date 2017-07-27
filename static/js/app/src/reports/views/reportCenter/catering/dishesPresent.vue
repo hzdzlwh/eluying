@@ -211,19 +211,17 @@
             DateSelect
         },
         watch: {
+            date() {
+                this.pageNo = 1;
+                if (this.flag) {
+                    this.getData();
+                }
+            },
             restType() {
                 this.pageNo = 1;
                 this.getData();
             },
             name() {
-                this.pageNo = 1;
-                this.getData();
-            },
-            startDate() {
-                this.pageNo = 1;
-                this.getData();
-            },
-            endDate() {
                 this.pageNo = 1;
                 this.getData();
             },

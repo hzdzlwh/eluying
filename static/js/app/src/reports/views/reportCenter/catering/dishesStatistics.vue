@@ -181,13 +181,17 @@
             this.getData();
             this.getCollectStatus();
         },
-        components: {
-            DdDropdown,
-            DdDropdownItem,
-            DateSelect,
-            DdSelect,
-            DdOption,
-            DdTable
+        watch: {
+            restType() {
+                this.getData();
+            },
+            name() {
+                this.getData();
+            },
+            date() {
+                this.pageNo = 1;
+                this.getData();
+            }
         },
         computed: {
             ...mapState(['date']),
@@ -199,19 +203,13 @@
                 }
             }
         },
-        watch: {
-            restType() {
-                this.getData();
-            },
-            name() {
-                this.getData();
-            },
-            startDate() {
-                this.getData();
-            },
-            endDate() {
-                this.getData();
-            }
+        components: {
+            DdDropdown,
+            DdDropdownItem,
+            DateSelect,
+            DdSelect,
+            DdOption,
+            DdTable
         },
         methods: {
             collectUrl(num) {

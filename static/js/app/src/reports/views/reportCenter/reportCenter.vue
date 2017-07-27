@@ -2,7 +2,7 @@
     <div class="reports-container">
         <LeftMenu></LeftMenu>
         <div class="view-container">
-            <div v-if="dataSelect">
+            <div v-show="dataSelect">
                 <DateSelect />
             </div>
             <router-view></router-view>
@@ -87,17 +87,33 @@
         created() {
             this.getDataSelect();
         },
+        watch: {
+            $route() {
+                this.getDataSelect();
+            }
+        },
         methods: {
             getDataSelect() {
-                list.forEach(item => {
-                    console.log(item.name, this.$route.meta.name);
-                    if (item.name === this.$route.meta.name) {
+                for (let i=0;i<list.length;i++) {
+                    console.log(list[i].name,this.$route.meta.name);
+                    if (list[i].name === this.$route.meta.name) {
                         this.dataSelect = true;
-                        console.log(this.dataSelect);
+                        return;
                     } else {
-                        this.dataSelect = false;
+                         this.dataSelect = false;
                     }
-                })
+                    console.log(this.dataSelect);
+                }
+//                list.forEach(item => {
+//                    this.dataSelect = undefined;
+//                    console.log(item.name, this.$route.meta.name);
+//                    if (item.name === this.$route.meta.name) {
+//                        this.dataSelect = true;
+//                    } else {
+//                        this.dataSelect = false;
+//                    }
+//                    console.log(this.dataSelect);
+//                })
             }
         }
     };
