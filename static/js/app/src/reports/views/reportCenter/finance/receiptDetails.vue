@@ -271,13 +271,27 @@
         methods: {
             collectUrl(num) {
                 if (num === 0) {
-                    this.collectNum = 1;
-                    this.collectName = '已收藏';
-                    http.get('/stat/addToCollect',{statValue: 401});
+                    http.get('/stat/addToCollect',{statValue: 401}).then(res => {
+                        this.collectNum = 1;
+                        this.collectName = '已收藏';
+                    });
                 } else if (num === 1) {
-                    http.get('/stat/removeFromCollection',{statValue: 401});
-                    this.collectNum = 0;
-                    this.collectName = '加入收藏';
+                    http.get('/stat/removeFromCollection',{statValue: 401}).then(res => {
+                        this.collectNum = 0;
+                        this.collectName = '加入收藏';
+                        let removeIndex = null;
+                        this.$router.options.routes[2].children[0].children.map((item, index) => {
+                            if (item.meta.id === 401) {
+                                removeIndex = index;
+                            }
+                        });
+                        this.$router.options.routes[2].children[0].children.splice(removeIndex , 1);
+                        if (this.$router.options.routes[2].children[0].children.length > 1) {
+                            this.$router.push('/reportCenter/collect/' + this.$router.options.routes[2].children[0].children[1].meta.id);
+                        } else {
+                            this.$router.push('/reportCenter/collect/');
+                        }
+                    });
                 }
             },
             getCollectStatus() {

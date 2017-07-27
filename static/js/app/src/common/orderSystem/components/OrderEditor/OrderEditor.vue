@@ -84,11 +84,11 @@
                                 <div class="userInfo-item">
                                     <label>销售员：</label>
                                     <span  style="width: 150px">
-                                        <dd-select v-model="saleId">
+                                        <dd-select v-model="saleId" :disabled="(this.checkState === 'editOrder' || this.checkState === 'checkIn') && !(order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder))">
                                             <dd-option :value="-1" label="无">
                                                 无
                                             </dd-option>
-                                            <dd-option v-for="sale in saleList" :key="sale.employeeId" :disabled="(this.checkState === 'editOrder' || this.checkState === 'checkIn') && !(order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder))" :value="sale.employeeId" :label="sale.realName + (sale.phone ? '(' + sale.phone+ ')' : '')">
+                                            <dd-option v-for="sale in saleList" :key="sale.employeeId"  :value="sale.employeeId" :label="sale.realName + (sale.phone ? '(' + sale.phone+ ')' : '')">
                                             <span class="text-over-ellips" :title="sale.realName + (sale.phone ? '(' + sale.phone+ ')' : '')">{{sale.realName + (sale.phone ? '(' + sale.phone+ ')' : '')}}</span>
                                             </dd-option>
                                     </dd-select>
@@ -1138,7 +1138,7 @@ export default {
                 whenCheckIn: this.checkState === 'checkIn',
                 ...this.getDiscountRelatedIdAndOrigin(),
                 checkType: room.checkType,
-                saleId: this.saleId
+                salerId: this.saleId
             };
             const callback = function() {
                 http.post('/order/modifyRoomOrder', params)
@@ -1185,7 +1185,7 @@ export default {
                 timeAmount: enterItems.timeAmount,
                 totalPrice: enterItems.totalPrice,
                 date: enterItems.date,
-                saleId: this.saleId,
+                salerId: this.saleId,
                 ...this.getDiscountRelatedIdAndOrigin()
             };
             http.post('/order/modifyEnterOrder', params)
@@ -1258,7 +1258,7 @@ export default {
                 whenCheckIn: this.checkState === 'checkIn',
                 whenCheckInDeleteRooms: JSON.stringify(this.whenCheckInDeleteRooms),
                 ...this.getDiscountRelatedIdAndOrigin(),
-                saleId: this.saleId
+                salerId: this.saleId
             };
 
             const callback = function() {
@@ -1299,7 +1299,7 @@ export default {
                 items: JSON.stringify(this.newGoodItems),
                 goods: JSON.stringify(this.previousGoods),
                 ...this.getDiscountRelatedIdAndOrigin(),
-                saleId: this.saleId
+                salerId: this.saleId
             };
             if (type && type === 'auto') {
                 params.type = 1;
@@ -1355,7 +1355,7 @@ export default {
                 items: JSON.stringify(this.newGoodItems),
                 goods: JSON.stringify(this.previousGoods),
                 ...this.getDiscountRelatedIdAndOrigin(),
-                saleId: this.saleId
+                salerId: this.saleId
             };
             // const str = util.dateFormat(new Date());
             // const arr = str.split('-');
