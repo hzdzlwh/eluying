@@ -1,5 +1,7 @@
 <template>
-	<div>this is member</div>
+	<div>
+		<router-view></router-view>
+	</div>
 </template>
 <style lang="scss" scoped>
 </style>
