@@ -42,10 +42,7 @@
                     if (res.code === 1) {
                         const centerList = res.data.list;
                         if (centerList.length) {
-<<<<<<< HEAD
-=======
                             this.currentView = collectList[centerList[0]].component;
->>>>>>> d194fbf766fa8e3ef101d3eb55694ead62ec0f2a
                         }
                     } else {
                         window.alert('请求失败');
