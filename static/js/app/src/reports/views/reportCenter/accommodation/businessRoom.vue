@@ -288,9 +288,13 @@
                         });
                         this.$router.options.routes[2].children[0].children.splice(removeIndex , 1);
                         if (this.$router.options.routes[2].children[0].children.length > 1) {
-                            this.$router.push('/reportCenter/collect/' + this.$router.options.routes[2].children[0].children[1].meta.id);
+                            if (this.$route.params.id) {
+                                this.$router.push('/reportCenter/collect/' + this.$router.options.routes[2].children[0].children[1].meta.id);
+                            }
                         } else {
-                            this.$router.push('/reportCenter/collect/');
+                            if (this.$route.params.id) {
+                                this.$router.push('/reportCenter/collect/');
+                            }
                         }
                     });
                 }
