@@ -284,7 +284,6 @@
 </template>
 <style lang="scss">
     @import "~dd-common-css/src/variables";
-
     .blueimp-gallery {
         background: rgba(0,0,0,.8)!important;
     }

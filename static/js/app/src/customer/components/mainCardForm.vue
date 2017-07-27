@@ -68,7 +68,7 @@
                                     </dd-option>
                                     <dd-option v-for="sale in saleList" :key="sale.employeeId"
                                                    :value="sale.employeeId" :label="sale.realName + (sale.phone ? '(' + sale.phone+ ')' : '')">
-                                    <span :title="sale.realName + (sale.phone ? '(' + sale.phone+ ')' : '')">{{sale.realName + (sale.phone ? '(' + sale.phone+ ')' : '')}}</span>
+                                    <span class="text-over-ellips" :title="sale.realName + (sale.phone ? '(' + sale.phone+ ')' : '')">{{sale.realName + (sale.phone ? '(' + sale.phone+ ')' : '')}}</span>
                                     </dd-option>
                             </dd-select>
                         </div>
@@ -109,6 +109,15 @@
 <style lang="scss" type="text/css" rel="stylesheet/scss">
     #mainCardModal{
         z-index: 2052;
+    }
+    #mainCardModal .dd-select-menu{
+        max-height:200px;
+    }
+    .text-over-ellips{
+        display: block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 </style>
 <script>
