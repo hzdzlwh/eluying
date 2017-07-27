@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-19 09:56:55
 * @Last Modified by:   linxinjian
-* @Last Modified time: 2017-07-27 09:34:40
+* @Last Modified time: 2017-07-27 11:49:04
 * @email: 783384903@qq.com
 */
 <!-- 有问题找产品，这个模块的功能一般人解释不清楚 -->
@@ -24,7 +24,7 @@
                                     <span class="cashier-money-text" v-if="orderPayment.need.penalty">违约金:<span>¥{{orderPayment.need.penalty}}</span></span>
                                 </div>
                                 <div style='margin-top:12px;'>
-                                    <span class="cashier-money-text" v-if='orderPayment.paid.game && orderPayment.game'>{{orderPayment.game[0].accountName}}已抵扣:<span>¥{{orderPayment.paid.game}}</span></span>
+                                    <span class="cashier-money-text" v-if='orderPayment.paid.game && orderPayment.game'>{{orderPayment.paid.gameName}}已抵扣:<span>¥{{orderPayment.paid.game}}</span></span>
                                     <span class="cashier-money-text" v-if='orderPayment.paid.balance'>余额已抵扣:<span>¥{{orderPayment.paid.balance}}</span></span>
                                     <span class="cashier-money-text">现金已收:<span>¥{{ orderPayment.paid.normal }}</span></span>
                                 </div>
@@ -587,7 +587,8 @@ export default {
                 this.orderPayment.game.forEach(el => {
                     if (el.type === 0) {
                         // const abelFee = Math.min(needPay, el.lastFee);
-                        const abelFee = Math.min(el.max, Math.max(0, needPay));
+                        // const abelFee = Math.min(el.max, Math.max(0, needPay));
+                        const abelFee = el.max;
                         const payed = Math.min(abelFee / el.rate, el.fee);
                         el.ableNum = parseInt(abelFee / el.rate);
                         el.fee = parseInt(payed);
@@ -817,19 +818,23 @@ export default {
                     res.data.game && res.data.game.forEach(element => {
                         element.max = Math.abs(element.ableFee - element.paidFee).toFixed(2);
                         const MaxNum = parseInt(needpay / element.rate);
-                        element.ableNum = Math.min(Math.abs(element.ableNum - element.paidNum).toFixed(0), MaxNum);
+                        // element.ableNum = Math.min(Math.abs(element.ableNum - element.paidNum).toFixed(0), MaxNum);
+                        element.ableNum = Math.abs(element.ableNum - element.paidNum).toFixed(0);
                     });
                     res.data.company && res.data.company.forEach(element => {
-                        element.max = element.ableFee;
-                        element.ableFee = Math.min(Math.abs(element.ableFee - element.paidFee), needpay);
+                        // element.max = element.ableFee;
+                        element.max = Math.abs(element.ableFee - element.paidFee).toFixed(2);
+                        element.ableFee = Math.abs(element.ableFee - element.paidFee);
                     });
                     res.data.member && res.data.member.forEach(element => {
-                        element.max = element.ableFee;
-                        element.ableFee = Math.min(Math.abs(element.ableFee - element.paidFee), needpay);
+                        // element.max = element.ableFee;
+                        element.max = Math.abs(element.ableFee - element.paidFee).toFixed(2);
+                        element.ableFee = Math.abs(element.ableFee - element.paidFee);
                     });
                     res.data.card && res.data.card.forEach(element => {
-                        element.max = element.ableFee;
-                        element.ableFee = Math.min(Math.abs(element.ableFee - element.paidFee), needpay);
+                        // element.max = element.ableFee;
+                        element.max = Math.abs(element.ableFee - element.paidFee).toFixed(2);
+                        element.ableFee = Math.abs(element.ableFee - element.paidFee);
                         element.cards.forEach(el => {
                             if (!cardHash[el.accountId]) {
                                 if (element.type === 2) {
