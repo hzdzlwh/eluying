@@ -1,23 +1,6 @@
 <template>
     <div>
         <component v-bind:is="currentView"></component>
-        <!--<morrowArrive :is='componentName === "23"'></morrowArrive>-->
-        <!--<todayArrive :is='componentName === "22"'></todayArrive>-->
-        <!--<todayLeave :is='componentName === "20"'></todayLeave>-->
-        <!--<morrowLeave :is='componentName === "21"'></morrowLeave>-->
-        <!--<todayRoom :is='componentName === "301"'></todayRoom>-->
-        <!--<todayGuest :is='componentName === "302"'></todayGuest>-->
-        <!--<historyGuest :is='componentName === "303"'></historyGuest>-->
-        <!--<businessRoom :is='componentName === "19"'></businessRoom>-->
-        <!--<forecastRoom :is='componentName === "304"'></forecastRoom>-->
-        <!--<dishesPresent :is='componentName === "501"'></dishesPresent>-->
-        <!--<dishesStatistics :is='componentName === "502"'></dishesStatistics>-->
-        <!--<receiptDetails :is='componentName === "401"'></receiptDetails>-->
-        <!--<receiptGather :is='componentName === "402"'></receiptGather>-->
-        <!--<transferDetails :is='componentName === "403"'></transferDetails>-->
-        <!--<rechargeDetails :is='componentName === "305"'></rechargeDetails>-->
-        <!--<ARGather :is='componentName === "405"'></ARGather>-->
-        <!--<dailyReport :is='componentName === "18"'></dailyReport>-->
     </div>
 </template>
 <style lang="scss" scoped>
@@ -54,15 +37,11 @@
             };
         },
         created() {
-            console.log(this.collectList);
             http.get('/stat/getCollection', {})
                 .then(res => {
                     if (res.code === 1) {
                         const centerList = res.data.list;
                         if (centerList.length) {
-                            console.log(centerList);
-                            // this.$router.push('/reportCenter/collect/' + res.data.list[0]);
-                            // this.currentView = ''
                         }
                     } else {
                         window.alert('请求失败');
@@ -99,9 +78,5 @@
                 
             }
         }
-        // beforeRouteUpdate(to, from, next) {
-        //     this.componentName = this.$routes.params.id;
-        //     next();
-        // }
     };
 </script>
