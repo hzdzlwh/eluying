@@ -831,7 +831,7 @@ export default {
                     const str = util.dateFormat(new Date(startDate));
                     const arr = str.split('-');
                     return (date) => {
-                        return date.valueOf() < (new Date(arr[0], arr[1] - 1, arr[2] - 1)).valueOf();
+                        return date.valueOf() < (new Date(arr[0], arr[1] - 1, arr[2])).valueOf();
                     };
                 } else {
                     const str = util.dateFormat(new Date(startDate));
@@ -846,7 +846,6 @@ export default {
             if (!room.categoryType) {
                 return [];
             }
-
             http.get('/room/getRoomsList', {
                 startDate: util.dateFormat(room.room.startDate),
                 endDate: util.dateFormat(room.room.endDate),
