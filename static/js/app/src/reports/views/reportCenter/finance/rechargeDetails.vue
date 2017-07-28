@@ -1,6 +1,6 @@
 <template>
     <div>
-        <p style="font-weight: bold;font-size:24px;color:#178ce6;text-align:center;margin: 20px 0 26px">
+        <p class="report-title">
             充值明细表
         </p>
         <div class="top">
@@ -34,10 +34,12 @@
         </div>
         <dd-table :columns="col" :data-source="vips" :bordered="true" style="margin:20px 0 10px;"></dd-table>
         <div class="foot footfix">
-            <p style="font-size:16px;"><small style='width:16px;'>总充值笔数 : </small> {{receiptNum}}</p>
-            <p style="font-size:16px;"><small style='width:16px;'>总充值金额 : </small> {{receiptFree}}</p>
-            <p style="font-size:16px;"><small style='width:16px;'>总赠送金额 : </small> {{priceFree}}</p>
-            <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo" style="float:right;"/>
+            <div style="float:left;">
+                <p style="font-size:16px;"><small style='width:16px;'>总充值笔数 : </small> {{receiptNum}}</p>
+                <p style="font-size:16px;"><small style='width:16px;'>总充值金额 : </small> {{receiptFree}}</p>
+                <p style="font-size:16px;"><small style='width:16px;'>总赠送金额 : </small> {{priceFree}}</p>
+            </div>
+            <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo" style="float:right;margin-top:20px;"/>
         </div>
     </div>
 </template>
@@ -234,10 +236,26 @@
                 this.getCategoryTypeAll();
             }
         },
+        beforeRouteEnter (to, from, next) {
+            http.get('/stat/getCollection')
+                .then(res => {
+                    if(res.code === 1) {
+                        next(vm => {
+                            const collectList = res.data.list;
+                            for(let i=0;i<collectList.length;i++){
+                                if (collectList[i] === 305) {
+                                    vm.collectNum = 1;
+                                    vm.collectName = '已收藏';
+                                }
+                            }
+                        })
+                    }
+                })
+        },
         created() {
             this.getChannels();
             this.getData();
-            this.getCollectStatus();
+            this.collectStat();
         },
         computed: {
             ...mapState(['date']),
@@ -279,19 +297,12 @@
                     });
                 }
             },
-            getCollectStatus() {
-                http.get('/stat/getCollection')
-                    .then(res => {
-                        if(res.code === 1) {
-                            const collectList = res.data.list;
-                            for(let i=0;i<collectList.length;i++){
-                                if (collectList[i] === 305) {
-                                    this.collectNum = 1;
-                                    this.collectName = '已收藏';
-                                }
-                            }
-                        }
-                    })
+            collectStat() {
+                const reg = /^\/reportCenter\/collect/;
+                if (reg.test(this.$route.path)) {
+                    this.collectNum = 1;
+                    this.collectName = '已收藏';
+                }
             },
             exportUrl(type) {
                 const obj = {

@@ -2,7 +2,7 @@
     <div width="padding-top:65px;">
         <div style="margin: 20px 0;">
             <p><i>订单金额拆分到每日订单，统计每日产生的消费金额，</i></p>
-            <p><i>包括已预订、进行中、已结束、已取消的订单</i></p>
+            <p><i>包括已预订、进行中、已结束订单的订单金额，以及已取消订单的违约金。</i></p>
         </div>
         <div class="card" style="display: flex;justify-content: space-around;margin-bottom: 20px">
             <div>

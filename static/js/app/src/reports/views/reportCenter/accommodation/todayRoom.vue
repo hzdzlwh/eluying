@@ -1,9 +1,9 @@
 <template>
     <div>
-        <p style="font-weight: bold;font-size:24px;color:#178ce6;text-align:center;margin: 20px 0 26px">
+        <p class="report-title">
             当前在住房间报表
         </p>
-        <div class="top">
+        <div class="report-select-top">
             <div class="date">日期 : <i>{{today}}</i></div>
             <div class="select-box">
                 <div style="margin-right:20px;width: 120px;" class="fr region" >
@@ -54,22 +54,36 @@
         </div>
         <dd-table :columns="col" :data-source="vips" :bordered="true" style="margin:20px 0 10px;"></dd-table>
         <div class="foot footfix">
-            <p style="font-size:16px;"><small style='width:16px;'>总房数 : </small> {{roomCount}}</p>
-            <p style="font-size:16px;"><small style="width:16px;">当日房费合计 : </small>{{freeCount}}</p>
-            <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo" style="float:right;"/>
+            <div style="float:left;">
+                <p style="font-size:16px;"><small style='width:16px;'>总房数 : </small> {{roomCount}}</p>
+                <p style="font-size:16px;"><small style="width:16px;">当日房费合计 : </small>{{freeCount}}</p>
+            </div>
+            <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo" style="float:right;margin-top:20px;"/>
         </div>
     </div>
 </template>
-<style lang='scss' scoped>
+<style lang="scss">
     .report-title {
-        width: 100%;
-        line-height: 56px;
-        font-size: 1.5em;
-        color: #746D66;
-        text-align: center;
         font-family: border;
+        font-weight: bold;
+        font-size:24px;
+        color:#178ce6;
+        text-align:center;
+        margin: 20px 0 26px;
     }
-    .top {
+    @media screen and (min-width:980px) {
+        .report-title {
+            width:calc(100vw - 250px);
+        }
+    }
+    @media screen and (min-width:1470px) {
+        .report-title {
+            width: 1200px;
+        }
+    }
+</style>
+<style lang='scss' scoped>
+    .report-select-top {
         width: 100%;
         height: 32px;
         padding: 5px 0;
@@ -119,14 +133,12 @@
             return {
                 today: undefined,
                 zoneType: '-1~',
-                zoneTypeOther: [],
                 zoneTypeAll: [{
                     id: -1,
                     name: '全部区域',
                     zoneType: '-1~'
                 }],
                 roomType: '-1~',
-                roomTypeOther: [],
                 roomTypeAll: [{
                     id: -1,
                     name: '全部房型',
@@ -155,7 +167,6 @@
                 }],
                 checkType: -1,
                 userOriginType: '-2~',
-                userOrigins: [],
                 userSelfOrigins: [{
                     id: '',
                     name: '全部客源渠道',
@@ -232,8 +243,7 @@
                         dataIndex: 'expectCheckOutTime',
                         width: 120
                     }
-                ],
-                flag: true
+                ]
             };
         },
         components: {
@@ -247,40 +257,43 @@
         },
         watch: {
             date() {
-              // const date = this.today;
-                if (this.flag) {
-                    this.getData();
-                }
+                this.getData();
             },
             userOriginType() {
                 this.pageNo = 1;
-                if (this.flag) {
-                    this.getData();
-                }
+                this.getData();
             },
             roomType() {
                 this.pageNo = 1;
-                if (this.flag) {
-                    this.getData();
-                }
+                this.getData();
             },
             pageNo() {
-                if (this.flag) {
-                    this.getData();
-                }
+                this.getData();
             },
             zoneType() {
                 this.pageNo = 1;
-                if (this.flag) {
-                    this.getData();
-                }
+                this.getData();
             },
             checkType() {
                 this.pageNo = 1;
-                if (this.flag) {
-                    this.getData();
+                this.getData();
+            },
+            '$toute': 'beforeRouteEnter'
+        },
+        beforeRouteEnter(to, from, next) {
+            http.get('/stat/getCollection').then(res => {
+                if (res.code === 1) {
+                    next(vm => {
+                        const collectList = res.data.list;
+                        for(let i=0;i<collectList.length;i++){
+                            if (collectList[i] === 301) {
+                                vm.collectNum = 1;
+                                vm.collectName = '已收藏';
+                            }
+                        }
+                    })
                 }
-            }
+            });
         },
         created() {
             this.today = util.dateFormat(new Date());
@@ -288,14 +301,22 @@
             this.getZoneType();
             this.getRoomType();
             this.getOrigin();
-            this.getCollectStatus();
+            this.collectStat();
         },
         methods: {
-            collectUrl(num) {
-                if (num === 0) {
+            collectStat() {
+                const reg = /^\/reportCenter\/collect/;
+                if (reg.test(this.$route.path)) {
                     this.collectNum = 1;
                     this.collectName = '已收藏';
-                    http.get('/stat/addToCollect',{statValue: 301});
+                }
+            },
+            collectUrl(num) {
+                if (num === 0) {
+                    http.get('/stat/addToCollect',{statValue: 301}).then(res => {
+                        this.collectNum = 1;
+                        this.collectName = '已收藏';
+                    });
                 } else if (num === 1) {
                     http.get('/stat/removeFromCollection',{statValue: 301}).then(res => {
                         this.collectNum = 0;
@@ -354,7 +375,6 @@
                 .then(res => {
                     if (res.code === 1) {
                         const zoneList = res.data.list;
-                        this.zoneTypeOther = zoneList;
                         zoneList.forEach(zone => {
                             zone.id = zone.zoneId;
                             zone.name = zone.zoneName;
@@ -369,7 +389,6 @@
                 .then(res => {
                     if (res.code === 1) {
                         const roomList = res.data.list;
-                        this.roomTypeOther = roomList;
                         roomList.forEach(room => {
                             room.id = room.cId;
                             room.name = room.cName;
@@ -387,7 +406,6 @@
                     if (res.code === 1) {
                         const originsList = res.data.list;
                         const otherOrigins = [];
-                        this.userOrigins = originsList;
                         originsList.forEach(origin => {
                             if (origin.id < 0) {
                                 origin.originType = `${origin.id}~${origin.id}`;
@@ -430,26 +448,11 @@
                         this.freeCount = res.data.totalFee;
                         this.pages = Math.ceil(res.data.total / 30);
                     }
-                    this.flag = true;
                 });
             },
             handlePageChange(internalCurrentPage) {
                 this.pageNo = internalCurrentPage;
                 this.getData();
-            },
-            getCollectStatus() {
-                http.get('/stat/getCollection')
-                    .then(res => {
-                        if(res.code === 1) {
-                            const collectList = res.data.list;
-                            for(let i=0;i<collectList.length;i++){
-                                if (collectList[i] === 301) {
-                                    this.collectNum = 1;
-                                    this.collectName = '已收藏';
-                                }
-                            }
-                        }
-                    })
             }
         },
         computed: {

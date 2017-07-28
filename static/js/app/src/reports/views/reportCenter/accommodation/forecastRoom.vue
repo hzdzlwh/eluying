@@ -8,7 +8,7 @@
                 {{collectName}}
             </div>
         </div>
-        <p style="font-weight: bold;font-size:24px;color:#178ce6;text-align:center;margin: 20px 0 26px">
+        <p class="report-title">
             房间预测报表
         </p>
         <div class="report-forecastRoom-date" style="line-height:24px;">
@@ -159,12 +159,28 @@
             DdDatepicker,
             DdPagination
         },
+        beforeRouteEnter (to, from, next) {
+            http.get('/stat/getCollection')
+                .then(res => {
+                    if(res.code === 1) {
+                        next(vm => {
+                            const collectList = res.data.list;
+                            for(let i=0;i<collectList.length;i++){
+                                if (collectList[i] === 304) {
+                                    vm.collectNum = 1;
+                                    vm.collectName = '已收藏';
+                                }
+                            }
+                        })
+                    }
+                })
+        },
         created() {
             const startTime = new Date();
             this.startTime = util.dateFormat(startTime);
             this.endTime = util.dateFormat(util.diffDate(startTime, 30));
             this.getData();
-            this.getCollectStatus();
+            this.collectStat();
         },
         watch: {
             endTime() {
@@ -211,19 +227,12 @@
                     });
                 }
             },
-            getCollectStatus() {
-                http.get('/stat/getCollection')
-                    .then(res => {
-                        if(res.code === 1) {
-                            const collectList = res.data.list;
-                            for(let i=0;i<collectList.length;i++){
-                                if (collectList[i] === 304) {
-                                    this.collectNum = 1;
-                                    this.collectName = '已收藏';
-                                }
-                            }
-                        }
-                    })
+            collectStat() {
+                const reg = /^\/reportCenter\/collect/;
+                if (reg.test(this.$route.path)) {
+                    this.collectNum = 1;
+                    this.collectName = '已收藏';
+                }
             },
             disableStartDate(date) {
                 if (this.startDate !== '') {

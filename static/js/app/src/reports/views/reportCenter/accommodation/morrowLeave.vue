@@ -1,6 +1,6 @@
 <template>
     <div>
-        <p style="font-weight: bold;font-size:24px;color:#178ce6;text-align:center;margin: 20px 0 26px">
+        <p class="report-title">
             次日预离房间报表
         </p>
         <div class="top">
@@ -54,7 +54,9 @@
         </div>
         <dd-table :columns="col" :data-source="vips" :bordered="true" style="margin:20px 0 10px;"></dd-table>
         <div class="foot footfix">
-            <span style="font-size:16px;"><small style='width:16px;'>总房数 : </small> {{count}}</span>
+            <div style="float:left;">
+                <p style="font-size:16px;"><small style='width:16px;'>总房数 : </small> {{count}}</p>
+            </div>
             <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo" style="float:right;"/>
         </div>
     </div>
@@ -272,6 +274,22 @@
                 this.getData();
             }
         },
+        beforeRouteEnter (to, from, next) {
+            http.get('/stat/getCollection')
+                .then(res => {
+                    if(res.code === 1) {
+                        next(vm => {
+                            const collectList = res.data.list;
+                            for(let i=0;i<collectList.length;i++){
+                                if (collectList[i] === 21) {
+                                    vm.collectNum = 1;
+                                    vm.collectName = '已收藏';
+                                }
+                            }
+                        })
+                    }
+                })
+        },
         created() {
             this.today = new Date();
             const tomorrow = util.tomorrow(this.today);
@@ -280,7 +298,7 @@
             this.getZoneType();
             this.getRoomType();
             this.getOrigin();
-            this.getCollectStatus();
+            this.collectStat();
         },
         methods: {
             collectUrl(num) {
@@ -312,19 +330,12 @@
                     });
                 }
             },
-            getCollectStatus() {
-                http.get('/stat/getCollection')
-                    .then(res => {
-                        if(res.code === 1) {
-                            const collectList = res.data.list;
-                            for(let i=0;i<collectList.length;i++){
-                                if (collectList[i] === 21) {
-                                    this.collectNum = 1;
-                                    this.collectName = '已收藏';
-                                }
-                            }
-                        }
-                    })
+            collectStat() {
+                const reg = /^\/reportCenter\/collect/;
+                if (reg.test(this.$route.path)) {
+                    this.collectNum = 1;
+                    this.collectName = '已收藏';
+                }
             },
             exportUrl(type) {
                 const originParam = {

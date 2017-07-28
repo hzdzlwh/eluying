@@ -28,18 +28,7 @@
     .view-container {
         position: relative;
         width: 1200px;
-    }
-    @media screen and (min-width:1470px) {
-        .view-container {
-            width: 1000px;
-            margin-left:0;
-        }
-    }
-    @media screen and (min-width:980px) {
-        .view-container {
-            width:1200px;
-            margin:0 auto;
-        }
+        margin: 0 auto;
     }
     .card {
         box-shadow:0 0 5px 0 rgba(0,0,0,0.15);

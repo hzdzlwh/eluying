@@ -1,6 +1,6 @@
 <template>
     <div>
-        <p style="font-weight: bold;font-size:24px;color:#178ce6;text-align:center;margin: 20px 0 26px">
+        <p class="report-title">
             当前在住客人报表
         </p>
         <div class="top">
@@ -54,9 +54,11 @@
         </div>
         <dd-table :columns="col" :data-source="vips" :bordered="true" style="margin:20px 0 10px;"></dd-table>
         <div class="foot footfix">
-            <p style="font-size:16px;"><small style='width:16px;'>总人数 : </small> {{personCount}}</p>
-            <p style="font-size:16px;"><small style="width:16px;">总房数 : </small>{{roomCount}}</p>
-            <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo" style="float:right;"/>
+            <div style="float:left;">
+                <p style="font-size:16px;"><small style='width:16px;'>总人数 : </small> {{personCount}}</p>
+                <p style="font-size:16px;"><small style="width:16px;">总房数 : </small>{{roomCount}}</p>
+            </div>
+            <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo" style="float:right;margin-top:20px;"/>
         </div>
     </div>
 </template>
@@ -241,13 +243,29 @@
             DdOption,
             DdGroupOption
         },
+        beforeRouteEnter (to, from, next) {
+            http.get('/stat/getCollection')
+                .then(res => {
+                    if(res.code === 1) {
+                        next(vm => {
+                            const collectList = res.data.list;
+                            for(let i=0;i<collectList.length;i++){
+                                if (collectList[i] === 302) {
+                                    vm.collectNum = 1;
+                                    vm.collectName = '已收藏';
+                                }
+                            }
+                        })
+                    }
+                })
+        },
         created() {
             this.today = util.dateFormat(new Date());
             this.getData();
             this.getZoneType();
             this.getRoomType();
             this.getOrigin();
-            this.getCollectStatus();
+            this.collectStat();
         },
         watch: {
             date() {
@@ -287,6 +305,13 @@
             }
         },
         methods: {
+            collectStat() {
+                const reg = /^\/reportCenter\/collect/;
+                if (reg.test(this.$route.path)) {
+                    this.collectNum = 1;
+                    this.collectName = '已收藏';
+                }
+            },
             collectUrl(num) {
                 if (num === 0) {
                     this.collectNum = 1;
@@ -314,20 +339,6 @@
                         }
                     });
                 }
-            },
-            getCollectStatus() {
-                http.get('/stat/getCollection')
-                    .then(res => {
-                        if(res.code === 1) {
-                            const collectList = res.data.list;
-                            for(let i=0;i<collectList.length;i++){
-                                if (collectList[i] === 302) {
-                                    this.collectNum = 1;
-                                    this.collectName = '已收藏';
-                                }
-                            }
-                        }
-                    })
             },
             exportUrl(type) {
                 const obj = {
@@ -455,6 +466,6 @@
                     'report-collect-dis': this.collectNum === 1
                 }
             }
-        }
+        },
     };
 </script>

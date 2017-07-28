@@ -12,7 +12,7 @@
                 </dd-dropdown>
             </div>
         </div>
-        <p style="font-weight: bold;font-size:24px;color:#178ce6;text-align:center;margin: 20px 0 26px">
+        <p class="report-title">
             客房营业统计表
             <span class="ic">i
                 <div class="i">
@@ -238,9 +238,10 @@
             };
         },
         created() {
-            this.date = util.dateFormat(new Date());
+            const prevDate = this.prevDate(new Date());
+            this.date = util.dateFormat(prevDate);
             this.getData();
-            this.getCollectStatus();
+            this.collectStat();
         },
         watch: {
             date() {
@@ -260,16 +261,36 @@
             DdSelect,
             DdOption
         },
-        beforeRouteEnter(to, from, next) {
-            next(() => {
-                $('.date-select-container').hide();
-            });
-        },
-        beforeRouteLeave(to, from, next) {
-            $('.date-select-container').show();
-            next();
+        beforeRouteEnter (to, from, next) {
+            http.get('/stat/getCollection')
+                .then(res => {
+                    if(res.code === 1) {
+                        next(vm => {
+                            const collectList = res.data.list;
+                            for(let i=0;i<collectList.length;i++){
+                                if (collectList[i] === 19) {
+                                    vm.collectNum = 1;
+                                    vm.collectName = '已收藏';
+                                }
+                            }
+                        })
+                    }
+                })
         },
         methods: {
+            prevDate(date) {
+                var d = date.getDate();
+                return new Date(date.setDate(d - 1));
+            },
+            disabledEndDate(startDate) {
+                if (util.isSameDay(new Date(startDate), new Date())) {
+                    const str1 = dateFormat(new Date());
+                    const arr1 = str1.split('-');
+                    return (date) => {
+                        return (date.valueOf() < (new Date(arr1[0], arr1[1] - 1, arr1[2] - 1)).valueOf());
+                    };
+                }
+            },
             collectUrl(num) {
                 if (num === 0) {
                     http.get('/stat/addToCollect',{statValue: 19}).then(res => {
@@ -299,19 +320,12 @@
                     });
                 }
             },
-            getCollectStatus() {
-                http.get('/stat/getCollection')
-                    .then(res => {
-                        if(res.code === 1) {
-                            const collectList = res.data.list;
-                            for(let i=0;i<collectList.length;i++){
-                                if (collectList[i] === 19) {
-                                    this.collectNum = 1;
-                                    this.collectName = '已收藏';
-                                }
-                            }
-                        }
-                    })
+            collectStat() {
+                const reg = /^\/reportCenter\/collect/;
+                if (reg.test(this.$route.path)) {
+                    this.collectNum = 1;
+                    this.collectName = '已收藏';
+                }
             },
             exportUrl(type) {
                 const originParam = {
@@ -329,7 +343,7 @@
                 return `${host}?${params}`;
             },
             disabledDate(date) {
-                return util.DateDiff(date, new Date()) < 0;
+                return util.DateDiff(date, new Date()) < 1;
             },
             getData() {
                 http.get('/stat/getRoomDailyStat', { date: this.date }).then(res => {

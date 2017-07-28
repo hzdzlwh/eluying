@@ -1,5 +1,5 @@
 <template>
-    <div style="width: 1000px;margin:0 auto;">
+    <div>
         <div class="report-reportCenter-date">
             <div :class="collectClass" @click="collectUrl(collectNum)" style="float:right;margin-top:-20px;margin-left:20px;">
                 {{collectName}}
@@ -11,7 +11,7 @@
                 </dd-dropdown>
             </div>
         </div>
-        <p style="font-weight: bold;font-size:24px;color:#178ce6;text-align:center;margin: 20px 0 26px">
+        <p class="report-title">
             菜品统计汇总表
         </p>
         <div class="report-reportCenter-top">
@@ -108,9 +108,10 @@
         font-family: border;
     }
     .report-reportCenter-top {
-        width: 100%;
+        width: 1200px;
         height: 32px;
         padding: 5px 0;
+        margin:0 auto;
         .date {
             float: left;
             line-height: 25.44px;
@@ -124,8 +125,8 @@
         }
     }
     .report-dishesStat-table{
-        width: 1000px;
-        margin: 0 auto;
+        width: 1200px;
+        margin:0 auto;
         margin-top: 20px;
         th{
             height: 30px;
@@ -175,15 +176,37 @@
                 vips: []
             };
         },
+        beforeRouteEnter (to, from, next) {
+            http.get('/stat/getCollection')
+                .then(res => {
+                    if(res.code === 1) {
+                        next(vm => {
+                            const collectList = res.data.list;
+                            for(let i=0;i<collectList.length;i++){
+                                if (collectList[i] === 502) {
+                                    vm.collectNum = 1;
+                                    vm.collectName = '已收藏';
+                                }
+                            }
+                        })
+                    }
+                })
+        },
         created() {
             this.getRestType();
             this.getDishType();
             this.getData();
-            this.getCollectStatus();
+            this.collectStat();
         },
         watch: {
             restType() {
                 this.getData();
+                this.dishTypeAll = [{
+                    id: -1,
+                    name: '全部菜品分类'
+                }];
+                this.name = '全部菜品分类';
+                this.getDishType();
             },
             name() {
                 this.getData();
@@ -241,19 +264,12 @@
                     });
                 }
             },
-            getCollectStatus() {
-                http.get('/stat/getCollection')
-                    .then(res => {
-                        if(res.code === 1) {
-                            const collectList = res.data.list;
-                            for(let i=0;i<collectList.length;i++){
-                                if (collectList[i] === 502) {
-                                    this.collectNum = 1;
-                                    this.collectName = '已收藏';
-                                }
-                            }
-                        }
-                    })
+            collectStat() {
+                const reg = /^\/reportCenter\/collect/;
+                if (reg.test(this.$route.path)) {
+                    this.collectNum = 1;
+                    this.collectName = '已收藏';
+                }
             },
             getRestType() {
                 http.get('/restaurant/listSimple')
@@ -270,7 +286,11 @@
                 });
             },
             getDishType() {
-                http.get('/dish/getDishTypes')
+                const obj = {};
+                if (this.restType.split('~')[1]) {
+                    obj.restId = this.restType.split('~')[1];
+                }
+                http.get('/dish/getDishTypes',obj)
                 .then(res => {
                     if (res.code === 1) {
                         const dishType = res.data.list;

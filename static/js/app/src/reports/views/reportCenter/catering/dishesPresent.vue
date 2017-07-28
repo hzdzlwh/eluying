@@ -11,7 +11,7 @@
                 </dd-dropdown>
             </div>
         </div>
-        <p style="font-weight: bold;font-size:24px;color:#178ce6;text-align:center;margin: 20px 0 26px">
+        <p class="report-title">
             菜品赠送明细表
         </p>
         <div class="top">
@@ -36,9 +36,11 @@
         </div>
         <dd-table :columns="col" :data-source="vips" :bordered="true" style="margin:20px 0 10px;"></dd-table>
         <div class="foot footfix">
-            <p style="font-size:16px;"><small style='width:16px;'>总赠送数量 : </small> {{receiptNum}}</p>
-            <p style="font-size:16px;"><small style='width:16px;'>总赠送金额 : </small> {{receiptFree}}</p>
-            <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo" />
+            <div style="float:left;">
+                <p style="font-size:16px;"><small style='width:16px;'>总赠送数量 : </small> {{receiptNum}}</p>
+                <p style="font-size:16px;"><small style='width:16px;'>总赠送金额 : </small> {{receiptFree}}</p>
+            </div>
+            <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo" style="float:right;margin-top:20px;"/>
         </div>
     </div>
 </template>
@@ -193,12 +195,28 @@
                 flag: true
             };
         },
+        beforeRouteEnter (to, from, next) {
+            http.get('/stat/getCollection')
+                .then(res => {
+                    if(res.code === 1) {
+                        next(vm => {
+                            const collectList = res.data.list;
+                            for(let i=0;i<collectList.length;i++){
+                                if (collectList[i] === 501) {
+                                    vm.collectNum = 1;
+                                    vm.collectName = '已收藏';
+                                }
+                            }
+                        })
+                    }
+                })
+        },
         created() {
             this.getData();
             this.getRestType();
             this.getEmployeeList();
             this.getDishType();
-            this.getCollectStatus();
+            this.collectStat();
         },
         components: {
             DdTable,
@@ -220,6 +238,13 @@
             restType() {
                 this.pageNo = 1;
                 this.getData();
+                this.dishTypeAll = [{
+                    id: -1,
+                    name: '全部菜品分类'
+                }];
+                this.name = '全部菜品分类';
+                this.getDishType();
+
             },
             name() {
                 this.pageNo = 1;
@@ -273,19 +298,12 @@
                     });
                 }
             },
-            getCollectStatus() {
-                http.get('/stat/getCollection')
-                    .then(res => {
-                        if(res.code === 1) {
-                            const collectList = res.data.list;
-                            for(let i=0;i<collectList.length;i++){
-                                if (collectList[i] === 501) {
-                                    this.collectNum = 1;
-                                    this.collectName = '已收藏';
-                                }
-                            }
-                        }
-                    })
+            collectStat() {
+                const reg = /^\/reportCenter\/collect/;
+                if (reg.test(this.$route.path)) {
+                    this.collectNum = 1;
+                    this.collectName = '已收藏';
+                }
             },
             getRestType() {
                 http.get('/restaurant/listSimple')
@@ -303,7 +321,11 @@
                 });
             },
             getDishType() {
-                http.get('/dish/getDishTypes')
+                const obj = {};
+                if (this.restType.split('~')[1]) {
+                    obj.restId = this.restType.split('~')[1];
+                }
+                http.get('/dish/getDishTypes',obj)
                 .then(res => {
                     if (res.code === 1) {
                         const dishType = res.data.list;
