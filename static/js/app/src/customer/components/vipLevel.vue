@@ -322,7 +322,7 @@ export default {
                 2: 0,
                 3: 0
             },
-            url: this.type ? '/vipUser/createEditVipLevel' : ' /vipUser/createEditVipLevelNotAuto',
+            url: this.type ? '/vipUser/createEditVipLevel' : '/vipUser/createEditVipLevelNotAuto',
             week: ['日', '一', '二', '三', '四', '五', '六']
         };
     },

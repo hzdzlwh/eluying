@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-19 09:56:55
 * @Last Modified by:   linxinjian
-* @Last Modified time: 2017-07-27 17:44:49
+* @Last Modified time: 2017-07-28 11:17:57
 * @email: 783384903@qq.com
 */
 <!-- 有问题找产品，这个模块的功能一般人解释不清楚 -->
@@ -838,9 +838,10 @@ export default {
                         element.ableFee = Math.abs(element.ableFee - element.paidFee);
                         element.cards.forEach(el => {
                             if (!cardHash[el.accountId]) {
-                                if (element.type === 2) {
+                                if (element.type === 2 && el.paidFee) {
                                     el.disabled = true;
                                     el.type = 2;
+                                    el.fee = el.paidFee;
                                     this.paycard.push(el);
                                 }
                                 cardList.push(el);
