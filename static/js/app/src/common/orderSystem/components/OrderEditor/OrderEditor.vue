@@ -38,7 +38,7 @@
                                         <span style="vertical-align: text-bottom">&uarr;</span> 请输入正确的手机号
                                     </span>
                                 </div>
-                                <div class="userInfo-item" style="position: relative">
+                                <div class="userInfo-item" style="position: relative;margin-right: 26px;">
                                     <label>客户来源</label>
                                     <div class="select-component-container">
                                         <dd-select v-model="userOriginType" :disabled="(this.checkState === 'editOrder' || this.checkState === 'checkIn') && !(order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder))">
