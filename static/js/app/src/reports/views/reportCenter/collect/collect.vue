@@ -33,7 +33,7 @@
             return {
                 collectList,
                 componentName: this.$route.params.id,
-                currentView: 'noCollect'
+                currentView: ''
             };
         },
         created() {

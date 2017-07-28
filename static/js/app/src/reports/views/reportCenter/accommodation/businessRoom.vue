@@ -238,7 +238,8 @@
             };
         },
         created() {
-            this.date = util.dateFormat(new Date());
+            const prevDate = this.prevDate(new Date());
+            this.date = util.dateFormat(prevDate);
             this.getData();
             this.getCollectStatus();
         },
@@ -270,6 +271,19 @@
             next();
         },
         methods: {
+            prevDate(date) {
+                var d = date.getDate();
+                return new Date(date.setDate(d - 1));
+            },
+            disabledEndDate(startDate) {
+                if (util.isSameDay(new Date(startDate), new Date())) {
+                    const str1 = dateFormat(new Date());
+                    const arr1 = str1.split('-');
+                    return (date) => {
+                        return (date.valueOf() < (new Date(arr1[0], arr1[1] - 1, arr1[2] - 1)).valueOf());
+                    };
+                }
+            },
             collectUrl(num) {
                 if (num === 0) {
                     http.get('/stat/addToCollect',{statValue: 19}).then(res => {
@@ -288,9 +302,13 @@
                         });
                         this.$router.options.routes[2].children[0].children.splice(removeIndex , 1);
                         if (this.$router.options.routes[2].children[0].children.length > 1) {
-                            this.$router.push('/reportCenter/collect/' + this.$router.options.routes[2].children[0].children[1].meta.id);
+                            if (this.$route.params.id) {
+                                this.$router.push('/reportCenter/collect/' + this.$router.options.routes[2].children[0].children[1].meta.id);
+                            }
                         } else {
-                            this.$router.push('/reportCenter/collect/');
+                            if (this.$route.params.id) {
+                                this.$router.push('/reportCenter/collect/');
+                            }
                         }
                     });
                 }
@@ -325,7 +343,7 @@
                 return `${host}?${params}`;
             },
             disabledDate(date) {
-                return util.DateDiff(date, new Date()) < 0;
+                return util.DateDiff(date, new Date()) < 1;
             },
             getData() {
                 http.get('/stat/getRoomDailyStat', { date: this.date }).then(res => {

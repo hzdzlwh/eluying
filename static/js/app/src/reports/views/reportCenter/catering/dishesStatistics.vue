@@ -184,6 +184,12 @@
         watch: {
             restType() {
                 this.getData();
+                this.dishTypeAll = [{
+                    id: -1,
+                    name: '全部菜品分类'
+                }];
+                this.name = '全部菜品分类';
+                this.getDishType();
             },
             name() {
                 this.getData();
@@ -230,9 +236,13 @@
                         });
                         this.$router.options.routes[2].children[0].children.splice(removeIndex , 1);
                         if (this.$router.options.routes[2].children[0].children.length > 1) {
-                            this.$router.push('/reportCenter/collect/' + this.$router.options.routes[2].children[0].children[1].meta.id);
+                            if (this.$route.params.id) {
+                                this.$router.push('/reportCenter/collect/' + this.$router.options.routes[2].children[0].children[1].meta.id);
+                            }
                         } else {
-                            this.$router.push('/reportCenter/collect/');
+                            if (this.$route.params.id) {
+                                this.$router.push('/reportCenter/collect/');
+                            }
                         }
                     });
                 }
@@ -266,7 +276,11 @@
                 });
             },
             getDishType() {
-                http.get('/dish/getDishTypes')
+                const obj = {};
+                if (this.restType.split('~')[1]) {
+                    obj.restId = this.restType.split('~')[1];
+                }
+                http.get('/dish/getDishTypes',obj)
                 .then(res => {
                     if (res.code === 1) {
                         const dishType = res.data.list;

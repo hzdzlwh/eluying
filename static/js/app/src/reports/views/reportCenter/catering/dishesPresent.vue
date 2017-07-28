@@ -38,7 +38,7 @@
         <div class="foot footfix">
             <p style="font-size:16px;"><small style='width:16px;'>总赠送数量 : </small> {{receiptNum}}</p>
             <p style="font-size:16px;"><small style='width:16px;'>总赠送金额 : </small> {{receiptFree}}</p>
-            <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo" />
+            <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo" style="float:right;"/>
         </div>
     </div>
 </template>
@@ -220,6 +220,13 @@
             restType() {
                 this.pageNo = 1;
                 this.getData();
+                this.dishTypeAll = [{
+                    id: -1,
+                    name: '全部菜品分类'
+                }];
+                this.name = '全部菜品分类';
+                this.getDishType();
+
             },
             name() {
                 this.pageNo = 1;
@@ -262,9 +269,13 @@
                         });
                         this.$router.options.routes[2].children[0].children.splice(removeIndex , 1);
                         if (this.$router.options.routes[2].children[0].children.length > 1) {
-                            this.$router.push('/reportCenter/collect/' + this.$router.options.routes[2].children[0].children[1].meta.id);
+                            if (this.$route.params.id) {
+                                this.$router.push('/reportCenter/collect/' + this.$router.options.routes[2].children[0].children[1].meta.id);
+                            }
                         } else {
-                            this.$router.push('/reportCenter/collect/');
+                            if (this.$route.params.id) {
+                                this.$router.push('/reportCenter/collect/');
+                            }
                         }
                     });
                 }
@@ -299,7 +310,11 @@
                 });
             },
             getDishType() {
-                http.get('/dish/getDishTypes')
+                const obj = {};
+                if (this.restType.split('~')[1]) {
+                    obj.restId = this.restType.split('~')[1];
+                }
+                http.get('/dish/getDishTypes',obj)
                 .then(res => {
                     if (res.code === 1) {
                         const dishType = res.data.list;

@@ -32,7 +32,7 @@
             <p style="font-size:16px;"><small style='width:16px;'>总入账次数 : </small> {{receiptNum}}</p>
             <p style="font-size:16px;"><small style='width:16px;'>总订单金额 : </small> {{orderFree}}</p>
             <p style="font-size:16px;"><small style='width:16px;'>总入账金额 : </small> {{receiptFree}}</p>
-            <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo" />
+            <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo" style="float:right;margin-top:0;margin-bottom:0;margin:auto;"/>
         </div>
     </div>
 </template>
@@ -266,9 +266,13 @@
                         });
                         this.$router.options.routes[2].children[0].children.splice(removeIndex , 1);
                         if (this.$router.options.routes[2].children[0].children.length > 1) {
-                            this.$router.push('/reportCenter/collect/' + this.$router.options.routes[2].children[0].children[1].meta.id);
+                            if (this.$route.params.id) {
+                                this.$router.push('/reportCenter/collect/' + this.$router.options.routes[2].children[0].children[1].meta.id);
+                            }
                         } else {
-                            this.$router.push('/reportCenter/collect/');
+                            if (this.$route.params.id) {
+                                this.$router.push('/reportCenter/collect/');
+                            }
                         }
                     });
                 }
