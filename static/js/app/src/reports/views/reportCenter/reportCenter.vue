@@ -3,7 +3,7 @@
         <LeftMenu></LeftMenu>
         <div class="view-container">
             <div v-show="dataSelect">
-                <DateSelect />
+                <DateSelect/>
             </div>
             <router-view></router-view>
         </div>

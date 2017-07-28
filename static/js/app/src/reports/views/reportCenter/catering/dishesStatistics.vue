@@ -184,6 +184,12 @@
         watch: {
             restType() {
                 this.getData();
+                this.dishTypeAll = [{
+                    id: -1,
+                    name: '全部菜品分类'
+                }];
+                this.name = '全部菜品分类';
+                this.getDishType();
             },
             name() {
                 this.getData();
@@ -270,7 +276,11 @@
                 });
             },
             getDishType() {
-                http.get('/dish/getDishTypes')
+                const obj = {};
+                if (this.restType.split('~')[1]) {
+                    obj.restId = this.restType.split('~')[1];
+                }
+                http.get('/dish/getDishTypes',obj)
                 .then(res => {
                     if (res.code === 1) {
                         const dishType = res.data.list;
