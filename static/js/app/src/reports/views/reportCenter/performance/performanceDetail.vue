@@ -11,10 +11,15 @@
 			</div>
 		</div>
 		<div class="content">
-			<h4>会员卡销售明细表</h4>
+			<h4>销售员销售业绩明细表</h4>
 			<div class="filter-container">
 				<div class="filter-time">
 					日期: <span>{{date.startDate}}</span>~<span>{{date.endDate}}</span>
+				</div>
+				<div class="filter-condition">
+					<dd-select>
+						<dd-option></dd-option>
+					</dd-select>
 				</div>
 				<div class="filter-condition">
 					<dd-select>
@@ -44,35 +49,11 @@ export default {
 			collectState: undefined,
 			columns: [
 				{
-					title: '办卡时间',
+					title: '订单号',
 					dataIndex: ''
 				},
 				{
-					title: '卡号',
-					dataIndex: ''
-				},
-				{
-					title: '会员卡类型',
-					dataIndex: ''
-				},
-				{
-					title: '姓名',
-					dataIndex: ''
-				},
-				{
-					title: '手机号',
-					dataIndex: ''
-				},
-				{
-					title: '卡费金额',
-					dataIndex: ''
-				},
-				{
-					title: '首冲金额',
-					dataIndex: ''
-				},
-				{
-					title: '首冲赠送金额',
+					title: '创建时间',
 					dataIndex: ''
 				},
 				{
@@ -84,25 +65,37 @@ export default {
 					dataIndex: ''
 				},
 				{
-					title: '销售价格',
+					title: '订单类型',
 					dataIndex: ''
 				},
 				{
-					title: '收款方式',
+					title: '订单金额',
 					dataIndex: ''
 				},
 				{
-					title: '收银员',
+					title: '客户姓名',
+					dataIndex: ''
+				},
+				{
+					title: '手机号',
+					dataIndex: ''
+				},
+				{
+					title: '客源渠道',
+					dataIndex: ''
+				},
+				{
+					title: '创建人',
 					dataIndex: ''
 				}
 			],
 			dataSource: []
-		}
+		};
 	},
 	components: {
-		CollectButton,
 		DdDropdown,
 		DdDropdownItem,
+		CollectButton,
 		DdTable,
 		DdSelect,
 		DdOption
@@ -123,7 +116,7 @@ export default {
 
 <style lang="scss" scoped>
 	.filter-container{
-		width: 40%;
+		width: 50%;
 		display: flex;
 		justify-content: space-between;
 		.filter-time{

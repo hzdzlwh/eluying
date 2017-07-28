@@ -11,22 +11,8 @@
 			</div>
 		</div>
 		<div class="content">
-			<h4>会员卡销售明细表</h4>
-			<div class="filter-container">
-				<div class="filter-time">
-					日期: <span>{{date.startDate}}</span>~<span>{{date.endDate}}</span>
-				</div>
-				<div class="filter-condition">
-					<dd-select>
-						<dd-option></dd-option>
-					</dd-select>
-				</div>
-				<div class="filter-condition">
-					<dd-select>
-						<dd-option></dd-option>
-					</dd-select>
-				</div>
-			</div>
+			<h4>销售员（订单数量）业绩汇总表</h4>
+			<p>日期: <span>{{date.startDate}}</span>~<span>{{date.endDate}}</span></p>
 			<div>
 				<dd-table :columns="columns" :data-source="dataSource" :bordered="true"></dd-table>
 			</div>
@@ -44,38 +30,6 @@ export default {
 			collectState: undefined,
 			columns: [
 				{
-					title: '办卡时间',
-					dataIndex: ''
-				},
-				{
-					title: '卡号',
-					dataIndex: ''
-				},
-				{
-					title: '会员卡类型',
-					dataIndex: ''
-				},
-				{
-					title: '姓名',
-					dataIndex: ''
-				},
-				{
-					title: '手机号',
-					dataIndex: ''
-				},
-				{
-					title: '卡费金额',
-					dataIndex: ''
-				},
-				{
-					title: '首冲金额',
-					dataIndex: ''
-				},
-				{
-					title: '首冲赠送金额',
-					dataIndex: ''
-				},
-				{
 					title: '销售员',
 					dataIndex: ''
 				},
@@ -84,15 +38,23 @@ export default {
 					dataIndex: ''
 				},
 				{
-					title: '销售价格',
+					title: '住宿订单数量',
 					dataIndex: ''
 				},
 				{
-					title: '收款方式',
+					title: '餐饮订单数量',
 					dataIndex: ''
 				},
 				{
-					title: '收银员',
+					title: '娱乐订单数量',
+					dataIndex: ''
+				},
+				{
+					title: '商超订单数量',
+					dataIndex: ''
+				},
+				{
+					title: '总订单数量',
 					dataIndex: ''
 				}
 			],
@@ -100,12 +62,10 @@ export default {
 		}
 	},
 	components: {
-		CollectButton,
+		DdTable,
 		DdDropdown,
 		DdDropdownItem,
-		DdTable,
-		DdSelect,
-		DdOption
+		CollectButton
 	},
 	computed: {
 		...mapState(['date'])
@@ -122,15 +82,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-	.filter-container{
-		width: 40%;
-		display: flex;
-		justify-content: space-between;
-		.filter-time{
-			line-height: 24px;
-		}
-		.filter-condition{
-			width: 120px;
-		}
-	}
+	
 </style>

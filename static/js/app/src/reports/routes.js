@@ -57,6 +57,10 @@ import saleCollect from './views/reportCenter/member/saleCollect.vue';
 import saleDetail from './views/reportCenter/member/saleDetail.vue'
 import collect from './views/reportCenter/collect/collect.vue';
 import noCollect from './views/reportCenter/collect/noCollect.vue';
+import performance from './views/reportCenter/performance/performance.vue';
+import saleMoney from './views/reportCenter/performance/saleMoney.vue';
+import orderNumber from './views/reportCenter/performance/orderNumber.vue';
+import performanceDetail from './views/reportCenter/performance/performanceDetail.vue';
 import auth from '../common/auth';
 export const routeList = {
     todayRoom,
@@ -572,6 +576,37 @@ export const routes = [
                             name: '会员卡销售明细表'
                         },
                         component: saleDetail
+                    }
+                ]
+            },
+            {
+                path: '/reportCenter/performance',
+                meta: {
+                    name: '业绩'
+                },
+                component: performance,
+                redirect: '/reportCenter/performance/saleMoney',
+                children: [
+                    {
+                        path: '/reportCenter/performance/saleMoney',
+                        meta: {
+                            name: '销售金额业绩汇总表'
+                        },
+                        component: saleMoney
+                    },
+                    {
+                        path: '/reportCenter/performance/orderNumber',
+                        meta: {
+                            name: '订单数量业绩汇总表'
+                        },
+                        component: orderNumber
+                    },
+                    {
+                        path: '/reportCenter/performance/performanceDetail',
+                        meta: {
+                            name: '销售员业绩明细表'
+                        },
+                        component: performanceDetail
                     }
                 ]
             }

@@ -24,7 +24,11 @@ export default {
     '305': { component: 'rechargeDetails', name: '充值明细表' },
     '502': { component: 'dishesStatistics', name: '菜品统计汇总表' },
     '501': { component: 'dishesPresent', name: '菜品赠送明细表' },
-    '18': { component: 'dailyReport', name: '营业日报表' }
+    '306': { component: 'saleCollect', name: '会员卡销售汇总表' },
+    '308': { component: 'saleDetail', name: '会员卡销售明细表' },
+    '601': { component: 'saleMoney', name: '销售金额业绩汇总表' },
+    '602': { component: 'orderNumber', name: '订单数量业绩汇总表' },
+    '603': { component: 'performanceDetail', name: '销售员业绩明细表' }
 };
 export const list = [
     {
@@ -50,6 +54,21 @@ export const list = [
     },
     {
         'name': '菜品赠送明细表'
+    },
+    {
+        'name': '会员卡销售汇总表'
+    },
+    {
+        'name': '会员卡销售明细表'
+    },
+    {
+        'name': '销售金额业绩汇总表'
+    },
+    {
+        'name': '订单数量业绩汇总表'
+    },
+    {
+        'name': '销售员业绩明细表'
     }
 ];
 export const collectDateList = [
@@ -76,5 +95,20 @@ export const collectDateList = [
     },
     {
         'reportType': '501'
+    },
+    {
+        'reportType': '306'
+    },
+    {
+        'reportType': '308'
+    },
+    {
+        'reportType': '601'
+    },
+    {
+        'reportType': '602'
+    },
+    {
+        'reportType': '603'
     }
 ];
