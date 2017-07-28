@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-19 09:56:55
 * @Last Modified by:   linxinjian
-* @Last Modified time: 2017-07-28 11:17:57
+* @Last Modified time: 2017-07-28 17:24:38
 * @email: 783384903@qq.com
 */
 <!-- 有问题找产品，这个模块的功能一般人解释不清楚 -->
@@ -617,17 +617,23 @@ export default {
             }
             // 会员余额
             if (this.orderPayment && this.orderPayment.card && this.orderPayment.card.length) {
+                const cardAble = this.orderPayment.card.find(card => card.type === 0);
+                let cardAbleFee = 0;
+                if (cardAble) {
+                    cardAbleFee = cardAble.ableFee;
+                }
                 const cardMax = this.orderPayment.card.find(card => card.type === 0);
                 this.paycard.length && this.paycard.forEach(card => {
                     if (card.accountId) {
                         const selectCard = this.cardList.find(cards => cards.accountId === card.accountId);
                         if (card.type === 0) {
                             // const abelFee = Math.min((cardMax ? cardMax.max : 0), Math.max(0, needPay));
-                            const abelFee = cardMax ? cardMax.max : 0;
+                            const abelFee = Math.min((cardMax ? cardMax.max : 0), cardAbleFee);
                             // const abelFee = Math.min(needPay, selectCard.lastFee);
                             const payed = Math.min(abelFee, card.fee);
                             card.ableFee = abelFee;
                             card.fee = payed;
+                            cardAbleFee = cardAbleFee - payed;
                             needPay = (needPay - payed).toFixed(2) * 1;
                         }
                     }
