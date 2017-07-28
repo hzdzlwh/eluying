@@ -1,5 +1,5 @@
 <template>
-    <div style="width: 1000px;margin:0 auto;">
+    <div>
         <div class="report-reportCenter-date">
             <div :class="collectClass" @click="collectUrl(collectNum)" style="float:right;margin-top:-20px;margin-left:20px;">
                 {{collectName}}
@@ -11,7 +11,7 @@
                 </dd-dropdown>
             </div>
         </div>
-        <p style="font-weight: bold;font-size:24px;color:#178ce6;text-align:center;margin: 20px 0 26px">
+        <p class="report-title">
             菜品统计汇总表
         </p>
         <div class="report-reportCenter-top">
@@ -108,9 +108,10 @@
         font-family: border;
     }
     .report-reportCenter-top {
-        width: 100%;
+        width: 1200px;
         height: 32px;
         padding: 5px 0;
+        margin:0 auto;
         .date {
             float: left;
             line-height: 25.44px;
@@ -124,8 +125,8 @@
         }
     }
     .report-dishesStat-table{
-        width: 1000px;
-        margin: 0 auto;
+        width: 1200px;
+        margin:0 auto;
         margin-top: 20px;
         th{
             height: 30px;
@@ -145,6 +146,22 @@
             border-bottom: 1px solid #ccc;
         }
     }
+    /*@media screen and (min-width:980px) {*/
+        /*.report-reportCenter-top {*/
+            /*margin: 20px 0 0 0;*/
+        /*}*/
+        /*.report-dishesStat-table {*/
+            /*margin:20px 0 0 0;*/
+        /*}*/
+    /*}*/
+    /*@media screen and (min-width:1260px) {*/
+        /*.report-reportCenter-top {*/
+            /*margin:20px auto 0;*/
+        /*}*/
+        /*.report-dishesStat-table {*/
+            /*margin:20px auto 0;*/
+        /*}*/
+    /*}*/
 </style>
 <script>
     import http from 'http';

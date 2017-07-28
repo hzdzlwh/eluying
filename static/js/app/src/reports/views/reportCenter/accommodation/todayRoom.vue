@@ -1,6 +1,6 @@
 <template>
     <div>
-        <p style="font-weight: bold;font-size:24px;color:#178ce6;text-align:center;margin: 20px 0 26px">
+        <p class="report-title">
             当前在住房间报表
         </p>
         <div class="top">
@@ -54,21 +54,35 @@
         </div>
         <dd-table :columns="col" :data-source="vips" :bordered="true" style="margin:20px 0 10px;"></dd-table>
         <div class="foot footfix">
-            <p style="font-size:16px;"><small style='width:16px;'>总房数 : </small> {{roomCount}}</p>
-            <p style="font-size:16px;"><small style="width:16px;">当日房费合计 : </small>{{freeCount}}</p>
-            <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo" style="float:right;"/>
+            <div style="float:left;">
+                <p style="font-size:16px;"><small style='width:16px;'>总房数 : </small> {{roomCount}}</p>
+                <p style="font-size:16px;"><small style="width:16px;">当日房费合计 : </small>{{freeCount}}</p>
+            </div>
+            <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo" style="float:right;margin-top:20px;"/>
         </div>
     </div>
 </template>
-<style lang='scss' scoped>
+<style lang="scss">
     .report-title {
-        width: 100%;
-        line-height: 56px;
-        font-size: 1.5em;
-        color: #746D66;
-        text-align: center;
         font-family: border;
+        font-weight: bold;
+        font-size:24px;
+        color:#178ce6;
+        text-align:center;
+        margin: 20px 0 26px;
     }
+    @media screen and (min-width:980px) {
+        .report-title {
+            width:calc(100vw - 250px);
+        }
+    }
+    @media screen and (min-width:1470px) {
+        .report-title {
+            width: 1200px;
+        }
+    }
+</style>
+<style lang='scss' scoped>
     .top {
         width: 100%;
         height: 32px;

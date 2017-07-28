@@ -1,6 +1,6 @@
 <template>
 	<div>
-        <p style="font-weight: bold;font-size:24px;color:#178ce6;text-align:center;margin: 20px 0 26px">
+        <p class="report-title">
             收款汇总表
         </p>
         <div class="top">

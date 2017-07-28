@@ -17,8 +17,8 @@
             </div>
         </div>
         <div class="content">
-            <div class="title">
-                <h2>营业日报表</h2>
+            <div class="report-title">
+                营业日报表
             </div>
             <div class="table-container">
                 <table class="debit-table" border="1">

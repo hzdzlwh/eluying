@@ -1,6 +1,6 @@
 <template>
     <div>
-        <p style="font-weight: bold;font-size:24px;color:#178ce6;text-align:center;margin: 20px 0 26px">
+        <p class="report-title">
             当前在住客人报表
         </p>
         <div class="top">
@@ -54,9 +54,11 @@
         </div>
         <dd-table :columns="col" :data-source="vips" :bordered="true" style="margin:20px 0 10px;"></dd-table>
         <div class="foot footfix">
-            <p style="font-size:16px;"><small style='width:16px;'>总人数 : </small> {{personCount}}</p>
-            <p style="font-size:16px;"><small style="width:16px;">总房数 : </small>{{roomCount}}</p>
-            <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo" style="float:right;"/>
+            <div style="float:left;">
+                <p style="font-size:16px;"><small style='width:16px;'>总人数 : </small> {{personCount}}</p>
+                <p style="font-size:16px;"><small style="width:16px;">总房数 : </small>{{roomCount}}</p>
+            </div>
+            <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo" style="float:right;margin-top:20px;"/>
         </div>
     </div>
 </template>

@@ -8,7 +8,7 @@
                 {{collectName}}
             </div>
         </div>
-        <p style="font-weight: bold;font-size:24px;color:#178ce6;text-align:center;margin: 20px 0 26px">
+        <p class="report-title">
             房间预测报表
         </p>
         <div class="report-forecastRoom-date" style="line-height:24px;">
