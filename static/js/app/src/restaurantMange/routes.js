@@ -4,18 +4,17 @@
 import Router from 'vue-router';
 import auth from '../common/auth';
 import NoAuth from './components/no-auth.vue';
-import book from './view/book/index.vue';
-import order from './view/order/index.vue';
-import orderList from './view/orderList/index.vue';
+import book from './views/book/index.vue';
+import order from './views/order/index.vue';
+import orderList from './views/orderList/index.vue';
 const hasAuth = auth.checkModule(auth.VIP_ID);
 const hasCompanyAuth = auth.checkModule(auth.COMPANY_ID, auth.COMPANY_VIEW_ID);
 
 export const routes = [
     {
         path: '/',
-        redirect: '/book',
+        redirect: '/order',
         meta: {
-            invisible: true
         }
     },
     {
@@ -44,7 +43,6 @@ export const routes = [
         path: '/non-auth',
         component: NoAuth,
         meta: {
-            invisible: true
         }
     }
 ];
