@@ -146,22 +146,6 @@
             border-bottom: 1px solid #ccc;
         }
     }
-    /*@media screen and (min-width:980px) {*/
-        /*.report-reportCenter-top {*/
-            /*margin: 20px 0 0 0;*/
-        /*}*/
-        /*.report-dishesStat-table {*/
-            /*margin:20px 0 0 0;*/
-        /*}*/
-    /*}*/
-    /*@media screen and (min-width:1260px) {*/
-        /*.report-reportCenter-top {*/
-            /*margin:20px auto 0;*/
-        /*}*/
-        /*.report-dishesStat-table {*/
-            /*margin:20px auto 0;*/
-        /*}*/
-    /*}*/
 </style>
 <script>
     import http from 'http';
@@ -192,11 +176,27 @@
                 vips: []
             };
         },
+        beforeRouteEnter (to, from, next) {
+            http.get('/stat/getCollection')
+                .then(res => {
+                    if(res.code === 1) {
+                        next(vm => {
+                            const collectList = res.data.list;
+                            for(let i=0;i<collectList.length;i++){
+                                if (collectList[i] === 502) {
+                                    vm.collectNum = 1;
+                                    vm.collectName = '已收藏';
+                                }
+                            }
+                        })
+                    }
+                })
+        },
         created() {
             this.getRestType();
             this.getDishType();
             this.getData();
-            this.getCollectStatus();
+            this.collectStat();
         },
         watch: {
             restType() {
@@ -264,19 +264,12 @@
                     });
                 }
             },
-            getCollectStatus() {
-                http.get('/stat/getCollection')
-                    .then(res => {
-                        if(res.code === 1) {
-                            const collectList = res.data.list;
-                            for(let i=0;i<collectList.length;i++){
-                                if (collectList[i] === 502) {
-                                    this.collectNum = 1;
-                                    this.collectName = '已收藏';
-                                }
-                            }
-                        }
-                    })
+            collectStat() {
+                const reg = /^\/reportCenter\/collect/;
+                if (reg.test(this.$route.path)) {
+                    this.collectNum = 1;
+                    this.collectName = '已收藏';
+                }
             },
             getRestType() {
                 http.get('/restaurant/listSimple')

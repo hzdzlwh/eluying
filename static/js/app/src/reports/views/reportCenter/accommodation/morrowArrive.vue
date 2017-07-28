@@ -290,6 +290,22 @@
                 }
             }
         },
+        beforeRouteEnter (to, from, next) {
+            http.get('/stat/getCollection')
+                .then(res => {
+                    if(res.code === 1) {
+                        next(vm => {
+                            const collectList = res.data.list;
+                            for(let i=0;i<collectList.length;i++){
+                                if (collectList[i] === 23) {
+                                    vm.collectNum = 1;
+                                    vm.collectName = '已收藏';
+                                }
+                            }
+                        })
+                    }
+                })
+        },
         created() {
             this.today = new Date();
             const tomorrow = util.tomorrow(this.today);
@@ -298,7 +314,7 @@
             this.getZoneType();
             this.getRoomType();
             this.getOrigin();
-            this.getCollectStatus();
+            this.collectStat();
         },
         methods: {
             collectUrl(num) {
@@ -330,19 +346,12 @@
                     });
                 }
             },
-            getCollectStatus() {
-                http.get('/stat/getCollection')
-                    .then(res => {
-                        if(res.code === 1) {
-                            const collectList = res.data.list;
-                            for(let i=0;i<collectList.length;i++){
-                                if (collectList[i] === 23) {
-                                    this.collectNum = 1;
-                                    this.collectName = '已收藏';
-                                }
-                            }
-                        }
-                    })
+            collectStat() {
+                const reg = /^\/reportCenter\/collect/;
+                if (reg.test(this.$route.path)) {
+                    this.collectNum = 1;
+                    this.collectName = '已收藏';
+                }
             },
             exportUrl(type) {
                 const originParam = {
@@ -355,13 +364,13 @@
                 };
                 if (this.checkType !== -1) {
                     originParam.checkType = this.checkType;
-                };
+                }
                 // 后台要求如果为空就不传
                 for (const ob in originParam) {
                     if (originParam[ob] === undefined || originParam[ob] === '') {
                         delete originParam[ob];
                     }
-                };
+                }
                 const paramsObj = {
                     exportType: type,
                     reportType: 23,

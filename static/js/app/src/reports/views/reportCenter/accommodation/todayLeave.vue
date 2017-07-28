@@ -290,13 +290,29 @@
                 }
             }
         },
+        beforeRouteEnter (to, from, next) {
+            http.get('/stat/getCollection')
+                .then(res => {
+                    if(res.code === 1) {
+                        next(vm => {
+                            const collectList = res.data.list;
+                            for(let i=0;i<collectList.length;i++){
+                                if (collectList[i] === 20) {
+                                    vm.collectNum = 1;
+                                    vm.collectName = '已收藏';
+                                }
+                            }
+                        })
+                    }
+                })
+        },
         created() {
             this.today = util.dateFormat(new Date());
             this.getData();
             this.getZoneType();
             this.getRoomType();
             this.getOrigin();
-            this.getCollectStatus();
+            this.collectStat();
         },
         computed: {
             collectClass: function () {
@@ -308,6 +324,13 @@
             }
         },
         methods: {
+            collectStat() {
+                const reg = /^\/reportCenter\/collect/;
+                if (reg.test(this.$route.path)) {
+                    this.collectNum = 1;
+                    this.collectName = '已收藏';
+                }
+            },
             collectUrl(num) {
                 if (num === 0) {
                     http.get('/stat/addToCollect',{statValue: 20}).then(res => {
@@ -449,20 +472,6 @@
                     }
                     this.flag = true;
                 });
-            },
-            getCollectStatus() {
-                http.get('/stat/getCollection')
-                    .then(res => {
-                        if(res.code === 1) {
-                            const collectList = res.data.list;
-                            for(let i=0;i<collectList.length;i++){
-                                if (collectList[i] === 20) {
-                                    this.collectNum = 1;
-                                    this.collectName = '已收藏';
-                                }
-                            }
-                        }
-                    })
             },
             handlePageChange(internalCurrentPage) {
                 this.pageNo = internalCurrentPage;

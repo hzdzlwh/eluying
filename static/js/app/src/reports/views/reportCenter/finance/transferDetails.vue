@@ -19,7 +19,6 @@
             </div>
             <div class="export">
                 <dd-dropdown text="导出明细" trigger="click" style="width:100px;">
-                  <!-- <dd-dropdown-item><span><a :href="exportUrl(1)">导出PDF</a></span></dd-dropdown-item> -->
                   <dd-dropdown-item><span><a :href="exportUrl(0)">导出Excel</a></span></dd-dropdown-item>
                 </dd-dropdown>
             </div>
