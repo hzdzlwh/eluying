@@ -98,57 +98,30 @@
     import { DdTable, DdPagination, DdDropdown, DdDropdownItem, DdSelect, DdOption, DdGroupOption } from 'dd-vue-component';
     import http from 'http';
     import { mapState } from 'vuex';
-    import DateSelect from '../../../components/DateSelect.vue';
+    import { getRestType, getDishType, getEmployeeType } from '../mixin/selectType';
+    import { collect } from '../mixin/collect';
+    import pagination from '../mixin/pagination';
     export default {
+        mixins: [ getRestType, collect, pagination, getDishType, getEmployeeType ],
         props: {
             startDate: String,
             endDate: String
         },
         data() {
             return {
-                restTypeAll: [{
-                    id: -1,
-                    name: '全部餐厅',
-                    restType: '-1~'
-                }],
-                restType: '-1~',
-                dishTypeAll: [{
-                    id: -1,
-                    name: '全部菜品分类'
-                }],
-                name: '全部菜品分类',
-                employeeList: [
-                    {
-                        realName: '全部操作人',
-                        employeeId: 'ALL'
-                    },
-                    {
-                        realName: '游客线上付款',
-                        employeeId: -2
-                    },
-                    {
-                        realName: '全部员工',
-                        employeeId: -1
-                    }
-                ],
-                operatorId: 'ALL',
                 vips: [],
-                pages: 0,
                 receiptNum: 0,
                 receiptFree: 0,
-                pageNo: 1,
-                collectNum: 0,
-                collectName: '加入收藏',
                 col: [
                     {
                         title: '订单号',
                         dataIndex: 'orderNum',
-                        width: 180
+                        width: 160
                     },
                     {
                         title: '餐厅名称',
                         dataIndex: 'restName',
-                        width: 80
+                        width: 100
                     },
                     {
                         title: '桌位',
@@ -163,7 +136,7 @@
                     {
                         title: '菜名',
                         dataIndex: 'dishName',
-                        width: 80
+                        width: 100
                     },
                     {
                         title: '单价',
@@ -189,10 +162,9 @@
                     {
                         title: '操作人',
                         dataIndex: 'operatorName',
-                        width: 120
+                        width: 100
                     }
-                ],
-                flag: true
+                ]
             };
         },
         beforeRouteEnter (to, from, next) {
@@ -225,48 +197,16 @@
             DdDropdownItem,
             DdSelect,
             DdOption,
-            DdGroupOption,
-            DateSelect
+            DdGroupOption
         },
         watch: {
             date() {
                 this.pageNo = 1;
-                if (this.flag) {
-                    this.getData();
-                }
-            },
-            restType() {
-                this.pageNo = 1;
-                this.getData();
-                this.dishTypeAll = [{
-                    id: -1,
-                    name: '全部菜品分类'
-                }];
-                this.name = '全部菜品分类';
-                this.getDishType();
-
-            },
-            name() {
-                this.pageNo = 1;
-                this.getData();
-            },
-            operatorId() {
-                this.page = 1;
-                this.getData();
-            },
-            pageNo() {
                 this.getData();
             }
         },
         computed: {
-            ...mapState(['date']),
-            collectClass: function () {
-                return {
-                    'report-collect': true,
-                    'report-collect-add': this.collectNum === 0,
-                    'report-collect-dis': this.collectNum === 1
-                }
-            }
+            ...mapState(['date'])
         },
         methods: {
             collectUrl(num) {
@@ -297,57 +237,6 @@
                         }
                     });
                 }
-            },
-            collectStat() {
-                const reg = /^\/reportCenter\/collect/;
-                if (reg.test(this.$route.path)) {
-                    this.collectNum = 1;
-                    this.collectName = '已收藏';
-                }
-            },
-            getRestType() {
-                http.get('/restaurant/listSimple')
-                .then(res => {
-                    if (res.code === 1) {
-                        const restList = res.data.list;
-                        this.restTypeOther = restList;
-                        restList.forEach(rest => {
-                            rest.id = rest.restId;
-                            rest.name = rest.restName;
-                            rest.restType = `-1~${rest.restId}`;
-                            this.restTypeAll.push(rest);
-                        });
-                    }
-                });
-            },
-            getDishType() {
-                const obj = {};
-                if (this.restType.split('~')[1]) {
-                    obj.restId = this.restType.split('~')[1];
-                }
-                http.get('/dish/getDishTypes',obj)
-                .then(res => {
-                    if (res.code === 1) {
-                        const dishType = res.data.list;
-                        const dict = {};
-                        dishType.forEach(dish => {
-                            dish.name = dish.dishType;
-                            if (!dict[dish.name]) {
-                                dish.dishType = `-1~{dish.name}`;
-                                this.dishTypeAll.push(dish);
-                                dict[dish.name] = 1;
-                            }
-                        });
-                    }
-                });
-            },
-            getEmployeeList() {
-                http.get('/user/getEmployeeList', {})
-                    .then(res => {
-                        if (res.code === 1) {
-                            this.employeeList = [...this.employeeList, ...res.data.list];
-                        }
-                    });
             },
             exportUrl(type) {
                 const obj = {
@@ -409,10 +298,6 @@
                     }
                     this.flag = true;
                 });
-            },
-            handlePageChange(internalCurrentPage) {
-                this.pageNo = internalCurrentPage;
-                this.getData();
             }
         }
     };

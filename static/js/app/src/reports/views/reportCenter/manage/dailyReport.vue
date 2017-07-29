@@ -91,12 +91,11 @@
     import http from '../../../../common/http';
     import util from '../../../../common/util';
     import { DdDatepicker, DdDropdown, DdDropdownItem } from 'dd-vue-component';
-    
+    import { collect } from '../mixin/collect';
     export default {
+        mixins: [ collect ],
         data() {
             return {
-                collectNum: 0,
-                collectName: '加入收藏',
                 today: undefined,
                 credit: [],
                 creditSummary: {},
@@ -122,7 +121,6 @@
         },
         created() {
             this.today = util.dateFormat(new Date());
-            this.getDailyReportData();
             this.collectStat();
         },
         computed: {
@@ -131,13 +129,6 @@
             },
             creditSupplymentTr() {
                 return this.debit.length > this.credit.length ? this.debit.length - this.credit.length : 0;
-            },
-            collectClass: function () {
-                return {
-                    'report-collect': true,
-                    'report-collect-add': this.collectNum === 0,
-                    'report-collect-dis': this.collectNum === 1
-                }
             }
         },
         methods: {
@@ -168,13 +159,6 @@
                             }
                         }
                     });
-                }
-            },
-            collectStat() {
-                const reg = /^\/reportCenter\/collect/;
-                if (reg.test(this.$route.path)) {
-                    this.collectNum = 1;
-                    this.collectName = '已收藏';
                 }
             },
             getDailyReportData() {
@@ -215,15 +199,6 @@
             DdDatepicker,
             DdDropdown,
             DdDropdownItem
-        },
-        beforeRouteEnter(to, from, next) {
-            next(() => {
-                $('.date-select-container').hide();
-            });
-        },
-        beforeRouteLeave(to, from, next) {
-            $('.date-select-container').show();
-            next();
         }
     };
 </script>

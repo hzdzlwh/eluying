@@ -96,74 +96,31 @@
     import { DdTable, DdPagination, DdDropdown, DdDropdownItem, DdSelect, DdOption, DdGroupOption } from 'dd-vue-component';
     import http from 'http';
     import { mapState } from 'vuex';
-    import DateSelect from '../../../components/DateSelect.vue';
+    import { collect } from '../mixin/collect';
+    import pagination from '../mixin/pagination';
+    import { getOrderType, getEmployeeType } from '../mixin/selectType';
     export default {
+        mixins: [ collect, pagination, getOrderType, getEmployeeType],
         props: {
             startDate: String,
             endDate: String
         },
         data() {
             return {
-                orderTypeAll: [{
-                    id: -2,
-                    name: '全部订单类型',
-                    orderType: -2
-                }, {
-                    id: -1,
-                    name: '组合订单',
-                    orderType: -1
-                }, {
-                    id: 0,
-                    name: '餐饮',
-                    orderType: 0
-                }, {
-                    id: 1,
-                    name: '娱乐',
-                    orderType: 1
-                }, {
-                    id: 2,
-                    name: '商超',
-                    orderType: 2
-                }, {
-                    id: 3,
-                    name: '住宿',
-                    orderType: 3
-                }],
-                orderType: -2,
-                employeeList: [
-                    {
-                        realName: '全部操作人',
-                        employeeId: 'ALL'
-                    },
-                    {
-                        realName: '游客线上付款',
-                        employeeId: -2
-                    },
-                    {
-                        realName: '全部员工',
-                        employeeId: -1
-                    }
-                ],
-                operatorId: 'ALL',
                 vips: [],
-                vip: {},
-                pages: 0,
                 receiptNum: 0,
                 orderFree: 0,
                 receiptFree: 0,
-                pageNo: 1,
-                collectNum: 0,
-                collectName: '加入收藏',
                 col: [
                     {
                         title: '订单号',
                         dataIndex: 'orderNum',
-                        width: 180
+                        width: 140
                     },
                     {
                         title: '订单类型',
                         dataIndex: 'orderType',
-                        width: 80
+                        width: 60
                     },
                     {
                         title: '订单内容',
@@ -183,7 +140,7 @@
                     {
                         title: '下单时间',
                         dataIndex: 'creationTime',
-                        width: 80
+                        width: 140
                     },
                     {
                         title: '入账金额',
@@ -194,16 +151,31 @@
                     {
                         title: '入账时间',
                         dataIndex: 'incomeTime',
-                        width: 80
+                        width: 140
                     },
                     {
                         title: '操作人',
                         dataIndex: 'operator',
-                        width: 120
+                        width: 100
                     }
-                ],
-                flag: true
+                ]
             };
+        },
+        beforeRouteEnter (to, from, next) {
+            http.get('/stat/getCollection')
+                .then(res => {
+                    if(res.code === 1) {
+                        next(vm => {
+                            const collectList = res.data.list;
+                            for(let i=0;i<collectList.length;i++){
+                                if (collectList[i] === 403) {
+                                    vm.collectNum = 1;
+                                    vm.collectName = '已收藏';
+                                }
+                            }
+                        })
+                    }
+                })
         },
         components: {
             DdTable,
@@ -213,40 +185,20 @@
             DdSelect,
             DdOption,
             DdGroupOption,
-            DateSelect
         },
         watch: {
             date() {
                 this.pageNo = 1;
-                if (this.flag) {
-                    this.getData();
-                }
-            },
-            orderType() {
-                this.pageNo = 1;
-                if (this.flag) {
-                    this.getData();
-                }
-            },
-            operatorId() {
-                this.page = 1;
                 this.getData();
             }
         },
         created() {
             this.getData();
             this.getEmployeeList();
-            this.getCollectStatus();
+            this.collectStat();
         },
         computed: {
-            ...mapState(['date']),
-            collectClass: function () {
-                return {
-                    'report-collect': true,
-                    'report-collect-add': this.collectNum === 0,
-                    'report-collect-dis': this.collectNum === 1
-                }
-            }
+            ...mapState(['date'])
         },
         methods: {
             collectUrl(num) {
@@ -278,20 +230,6 @@
                     });
                 }
             },
-            getCollectStatus() {
-                http.get('/stat/getCollection')
-                    .then(res => {
-                        if(res.code === 1) {
-                            const collectList = res.data.list;
-                            for(let i=0;i<collectList.length;i++){
-                                if (collectList[i] === 403) {
-                                    this.collectNum = 1;
-                                    this.collectName = '已收藏';
-                                }
-                            }
-                        }
-                    })
-            },
             exportUrl(type) {
                 const obj = {
                     page: this.pageNo,
@@ -321,14 +259,6 @@
                 const params = http.paramsToString(pa);
                 return `${host}?${params}`;
             },
-            getEmployeeList() {
-                http.get('/user/getEmployeeList', {})
-                    .then(res => {
-                        if (res.code === 1) {
-                            this.employeeList = [...this.employeeList, ...res.data.list];
-                        }
-                    });
-            },
             getData() {
                 const obj = {
                     page: this.pageNo,
@@ -357,10 +287,6 @@
                     }
                     this.flag = true;
                 });
-            },
-            handlePageChange(internalCurrentPage) {
-                this.pageNo = internalCurrentPage;
-                this.getData();
             }
         }
     };

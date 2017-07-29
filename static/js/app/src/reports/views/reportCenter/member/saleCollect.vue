@@ -15,7 +15,7 @@
 			<div class="tab-container">
 				<span class="show-dimension">显示维度</span>
 				<ul class="nav nav-tabs">
-					<li class="active">
+					<li class="active" ref="activeTab">
 						<a href="#salesman" data-toggle="tab">销售员</a>
 					</li>
 					<li>/</li>
@@ -114,7 +114,26 @@ export default {
 	},
 	methods: {
 		exportUrl(type) {
-			return '';
+			const obj = {
+                startDate: this.date.startDate,
+                toDate: this.date.endDate
+            };
+             // 后台要求如果为空就不传
+            for (const ob in obj) {
+                if (obj[ob] === undefined || obj[ob] === '') {
+                    delete obj[ob];
+                }
+            }
+            const paramsObj = {
+                exportType: type,
+                reportType: $(this.$refs.activeTab).hasClass('active') ? 306 : 307,
+                params: JSON.stringify(obj)
+            };
+            const host = http.getUrl('/stat/exportReport');
+            const pa = http.getDataWithToken(paramsObj);
+            pa.params = JSON.parse(pa.params);
+            const params = http.paramsToString(pa);
+            return `${host}?${params}`;
 		},
 		toggleCollect() {
 			if (this.collectState) {
@@ -168,16 +187,15 @@ export default {
                 			this.collectState = true;
                 		}
                 	});
-                    const collectList = res.data.list;
-                    for(let i=0;i<collectList.length;i++){
-                        if (collectList[i] === 303) {
-                            this.collectNum = 1;
-                            this.collectName = '已收藏';
-                        }
-                    }
                 }
             });
         }
+	},
+	watch: {
+		date(newValue) {
+			this.getVipCardSalesman();
+			this.getVipCardType();
+		}
 	}
 }	
 </script>
