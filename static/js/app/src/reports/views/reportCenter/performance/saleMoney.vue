@@ -146,6 +146,11 @@
 					}
 				});
 			}
+		},
+		watch: {
+			date(newValue) {
+				this.getSaleMoney();
+			}
 		}
 	}	
 </script>

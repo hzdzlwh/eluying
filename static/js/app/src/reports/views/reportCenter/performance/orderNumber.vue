@@ -146,6 +146,11 @@ export default {
 				}
 			});
 		}
+	},
+	watch: {
+		date(newValue) {
+			this.getOrderNumber();
+		}
 	}
 }	
 </script>

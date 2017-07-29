@@ -251,6 +251,10 @@ export default {
 		salerId(newValue) {
 			this.pageNo = 1;
 			this.getVipCardSaleDetail();
+		},
+		date(newValue) {
+			this.pageNo = 1;
+			this.getVipCardSaleDetail();
 		}
 	}
 }	

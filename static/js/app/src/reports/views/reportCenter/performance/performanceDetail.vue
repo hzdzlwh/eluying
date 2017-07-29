@@ -303,6 +303,10 @@ export default {
 		userOriginType(newValue) {
 			this.pageNo = 1;
 			this.getSalePerformance();
+		},
+		date(newValue) {
+			this.pageNo = 1;
+			this.getSalePerformance();
 		}
 	}
 }	

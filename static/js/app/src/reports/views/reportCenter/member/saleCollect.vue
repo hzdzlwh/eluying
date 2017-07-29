@@ -190,6 +190,12 @@ export default {
                 }
             });
         }
+	},
+	watch: {
+		date(newValue) {
+			this.getVipCardSalesman();
+			this.getVipCardType();
+		}
 	}
 }	
 </script>
