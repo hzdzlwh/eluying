@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-19 09:56:55
 * @Last Modified by:   linxinjian
-* @Last Modified time: 2017-07-28 17:24:38
+* @Last Modified time: 2017-07-29 11:28:17
 * @email: 783384903@qq.com
 */
 <!-- 有问题找产品，这个模块的功能一般人解释不清楚 -->
@@ -741,7 +741,7 @@ export default {
                     return (element.channelId !== -6 && element.channelId !== -7 && element.channelId !== -11 && element.channelId !== -12);
                 });
             }
-            if (item.type === 0 && this.isCompany && this.companyCityLedger && !payBack.some(pay => pay.channelId === 14)) {
+            if (item.type === 0 && this.isCompany && this.companyCityLedger && !payBack.some(pay => pay.channelId === -14)) {
                 payBack = [{
                     channelId: -14,
                     name: `企业挂帐(${this.companyName || ''})`
