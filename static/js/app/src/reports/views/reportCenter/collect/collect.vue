@@ -29,6 +29,9 @@
     import dailyReport from '../manage/dailyReport.vue';
     import saleCollect from '../member/saleCollect.vue';
     import saleDetail from '../member/saleDetail.vue';
+    import saleMoney from '../performance/saleMoney.vue';
+    import orderNumber from '../performance/orderNumber.vue';
+    import performanceDetail from '../performance/performanceDetail.vue';
     import collectList from '../../../collectList.js';
     export default {
         data() {
@@ -71,7 +74,10 @@
             ARGather,
             dailyReport,
             saleCollect,
-            saleDetail
+            saleDetail,
+            saleMoney,
+            orderNumber,
+            performanceDetail
         },
         watch: {
             '$route.path'() {

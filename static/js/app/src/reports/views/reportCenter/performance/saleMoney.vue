@@ -12,7 +12,7 @@
 		</div>
 		<div class="content">
 			<h4>销售员（销售金额）业绩汇总表</h4>
-			<p>日期: <span>{{date.startDate}}</span>~<span>{{date.endDate}}</span></p>
+			<p class="time">日期: <span>{{date.startDate}}</span>~<span>{{date.endDate}}</span></p>
 			<div>
 				<dd-table :columns="columns" :data-source="dataSource" :bordered="true"></dd-table>
 			</div>
@@ -24,10 +24,11 @@
 	import { DdTable, DdPagination, DdDropdown, DdDropdownItem, DdSelect, DdOption, DdGroupOption } from 'dd-vue-component';
 	import CollectButton from '../../../components/CollectButton';
 	import { mapState } from 'vuex';
+	import http from 'http';
 	export default {
 		data() {
 			return {
-				collectState: undefined,
+				collectState: false,
 				columns: [
 					{
 						title: '销售员',
@@ -61,6 +62,10 @@
 				dataSource: []
 			};
 		},
+		created() {
+			this.getSaleMoney();
+			this.getCollectStatus();
+		},
 		components: {
 			DdDropdown,
 			DdDropdownItem,
@@ -72,15 +77,81 @@
 		},
 		methods: {
 			exportUrl(type) {
-				return '';
+				const obj = {
+	                endDate: this.date.endDate,
+	                startDate: this.date.startDate
+	            };
+	             // 后台要求如果为空就不传
+	            for (const ob in obj) {
+	                if (obj[ob] === undefined || obj[ob] === '') {
+	                    delete obj[ob];
+	                }
+	            }
+	            const paramsObj = {
+	                exportType: type,
+	                reportType: 601,
+	                params: JSON.stringify(obj)
+	            };
+	            const host = http.getUrl('/stat/exportReport');
+	            const pa = http.getDataWithToken(paramsObj);
+	            pa.params = JSON.parse(pa.params);
+	            const params = http.paramsToString(pa);
+	            return `${host}?${params}`;
 			},
 			toggleCollect() {
-				this.collectState = !this.collectState;
+				if (this.collectState) {
+					http.get('/stat/removeFromCollection',{ statValue: 601 }).then(res => {
+	                    let removeIndex = null;
+	                    this.$router.options.routes[2].children[0].children.map((item, index) => {
+	                        if (item.meta.id === 601) {
+	                            removeIndex = index;
+	                        }
+	                    });
+	                    this.$router.options.routes[2].children[0].children.splice(removeIndex , 1);
+	                    if (this.$router.options.routes[2].children[0].children.length > 1) {
+	                        if (this.$route.params.id) {
+	                            this.$router.push('/reportCenter/collect/' + this.$router.options.routes[2].children[0].children[1].meta.id);
+	                        }
+	                    } else {
+	                        if (this.$route.params.id) {
+	                            this.$router.push('/reportCenter/collect/');
+	                        }
+	                    }
+	                    this.collectState = !this.collectState;
+	                });
+				} else {
+					http.get('/stat/addToCollect',{ statValue: 601 }).then(res => {
+						if (res.code === 1) {
+							this.collectState = !this.collectState;
+						}
+	                });
+				}
+			},
+			getCollectStatus() {
+	            http.get('/stat/getCollection')
+	            .then(res => {
+	                if(res.code === 1) {
+	                	res.data.list.map(item => {
+	                		if (item === 601) {
+	                			this.collectState = true;
+	                		}
+	                	});
+	                }
+	            });
+	        },
+			getSaleMoney() {
+				http.get('/stat/getSaleAmountStat4Salers', { endDate: this.date.endDate, startDate: this.date.startDate }).then(res => {
+					if (res.code === 1) {
+						this.dataSource = res.data.list;
+					}
+				});
 			}
 		}
 	}	
 </script>
 
 <style lang="scss" scoped>
-	
+	.time{
+		margin: 27px 0 22px 0;
+	}
 </style>
