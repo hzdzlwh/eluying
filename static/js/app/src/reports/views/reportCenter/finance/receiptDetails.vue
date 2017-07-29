@@ -101,79 +101,30 @@
     import { DdTable, DdPagination, DdDropdown, DdDropdownItem, DdSelect, DdOption, DdGroupOption } from 'dd-vue-component';
     import http from 'http';
     import { mapState } from 'vuex';
-    import DateSelect from '../../../components/DateSelect.vue';
+    import { collect } from '../mixin/collect';
+    import pagination from '../mixin/pagination';
+    import { getEmployeeType, getChannelType, getOrderType } from '../mixin/selectType';
     export default {
+        mixins: [ collect, pagination, getEmployeeType, getChannelType, getOrderType ],
         props: {
             startDate: String,
             endDate: String
         },
         data() {
             return {
-                orderTypeAll: [{
-                    id: -2,
-                    name: '全部订单类型',
-                    orderType: -2
-                }, {
-                    id: -1,
-                    name: '组合订单',
-                    orderType: -1
-                }, {
-                    id: 0,
-                    name: '餐饮',
-                    orderType: 0
-                }, {
-                    id: 1,
-                    name: '娱乐',
-                    orderType: 1
-                }, {
-                    id: 2,
-                    name: '商超',
-                    orderType: 2
-                }, {
-                    id: 3,
-                    name: '住宿',
-                    orderType: 3
-                }],
-                collectNum: 0,
-                collectName: '加入收藏',
-                orderType: -2,
-                employeeList: [
-                    {
-                        realName: '全部操作人',
-                        employeeId: 'ALL'
-                    },
-                    {
-                        realName: '游客线上付款',
-                        employeeId: -2
-                    },
-                    {
-                        realName: '全部员工',
-                        employeeId: -1
-                    }
-                ],
-                operatorId: 'ALL',
-                channels: [
-                    {
-                        id: 'ALL',
-                        name: '全部收款方式'
-                    }
-                ],
-                channelId: 'ALL',
                 vips: [],
-                pages: 0,
                 receiptNum: 0,
                 receiptFree: 0,
-                pageNo: 1,
                 col: [
                     {
                         title: '订单号',
                         dataIndex: 'orderNum',
-                        width: 180
+                        width: 140
                     },
                     {
                         title: '订单类型',
                         dataIndex: 'orderType',
-                        width: 80
+                        width: 60
                     },
                     {
                         title: '订单内容',
@@ -193,7 +144,7 @@
                     {
                         title: '下单时间',
                         dataIndex: 'creationTime',
-                        width: 80
+                        width: 120
                     },
                     {
                         title: '收款金额',
@@ -204,20 +155,19 @@
                     {
                         title: '收款时间',
                         dataIndex: 'payTime',
-                        width: 80
+                        width: 120
                     },
                     {
                         title: '收款方式',
                         dataIndex: 'payChannel',
-                        width: 120
+                        width: 80
                     },
                     {
                         title: '操作人',
                         dataIndex: 'operator',
-                        width: 120
+                        width: 80
                     }
-                ],
-                flag: true
+                ]
             };
         },
         components: {
@@ -227,8 +177,7 @@
             DdDropdownItem,
             DdSelect,
             DdOption,
-            DdGroupOption,
-            DateSelect
+            DdGroupOption
         },
         beforeRouteEnter (to, from, next) {
             http.get('/stat/getCollection')
@@ -253,34 +202,11 @@
             this.collectStat();
         },
         computed: {
-            ...mapState(['date']),
-            collectClass: function () {
-                return {
-                    'report-collect': true,
-                    'report-collect-add': this.collectNum === 0,
-                    'report-collect-dis': this.collectNum === 1
-                }
-            }
+            ...mapState(['date'])
         },
         watch: {
             date() {
                 this.pageNo = 1;
-                if (this.flag) {
-                    this.getData();
-                }
-            },
-            orderType() {
-                this.pageNo = 1;
-                if (this.flag) {
-                    this.getData();
-                }
-            },
-            channelId() {
-                this.page = 1;
-                this.getData();
-            },
-            operatorId() {
-                this.page = 1;
                 this.getData();
             }
         },
@@ -312,13 +238,6 @@
                             }
                         }
                     });
-                }
-            },
-            collectStat() {
-                const reg = /^\/reportCenter\/collect/;
-                if (reg.test(this.$route.path)) {
-                    this.collectNum = 1;
-                    this.collectName = '已收藏';
                 }
             },
             exportUrl(type) {
@@ -353,22 +272,6 @@
                 const params = http.paramsToString(pa);
                 return `${host}?${params}`;
             },
-            getEmployeeList() {
-                http.get('/user/getEmployeeList', {})
-                    .then(res => {
-                        if (res.code === 1) {
-                            this.employeeList = [...this.employeeList, ...res.data.list];
-                        }
-                    });
-            },
-            getChannels() {
-                http.get('/user/getChannels', { type: 1, isAll: true })
-                    .then(res => {
-                        if (res.code === 1) {
-                            this.channels = [...this.channels, ...res.data.list];
-                        }
-                    });
-            },
             getData() {
                 const obj = {
                     page: this.pageNo,
@@ -399,10 +302,6 @@
                     }
                     this.flag = true;
                 });
-            },
-            handlePageChange(internalCurrentPage) {
-                this.pageNo = internalCurrentPage;
-                this.getData();
             }
         }
     };

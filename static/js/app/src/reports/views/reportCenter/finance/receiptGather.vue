@@ -60,8 +60,9 @@
     import { DdTable, DdPagination } from 'dd-vue-component';
     import http from 'http';
     import { mapState } from 'vuex';
-    import DateSelect from '../../../components/DateSelect.vue';
+    import { collect } from '../mixin/collect';
 	export default {
+	    mixins: [ collect ],
         props: {
             startDate: String,
             endDate: String
@@ -69,11 +70,6 @@
         data() {
             return {
                 vips: [],
-                vip: {},
-                pages: 0,
-                pageNo: 1,
-                collectNum: 0,
-                collectName: '加入收藏',
                 col: [
                     {
                         title: '收款方式',
@@ -90,8 +86,7 @@
                         dataIndex: 'amount',
                         width: 80
                     }
-                ],
-                flag: true
+                ]
             };
         },
         beforeRouteEnter (to, from, next) {
@@ -115,30 +110,15 @@
             this.collectStat();
         },
         computed: {
-            ...mapState(['date']),
-            collectClass: function () {
-                return {
-                    'report-collect': true,
-                    'report-collect-add': this.collectNum === 0,
-                    'report-collect-dis': this.collectNum === 1
-                }
-            }
+            ...mapState(['date'])
         },
         watch: {
             date() {
                 this.pageNo = 1;
-                if (this.flag) {
-                    this.getData();
-                }
-            },
-            pageNo() {
-                if (this.flag) {
-                    this.getData();
-                }
+                this.getData();
             }
         },
         components: {
-            DateSelect,
             DdTable,
             DdPagination
         },
@@ -172,13 +152,6 @@
                     });
                 }
             },
-            collectStat() {
-                const reg = /^\/reportCenter\/collect/;
-                if (reg.test(this.$route.path)) {
-                    this.collectNum = 1;
-                    this.collectName = '已收藏';
-                }
-            },
             exportUrl(type) {
                 const originParam = {
                     date: this.today
@@ -209,7 +182,6 @@
                     if (res.code === 1) {
                         this.vips = res.data.list || [];
                     }
-                    this.flag = true;
                 });
             }
         }

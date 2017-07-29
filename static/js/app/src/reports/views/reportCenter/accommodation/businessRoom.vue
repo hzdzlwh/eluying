@@ -212,26 +212,13 @@
     import { DdDatepicker, DdDropdown, DdDropdownItem, DdSelect, DdOption } from 'dd-vue-component';
     import http from 'http';
     import util from 'util';
+    import { collect } from '../mixin/collect';
+    import { getStatType } from '../mixin/selectType';
     export default {
+        mixins: [ collect, getStatType ],
         data() {
             return {
                 date: '',
-                statTypeAll: [{
-                    id: 0,
-                    name: '入住类型',
-                    statType: 0
-                }, {
-                    id: 1,
-                    name: '房间类型',
-                    statType: 1
-                }, {
-                    id: 2,
-                    name: '客源渠道',
-                    statType: 2
-                }],
-                collectNum: 0,
-                collectName: '加入收藏',
-                statType: 0,
                 showTypeAll: [],
                 dayStat: [],
                 monStat: []
@@ -245,12 +232,6 @@
         },
         watch: {
             date() {
-                this.getData();
-            },
-            statType() {
-                this.getData();
-            },
-            pageNo() {
                 this.getData();
             }
         },
@@ -279,17 +260,8 @@
         },
         methods: {
             prevDate(date) {
-                var d = date.getDate();
+                const d = date.getDate();
                 return new Date(date.setDate(d - 1));
-            },
-            disabledEndDate(startDate) {
-                if (util.isSameDay(new Date(startDate), new Date())) {
-                    const str1 = dateFormat(new Date());
-                    const arr1 = str1.split('-');
-                    return (date) => {
-                        return (date.valueOf() < (new Date(arr1[0], arr1[1] - 1, arr1[2] - 1)).valueOf());
-                    };
-                }
             },
             collectUrl(num) {
                 if (num === 0) {
@@ -318,13 +290,6 @@
                             }
                         }
                     });
-                }
-            },
-            collectStat() {
-                const reg = /^\/reportCenter\/collect/;
-                if (reg.test(this.$route.path)) {
-                    this.collectNum = 1;
-                    this.collectName = '已收藏';
                 }
             },
             exportUrl(type) {
@@ -360,15 +325,6 @@
                         }
                     }
                 });
-            }
-        },
-        computed: {
-            collectClass: function () {
-                return {
-                    'report-collect': true,
-                    'report-collect-add': this.collectNum === 0,
-                    'report-collect-dis': this.collectNum === 1
-                }
             }
         }
     };

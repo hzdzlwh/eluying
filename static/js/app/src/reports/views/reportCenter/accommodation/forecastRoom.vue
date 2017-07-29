@@ -141,18 +141,17 @@
     import { DdDatepicker, DdPagination } from 'dd-vue-component';
     import http from 'http';
     import util from 'util';
+    import { collect } from '../mixin/collect';
+    import pagination from '../mixin/pagination';
     export default {
+        mixins: [ collect, pagination ],
         data() {
             return {
                 vips: [],
-                pages: 0,
                 count: 0,
                 totalMany: 0,
-                pageNo: 1,
                 startTime: '',
-                endTime: '',
-                collectNum: 0,
-                collectName: '加入收藏',
+                endTime: ''
             };
         },
         components: {
@@ -190,11 +189,6 @@
             startTime() {
                 this.pageNo = 1;
                 this.getData();
-            },
-            pageNo() {
-                if (this.flag) {
-                    this.getData();
-                }
             }
         },
         methods: {
@@ -225,13 +219,6 @@
                             }
                         }
                     });
-                }
-            },
-            collectStat() {
-                const reg = /^\/reportCenter\/collect/;
-                if (reg.test(this.$route.path)) {
-                    this.collectNum = 1;
-                    this.collectName = '已收藏';
                 }
             },
             disableStartDate(date) {
@@ -272,19 +259,6 @@
                         this.pages = Math.ceil(res.data.total / 30);
                     };
                 });
-            },
-            handlePageChange(internalCurrentPage) {
-                this.pageNo = internalCurrentPage;
-                this.getData();
-            }
-        },
-        computed: {
-            collectClass: function () {
-                return {
-                    'report-collect': true,
-                    'report-collect-add': this.collectNum === 0,
-                    'report-collect-dis': this.collectNum === 1
-                }
             }
         }
     };

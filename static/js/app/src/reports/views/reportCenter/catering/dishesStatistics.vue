@@ -35,7 +35,7 @@
                     <th>餐厅名称</th>
                     <th>菜品种类</th>
                     <th>菜品名称</th>
-                    <th>总数</th>
+                    <th style="width:170px;">总数</th>
                     <th>售卖数量</th>
                     <th>赠送数量</th>
                 </tr>
@@ -152,27 +152,17 @@
     import { mapState } from 'vuex';
     import DateSelect from '../../../components/DateSelect.vue';
     import { DdDropdown, DdDropdownItem, DdSelect, DdOption, DdTable } from 'dd-vue-component';
+    import { getRestType, getDishType } from '../mixin/selectType';
+    import { collect } from '../mixin/collect';
+    import pagination from '../mixin/pagination';
     export default {
+        mixins: [ getRestType, getDishType, collect, pagination ],
         props: {
             startDate: String,
             endDate: String
         },
         data() {
             return {
-                restTypeAll: [{
-                    id: -1,
-                    name: '全部餐厅',
-                    restType: '-1~'
-                }],
-                restType: '-1~',
-                dishTypeAll: [{
-                    id: -1,
-                    name: '全部菜品分类'
-                }],
-                name: '全部菜品分类',
-                collectNum: 0,
-                collectName: '加入收藏',
-                pageNo: 1,
                 vips: []
             };
         },
@@ -199,37 +189,17 @@
             this.collectStat();
         },
         watch: {
-            restType() {
-                this.getData();
-                this.dishTypeAll = [{
-                    id: -1,
-                    name: '全部菜品分类'
-                }];
-                this.name = '全部菜品分类';
-                this.getDishType();
-            },
-            name() {
-                this.getData();
-            },
             date() {
                 this.pageNo = 1;
                 this.getData();
             }
         },
         computed: {
-            ...mapState(['date']),
-            collectClass: function () {
-                return {
-                    'report-collect': true,
-                    'report-collect-add': this.collectNum === 0,
-                    'report-collect-dis': this.collectNum === 1
-                }
-            }
+            ...mapState(['date'])
         },
         components: {
             DdDropdown,
             DdDropdownItem,
-            DateSelect,
             DdSelect,
             DdOption,
             DdTable
@@ -264,47 +234,6 @@
                     });
                 }
             },
-            collectStat() {
-                const reg = /^\/reportCenter\/collect/;
-                if (reg.test(this.$route.path)) {
-                    this.collectNum = 1;
-                    this.collectName = '已收藏';
-                }
-            },
-            getRestType() {
-                http.get('/restaurant/listSimple')
-                .then(res => {
-                    if (res.code === 1) {
-                        const restList = res.data.list;
-                        restList.forEach(rest => {
-                            rest.id = rest.restId;
-                            rest.name = rest.restName;
-                            rest.restType = `-1~${rest.restId}`;
-                            this.restTypeAll.push(rest);
-                        });
-                    }
-                });
-            },
-            getDishType() {
-                const obj = {};
-                if (this.restType.split('~')[1]) {
-                    obj.restId = this.restType.split('~')[1];
-                }
-                http.get('/dish/getDishTypes',obj)
-                .then(res => {
-                    if (res.code === 1) {
-                        const dishType = res.data.list;
-                        const dict = {};
-                        dishType.forEach(dish => {
-                            dish.name = dish.dishType;
-                            if (!dict[dish.name]) {
-                                this.dishTypeAll.push(dish);
-                                dict[dish.name] = 1;
-                            }
-                        });
-                    }
-                });
-            },
             exportUrl(type) {
                 const obj = {
                     restId: this.restType.split('~')[1],
@@ -331,8 +260,6 @@
                 pa.params = JSON.parse(pa.params);
                 const params = http.paramsToString(pa);
                 return `${host}?${params}`;
-            },
-            collect() {
             },
             getData() {
                 const obj = {

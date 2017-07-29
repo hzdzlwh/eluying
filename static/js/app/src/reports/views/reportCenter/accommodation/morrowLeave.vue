@@ -121,61 +121,16 @@
     import http from 'http';
     import { checkTypeAll } from '../../../../common/orderSystem/roomCheckType.js';
     import util from 'util';
+    import { getRoomType, getZoneType, getCheckType, getOriginType } from '../mixin/selectType';
+    import { collect } from '../mixin/collect';
+    import pagination from '../mixin/pagination';
     export default {
+        mixins: [getRoomType, getZoneType, getCheckType, getOriginType, collect, pagination ],
         data() {
             return {
-                today: undefined,
                 morrow: undefined,
-                zoneType: '-1~',
-                zoneTypeAll: [{
-                    id: -1,
-                    name: '全部区域',
-                    zoneType: '-1~'
-                }],
-                roomType: '-1~',
-                roomTypeAll: [{
-                    id: -1,
-                    name: '全部房型',
-                    roomType: '-1~'
-                }],
-                checkTypeAll: [{
-                    id: -1,
-                    name: '全部入住类型',
-                    checkType: -1
-                }, {
-                    id: 0,
-                    name: '正常入住',
-                    checkType: 0
-                }, {
-                    id: 2,
-                    name: '自用房',
-                    checkType: 2
-                }, {
-                    id: 3,
-                    name: '免费房',
-                    checkType: 3
-                }, {
-                    id: 1,
-                    name: '钟点房',
-                    checkType: 1
-                }],
-                checkType: -1,
-                userOriginType: '-2~',
-                userOrigins: [],
-                userSelfOrigins: [{
-                    id: '',
-                    name: '全部客源渠道',
-                    originType: '-2~',
-                    type: 2
-                }],
-                userGroupOrigins: [],
                 vips: [],
-                vip: {},
-                pages: 0,
                 count: 0,
-                pageNo: 1,
-                collectNum: 0,
-                collectName: '加入收藏',
                 col: [
                     {
                         title: '订单号',
@@ -237,8 +192,7 @@
                         dataIndex: 'checkOutTime',
                         width: 120
                     }
-                ],
-                flag: true
+                ]
             };
         },
         components: {
@@ -252,25 +206,6 @@
         },
         watch: {
             date() {
-                this.getData();
-            },
-            userOriginType() {
-                this.pageNo = 1;
-                this.getData();
-            },
-            roomType() {
-                this.pageNo = 1;
-                this.getData();
-            },
-            pageNo() {
-                this.getData();
-            },
-            zoneType() {
-                this.pageNo = 1;
-                this.getData();
-            },
-            checkType() {
-                this.pageNo = 1;
                 this.getData();
             }
         },
@@ -291,8 +226,8 @@
                 })
         },
         created() {
-            this.today = new Date();
-            const tomorrow = util.tomorrow(this.today);
+            const today = new Date();
+            const tomorrow = util.tomorrow(today);
             this.morrow = util.dateFormat(tomorrow);
             this.getData();
             this.getZoneType();
@@ -330,13 +265,6 @@
                     });
                 }
             },
-            collectStat() {
-                const reg = /^\/reportCenter\/collect/;
-                if (reg.test(this.$route.path)) {
-                    this.collectNum = 1;
-                    this.collectName = '已收藏';
-                }
-            },
             exportUrl(type) {
                 const originParam = {
                     pageNo: this.pageNo,
@@ -367,58 +295,6 @@
                 const params = http.paramsToString(pa);
                 return `${host}?${params}`;
             },
-            getZoneType() {
-                http.get('/room/getZoneList')
-                .then(res => {
-                    if (res.code === 1) {
-                        const zoneList = res.data.list;
-                        zoneList.forEach(zone => {
-                            zone.id = zone.zoneId;
-                            zone.name = zone.zoneName;
-                            zone.zoneType = `-1~${zone.zoneId}`;
-                            this.zoneTypeAll.push(zone);
-                        });
-                    }
-                });
-            },
-            getRoomType() {
-                http.get('/room/getRoomCategories')
-                .then(res => {
-                    if (res.code === 1) {
-                        const roomList = res.data.list;
-                        roomList.forEach(room => {
-                            room.id = room.cId;
-                            room.name = room.cName;
-                            room.roomType = `-1~${room.cId}`;
-                            this.roomTypeAll.push(room);
-                        });
-                    }
-                });
-            },
-            getOrigin() {
-            // 获取全部客户来源渠道
-                http.get('/user/getChannels', { type: 2, isAll: false })
-                .then((res) => {
-                    // 拼接originType 企业渠道：企业id~-5 会员-4～-4 自定义渠道 渠道id～渠道id
-                    if (res.code === 1) {
-                        const originsList = res.data.list;
-                        const otherOrigins = [];
-                        this.userOrigins = originsList;
-                        originsList.forEach(origin => {
-                            if (origin.id < 0) {
-                                origin.originType = `${origin.id}~${origin.id}`;
-                                this.userSelfOrigins.push(origin);
-                            } else if (origin.id > 0) {
-                                origin.originType = `${origin.id}~${origin.id}`;
-                                origin.info = origin.name;
-                                otherOrigins.push(origin);
-                            }
-                        });
-                        this.userGroupOrigins.push({ label: '其他', origins: otherOrigins });
-                        // this.userOriginType = this.userSelfOrigins[0].originType;
-                    }
-                });
-            },
             getData() {
                 const obj = {
                     pageNo: this.pageNo,
@@ -444,21 +320,7 @@
                         this.count = res.data.count;
                         this.pages = Math.ceil(res.data.count / 30);
                     }
-                    this.flag = true;
                 });
-            },
-            handlePageChange(internalCurrentPage) {
-                this.pageNo = internalCurrentPage;
-                this.getData();
-            }
-        },
-        computed: {
-            collectClass: function () {
-                return {
-                    'report-collect': true,
-                    'report-collect-add': this.collectNum === 0,
-                    'report-collect-dis': this.collectNum === 1
-                }
             }
         }
     };
