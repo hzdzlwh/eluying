@@ -8,7 +8,7 @@ export const getRoomType = {
                 name: '全部房型',
                 roomType: '-1~'
             }]
-        }
+        };
     },
     methods: {
         getRoomType() {
@@ -43,7 +43,7 @@ export const getZoneType = {
                 name: '全部区域',
                 zoneType: '-1~'
             }]
-        }
+        };
     },
     methods: {
         getZoneType() {
@@ -93,7 +93,7 @@ export const getCheckType = {
                 checkType: 1
             }],
             checkType: -1
-        }
+        };
     },
     watch: {
         checkType() {
@@ -113,7 +113,7 @@ export const getOriginType = {
                 type: 2
             }],
             userGroupOrigins: []
-        }
+        };
     },
     methods: {
         getOrigin() {
@@ -164,7 +164,7 @@ export const getStatType = {
                 statType: 2
             }],
             statType: 0
-        }
+        };
     },
     watch: {
         statType() {
@@ -181,7 +181,7 @@ export const getRestType = {
                 restType: '-1~'
             }],
             restType: '-1~'
-        }
+        };
     },
     methods: {
         getRestType() {
@@ -210,7 +210,6 @@ export const getRestType = {
             }];
             this.name = '全部菜品分类';
             this.getDishType();
-
         }
     }
 };
@@ -222,7 +221,7 @@ export const getDishType = {
                 name: '全部菜品分类'
             }],
             name: '全部菜品分类'
-        }
+        };
     },
     methods: {
         getDishType() {
@@ -230,21 +229,21 @@ export const getDishType = {
             if (this.restType.split('~')[1]) {
                 obj.restId = this.restType.split('~')[1];
             }
-            http.get('/dish/getDishTypes',obj)
+            http.get('/dish/getDishTypes', obj)
                 .then(res => {
-                if (res.code === 1) {
-                const dishType = res.data.list;
-                const dict = {};
-                dishType.forEach(dish => {
-                    dish.name = dish.dishType;
-                if (!dict[dish.name]) {
-                    dish.dishType = `-1~{dish.name}`;
-                    this.dishTypeAll.push(dish);
-                    dict[dish.name] = 1;
-                }
-            });
-            }
-        });
+                    if (res.code === 1) {
+                        const dishType = res.data.list;
+                        const dict = {};
+                        dishType.forEach(dish => {
+                            dish.name = dish.dishType;
+                            if (!dict[dish.name]) {
+                                dish.dishType = `-1~{dish.name}`;
+                                this.dishTypeAll.push(dish);
+                                dict[dish.name] = 1;
+                            }
+                        });
+                    }
+                });
         }
     },
     watch: {
@@ -272,7 +271,7 @@ export const getEmployeeType = {
                 }
             ],
             operatorId: 'ALL'
-        }
+        };
     },
     methods: {
         getEmployeeList() {
@@ -320,7 +319,7 @@ export const getOrderType = {
                 orderType: 3
             }],
             orderType: -2
-        }
+        };
     },
     watch: {
         orderType() {
@@ -339,7 +338,7 @@ export const getChannelType = {
                 }
             ],
             channelId: 'ALL'
-        }
+        };
     },
     methods: {
         getChannels() {
@@ -354,7 +353,7 @@ export const getChannelType = {
                                 if (item.name !== '企业余额抵扣' && item.name !== '企业挂账' && item.name !== '一码通' && item.name !== '会员卡余额抵扣' && item.name !== '会员余额抵扣' && item.name !== '虚拟币抵扣') {
                                     this.channels.push(item);
                                 }
-                            })
+                            });
                         }
                     }
                 });
@@ -384,7 +383,7 @@ export const getMemberType = {
                 type: 1
             }],
             type: -1
-        }
+        };
     },
     watch: {
         type() {
@@ -409,7 +408,7 @@ export const getCategoryType = {
                 categoryType: '-1~'
             }],
             categoryType: '-1~'
-        }
+        };
     },
     methods: {
         getCategoryTypeAll() {

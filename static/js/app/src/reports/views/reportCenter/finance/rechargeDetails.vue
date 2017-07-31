@@ -53,7 +53,7 @@
     import pagination from '../mixin/pagination';
     import { getChannelType, getMemberType, getCategoryType } from '../mixin/selectType';
     export default {
-        mixins: [ pagination, collect, getChannelType, getMemberType, getCategoryType ],
+        mixins: [pagination, collect, getChannelType, getMemberType, getCategoryType],
         props: {
             startDate: String,
             endDate: String
@@ -121,7 +121,7 @@
             DdDropdownItem,
             DdSelect,
             DdOption,
-            DdGroupOption,
+            DdGroupOption
         },
         watch: {
             date() {
@@ -129,21 +129,21 @@
                 this.getData();
             }
         },
-        beforeRouteEnter (to, from, next) {
+        beforeRouteEnter(to, from, next) {
             http.get('/stat/getCollection')
                 .then(res => {
-                    if(res.code === 1) {
+                    if (res.code === 1) {
                         next(vm => {
                             const collectList = res.data.list;
-                            for(let i=0;i<collectList.length;i++){
+                            for (let i = 0; i < collectList.length; i ++) {
                                 if (collectList[i] === 305) {
                                     vm.collectNum = 1;
                                     vm.collectName = '已收藏';
                                 }
                             }
-                        })
+                        });
                     }
-                })
+                });
         },
         created() {
             this.getChannels();
@@ -156,12 +156,12 @@
         methods: {
             collectUrl(num) {
                 if (num === 0) {
-                    http.get('/stat/addToCollect',{statValue: 305}).then(res => {
+                    http.get('/stat/addToCollect', { statValue: 305 }).then(res => {
                         this.collectNum = 1;
                         this.collectName = '已收藏';
                     });
                 } else if (num === 1) {
-                    http.get('/stat/removeFromCollection',{statValue: 305}).then(res => {
+                    http.get('/stat/removeFromCollection', { statValue: 305 }).then(res => {
                         this.collectNum = 0;
                         this.collectName = '加入收藏';
                         let removeIndex = null;
@@ -170,7 +170,7 @@
                                 removeIndex = index;
                             }
                         });
-                        this.$router.options.routes[2].children[0].children.splice(removeIndex , 1);
+                        this.$router.options.routes[2].children[0].children.splice(removeIndex, 1);
                         if (this.$router.options.routes[2].children[0].children.length > 1) {
                             if (this.$route.params.id) {
                                 this.$router.push('/reportCenter/collect/' + this.$router.options.routes[2].children[0].children[1].meta.id);
@@ -196,7 +196,7 @@
                 if (this.channelId !== 'ALL') {
                     obj.payChannel = this.channelId;
                 };
-                 // 后台要求如果为空就不传
+                // 后台要求如果为空就不传
                 for (const ob in obj) {
                     if (obj[ob] === undefined || obj[ob] === '') {
                         delete obj[ob];
@@ -226,7 +226,7 @@
                 if (this.channelId !== 'ALL') {
                     obj.payChannel = this.channelId;
                 };
-                 // 后台要求如果为空就不传
+                // 后台要求如果为空就不传
                 for (const ob in obj) {
                     if (obj[ob] === undefined || obj[ob] === '') {
                         delete obj[ob];

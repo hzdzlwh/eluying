@@ -24,7 +24,7 @@ export default {
     '305': { component: 'rechargeDetails', name: '充值明细表' },
     '502': { component: 'dishesStatistics', name: '菜品统计汇总表' },
     '501': { component: 'dishesPresent', name: '菜品赠送明细表' },
-    '18': { component: 'dailyReport', name: '营业日报表'},
+    '18': { component: 'dailyReport', name: '营业日报表' },
     '306': { component: 'saleCollect', name: '会员卡销售汇总表' },
     '308': { component: 'saleDetail', name: '会员卡销售明细表' },
     '601': { component: 'saleMoney', name: '销售金额业绩汇总表' },

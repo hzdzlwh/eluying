@@ -3,7 +3,7 @@ export default {
         return {
             pages: 0,
             pageNo: 1
-        }
+        };
     },
     methods: {
         handlePageChange(internalCurrentPage) {
@@ -11,4 +11,4 @@ export default {
             this.getData();
         }
     }
-}
+};
