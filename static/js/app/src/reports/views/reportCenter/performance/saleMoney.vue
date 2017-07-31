@@ -21,7 +21,7 @@
 </template>
 
 <script>
-	import { DdTable, DdPagination, DdDropdown, DdDropdownItem, DdSelect, DdOption, DdGroupOption } from 'dd-vue-component';
+	import { DdTable, DdDropdown, DdDropdownItem } from 'dd-vue-component';
 	import CollectButton from '../../../components/CollectButton';
 	import { mapState } from 'vuex';
 	import http from 'http';
@@ -139,7 +139,7 @@
 	                }
 	            }); */
 	            if (/^\/reportCenter\/collect/.test(this.$route.path)) {
-	            	this.collectState = true;
+                this.collectState = true;
 	            }
 	        },
 	        getSaleMoney() {
@@ -160,10 +160,10 @@
 	            if (res.code === 1) {
 	                next(vm => {
 	                    res.data.list.map(item => {
-	                		if (item === 601) {
-	                			vm.collectState = true;
-	                		}
-	                	});
+                        if (item === 601) {
+                            vm.collectState = true;
+                        }
+                    });
 	                });
 	            }
 	        });

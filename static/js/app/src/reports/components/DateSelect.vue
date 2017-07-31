@@ -18,7 +18,7 @@
 </style>
 <script>
     import { DdDatepicker, DdSelect, DdOption } from 'dd-vue-component';
-    import { mapMutations, mapState } from 'vuex';
+    import { mapMutations } from 'vuex';
     import util from '../../common/util';
     import types from '../store/types';
     export default{

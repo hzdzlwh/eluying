@@ -63,6 +63,7 @@ import { DdTable, DdPagination, DdDropdown, DdDropdownItem, DdSelect, DdOption, 
 import CollectButton from '../../../components/CollectButton';
 import { mapState } from 'vuex';
 import http from 'http';
+const ORDERTYPES = ['餐饮', '娱乐', '商超', '住宿'];
 export default {
     data() {
         return {
@@ -122,7 +123,7 @@ export default {
                 },
                 {
                     title: '订单类型',
-                    dataIndex: 'orderType'
+                    render: (h, row) => <span>{ORDERTYPES[row.orderType]}</span>
                 },
                 {
                     title: '订单金额',
@@ -235,7 +236,7 @@ export default {
                 }
             }); */
             if (/^\/reportCenter\/collect/.test(this.$route.path)) {
-            	this.collectState = true;
+                this.collectState = true;
             }
         },
         getSalePerformance(page) {
@@ -247,14 +248,14 @@ export default {
                 pageNo: this.pageNo,
                 salerId: this.salerId === -1 ? '' : this.salerId,
                 startDate: this.date.startDate
-			 }).then(res => {
-			 	if (res.code === 1) {
-			 		this.dataSource = res.data.list;
-			 		this.totalPrice = res.data.totalPrice;
-			 		this.count = res.data.count;
-			 		this.pages = Math.ceil(res.data.count / 30);
-			 	}
-			 });
+            }).then(res => {
+                if (res.code === 1) {
+                    this.dataSource = res.data.list;
+                    this.totalPrice = res.data.totalPrice;
+                    this.count = res.data.count;
+                    this.pages = Math.ceil(res.data.count / 30);
+                }
+            });
         },
         getEmployeeList() {
             http.get('/user/getEmployeeList', { salerType: 2 }).then(res => {
@@ -313,10 +314,10 @@ export default {
             if (res.code === 1) {
                 next(vm => {
                     res.data.list.map(item => {
-                		if (item === 603) {
-                			vm.collectState = true;
-                		}
-                	});
+                        if (item === 603) {
+                            vm.collectState = true;
+                        }
+                    });
                 });
             }
         });

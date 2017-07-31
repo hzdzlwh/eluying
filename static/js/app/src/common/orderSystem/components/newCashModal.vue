@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-19 09:56:55
 * @Last Modified by:   linxinjian
-* @Last Modified time: 2017-07-31 15:00:55
+* @Last Modified time: 2017-07-31 17:44:55
 * @email: 783384903@qq.com
 */
 <!-- 有问题找产品，这个模块的功能一般人解释不清楚 -->
@@ -26,7 +26,7 @@
                                 <div style='margin-top:12px;'>
                                     <span class="cashier-money-text" v-if='orderPayment.paid.game && orderPayment.game'>{{orderPayment.paid.gameName}}已抵扣:<span>¥{{orderPayment.paid.game}}</span></span>
                                     <span class="cashier-money-text" v-if='orderPayment.paid.balance'>余额已抵扣:<span>¥{{orderPayment.paid.balance}}</span></span>
-                                    <span class="cashier-money-text">现金已收:<span>¥{{ orderPayment.paid.normal }}</span></span>
+                                    <span class="cashier-money-text">常规收款已收:<span>¥{{ orderPayment.paid.normal }}</span></span>
                                 </div>
                                 <!-- <span class="cashier-money-text">已收金额:<span>¥{{ paiedMoney }}</span></span> -->
                                 <!-- <span class="cashier-money-text">{{orderState ? '需补金额:' : '需退金额:'}}<span>¥{{ notPay }}</span></span> -->
@@ -150,7 +150,7 @@
                 </div>
             </div>
             <div class="content-item">
-                <p class="content-item-title"><span>现金收款</span></p>
+                <p class="content-item-title"><span>常规收款</span></p>
                 <div class="cashier-getMoney-channels" v-if="payments.length > 0">
                     <div class="cashier-getMoney-channel" v-for="(payment, index) in payments" :key="payment.uniqueId">
                         <dd-select v-model="payment.type" class='dd-select-with'>
@@ -169,7 +169,7 @@
                 </div>
                 <div class="cashier-addBtn" @click="addPayMent">
                     <span class="cashier-addBtn-icon"></span>
-                    <span style="cursor: pointer">添加现金收款</span>
+                    <span style="cursor: pointer">添加常规收款</span>
                 </div>
             </div>
             <div class="content-item">
@@ -179,7 +179,7 @@
                     <div v-if='orderPayment.member'><span>会员余额抵扣:</span><span>¥{{memberTotal}}</span></div>
                     <div v-if='orderPayment.company'><span>企业余额抵扣:</span><span>¥{{companyTotal}}</span></div>
                     <div v-if='orderPayment.card'><span>会员卡余额抵扣:</span><span>¥{{cardsTotal}}</span></div>
-                    <div><span>现金收款:</span><span>¥{{cashTotal}}</span></div>
+                    <div><span>常规收款:</span><span>¥{{cashTotal}}</span></div>
                     <div><span>还需收款:</span><span>¥{{needPayed}}</span></div>
                 </div>
             </div>
