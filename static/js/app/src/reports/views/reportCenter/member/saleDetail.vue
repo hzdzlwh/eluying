@@ -221,7 +221,7 @@ export default {
 					this.firstChargeFeeTotal = res.data.firstChargeFeeTotal;
 					this.firstChargeFreeFeeTotal = res.data.firstChargeFreeFeeTotal;
 					this.saleFeeTotal = res.data.saleFeeTotal;
-					this.pages = Math.ceil(res.data.entityList.length / 30);
+					this.pages = Math.ceil(res.data.total / 30);
 				}
 			});
 		},

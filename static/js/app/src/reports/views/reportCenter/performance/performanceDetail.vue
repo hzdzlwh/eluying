@@ -70,18 +70,14 @@ export default {
 			pages: 0,
 			pageNo: 1,
 			count: 0,
-			orderType: -2,
+			orderType: -1,
 			salerId: -1,
 			salers: [],
 			totalPrice: undefined,
 			orderTypeAll: [{
-                id: -2,
-                name: '全部订单类型',
-                orderType: -2
-            }, {
                 id: -1,
-                name: '组合订单',
-                orderType: -1
+                name: '全部订单类型',
+                orderType: 0
             }, {
                 id: 0,
                 name: '餐饮',
@@ -246,10 +242,10 @@ export default {
 			this.pageNo = page || this.pageNo;
 			http.get('/stat/getSalesPerformanceStat4Salers', { 
 				endDate: this.date.endDate,
-				orderType: this.orderType,
+				orderType: this.orderType === -1 ? '' : this.orderType,
 				originId: this.userOriginType.split('~')[1],
 				pageNo: this.pageNo,
-				salerId: this.salerId,
+				salerId: this.salerId === -1 ? '' : this.salerId,
 				startDate: this.date.startDate
 			 }).then(res => {
 			 	if (res.code === 1) {
