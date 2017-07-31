@@ -3,7 +3,7 @@
         <p class="report-title">
             充值明细表
         </p>
-        <div class="top">
+        <div class="report-select-top">
             <div class="date">日期 : <i>{{date.startDate}} ~ {{date.endDate}}</i></div>
             <div class="select-box">
                 <div style="margin-right:20px;width: 120px;" class="fr region" >
@@ -44,108 +44,31 @@
     </div>
 </template>
 <style lang='scss' scoped>
-  .title {
-    width: 100%;
-    line-height: 56px;
-    font-size: 1.5em;
-    color: #746D66;
-    text-align: center;
-    font-family: border;
-  }
-  .top {
-    width: 100%;
-    height: 32px;
-    padding: 5px 0;
-    .date {
-      float: left;
-      line-height: 25.44px;
-    }
-    .select-box {
-      float: left;
-      .fr {
-        float: left;
-        margin-left: 20px;
-      }
-    }
-    .export {
-      float: left;
-      margin-left:20px;
-    }
-  }
-  .report-collect {
-      float: left;
-      margin-left:20px;
-      height: 24px;
-      width: 100px;
-      border-radius:2px;
-      text-align: center;
-      line-height:24px;
-      cursor:pointer;
-      font-family:MicrosoftYaHei;
-      font-size:14px;
-      color:#ffffff;
-      text-align:center;
-  }
-  .report-collect-add {
-      background:#178ce6;
-  }
-  .report-collect-dis {
-      background:#f39c30;
-  }
 </style>
 <script>
     import { DdTable, DdPagination, DdDropdown, DdDropdownItem, DdSelect, DdOption, DdGroupOption } from 'dd-vue-component';
     import http from 'http';
     import { mapState } from 'vuex';
-    import DateSelect from '../../../components/DateSelect.vue';
+    import { collect } from '../mixin/collect';
+    import pagination from '../mixin/pagination';
+    import { getChannelType, getMemberType, getCategoryType } from '../mixin/selectType';
     export default {
+        mixins: [ pagination, collect, getChannelType, getMemberType, getCategoryType ],
         props: {
             startDate: String,
             endDate: String
         },
         data() {
             return {
-                typeAll: [{
-                    id: -1,
-                    name: '全部类型',
-                    type: -1
-                }, {
-                    id: 0,
-                    name: '会员',
-                    type: 0
-                }, {
-                    id: 1,
-                    name: '会员卡',
-                    type: 1
-                }],
-                type: -1,
-                collectNum: 0,
-                collectName: '加入收藏',
-                channels: [
-                    {
-                        id: 'ALL',
-                        name: '全部收款方式'
-                    }
-                ],
-                channelId: 'ALL',
-                categoryTypeAll: [{
-                    id: -1,
-                    name: '会员卡/等级',
-                    categoryType: '-1~'
-                }],
-                categoryType: '-1~',
                 vips: [],
-                vip: {},
-                pages: 0,
                 receiptNum: 0,
                 priceFree: 0,
                 receiptFree: 0,
-                pageNo: 1,
                 col: [
                     {
                         title: '类型',
                         dataIndex: 'type',
-                        width: 180
+                        width: 80
                     },
                     {
                         title: '会员卡/等级',
@@ -165,7 +88,7 @@
                     {
                         title: '充值金额',
                         dataIndex: 'price',
-                        width: 80
+                        width: 100
                     },
                     {
                         title: '赠送金额',
@@ -176,20 +99,19 @@
                     {
                         title: '充值时间',
                         dataIndex: 'creationTime',
-                        width: 80
+                        width: 120
                     },
                     {
                         title: '付款方式',
                         dataIndex: 'channel',
-                        width: 120
+                        width: 100
                     },
                     {
                         title: '操作人',
                         dataIndex: 'operator',
-                        width: 120
+                        width: 100
                     }
-                ],
-                flag: true
+                ]
             };
         },
         components: {
@@ -200,56 +122,36 @@
             DdSelect,
             DdOption,
             DdGroupOption,
-            DateSelect
         },
         watch: {
             date() {
                 this.pageNo = 1;
-                if (this.flag) {
-                    this.getData();
-                }
-            },
-            channelId() {
-                this.page = 1;
                 this.getData();
-            },
-            categoryType() {
-                this.pageNo = 1;
-                if (this.flag) {
-                    this.getData();
-                }
-            },
-            pageNo() {
-                if (this.flag) {
-                    this.getData();
-                }
-            },
-            type() {
-                this.pageNo = 1;
-                this.getData();
-                this.categoryTypeAll = [{
-                    id: -1,
-                    name: '会员卡/等级',
-                    categoryType: '-1~'
-                }];
-                this.categoryType = '-1~';
-                this.getCategoryTypeAll();
             }
+        },
+        beforeRouteEnter (to, from, next) {
+            http.get('/stat/getCollection')
+                .then(res => {
+                    if(res.code === 1) {
+                        next(vm => {
+                            const collectList = res.data.list;
+                            for(let i=0;i<collectList.length;i++){
+                                if (collectList[i] === 305) {
+                                    vm.collectNum = 1;
+                                    vm.collectName = '已收藏';
+                                }
+                            }
+                        })
+                    }
+                })
         },
         created() {
             this.getChannels();
             this.getData();
-            this.getCollectStatus();
+            this.collectStat();
         },
         computed: {
-            ...mapState(['date']),
-            collectClass: function () {
-                return {
-                    'report-collect': true,
-                    'report-collect-add': this.collectNum === 0,
-                    'report-collect-dis': this.collectNum === 1
-                }
-            }
+            ...mapState(['date'])
         },
         methods: {
             collectUrl(num) {
@@ -281,20 +183,6 @@
                     });
                 }
             },
-            getCollectStatus() {
-                http.get('/stat/getCollection')
-                    .then(res => {
-                        if(res.code === 1) {
-                            const collectList = res.data.list;
-                            for(let i=0;i<collectList.length;i++){
-                                if (collectList[i] === 305) {
-                                    this.collectNum = 1;
-                                    this.collectName = '已收藏';
-                                }
-                            }
-                        }
-                    })
-            },
             exportUrl(type) {
                 const obj = {
                     pageNum: this.pageNo,
@@ -325,48 +213,6 @@
                 const params = http.paramsToString(pa);
                 return `${host}?${params}`;
             },
-            getChannels() {
-                http.get('/user/getChannels', { type: 1, isAll: true })
-                    .then(res => {
-                        if (res.code === 1) {
-                            const channelList = res.data.list;
-                            channelList.forEach(channel => {
-                                if (channel.name !== '企业挂账' && channel.name !== '企业余额' && channel.name !== '一码通' && channel.name !== '会员余额' && channel.name !== '会员卡余额' && channel.name !== '虚拟币抵扣') {
-                                    this.channels.push(channel);
-                                }
-                            });
-                        }
-                    });
-            },
-            getCategoryTypeAll() {
-                if (this.type === 0) {
-                    http.get('/vipUser/getVipLevels')
-                    .then(res => {
-                        if (res.code === 1) {
-                            const categoryList = res.data.list;
-                            categoryList.forEach(category => {
-                                category.id = category.vipLevelId;
-                                category.name = category.vipLevelName;
-                                category.categoryType = `-1~${category.vipLevelId}`;
-                                this.categoryTypeAll.push(category);
-                            });
-                        }
-                    });
-                } else if (this.type === 1) {
-                    http.get('/vipCard/getVipCardSettings')
-                    .then(res => {
-                        if (res.code === 1) {
-                            const categoryList = res.data.list;
-                            categoryList.forEach(category => {
-                                category.id = category.categoryId;
-                                category.name = category.name;
-                                category.categoryType = `-1~${category.categoryId}`;
-                                this.categoryTypeAll.push(category);
-                            });
-                        }
-                    });
-                }
-            },
             getData() {
                 const obj = {
                     pageNum: this.pageNo,
@@ -396,10 +242,6 @@
                     }
                     this.flag = true;
                 });
-            },
-            handlePageChange(internalCurrentPage) {
-                this.pageNo = internalCurrentPage;
-                this.getData();
             }
         }
     };

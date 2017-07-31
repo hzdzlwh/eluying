@@ -3,7 +3,7 @@
         <p class="report-title">
             转应收账明细表
         </p>
-        <div class="top">
+        <div class="report-select-top">
             <div class="date">日期 : <i>{{date.startDate}} ~ {{date.endDate}}</i></div>
             <div class="select-box">
                 <div style="margin-right:20px;width: 120px;" class="fr region" >
@@ -19,7 +19,6 @@
             </div>
             <div class="export">
                 <dd-dropdown text="导出明细" trigger="click" style="width:100px;">
-                  <!-- <dd-dropdown-item><span><a :href="exportUrl(1)">导出PDF</a></span></dd-dropdown-item> -->
                   <dd-dropdown-item><span><a :href="exportUrl(0)">导出Excel</a></span></dd-dropdown-item>
                 </dd-dropdown>
             </div>
@@ -39,132 +38,36 @@
     </div>
 </template>
 <style lang='scss' scoped>
-  .title {
-    width: 100%;
-    line-height: 56px;
-    font-size: 1.5em;
-    color: #746D66;
-    text-align: center;
-    font-family: border;
-  }
-  .top {
-    width: 100%;
-    height: 32px;
-    padding: 5px 0;
-    .date {
-      float: left;
-      line-height: 25.44px;
-    }
-    .select-box {
-      float: left;
-      .fr {
-        float: left;
-        margin-left: 20px;
-      }
-    }
-    .export {
-      float: left;
-      margin-left:20px;
-    }
-  }
-  #table {
-    margin-top: 20px;
-    max-height: 400px;
-    padding-bottom: 12px;
-  }
-  .report-collect {
-      float: left;
-      margin-left:20px;
-      height: 24px;
-      width: 100px;
-      border-radius:2px;
-      text-align: center;
-      line-height:24px;
-      cursor:pointer;
-      font-family:MicrosoftYaHei;
-      font-size:14px;
-      color:#ffffff;
-      text-align:center;
-  }
-  .report-collect-add {
-      background:#178ce6;
-  }
-  .report-collect-dis {
-      background:#f39c30;
-  }
 </style>
 <script>
     import { DdTable, DdPagination, DdDropdown, DdDropdownItem, DdSelect, DdOption, DdGroupOption } from 'dd-vue-component';
     import http from 'http';
     import { mapState } from 'vuex';
-    import DateSelect from '../../../components/DateSelect.vue';
+    import { collect } from '../mixin/collect';
+    import pagination from '../mixin/pagination';
+    import { getOrderType, getEmployeeType } from '../mixin/selectType';
     export default {
+        mixins: [ collect, pagination, getOrderType, getEmployeeType],
         props: {
             startDate: String,
             endDate: String
         },
         data() {
             return {
-                orderTypeAll: [{
-                    id: -2,
-                    name: '全部订单类型',
-                    orderType: -2
-                }, {
-                    id: -1,
-                    name: '组合订单',
-                    orderType: -1
-                }, {
-                    id: 0,
-                    name: '餐饮',
-                    orderType: 0
-                }, {
-                    id: 1,
-                    name: '娱乐',
-                    orderType: 1
-                }, {
-                    id: 2,
-                    name: '商超',
-                    orderType: 2
-                }, {
-                    id: 3,
-                    name: '住宿',
-                    orderType: 3
-                }],
-                orderType: -2,
-                employeeList: [
-                    {
-                        realName: '全部操作人',
-                        employeeId: 'ALL'
-                    },
-                    {
-                        realName: '游客线上付款',
-                        employeeId: -2
-                    },
-                    {
-                        realName: '全部员工',
-                        employeeId: -1
-                    }
-                ],
-                operatorId: 'ALL',
                 vips: [],
-                vip: {},
-                pages: 0,
                 receiptNum: 0,
                 orderFree: 0,
                 receiptFree: 0,
-                pageNo: 1,
-                collectNum: 0,
-                collectName: '加入收藏',
                 col: [
                     {
                         title: '订单号',
                         dataIndex: 'orderNum',
-                        width: 180
+                        width: 140
                     },
                     {
                         title: '订单类型',
                         dataIndex: 'orderType',
-                        width: 80
+                        width: 60
                     },
                     {
                         title: '订单内容',
@@ -184,7 +87,7 @@
                     {
                         title: '下单时间',
                         dataIndex: 'creationTime',
-                        width: 80
+                        width: 140
                     },
                     {
                         title: '入账金额',
@@ -195,16 +98,31 @@
                     {
                         title: '入账时间',
                         dataIndex: 'incomeTime',
-                        width: 80
+                        width: 140
                     },
                     {
                         title: '操作人',
                         dataIndex: 'operator',
-                        width: 120
+                        width: 100
                     }
-                ],
-                flag: true
+                ]
             };
+        },
+        beforeRouteEnter (to, from, next) {
+            http.get('/stat/getCollection')
+                .then(res => {
+                    if(res.code === 1) {
+                        next(vm => {
+                            const collectList = res.data.list;
+                            for(let i=0;i<collectList.length;i++){
+                                if (collectList[i] === 403) {
+                                    vm.collectNum = 1;
+                                    vm.collectName = '已收藏';
+                                }
+                            }
+                        })
+                    }
+                })
         },
         components: {
             DdTable,
@@ -214,40 +132,20 @@
             DdSelect,
             DdOption,
             DdGroupOption,
-            DateSelect
         },
         watch: {
             date() {
                 this.pageNo = 1;
-                if (this.flag) {
-                    this.getData();
-                }
-            },
-            orderType() {
-                this.pageNo = 1;
-                if (this.flag) {
-                    this.getData();
-                }
-            },
-            operatorId() {
-                this.page = 1;
                 this.getData();
             }
         },
         created() {
             this.getData();
             this.getEmployeeList();
-            this.getCollectStatus();
+            this.collectStat();
         },
         computed: {
-            ...mapState(['date']),
-            collectClass: function () {
-                return {
-                    'report-collect': true,
-                    'report-collect-add': this.collectNum === 0,
-                    'report-collect-dis': this.collectNum === 1
-                }
-            }
+            ...mapState(['date'])
         },
         methods: {
             collectUrl(num) {
@@ -279,20 +177,6 @@
                     });
                 }
             },
-            getCollectStatus() {
-                http.get('/stat/getCollection')
-                    .then(res => {
-                        if(res.code === 1) {
-                            const collectList = res.data.list;
-                            for(let i=0;i<collectList.length;i++){
-                                if (collectList[i] === 403) {
-                                    this.collectNum = 1;
-                                    this.collectName = '已收藏';
-                                }
-                            }
-                        }
-                    })
-            },
             exportUrl(type) {
                 const obj = {
                     page: this.pageNo,
@@ -322,14 +206,6 @@
                 const params = http.paramsToString(pa);
                 return `${host}?${params}`;
             },
-            getEmployeeList() {
-                http.get('/user/getEmployeeList', {})
-                    .then(res => {
-                        if (res.code === 1) {
-                            this.employeeList = [...this.employeeList, ...res.data.list];
-                        }
-                    });
-            },
             getData() {
                 const obj = {
                     page: this.pageNo,
@@ -358,10 +234,6 @@
                     }
                     this.flag = true;
                 });
-            },
-            handlePageChange(internalCurrentPage) {
-                this.pageNo = internalCurrentPage;
-                this.getData();
             }
         }
     };

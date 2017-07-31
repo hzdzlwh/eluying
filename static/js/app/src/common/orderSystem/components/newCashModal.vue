@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-19 09:56:55
 * @Last Modified by:   linxinjian
-* @Last Modified time: 2017-07-28 17:24:38
+* @Last Modified time: 2017-07-31 15:00:55
 * @email: 783384903@qq.com
 */
 <!-- 有问题找产品，这个模块的功能一般人解释不清楚 -->
@@ -741,7 +741,7 @@ export default {
                     return (element.channelId !== -6 && element.channelId !== -7 && element.channelId !== -11 && element.channelId !== -12);
                 });
             }
-            if (item.type === 0 && this.isCompany && this.companyCityLedger && !payBack.some(pay => pay.channelId === 14)) {
+            if (item.type === 0 && this.isCompany && this.companyCityLedger && !payBack.some(pay => pay.channelId === -14)) {
                 payBack = [{
                     channelId: -14,
                     name: `企业挂帐(${this.companyName || ''})`
@@ -822,26 +822,33 @@ export default {
                     const cardHash = {};
                     const cardList = [];
                     const needpay = Math.abs(res.data.price + res.data.paid.normal);
+                    let gamePaied = 0;
                     res.data.game && res.data.game.forEach(element => {
                         element.max = Math.abs(element.ableFee - element.paidFee).toFixed(2);
                         const MaxNum = parseInt(needpay / element.rate);
+                        gamePaied += element.paidFee;
                         // element.ableNum = Math.min(Math.abs(element.ableNum - element.paidNum).toFixed(0), MaxNum);
                         element.ableNum = Math.abs(element.ableNum - element.paidNum).toFixed(0);
                     });
                     res.data.company && res.data.company.forEach(element => {
                         // element.max = element.ableFee;
                         element.max = Math.abs(element.ableFee - element.paidFee).toFixed(2);
-                        element.ableFee = Math.abs(element.ableFee - element.paidFee);
+                        element.ableFee = Math.abs(element.ableFee - element.paidFee).toFixed(2);
                     });
                     res.data.member && res.data.member.forEach(element => {
                         // element.max = element.ableFee;
-                        element.max = Math.abs(element.ableFee - element.paidFee).toFixed(2);
-                        element.ableFee = Math.abs(element.ableFee - element.paidFee);
+                        if (res.data.gameFeeMemberAble) {
+                            element.max = Math.abs(element.ableFee - element.paidFee - gamePaied).toFixed(2);
+                            element.ableFee = Math.abs(element.ableFee - element.paidFee - gamePaied).toFixed(2);
+                        } else {
+                            element.max = Math.abs(element.ableFee - element.paidFee).toFixed(2);
+                            element.ableFee = Math.abs(element.ableFee - element.paidFee).toFixed(2);
+                        }
                     });
                     res.data.card && res.data.card.forEach(element => {
                         // element.max = element.ableFee;
                         element.max = Math.abs(element.ableFee - element.paidFee).toFixed(2);
-                        element.ableFee = Math.abs(element.ableFee - element.paidFee);
+                        element.ableFee = Math.abs(element.ableFee - element.paidFee).toFixed(2);
                         element.cards.forEach(el => {
                             if (!cardHash[el.accountId]) {
                                 if (element.type === 2 && el.paidFee) {

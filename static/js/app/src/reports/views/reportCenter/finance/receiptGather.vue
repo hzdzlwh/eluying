@@ -3,7 +3,7 @@
         <p class="report-title">
             收款汇总表
         </p>
-        <div class="top">
+        <div class="report-select-top">
             <div class="date">日期 : <i>{{date.startDate}} ~ {{date.endDate}}</i></div>
             <div :class="collectClass" @click="collectUrl(collectNum)" style="float:right;">
                 {{collectName}}
@@ -13,55 +13,14 @@
     </div>
 </template>
 <style lang="scss" scoped>
-    .title {
-    width: 100%;
-    line-height: 56px;
-    font-size: 1.5em;
-    color: #746D66;
-    text-align: center;
-    font-family: border;
-  }
-  .top {
-    width: 100%;
-    height: 32px;
-    padding: 5px 0;
-    .date {
-      float: left;
-      line-height: 25.44px;
-    }
-  }
-  #table {
-    margin-top: 20px;
-    max-height: 400px;
-    padding-bottom: 12px;
-  }
-    .report-collect {
-        float: left;
-        margin-left:20px;
-        height: 24px;
-        width: 100px;
-        border-radius:2px;
-        text-align: center;
-        line-height:24px;
-        cursor:pointer;
-        font-family:MicrosoftYaHei;
-        font-size:14px;
-        color:#ffffff;
-        text-align:center;
-    }
-    .report-collect-add {
-        background:#178ce6;
-    }
-    .report-collect-dis {
-        background:#f39c30;
-    }
 </style>
 <script>
     import { DdTable, DdPagination } from 'dd-vue-component';
     import http from 'http';
     import { mapState } from 'vuex';
-    import DateSelect from '../../../components/DateSelect.vue';
+    import { collect } from '../mixin/collect';
 	export default {
+	    mixins: [ collect ],
         props: {
             startDate: String,
             endDate: String
@@ -69,11 +28,6 @@
         data() {
             return {
                 vips: [],
-                vip: {},
-                pages: 0,
-                pageNo: 1,
-                collectNum: 0,
-                collectName: '加入收藏',
                 col: [
                     {
                         title: '收款方式',
@@ -90,39 +44,39 @@
                         dataIndex: 'amount',
                         width: 80
                     }
-                ],
-                flag: true
+                ]
             };
+        },
+        beforeRouteEnter (to, from, next) {
+            http.get('/stat/getCollection')
+                .then(res => {
+                    if(res.code === 1) {
+                        next(vm => {
+                            const collectList = res.data.list;
+                            for(let i=0;i<collectList.length;i++){
+                                if (collectList[i] === 402) {
+                                    vm.collectNum = 1;
+                                    vm.collectName = '已收藏';
+                                }
+                            }
+                        })
+                    }
+                })
         },
         created() {
             this.getData();
-            this.getCollectStatus();
+            this.collectStat();
         },
         computed: {
-            ...mapState(['date']),
-            collectClass: function () {
-                return {
-                    'report-collect': true,
-                    'report-collect-add': this.collectNum === 0,
-                    'report-collect-dis': this.collectNum === 1
-                }
-            }
+            ...mapState(['date'])
         },
         watch: {
             date() {
                 this.pageNo = 1;
-                if (this.flag) {
-                    this.getData();
-                }
-            },
-            pageNo() {
-                if (this.flag) {
-                    this.getData();
-                }
+                this.getData();
             }
         },
         components: {
-            DateSelect,
             DdTable,
             DdPagination
         },
@@ -156,20 +110,6 @@
                     });
                 }
             },
-            getCollectStatus() {
-                http.get('/stat/getCollection')
-                    .then(res => {
-                        if(res.code === 1) {
-                            const collectList = res.data.list;
-                            for(let i=0;i<collectList.length;i++){
-                                if (collectList[i] === 402) {
-                                    this.collectNum = 1;
-                                    this.collectName = '已收藏';
-                                }
-                            }
-                        }
-                    })
-            },
             exportUrl(type) {
                 const originParam = {
                     date: this.today
@@ -200,7 +140,6 @@
                     if (res.code === 1) {
                         this.vips = res.data.list || [];
                     }
-                    this.flag = true;
                 });
             }
         }

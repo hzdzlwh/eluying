@@ -141,30 +141,45 @@
     import { DdDatepicker, DdPagination } from 'dd-vue-component';
     import http from 'http';
     import util from 'util';
+    import { collect } from '../mixin/collect';
+    import pagination from '../mixin/pagination';
     export default {
+        mixins: [ collect, pagination ],
         data() {
             return {
                 vips: [],
-                pages: 0,
                 count: 0,
                 totalMany: 0,
-                pageNo: 1,
                 startTime: '',
-                endTime: '',
-                collectNum: 0,
-                collectName: '加入收藏',
+                endTime: ''
             };
         },
         components: {
             DdDatepicker,
             DdPagination
         },
+        beforeRouteEnter (to, from, next) {
+            http.get('/stat/getCollection')
+                .then(res => {
+                    if(res.code === 1) {
+                        next(vm => {
+                            const collectList = res.data.list;
+                            for(let i=0;i<collectList.length;i++){
+                                if (collectList[i] === 304) {
+                                    vm.collectNum = 1;
+                                    vm.collectName = '已收藏';
+                                }
+                            }
+                        })
+                    }
+                })
+        },
         created() {
             const startTime = new Date();
             this.startTime = util.dateFormat(startTime);
             this.endTime = util.dateFormat(util.diffDate(startTime, 30));
             this.getData();
-            this.getCollectStatus();
+            this.collectStat();
         },
         watch: {
             endTime() {
@@ -174,11 +189,6 @@
             startTime() {
                 this.pageNo = 1;
                 this.getData();
-            },
-            pageNo() {
-                if (this.flag) {
-                    this.getData();
-                }
             }
         },
         methods: {
@@ -210,20 +220,6 @@
                         }
                     });
                 }
-            },
-            getCollectStatus() {
-                http.get('/stat/getCollection')
-                    .then(res => {
-                        if(res.code === 1) {
-                            const collectList = res.data.list;
-                            for(let i=0;i<collectList.length;i++){
-                                if (collectList[i] === 304) {
-                                    this.collectNum = 1;
-                                    this.collectName = '已收藏';
-                                }
-                            }
-                        }
-                    })
             },
             disableStartDate(date) {
                 if (this.startDate !== '') {
@@ -263,19 +259,6 @@
                         this.pages = Math.ceil(res.data.total / 30);
                     };
                 });
-            },
-            handlePageChange(internalCurrentPage) {
-                this.pageNo = internalCurrentPage;
-                this.getData();
-            }
-        },
-        computed: {
-            collectClass: function () {
-                return {
-                    'report-collect': true,
-                    'report-collect-add': this.collectNum === 0,
-                    'report-collect-dis': this.collectNum === 1
-                }
             }
         }
     };

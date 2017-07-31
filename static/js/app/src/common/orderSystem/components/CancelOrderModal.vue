@@ -62,9 +62,10 @@
     import modal from '../../modal';
     import bus from '../../eventBus';
     import { getOrderId } from '../utils/order';
-    import { mapState } from 'vuex';
+    import { mapActions, mapState } from 'vuex';
     import { DdSelect, DdOption } from 'dd-vue-component';
     import inputVaild from '../../components/inputVaild.vue';
+    import types from '../store/types';
     export default{
         props: {
             show: Boolean
@@ -99,6 +100,7 @@
             }
         },
         methods: {
+            ...mapActions([types.GET_ORDER_DETAIL]),
             showModal() {
                 this.penalty = this.backPenalty;
                 this.subOrderPenaltys = this.backSubOrderPenaltys.slice(0);
@@ -166,7 +168,14 @@
                             modal.success('取消成功');
                             this.hideModal();
                             bus.$emit('refreshView');
-                            bus.$emit('onShowDetail', this.orderId);
+                            this[types.GET_ORDER_DETAIL]({ orderId: getOrderId(this.order), orderType: this.order.type }).then(bus.$emit('onShowDetail', {
+                                orderId: getOrderId(this.order),
+                                orderType: this.order.type
+                            }));
+                            // bus.$emit('onShowDetail', {
+                            //     orderId: getOrderId(this.order),
+                            //     orderType: this.order.type
+                            // });
                         });
                 } else {
                     bus.$emit('changeBack', this.showModal);

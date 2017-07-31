@@ -14,7 +14,7 @@
         <p class="report-title">
             菜品赠送明细表
         </p>
-        <div class="top">
+        <div class="report-select-top">
             <div class="date">日期 : <i>{{date.startDate}} ~ {{date.endDate}}</i></div>
             <div class="select-box">
                 <div style="margin-right:20px;width: 120px;" class="fr region" >
@@ -45,110 +45,35 @@
     </div>
 </template>
 <style lang='scss' scoped>
-  .title {
-    width: 100%;
-    line-height: 56px;
-    font-size: 1.5em;
-    color: #746D66;
-    text-align: center;
-    font-family: border;
-  }
-  .top {
-    width: 100%;
-    height: 32px;
-    padding: 5px 0;
-    .date {
-      float: left;
-      line-height: 25.44px;
-    }
-    .select-box {
-      float: left;
-      .fr {
-        float: left;
-        margin-left: 20px;
-      }
-    }
-    .export {
-      float: left;
-      margin-left:20px;
-    }
-  }
-  .report-collect {
-      float: left;
-      margin-left:20px;
-      height: 24px;
-      width: 100px;
-      border-radius:2px;
-      text-align: center;
-      line-height:24px;
-      cursor:pointer;
-      font-family:MicrosoftYaHei;
-      font-size:14px;
-      color:#ffffff;
-      text-align:center;
-  }
-  .report-collect-add {
-      background:#178ce6;
-  }
-  .report-collect-dis {
-      background:#f39c30;
-  }
 </style>
 <script>
     import { DdTable, DdPagination, DdDropdown, DdDropdownItem, DdSelect, DdOption, DdGroupOption } from 'dd-vue-component';
     import http from 'http';
     import { mapState } from 'vuex';
-    import DateSelect from '../../../components/DateSelect.vue';
+    import { getRestType, getDishType, getEmployeeType } from '../mixin/selectType';
+    import { collect } from '../mixin/collect';
+    import pagination from '../mixin/pagination';
     export default {
+        mixins: [ getRestType, collect, pagination, getDishType, getEmployeeType ],
         props: {
             startDate: String,
             endDate: String
         },
         data() {
             return {
-                restTypeAll: [{
-                    id: -1,
-                    name: '全部餐厅',
-                    restType: '-1~'
-                }],
-                restType: '-1~',
-                dishTypeAll: [{
-                    id: -1,
-                    name: '全部菜品分类'
-                }],
-                name: '全部菜品分类',
-                employeeList: [
-                    {
-                        realName: '全部操作人',
-                        employeeId: 'ALL'
-                    },
-                    {
-                        realName: '游客线上付款',
-                        employeeId: -2
-                    },
-                    {
-                        realName: '全部员工',
-                        employeeId: -1
-                    }
-                ],
-                operatorId: 'ALL',
                 vips: [],
-                pages: 0,
                 receiptNum: 0,
                 receiptFree: 0,
-                pageNo: 1,
-                collectNum: 0,
-                collectName: '加入收藏',
                 col: [
                     {
                         title: '订单号',
                         dataIndex: 'orderNum',
-                        width: 180
+                        width: 160
                     },
                     {
                         title: '餐厅名称',
                         dataIndex: 'restName',
-                        width: 80
+                        width: 100
                     },
                     {
                         title: '桌位',
@@ -163,7 +88,7 @@
                     {
                         title: '菜名',
                         dataIndex: 'dishName',
-                        width: 80
+                        width: 100
                     },
                     {
                         title: '单价',
@@ -189,18 +114,33 @@
                     {
                         title: '操作人',
                         dataIndex: 'operatorName',
-                        width: 120
+                        width: 100
                     }
-                ],
-                flag: true
+                ]
             };
+        },
+        beforeRouteEnter (to, from, next) {
+            http.get('/stat/getCollection')
+                .then(res => {
+                    if(res.code === 1) {
+                        next(vm => {
+                            const collectList = res.data.list;
+                            for(let i=0;i<collectList.length;i++){
+                                if (collectList[i] === 501) {
+                                    vm.collectNum = 1;
+                                    vm.collectName = '已收藏';
+                                }
+                            }
+                        })
+                    }
+                })
         },
         created() {
             this.getData();
             this.getRestType();
             this.getEmployeeList();
             this.getDishType();
-            this.getCollectStatus();
+            this.collectStat();
         },
         components: {
             DdTable,
@@ -209,48 +149,16 @@
             DdDropdownItem,
             DdSelect,
             DdOption,
-            DdGroupOption,
-            DateSelect
+            DdGroupOption
         },
         watch: {
             date() {
                 this.pageNo = 1;
-                if (this.flag) {
-                    this.getData();
-                }
-            },
-            restType() {
-                this.pageNo = 1;
-                this.getData();
-                this.dishTypeAll = [{
-                    id: -1,
-                    name: '全部菜品分类'
-                }];
-                this.name = '全部菜品分类';
-                this.getDishType();
-
-            },
-            name() {
-                this.pageNo = 1;
-                this.getData();
-            },
-            operatorId() {
-                this.page = 1;
-                this.getData();
-            },
-            pageNo() {
                 this.getData();
             }
         },
         computed: {
-            ...mapState(['date']),
-            collectClass: function () {
-                return {
-                    'report-collect': true,
-                    'report-collect-add': this.collectNum === 0,
-                    'report-collect-dis': this.collectNum === 1
-                }
-            }
+            ...mapState(['date'])
         },
         methods: {
             collectUrl(num) {
@@ -281,64 +189,6 @@
                         }
                     });
                 }
-            },
-            getCollectStatus() {
-                http.get('/stat/getCollection')
-                    .then(res => {
-                        if(res.code === 1) {
-                            const collectList = res.data.list;
-                            for(let i=0;i<collectList.length;i++){
-                                if (collectList[i] === 501) {
-                                    this.collectNum = 1;
-                                    this.collectName = '已收藏';
-                                }
-                            }
-                        }
-                    })
-            },
-            getRestType() {
-                http.get('/restaurant/listSimple')
-                .then(res => {
-                    if (res.code === 1) {
-                        const restList = res.data.list;
-                        this.restTypeOther = restList;
-                        restList.forEach(rest => {
-                            rest.id = rest.restId;
-                            rest.name = rest.restName;
-                            rest.restType = `-1~${rest.restId}`;
-                            this.restTypeAll.push(rest);
-                        });
-                    }
-                });
-            },
-            getDishType() {
-                const obj = {};
-                if (this.restType.split('~')[1]) {
-                    obj.restId = this.restType.split('~')[1];
-                }
-                http.get('/dish/getDishTypes',obj)
-                .then(res => {
-                    if (res.code === 1) {
-                        const dishType = res.data.list;
-                        const dict = {};
-                        dishType.forEach(dish => {
-                            dish.name = dish.dishType;
-                            if (!dict[dish.name]) {
-                                dish.dishType = `-1~{dish.name}`;
-                                this.dishTypeAll.push(dish);
-                                dict[dish.name] = 1;
-                            }
-                        });
-                    }
-                });
-            },
-            getEmployeeList() {
-                http.get('/user/getEmployeeList', {})
-                    .then(res => {
-                        if (res.code === 1) {
-                            this.employeeList = [...this.employeeList, ...res.data.list];
-                        }
-                    });
             },
             exportUrl(type) {
                 const obj = {
@@ -400,10 +250,6 @@
                     }
                     this.flag = true;
                 });
-            },
-            handlePageChange(internalCurrentPage) {
-                this.pageNo = internalCurrentPage;
-                this.getData();
             }
         }
     };

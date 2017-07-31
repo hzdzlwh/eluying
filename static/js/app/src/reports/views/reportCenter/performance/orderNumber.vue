@@ -11,27 +11,10 @@
 			</div>
 		</div>
 		<div class="content">
-			<h4>会员卡销售汇总表</h4>
-			<div class="tab-container">
-				<span class="show-dimension">显示维度</span>
-				<ul class="nav nav-tabs">
-					<li class="active" ref="activeTab">
-						<a href="#salesman" data-toggle="tab">销售员</a>
-					</li>
-					<li>/</li>
-					<li>
-						<a href="#vipcard" data-toggle="tab">会员卡类型</a>
-					</li>
-				</ul>
-			</div>
-			<div class="tab-content">
-				<p>日期: <span>{{date.startDate}}</span>~<span>{{date.endDate}}</span></p>
-				<div class="tab-pane fade in active" id="salesman">
-					<dd-table :columns="columnsSalesman" :data-source="dataSourceSalesman" :bordered="true"></dd-table>
-				</div>
-				<div class="tab-pane fade in" id="vipcard">
-					<dd-table :columns="columnsVipcard" :data-source="dataSourceVipcard" :bordered="true"></dd-table>
-				</div>
+			<h4>销售员（订单数量）业绩汇总表</h4>
+			<p class="time">日期: <span>{{date.startDate}}</span>~<span>{{date.endDate}}</span></p>
+			<div>
+				<dd-table :columns="columns" :data-source="dataSource" :bordered="true"></dd-table>
 			</div>
 		</div>
 	</div>
@@ -45,69 +28,49 @@ import http from 'http';
 export default {
 	data() {
 		return {
-			collectState: false,
-			columnsSalesman: [
+			collectState: undefined,
+			columns: [
 				{
 					title: '销售员',
-					dataIndex: 'salerName'
+					dataIndex: 'name'
 				},
 				{
 					title: '销售员手机号',
-					dataIndex: 'salerPhone'
+					dataIndex: 'phone'
 				},
 				{
-					title: '销售数量',
-					dataIndex: 'saleCount'
+					title: '住宿订单数量',
+					dataIndex: 'roomOrdersCount'
 				},
 				{
-					title: '卡费金额',
-					dataIndex: 'cardFee'
+					title: '餐饮订单数量',
+					dataIndex: 'caterOrdersCount'
 				},
 				{
-					title: '首冲金额',
-					dataIndex: 'firstChargeFee'
+					title: '娱乐订单数量',
+					dataIndex: 'enterOrdersCount'
 				},
 				{
-					title: '首冲赠送金额',
-					dataIndex: 'firstChargeFreeFee'
+					title: '商超订单数量',
+					dataIndex: 'goodsOrdersCount'
+				},
+				{
+					title: '总订单数量',
+					dataIndex: 'ordersCount'
 				}
 			],
-			columnsVipcard: [
-				{
-					title: '会员卡类型',
-					dataIndex: 'cardType'
-				},
-				{
-					title: '销售数量',
-					dataIndex: 'saleCount'
-				},
-				{
-					title: '卡费金额',
-					dataIndex: 'cardFee'
-				},
-				{
-					title: '首冲金额',
-					dataIndex: 'firstChargeFee'
-				},
-				{
-					title: '首冲赠送金额',
-					dataIndex: 'firstChargeFreeFee'
-				}
-			],
-			dataSourceSalesman: [],
-			dataSourceVipcard: []
+			dataSource: []
 		}
 	},
+	created() {
+		this.getOrderNumber();
+		this.getCollectStatus();
+	},
 	components: {
-		CollectButton,
+		DdTable,
 		DdDropdown,
 		DdDropdownItem,
-		DdTable
-	},
-	created() {
-		this.getVipCardSalesman();
-		this.getVipCardType();
-		this.getCollectStatus();
+		CollectButton
 	},
 	computed: {
 		...mapState(['date'])
@@ -115,8 +78,8 @@ export default {
 	methods: {
 		exportUrl(type) {
 			const obj = {
-                startDate: this.date.startDate,
-                toDate: this.date.endDate
+                endDate: this.date.endDate,
+                startDate: this.date.startDate
             };
              // 后台要求如果为空就不传
             for (const ob in obj) {
@@ -126,7 +89,7 @@ export default {
             }
             const paramsObj = {
                 exportType: type,
-                reportType: $(this.$refs.activeTab).hasClass('active') ? 306 : 307,
+                reportType: 602,
                 params: JSON.stringify(obj)
             };
             const host = http.getUrl('/stat/exportReport');
@@ -137,10 +100,10 @@ export default {
 		},
 		toggleCollect() {
 			if (this.collectState) {
-				http.get('/stat/removeFromCollection',{ statValue: 306 }).then(res => {
+				http.get('/stat/removeFromCollection',{ statValue: 602 }).then(res => {
                     let removeIndex = null;
                     this.$router.options.routes[2].children[0].children.map((item, index) => {
-                        if (item.meta.id === 306) {
+                        if (item.meta.id === 602) {
                             removeIndex = index;
                         }
                     });
@@ -157,33 +120,19 @@ export default {
                     this.collectState = !this.collectState;
                 });
 			} else {
-				http.get('/stat/addToCollect',{ statValue: 306 }).then(res => {
+				http.get('/stat/addToCollect',{ statValue: 602 }).then(res => {
 					if (res.code === 1) {
 						this.collectState = !this.collectState;
 					}
                 });
 			}
 		},
-		getVipCardSalesman() {
-			http.get('/stat/getVipCardSoldSumStat', { startDate: this.date.startDate, toDate: this.date.endDate }).then((res) => {
-				if (res.code === 1) {
-					this.dataSourceSalesman = res.data.entityList;
-				}
-			});
-		},
-		getVipCardType() {
-			http.get('/stat/getVipCardSoldStat', { startDate: this.date.startDate, toDate: this.date.endDate }).then((res) => {
-				if (res.code === 1) {
-					this.dataSourceVipcard = res.data.entityList;
-				}
-			});
-		},
 		getCollectStatus() {
             /* http.get('/stat/getCollection')
             .then(res => {
                 if(res.code === 1) {
                 	res.data.list.map(item => {
-                		if (item === 306) {
+                		if (item === 602) {
                 			this.collectState = true;
                 		}
                 	});
@@ -192,12 +141,18 @@ export default {
             if (/^\/reportCenter\/collect/.test(this.$route.path)) {
             	this.collectState = true;
             }
-        }
+        },
+		getOrderNumber() {
+			http.get('/stat/getOrderCountStat4Salers', { endDate: this.date.endDate, startDate: this.date.startDate }).then(res => {
+				if (res.code === 1) {
+					this.dataSource = res.data.list;
+				}
+			});
+		}
 	},
 	watch: {
 		date(newValue) {
-			this.getVipCardSalesman();
-			this.getVipCardType();
+			this.getOrderNumber();
 		}
 	},
 	beforeRouteEnter(to, from, next) {
@@ -205,7 +160,7 @@ export default {
             if (res.code === 1) {
                 next(vm => {
                     res.data.list.map(item => {
-                		if (item === 306) {
+                		if (item === 602) {
                 			vm.collectState = true;
                 		}
                 	});
@@ -217,31 +172,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-	.tab-container{
-		display: flex;
-		justify-content: center;
-		.show-dimension{
-			display: inline-block;
-	    	line-height: 24px;
-	    	margin-right: 10px;
-		}
-		.nav-tabs{
-			margin-bottom: 0;
-			li{
-				a{
-					color: #666;
-				}
-				&.active{
-					a{
-						background-color: #fff;
-						color: #178ce6;
-					}
-				}
-				&:nth-child(2){
-					line-height: 25px;
-				}
-			}
-		}
+	.time{
+		margin: 27px 0 22px 0;
 	}
-	
 </style>

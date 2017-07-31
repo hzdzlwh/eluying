@@ -91,12 +91,11 @@
     import http from '../../../../common/http';
     import util from '../../../../common/util';
     import { DdDatepicker, DdDropdown, DdDropdownItem } from 'dd-vue-component';
-    
+    import { collect } from '../mixin/collect';
     export default {
+        mixins: [ collect ],
         data() {
             return {
-                collectNum: 0,
-                collectName: '加入收藏',
                 today: undefined,
                 credit: [],
                 creditSummary: {},
@@ -104,10 +103,25 @@
                 debitSummary: {}
             };
         },
+        beforeRouteEnter (to, from, next) {
+            http.get('/stat/getCollection')
+                .then(res => {
+                    if(res.code === 1) {
+                        next(vm => {
+                            const collectList = res.data.list;
+                            for(let i=0;i<collectList.length;i++){
+                                if (collectList[i] === 18) {
+                                    vm.collectNum = 1;
+                                    vm.collectName = '已收藏';
+                                }
+                            }
+                        })
+                    }
+                })
+        },
         created() {
             this.today = util.dateFormat(new Date());
-            this.getDailyReportData();
-            this.getCollectStatus();
+            this.collectStat();
         },
         computed: {
             debitSupplymentTr() {
@@ -115,13 +129,6 @@
             },
             creditSupplymentTr() {
                 return this.debit.length > this.credit.length ? this.debit.length - this.credit.length : 0;
-            },
-            collectClass: function () {
-                return {
-                    'report-collect': true,
-                    'report-collect-add': this.collectNum === 0,
-                    'report-collect-dis': this.collectNum === 1
-                }
             }
         },
         methods: {
@@ -153,20 +160,6 @@
                         }
                     });
                 }
-            },
-            getCollectStatus() {
-                http.get('/stat/getCollection')
-                    .then(res => {
-                        if(res.code === 1) {
-                            const collectList = res.data.list;
-                            for(let i=0;i<collectList.length;i++){
-                                if (collectList[i] === 18) {
-                                    this.collectNum = 1;
-                                    this.collectName = '已收藏';
-                                }
-                            }
-                        }
-                    })
             },
             getDailyReportData() {
                 http.get('/stat/getDailyStat', { date: this.today }).then(res => {
@@ -206,15 +199,6 @@
             DdDatepicker,
             DdDropdown,
             DdDropdownItem
-        },
-        beforeRouteEnter(to, from, next) {
-            next(() => {
-                $('.date-select-container').hide();
-            });
-        },
-        beforeRouteLeave(to, from, next) {
-            $('.date-select-container').show();
-            next();
         }
     };
 </script>

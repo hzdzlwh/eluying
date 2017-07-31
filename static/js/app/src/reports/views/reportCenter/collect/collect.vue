@@ -27,6 +27,11 @@
     import transferDetails from '../finance/transferDetails.vue';
     import ARGather from '../finance/ARGather.vue';
     import dailyReport from '../manage/dailyReport.vue';
+    import saleCollect from '../member/saleCollect.vue';
+    import saleDetail from '../member/saleDetail.vue';
+    import saleMoney from '../performance/saleMoney.vue';
+    import orderNumber from '../performance/orderNumber.vue';
+    import performanceDetail from '../performance/performanceDetail.vue';
     import collectList from '../../../collectList.js';
     export default {
         data() {
@@ -67,7 +72,12 @@
             rechargeDetails,
             transferDetails,
             ARGather,
-            dailyReport
+            dailyReport,
+            saleCollect,
+            saleDetail,
+            saleMoney,
+            orderNumber,
+            performanceDetail
         },
         watch: {
             '$route.path'() {

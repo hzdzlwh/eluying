@@ -18,9 +18,10 @@
                             <div style="width: 25%;"><span style="font-size:12px;color:#999999;">类型</span> <span>{{card.type === 0? card.categoryName : '副卡'}}</span></div>
                         </div>
                         <div class="customer-info">
-                            <div style="width: 50%;"><span style="font-size:12px;color:#999999;">卡号</span> <span>{{card.vipCardNum}}</span></div>
+                            <div style="width: 25%;"><span style="font-size:12px;color:#999999;">卡号</span> <span>{{card.vipCardNum}}</span></div>
                             <div style="width: 25%;"><span style="font-size:12px;color:#999999;">办理日期</span> <span>{{card.creationTime}}</span></div>
                             <div style="width: 25%;"><span style="font-size:12px;color:#999999;">状态</span> <span>{{CARDSTATUS[card.status]}}</span></div>
+                            <div style="width: 25%;"><span style="font-size:12px;color:#999999;">销售员</span> <span>{{card.salerString}}</span></div>
                         </div>
                     </div>
                     <div class="info-item">
@@ -33,7 +34,7 @@
                     <div style="padding: 15px; 20px;text-align: right;">
                         <button class="dd-btn dd-btn-primary" v-if="card.rechargeAble" @click="openModal('recharge')">充值</button>
                         <button class="dd-btn dd-btn-primary" v-if="card.status === 0" @click="openModal('operate', 'lose')">挂失</button>
-                        <button class="dd-btn dd-btn-primary" v-if="card.givingAble" @click="openModal('given')">转增</button>
+                        <button class="dd-btn dd-btn-primary" v-if="card.givingAble" @click="openModal('given')">转赠</button>
                         <button class="dd-btn dd-btn-primary" v-if="card.viceAble" @click="openModal('additional')">办理副卡</button>
                         <button class="dd-btn dd-btn-primary" v-if="card.reapplyAble" @click="openModal('repair')">补办</button>
                         <button class="dd-btn dd-btn-primary" v-if="card.status === 1" @click="openModal('operate', 'recover')">恢复</button>

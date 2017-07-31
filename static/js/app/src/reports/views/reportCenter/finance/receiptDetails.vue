@@ -3,7 +3,7 @@
         <p class="report-title">
             收款明细表
         </p>
-        <div class="top">
+        <div class="report-select-top">
             <div class="date">日期 : <i>{{date.startDate}} ~ {{date.endDate}}</i></div>
             <div class="select-box">
                 <div style="margin-right:20px;width: 120px;" class="fr region" >
@@ -43,137 +43,35 @@
     </div>
 </template>
 <style lang='scss' scoped>
-  .title {
-    width: 100%;
-    line-height: 56px;
-    font-size: 1.5em;
-    color: #746D66;
-    text-align: center;
-    font-family: border;
-  }
-  .top {
-    width: 100%;
-    height: 32px;
-    padding: 5px 0;
-    .date {
-      float: left;
-      line-height: 25.44px;
-    }
-    .select-box {
-      float: left;
-      .fr {
-        float: left;
-        margin-left: 20px;
-      }
-    }
-    .export {
-      float: left;
-      margin-left:20px;
-    }
-  }
-  #table {
-    margin-top: 20px;
-    max-height: 400px;
-    padding-bottom: 12px;
-  }
-  .report-collect {
-      float: left;
-      margin-left:20px;
-      height: 24px;
-      width: 100px;
-      border-radius:2px;
-      text-align: center;
-      line-height:24px;
-      cursor:pointer;
-      font-family:MicrosoftYaHei;
-      font-size:14px;
-      color:#ffffff;
-      text-align:center;
-  }
-  .report-collect-add {
-      background:#178ce6;
-  }
-  .report-collect-dis {
-      background:#f39c30;
-  }
 </style>
 <script>
     import { DdTable, DdPagination, DdDropdown, DdDropdownItem, DdSelect, DdOption, DdGroupOption } from 'dd-vue-component';
     import http from 'http';
     import { mapState } from 'vuex';
-    import DateSelect from '../../../components/DateSelect.vue';
+    import { collect } from '../mixin/collect';
+    import pagination from '../mixin/pagination';
+    import { getEmployeeType, getChannelType, getOrderType } from '../mixin/selectType';
     export default {
+        mixins: [ collect, pagination, getEmployeeType, getChannelType, getOrderType ],
         props: {
             startDate: String,
             endDate: String
         },
         data() {
             return {
-                orderTypeAll: [{
-                    id: -2,
-                    name: '全部订单类型',
-                    orderType: -2
-                }, {
-                    id: -1,
-                    name: '组合订单',
-                    orderType: -1
-                }, {
-                    id: 0,
-                    name: '餐饮',
-                    orderType: 0
-                }, {
-                    id: 1,
-                    name: '娱乐',
-                    orderType: 1
-                }, {
-                    id: 2,
-                    name: '商超',
-                    orderType: 2
-                }, {
-                    id: 3,
-                    name: '住宿',
-                    orderType: 3
-                }],
-                collectNum: 0,
-                collectName: '加入收藏',
-                orderType: -2,
-                employeeList: [
-                    {
-                        realName: '全部操作人',
-                        employeeId: 'ALL'
-                    },
-                    {
-                        realName: '游客线上付款',
-                        employeeId: -2
-                    },
-                    {
-                        realName: '全部员工',
-                        employeeId: -1
-                    }
-                ],
-                operatorId: 'ALL',
-                channels: [
-                    {
-                        id: 'ALL',
-                        name: '全部收款方式'
-                    }
-                ],
-                channelId: 'ALL',
                 vips: [],
-                pages: 0,
                 receiptNum: 0,
                 receiptFree: 0,
-                pageNo: 1,
                 col: [
                     {
                         title: '订单号',
                         dataIndex: 'orderNum',
-                        width: 180
+                        width: 140
                     },
                     {
                         title: '订单类型',
                         dataIndex: 'orderType',
-                        width: 80
+                        width: 60
                     },
                     {
                         title: '订单内容',
@@ -193,7 +91,7 @@
                     {
                         title: '下单时间',
                         dataIndex: 'creationTime',
-                        width: 80
+                        width: 120
                     },
                     {
                         title: '收款金额',
@@ -204,20 +102,19 @@
                     {
                         title: '收款时间',
                         dataIndex: 'payTime',
-                        width: 80
+                        width: 120
                     },
                     {
                         title: '收款方式',
                         dataIndex: 'payChannel',
-                        width: 120
+                        width: 80
                     },
                     {
                         title: '操作人',
                         dataIndex: 'operator',
-                        width: 120
+                        width: 80
                     }
-                ],
-                flag: true
+                ]
             };
         },
         components: {
@@ -227,44 +124,36 @@
             DdDropdownItem,
             DdSelect,
             DdOption,
-            DdGroupOption,
-            DateSelect
+            DdGroupOption
+        },
+        beforeRouteEnter (to, from, next) {
+            http.get('/stat/getCollection')
+                .then(res => {
+                    if(res.code === 1) {
+                        next(vm => {
+                            const collectList = res.data.list;
+                            for(let i=0;i<collectList.length;i++){
+                                if (collectList[i] === 401) {
+                                    vm.collectNum = 1;
+                                    vm.collectName = '已收藏';
+                                }
+                            }
+                        })
+                    }
+                })
         },
         created() {
             this.getData();
             this.getEmployeeList();
             this.getChannels();
-            this.getCollectStatus();
+            this.collectStat();
         },
         computed: {
-            ...mapState(['date']),
-            collectClass: function () {
-                return {
-                    'report-collect': true,
-                    'report-collect-add': this.collectNum === 0,
-                    'report-collect-dis': this.collectNum === 1
-                }
-            }
+            ...mapState(['date'])
         },
         watch: {
             date() {
                 this.pageNo = 1;
-                if (this.flag) {
-                    this.getData();
-                }
-            },
-            orderType() {
-                this.pageNo = 1;
-                if (this.flag) {
-                    this.getData();
-                }
-            },
-            channelId() {
-                this.page = 1;
-                this.getData();
-            },
-            operatorId() {
-                this.page = 1;
                 this.getData();
             }
         },
@@ -298,20 +187,6 @@
                     });
                 }
             },
-            getCollectStatus() {
-                http.get('/stat/getCollection')
-                    .then(res => {
-                        if(res.code === 1) {
-                            const collectList = res.data.list;
-                            for(let i=0;i<collectList.length;i++){
-                                if (collectList[i] === 401) {
-                                    this.collectNum = 1;
-                                    this.collectName = '已收藏';
-                                }
-                            }
-                        }
-                    })
-            },
             exportUrl(type) {
                 const obj = {
                     page: this.pageNo,
@@ -344,22 +219,6 @@
                 const params = http.paramsToString(pa);
                 return `${host}?${params}`;
             },
-            getEmployeeList() {
-                http.get('/user/getEmployeeList', {})
-                    .then(res => {
-                        if (res.code === 1) {
-                            this.employeeList = [...this.employeeList, ...res.data.list];
-                        }
-                    });
-            },
-            getChannels() {
-                http.get('/user/getChannels', { type: 1, isAll: true })
-                    .then(res => {
-                        if (res.code === 1) {
-                            this.channels = [...this.channels, ...res.data.list];
-                        }
-                    });
-            },
             getData() {
                 const obj = {
                     page: this.pageNo,
@@ -390,10 +249,6 @@
                     }
                     this.flag = true;
                 });
-            },
-            handlePageChange(internalCurrentPage) {
-                this.pageNo = internalCurrentPage;
-                this.getData();
             }
         }
     };

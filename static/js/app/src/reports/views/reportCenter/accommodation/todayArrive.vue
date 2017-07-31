@@ -3,7 +3,7 @@
         <p  class="report-title">
             本日预抵房间报表
         </p>
-        <div class="top">
+        <div class="report-select-top">
             <div class="date">日期 : <i>{{today}}</i></div>
             <div class="select-box">
                 <div style="margin-right:20px;width: 120px;" class="fr region" >
@@ -62,120 +62,22 @@
     </div>
 </template>
 <style lang='scss' scoped>
-    .title {
-        width: 100%;
-        line-height: 56px;
-        font-size: 1.5em;
-        color: #746D66;
-        text-align: center;
-        font-family: border;
-    }
-    .top {
-        width: 100%;
-        height: 32px;
-        padding: 5px 0;
-        .date {
-            float: left;
-            line-height: 25.44px;
-        }
-        .select-box {
-            float: left;
-            .fr {
-                float: left;
-                margin-left: 20px;
-            }
-        }
-        .export {
-            float: left;
-            margin-left:20px;
-        }
-    }
-    #table {
-        margin-top: 20px;
-        padding-bottom: 12px;
-    }
-    .report-collect {
-        float: left;
-        margin-left:20px;
-        height: 24px;
-        width: 100px;
-        border-radius:2px;
-        text-align: center;
-        line-height:24px;
-        cursor:pointer;
-        font-family:MicrosoftYaHei;
-        font-size:14px;
-        color:#ffffff;
-        text-align:center;
-    }
-    .report-collect-add {
-        background:#178ce6;
-    }
-    .report-collect-dis {
-        background:#f39c30;
-    }
 </style>
 <script>
     import { DdTable, DdPagination, DdDropdown, DdDropdownItem, DdSelect, DdOption, DdGroupOption } from 'dd-vue-component';
     import http from 'http';
     import util from 'util';
     import { checkTypeAll } from '../../../../common/orderSystem/roomCheckType.js';
+    import { getRoomType, getZoneType, getCheckType, getOriginType } from '../mixin/selectType';
+    import { collect } from '../mixin/collect';
+    import pagination from '../mixin/pagination';
     export default {
+        mixins: [getRoomType, getZoneType, getCheckType, getOriginType, collect, pagination ],
         data() {
             return {
                 today: undefined,
-                zoneType: '-1~',
-                zoneTypeOther: [],
-                zoneTypeAll: [{
-                    id: -1,
-                    name: '全部区域',
-                    zoneType: '-1~'
-                }],
-                roomType: '-1~',
-                roomTypeOther: [],
-                roomTypeAll: [{
-                    id: -1,
-                    name: '全部房型',
-                    roomType: '-1~'
-                }],
-                checkTypeAll: [{
-                    id: -1,
-                    name: '全部入住类型',
-                    checkType: -1
-                }, {
-                    id: 0,
-                    name: '正常入住',
-                    checkType: 0
-                }, {
-                    id: 2,
-                    name: '自用房',
-                    checkType: 2
-                }, {
-                    id: 3,
-                    name: '免费房',
-                    checkType: 3
-                }, {
-                    id: 1,
-                    name: '钟点房',
-                    checkType: 1
-                }],
-                checkType: -1,
-                userOriginType: '-2~',
-                userOrigins: [],
-                userSelfOrigins: [{
-                    id: '',
-                    name: '全部客源渠道',
-                    originType: '-2~',
-                    type: 2
-                }],
-                userGroupOrigins: [],
                 vips: [],
-                vip: {},
-                pages: 0,
                 count: 0,
-                pageNo: 1,
-                collectNum: 0,
-                collectName: '加入收藏',
                 col: [
                     {
                         title: '订单号',
@@ -237,8 +139,7 @@
                         dataIndex: 'checkOutTime',
                         width: 120
                     }
-                ],
-                flag: true
+                ]
             };
         },
         components: {
@@ -252,40 +153,24 @@
         },
         watch: {
             date() {
-                // date = this.today;
-                if (this.flag) {
-                    this.getData();
-                }
-            },
-            userOriginType() {
-                this.pageNo = 1;
-                if (this.flag) {
-                    this.getData();
-                }
-            },
-            roomType() {
-                this.pageNo = 1;
-                if (this.flag) {
-                    this.getData();
-                }
-            },
-            pageNo() {
-                if (this.flag) {
-                    this.getData();
-                }
-            },
-            zoneType() {
-                this.pageNo = 1;
-                if (this.flag) {
-                    this.getData();
-                }
-            },
-            checkType() {
-                this.pageNo = 1;
-                if (this.flag) {
-                    this.getData();
-                }
+                this.getData();
             }
+        },
+        beforeRouteEnter (to, from, next) {
+            http.get('/stat/getCollection')
+                .then(res => {
+                    if(res.code === 1) {
+                        next(vm => {
+                            const collectList = res.data.list;
+                            for(let i=0;i<collectList.length;i++){
+                                if (collectList[i] === 22) {
+                                    vm.collectNum = 1;
+                                    vm.collectName = '已收藏';
+                                }
+                            }
+                        })
+                    }
+                })
         },
         created() {
             this.today = util.dateFormat(new Date());
@@ -293,7 +178,7 @@
             this.getZoneType();
             this.getRoomType();
             this.getOrigin();
-            this.getCollectStatus();
+            this.collectStat();
         },
         methods: {
             collectUrl(num) {
@@ -325,20 +210,6 @@
                     });
                 }
             },
-            getCollectStatus() {
-                http.get('/stat/getCollection')
-                    .then(res => {
-                        if(res.code === 1) {
-                            const collectList = res.data.list;
-                            for(let i=0;i<collectList.length;i++){
-                                if (collectList[i] === 22) {
-                                    this.collectNum = 1;
-                                    this.collectName = '已收藏';
-                                }
-                            }
-                        }
-                    })
-            },
             exportUrl(type) {
                 const originParam = {
                     pageNo: this.pageNo,
@@ -369,60 +240,6 @@
                 const params = http.paramsToString(pa);
                 return `${host}?${params}`;
             },
-            getZoneType() {
-                http.get('/room/getZoneList')
-                .then(res => {
-                    if (res.code === 1) {
-                        const zoneList = res.data.list;
-                        this.zoneTypeOther = zoneList;
-                        zoneList.forEach(zone => {
-                            zone.id = zone.zoneId;
-                            zone.name = zone.zoneName;
-                            zone.zoneType = `-1~${zone.zoneId}`;
-                            this.zoneTypeAll.push(zone);
-                        });
-                    }
-                });
-            },
-            getRoomType() {
-                http.get('/room/getRoomCategories')
-                .then(res => {
-                    if (res.code === 1) {
-                        const roomList = res.data.list;
-                        this.roomTypeOther = roomList;
-                        roomList.forEach(room => {
-                            room.id = room.cId;
-                            room.name = room.cName;
-                            room.roomType = `-1~${room.cId}`;
-                            this.roomTypeAll.push(room);
-                        });
-                    }
-                });
-            },
-            getOrigin() {
-            // 获取全部客户来源渠道
-                http.get('/user/getChannels', { type: 2, isAll: false })
-                .then((res) => {
-                    // 拼接originType 企业渠道：企业id~-5 会员-4～-4 自定义渠道 渠道id～渠道id
-                    if (res.code === 1) {
-                        const originsList = res.data.list;
-                        const otherOrigins = [];
-                        this.userOrigins = originsList;
-                        originsList.forEach(origin => {
-                            if (origin.id < 0) {
-                                origin.originType = `${origin.id}~${origin.id}`;
-                                this.userSelfOrigins.push(origin);
-                            } else if (origin.id > 0) {
-                                origin.originType = `${origin.id}~${origin.id}`;
-                                origin.info = origin.name;
-                                otherOrigins.push(origin);
-                            }
-                        });
-                        this.userGroupOrigins.push({ label: '其他', origins: otherOrigins });
-                        // this.userOriginType = this.userSelfOrigins[0].originType;
-                    }
-                });
-            },
             getData() {
                 const obj = {
                     pageNo: this.pageNo,
@@ -447,32 +264,8 @@
                         this.vips = res.data.list || [];
                         this.count = res.data.count;
                         this.pages = Math.ceil(res.data.count / 30);
-                        // if (keyword) {
-                        //     this.originId = -2;
-                        //     this.endTime = undefined;
-                        //     this.pageNo = 1;
-                        //     this.searchPattern = undefined;
-                        //     this.startTime = undefined;
-                        //     this.state = -1;
-                        //     this.timeType = 1;
-                        //     $("#search").val('');
-                        // }
                     }
-                    this.flag = true;
                 });
-            },
-            handlePageChange(internalCurrentPage) {
-                this.pageNo = internalCurrentPage;
-                this.getData();
-            }
-        },
-        computed: {
-            collectClass: function () {
-                return {
-                    'report-collect': true,
-                    'report-collect-add': this.collectNum === 0,
-                    'report-collect-dis': this.collectNum === 1
-                }
             }
         }
     };

@@ -212,26 +212,13 @@
     import { DdDatepicker, DdDropdown, DdDropdownItem, DdSelect, DdOption } from 'dd-vue-component';
     import http from 'http';
     import util from 'util';
+    import { collect } from '../mixin/collect';
+    import { getStatType } from '../mixin/selectType';
     export default {
+        mixins: [ collect, getStatType ],
         data() {
             return {
                 date: '',
-                statTypeAll: [{
-                    id: 0,
-                    name: '入住类型',
-                    statType: 0
-                }, {
-                    id: 1,
-                    name: '房间类型',
-                    statType: 1
-                }, {
-                    id: 2,
-                    name: '客源渠道',
-                    statType: 2
-                }],
-                collectNum: 0,
-                collectName: '加入收藏',
-                statType: 0,
                 showTypeAll: [],
                 dayStat: [],
                 monStat: []
@@ -240,17 +227,10 @@
         created() {
             const prevDate = this.prevDate(new Date());
             this.date = util.dateFormat(prevDate);
-            this.getData();
-            this.getCollectStatus();
+            this.collectStat();
         },
         watch: {
             date() {
-                this.getData();
-            },
-            statType() {
-                this.getData();
-            },
-            pageNo() {
                 this.getData();
             }
         },
@@ -261,28 +241,26 @@
             DdSelect,
             DdOption
         },
-        beforeRouteEnter(to, from, next) {
-            next(() => {
-                $('.date-select-container').hide();
-            });
-        },
-        beforeRouteLeave(to, from, next) {
-            $('.date-select-container').show();
-            next();
+        beforeRouteEnter (to, from, next) {
+            http.get('/stat/getCollection')
+                .then(res => {
+                    if(res.code === 1) {
+                        next(vm => {
+                            const collectList = res.data.list;
+                            for(let i=0;i<collectList.length;i++){
+                                if (collectList[i] === 19) {
+                                    vm.collectNum = 1;
+                                    vm.collectName = '已收藏';
+                                }
+                            }
+                        })
+                    }
+                })
         },
         methods: {
             prevDate(date) {
-                var d = date.getDate();
+                const d = date.getDate();
                 return new Date(date.setDate(d - 1));
-            },
-            disabledEndDate(startDate) {
-                if (util.isSameDay(new Date(startDate), new Date())) {
-                    const str1 = dateFormat(new Date());
-                    const arr1 = str1.split('-');
-                    return (date) => {
-                        return (date.valueOf() < (new Date(arr1[0], arr1[1] - 1, arr1[2] - 1)).valueOf());
-                    };
-                }
             },
             collectUrl(num) {
                 if (num === 0) {
@@ -312,20 +290,6 @@
                         }
                     });
                 }
-            },
-            getCollectStatus() {
-                http.get('/stat/getCollection')
-                    .then(res => {
-                        if(res.code === 1) {
-                            const collectList = res.data.list;
-                            for(let i=0;i<collectList.length;i++){
-                                if (collectList[i] === 19) {
-                                    this.collectNum = 1;
-                                    this.collectName = '已收藏';
-                                }
-                            }
-                        }
-                    })
             },
             exportUrl(type) {
                 const originParam = {
@@ -360,15 +324,6 @@
                         }
                     }
                 });
-            }
-        },
-        computed: {
-            collectClass: function () {
-                return {
-                    'report-collect': true,
-                    'report-collect-add': this.collectNum === 0,
-                    'report-collect-dis': this.collectNum === 1
-                }
             }
         }
     };

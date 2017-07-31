@@ -14,7 +14,7 @@
         <p class="report-title">
             菜品统计汇总表
         </p>
-        <div class="report-reportCenter-top">
+        <div class="report-select-top">
             <div class="date">日期 : <i>{{date.startDate}} ~ {{date.endDate}}</i></div>
             <div class="select-box">
                 <div style="margin-right:20px;width: 120px;" class="fr region" >
@@ -35,7 +35,7 @@
                     <th>餐厅名称</th>
                     <th>菜品种类</th>
                     <th>菜品名称</th>
-                    <th>总数</th>
+                    <th style="width:170px;">总数</th>
                     <th>售卖数量</th>
                     <th>赠送数量</th>
                 </tr>
@@ -62,68 +62,6 @@
     </div> 
 </template>
 <style lang="scss" scoped>
-    .report-dishesStat{
-        border:1px solid #ccc;
-        thead{
-            background: #99CCFF;
-        }
-        tr{
-            height: 24px;
-        }
-        td{
-            div{
-                height: 20px;
-                box-sizing:border-box;
-                border-bottom:1px solid #ccc;
-            }  
-        }
-        
-    }
-    .report-collect {
-        float: left;
-        margin-left:20px;
-        height: 24px;
-        width: 100px;
-        border-radius:2px;
-        text-align: center;
-        line-height:24px;
-        cursor:pointer;
-        font-family:MicrosoftYaHei;
-        font-size:14px;
-        color:#ffffff;
-        text-align:center;
-    }
-    .report-collect-add {
-        background:#178ce6;
-    }
-    .report-collect-dis {
-        background:#f39c30;
-    }
-    .report-reportCenter-title {
-        width: 100%;
-        line-height: 56px;
-        font-size: 1.5em;
-        color: #746D66;
-        text-align: center;
-        font-family: border;
-    }
-    .report-reportCenter-top {
-        width: 1200px;
-        height: 32px;
-        padding: 5px 0;
-        margin:0 auto;
-        .date {
-            float: left;
-            line-height: 25.44px;
-        }
-        .select-box {
-            float: left;
-            .fr {
-                float: left;
-                margin-left: 20px;
-            }
-        }
-    }
     .report-dishesStat-table{
         width: 1200px;
         margin:0 auto;
@@ -146,90 +84,60 @@
             border-bottom: 1px solid #ccc;
         }
     }
-    /*@media screen and (min-width:980px) {*/
-        /*.report-reportCenter-top {*/
-            /*margin: 20px 0 0 0;*/
-        /*}*/
-        /*.report-dishesStat-table {*/
-            /*margin:20px 0 0 0;*/
-        /*}*/
-    /*}*/
-    /*@media screen and (min-width:1260px) {*/
-        /*.report-reportCenter-top {*/
-            /*margin:20px auto 0;*/
-        /*}*/
-        /*.report-dishesStat-table {*/
-            /*margin:20px auto 0;*/
-        /*}*/
-    /*}*/
 </style>
 <script>
     import http from 'http';
     import { mapState } from 'vuex';
     import DateSelect from '../../../components/DateSelect.vue';
     import { DdDropdown, DdDropdownItem, DdSelect, DdOption, DdTable } from 'dd-vue-component';
+    import { getRestType, getDishType } from '../mixin/selectType';
+    import { collect } from '../mixin/collect';
+    import pagination from '../mixin/pagination';
     export default {
+        mixins: [ getRestType, getDishType, collect, pagination ],
         props: {
             startDate: String,
             endDate: String
         },
         data() {
             return {
-                restTypeAll: [{
-                    id: -1,
-                    name: '全部餐厅',
-                    restType: '-1~'
-                }],
-                restType: '-1~',
-                dishTypeAll: [{
-                    id: -1,
-                    name: '全部菜品分类'
-                }],
-                name: '全部菜品分类',
-                collectNum: 0,
-                collectName: '加入收藏',
-                pageNo: 1,
                 vips: []
             };
+        },
+        beforeRouteEnter (to, from, next) {
+            http.get('/stat/getCollection')
+                .then(res => {
+                    if(res.code === 1) {
+                        next(vm => {
+                            const collectList = res.data.list;
+                            for(let i=0;i<collectList.length;i++){
+                                if (collectList[i] === 502) {
+                                    vm.collectNum = 1;
+                                    vm.collectName = '已收藏';
+                                }
+                            }
+                        })
+                    }
+                })
         },
         created() {
             this.getRestType();
             this.getDishType();
             this.getData();
-            this.getCollectStatus();
+            this.collectStat();
         },
         watch: {
-            restType() {
-                this.getData();
-                this.dishTypeAll = [{
-                    id: -1,
-                    name: '全部菜品分类'
-                }];
-                this.name = '全部菜品分类';
-                this.getDishType();
-            },
-            name() {
-                this.getData();
-            },
             date() {
                 this.pageNo = 1;
                 this.getData();
             }
         },
         computed: {
-            ...mapState(['date']),
-            collectClass: function () {
-                return {
-                    'report-collect': true,
-                    'report-collect-add': this.collectNum === 0,
-                    'report-collect-dis': this.collectNum === 1
-                }
-            }
+            ...mapState(['date'])
         },
         components: {
             DdDropdown,
             DdDropdownItem,
-            DateSelect,
             DdSelect,
             DdOption,
             DdTable
@@ -264,54 +172,6 @@
                     });
                 }
             },
-            getCollectStatus() {
-                http.get('/stat/getCollection')
-                    .then(res => {
-                        if(res.code === 1) {
-                            const collectList = res.data.list;
-                            for(let i=0;i<collectList.length;i++){
-                                if (collectList[i] === 502) {
-                                    this.collectNum = 1;
-                                    this.collectName = '已收藏';
-                                }
-                            }
-                        }
-                    })
-            },
-            getRestType() {
-                http.get('/restaurant/listSimple')
-                .then(res => {
-                    if (res.code === 1) {
-                        const restList = res.data.list;
-                        restList.forEach(rest => {
-                            rest.id = rest.restId;
-                            rest.name = rest.restName;
-                            rest.restType = `-1~${rest.restId}`;
-                            this.restTypeAll.push(rest);
-                        });
-                    }
-                });
-            },
-            getDishType() {
-                const obj = {};
-                if (this.restType.split('~')[1]) {
-                    obj.restId = this.restType.split('~')[1];
-                }
-                http.get('/dish/getDishTypes',obj)
-                .then(res => {
-                    if (res.code === 1) {
-                        const dishType = res.data.list;
-                        const dict = {};
-                        dishType.forEach(dish => {
-                            dish.name = dish.dishType;
-                            if (!dict[dish.name]) {
-                                this.dishTypeAll.push(dish);
-                                dict[dish.name] = 1;
-                            }
-                        });
-                    }
-                });
-            },
             exportUrl(type) {
                 const obj = {
                     restId: this.restType.split('~')[1],
@@ -338,8 +198,6 @@
                 pa.params = JSON.parse(pa.params);
                 const params = http.paramsToString(pa);
                 return `${host}?${params}`;
-            },
-            collect() {
             },
             getData() {
                 const obj = {
