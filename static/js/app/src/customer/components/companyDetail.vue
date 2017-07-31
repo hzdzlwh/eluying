@@ -93,9 +93,6 @@ export default {
     },
     filters: {
         getdiscount: function(val) {
-            if (val.nodeType === 0) {
-                return '住宿';
-            }
             if (val.nodeType === 3) {
                 return '商超';
             }

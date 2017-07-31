@@ -56,7 +56,7 @@
 					},
 					{
 						title: '总订单金额',
-						dataIndex: 'allOrdersTotalPrice'
+						dataIndex: 'ordersTotalPrice'
 					}
 				],
 				dataSource: []
