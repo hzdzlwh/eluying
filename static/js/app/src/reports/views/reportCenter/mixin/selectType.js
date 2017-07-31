@@ -118,7 +118,7 @@ export const getOriginType = {
     methods: {
         getOrigin() {
             // 获取全部客户来源渠道
-            http.get('/user/getChannels', { type: 2, isAll: false })
+            http.get('/user/getChannels', { type: 2, isAll: true })
                 .then((res) => {
                 // 拼接originType 企业渠道：企业id~-5 会员-4～-4 自定义渠道 渠道id～渠道id
                     if (res.code === 1) {
