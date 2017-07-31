@@ -3,7 +3,7 @@
         <p class="report-title">
             AR结算汇总表
         </p>
-        <div class="top">
+        <div class="report-select-top">
             <div class="date">日期 : <i>{{date.startDate}} ~ {{date.endDate}}</i></div>
             <div :class="collectClass" @click="collectUrl(collectNum)" style="float:right;">
                 {{collectName}}
@@ -14,43 +14,6 @@
     </div>
 </template>
 <style lang="scss" scoped>
-    .title {
-    width: 100%;
-    line-height: 56px;
-    font-size: 1.5em;
-    color: #746D66;
-    text-align: center;
-    font-family: border;
-  }
-  .top {
-    width: 100%;
-    height: 32px;
-    padding: 5px 0;
-    .date {
-      float: left;
-      line-height: 25.44px;
-    }
-  }
-    .report-collect {
-        float: left;
-        margin-left:20px;
-        height: 24px;
-        width: 100px;
-        border-radius:2px;
-        text-align: center;
-        line-height:24px;
-        cursor:pointer;
-        font-family:MicrosoftYaHei;
-        font-size:14px;
-        color:#ffffff;
-        text-align:center;
-    }
-    .report-collect-add {
-        background:#178ce6;
-    }
-    .report-collect-dis {
-        background:#f39c30;
-    }
 </style>
 <script>
     import { DdTable, DdPagination } from 'dd-vue-component';
