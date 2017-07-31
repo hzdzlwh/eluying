@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-19 09:56:55
 * @Last Modified by:   linxinjian
-* @Last Modified time: 2017-07-29 11:28:17
+* @Last Modified time: 2017-07-31 10:16:54
 * @email: 783384903@qq.com
 */
 <!-- 有问题找产品，这个模块的功能一般人解释不清楚 -->
@@ -831,17 +831,17 @@ export default {
                     res.data.company && res.data.company.forEach(element => {
                         // element.max = element.ableFee;
                         element.max = Math.abs(element.ableFee - element.paidFee).toFixed(2);
-                        element.ableFee = Math.abs(element.ableFee - element.paidFee);
+                        element.ableFee = Math.abs(element.ableFee - element.paidFee).toFixed(2);
                     });
                     res.data.member && res.data.member.forEach(element => {
                         // element.max = element.ableFee;
                         element.max = Math.abs(element.ableFee - element.paidFee).toFixed(2);
-                        element.ableFee = Math.abs(element.ableFee - element.paidFee);
+                        element.ableFee = Math.abs(element.ableFee - element.paidFee).toFixed(2);
                     });
                     res.data.card && res.data.card.forEach(element => {
                         // element.max = element.ableFee;
                         element.max = Math.abs(element.ableFee - element.paidFee).toFixed(2);
-                        element.ableFee = Math.abs(element.ableFee - element.paidFee);
+                        element.ableFee = Math.abs(element.ableFee - element.paidFee).toFixed(2);
                         element.cards.forEach(el => {
                             if (!cardHash[el.accountId]) {
                                 if (element.type === 2 && el.paidFee) {
