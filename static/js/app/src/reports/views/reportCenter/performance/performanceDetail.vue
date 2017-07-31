@@ -348,4 +348,19 @@ export default {
 	    justify-content: space-between;
 	    align-items: center;
 	}
+    .btn-container{
+        display: flex;
+        justify-content: flex-end;
+        .export{
+            margin-right: 20px;
+        }
+    }
+    .content{
+        margin-top: 20px;
+        h4{
+            text-align: center;
+            font-size: 24px;
+            color: #178ce6;
+        }
+    }
 </style>
