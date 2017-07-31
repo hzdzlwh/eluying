@@ -81,8 +81,26 @@
             width: 1200px;
         }
     }
-</style>
-<style lang='scss' scoped>
+    .report-collect {
+        float: left;
+        margin-left:20px;
+        height: 24px;
+        width: 100px;
+        border-radius:2px;
+        text-align: center;
+        line-height:24px;
+        cursor: pointer;
+        font-family:MicrosoftYaHei;
+        font-size:14px;
+        color:#ffffff;
+        text-align:center;
+    }
+    .report-collect-add {
+        background:#178ce6;
+    }
+    .report-collect-dis {
+        background:#f39c30;
+    }
     .report-select-top {
         width: 100%;
         height: 32px;
@@ -102,27 +120,9 @@
             float: left;
             margin-left:20px;
         }
-        .report-collect {
-            float: left;
-            margin-left:20px;
-            height: 24px;
-            width: 100px;
-            border-radius:2px;
-            text-align: center;
-            line-height:24px;
-            cursor: pointer;
-            font-family:MicrosoftYaHei;
-            font-size:14px;
-            color:#ffffff;
-            text-align:center;
-        }
-        .report-collect-add {
-            background:#178ce6;
-        }
-        .report-collect-dis {
-            background:#f39c30;
-        }
     }
+</style>
+<style lang='scss' scoped>
 </style>
 <script>
     import { DdTable, DdPagination, DdDropdown, DdDropdownItem, DdSelect, DdOption, DdGroupOption } from 'dd-vue-component';

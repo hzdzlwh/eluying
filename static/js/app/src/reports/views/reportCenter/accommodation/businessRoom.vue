@@ -227,7 +227,6 @@
         created() {
             const prevDate = this.prevDate(new Date());
             this.date = util.dateFormat(prevDate);
-            this.getData();
             this.collectStat();
         },
         watch: {

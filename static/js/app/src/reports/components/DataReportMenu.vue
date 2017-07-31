@@ -10,7 +10,7 @@
       position:fixed;
       width:100%;
       height:50px;
-      z-index:1500;
+      z-index:1070;
       background:#fbfbfb;
       display:flex;
       justify-content:center;
