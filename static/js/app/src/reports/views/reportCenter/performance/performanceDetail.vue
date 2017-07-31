@@ -106,43 +106,43 @@ export default {
 			columns: [
 				{
 					title: '订单号',
-					dataIndex: ''
+					dataIndex: 'serialNum'
 				},
 				{
 					title: '创建时间',
-					dataIndex: ''
+					dataIndex: 'creationTime'
 				},
 				{
 					title: '销售员',
-					dataIndex: ''
+					dataIndex: 'name'
 				},
 				{
 					title: '销售员手机号',
-					dataIndex: ''
+					dataIndex: 'phone'
 				},
 				{
 					title: '订单类型',
-					dataIndex: ''
+					dataIndex: 'orderType'
 				},
 				{
 					title: '订单金额',
-					dataIndex: ''
+					dataIndex: 'orderPrice'
 				},
 				{
 					title: '客户姓名',
-					dataIndex: ''
+					dataIndex: 'customerName'
 				},
 				{
 					title: '手机号',
-					dataIndex: ''
+					dataIndex: 'customerPhone'
 				},
 				{
 					title: '客源渠道',
-					dataIndex: ''
+					dataIndex: 'origin'
 				},
 				{
 					title: '创建人',
-					dataIndex: ''
+					dataIndex: 'operator'
 				}
 			],
 			dataSource: []
