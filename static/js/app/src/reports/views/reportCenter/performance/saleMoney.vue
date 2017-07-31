@@ -128,7 +128,7 @@
 				}
 			},
 			getCollectStatus() {
-	            http.get('/stat/getCollection')
+	            /* http.get('/stat/getCollection')
 	            .then(res => {
 	                if(res.code === 1) {
 	                	res.data.list.map(item => {
@@ -137,7 +137,10 @@
 	                		}
 	                	});
 	                }
-	            });
+	            }); */
+	            if (/^\/reportCenter\/collect/.test(this.$route.path)) {
+	            	this.collectState = true;
+	            }
 	        },
 			getSaleMoney() {
 				http.get('/stat/getSaleAmountStat4Salers', { endDate: this.date.endDate, startDate: this.date.startDate }).then(res => {
@@ -151,7 +154,20 @@
 			date(newValue) {
 				this.getSaleMoney();
 			}
-		}
+		},
+		beforeRouteEnter(to, from, next) {
+	        http.get('/stat/getCollection').then(res => {
+	            if (res.code === 1) {
+	                next(vm => {
+	                    res.data.list.map(item => {
+	                		if (item === 601) {
+	                			vm.collectState = true;
+	                		}
+	                	});
+	                })
+	            }
+	        });
+	    }
 	}	
 </script>
 

@@ -179,7 +179,7 @@ export default {
 			});
 		},
 		getCollectStatus() {
-            http.get('/stat/getCollection')
+            /* http.get('/stat/getCollection')
             .then(res => {
                 if(res.code === 1) {
                 	res.data.list.map(item => {
@@ -188,7 +188,10 @@ export default {
                 		}
                 	});
                 }
-            });
+            }); */
+            if (/^\/reportCenter\/collect/.test(this.$route.path)) {
+            	this.collectState = true;
+            }
         }
 	},
 	watch: {
@@ -196,7 +199,20 @@ export default {
 			this.getVipCardSalesman();
 			this.getVipCardType();
 		}
-	}
+	},
+	beforeRouteEnter(to, from, next) {
+        http.get('/stat/getCollection').then(res => {
+            if (res.code === 1) {
+                next(vm => {
+                    res.data.list.map(item => {
+                		if (item === 306) {
+                			vm.collectState = true;
+                		}
+                	});
+                })
+            }
+        });
+    }
 }	
 </script>
 
