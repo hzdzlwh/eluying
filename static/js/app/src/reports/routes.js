@@ -1,4 +1,4 @@
- /**
+/**
  * Created by lingchenxuan on 2017/1/9.
  */
 import Router from 'vue-router';
@@ -54,7 +54,7 @@ import reportDaily from './views/reportCenter/manage/dailyReport.vue';
 // import reportBazaar from './views/reportCenter/bazaar/bazaar.vue';
 import reportMember from './views/reportCenter/member/member.vue';
 import saleCollect from './views/reportCenter/member/saleCollect.vue';
-import saleDetail from './views/reportCenter/member/saleDetail.vue'
+import saleDetail from './views/reportCenter/member/saleDetail.vue';
 import collect from './views/reportCenter/collect/collect.vue';
 import noCollect from './views/reportCenter/collect/noCollect.vue';
 import performance from './views/reportCenter/performance/performance.vue';
@@ -113,19 +113,19 @@ export const routes = [
                         }
                         // redirect: '/dataCenter/overview/operation/operation',
                         // children: [
-                            // {
-                                // path: '/dataCenter/overview/operation/operation',
-                                // meta: {
-                                //     name: '统计'
-                                // }
-                            // }
-                            // {
-                            //     path: '/dataCenter/overview/operation/dailyReport',
-                            //     component: dailyReport,
-                            //     meta: {
-                            //         name: '日报'
-                            //     }
-                            // }
+                        // {
+                        // path: '/dataCenter/overview/operation/operation',
+                        // meta: {
+                        //     name: '统计'
+                        // }
+                        // }
+                        // {
+                        //     path: '/dataCenter/overview/operation/dailyReport',
+                        //     component: dailyReport,
+                        //     meta: {
+                        //         name: '日报'
+                        //     }
+                        // }
                         // ]
                     },
                     {
