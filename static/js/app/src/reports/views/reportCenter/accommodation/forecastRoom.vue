@@ -144,7 +144,7 @@
     import { collect } from '../mixin/collect';
     import pagination from '../mixin/pagination';
     export default {
-        mixins: [ collect, pagination ],
+        mixins: [collect, pagination],
         data() {
             return {
                 vips: [],
@@ -158,21 +158,21 @@
             DdDatepicker,
             DdPagination
         },
-        beforeRouteEnter (to, from, next) {
+        beforeRouteEnter(to, from, next) {
             http.get('/stat/getCollection')
                 .then(res => {
-                    if(res.code === 1) {
+                    if (res.code === 1) {
                         next(vm => {
                             const collectList = res.data.list;
-                            for(let i=0;i<collectList.length;i++){
+                            for (let i = 0; i < collectList.length; i ++) {
                                 if (collectList[i] === 304) {
                                     vm.collectNum = 1;
                                     vm.collectName = '已收藏';
                                 }
                             }
-                        })
+                        });
                     }
-                })
+                });
         },
         created() {
             const startTime = new Date();
@@ -194,12 +194,12 @@
         methods: {
             collectUrl(num) {
                 if (num === 0) {
-                    http.get('/stat/addToCollect',{statValue: 304}).then(res => {
+                    http.get('/stat/addToCollect', { statValue: 304 }).then(res => {
                         this.collectNum = 1;
                         this.collectName = '已收藏';
                     });
                 } else if (num === 1) {
-                    http.get('/stat/removeFromCollection',{statValue: 304}).then(res => {
+                    http.get('/stat/removeFromCollection', { statValue: 304 }).then(res => {
                         this.collectNum = 0;
                         this.collectName = '加入收藏';
                         let removeIndex = null;
@@ -208,7 +208,7 @@
                                 removeIndex = index;
                             }
                         });
-                        this.$router.options.routes[2].children[0].children.splice(removeIndex , 1);
+                        this.$router.options.routes[2].children[0].children.splice(removeIndex, 1);
                         if (this.$router.options.routes[2].children[0].children.length > 1) {
                             if (this.$route.params.id) {
                                 this.$router.push('/reportCenter/collect/' + this.$router.options.routes[2].children[0].children[1].meta.id);
@@ -247,7 +247,7 @@
                 if (this.type !== -1) {
                     obj.type = this.type;
                 };
-                 // 后台要求如果为空就不传
+                // 后台要求如果为空就不传
                 for (const ob in obj) {
                     if (obj[ob] === undefined || obj[ob] === '') {
                         delete obj[ob];
