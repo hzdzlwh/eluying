@@ -39,112 +39,111 @@
 </template>
 
 <script>
-import { DdTable, DdPagination, DdDropdown, DdDropdownItem, DdSelect, DdOption, DdGroupOption } from 'dd-vue-component';
+import { DdTable, DdPagination, DdDropdown, DdDropdownItem, DdSelect, DdOption } from 'dd-vue-component';
 import CollectButton from '../../../components/CollectButton';
 import { mapState } from 'vuex';
 import http from 'http';
 export default {
-	data() {
-		return {
-			collectState: false,
-			pages: 0,
-			pageNo: 1,
-			cardType: -1,
-			cardTypes: [],
-			salerId: -1,
-			salers: [],
-			recordNum: undefined,
-			cardPriceTotal: undefined,
-			firstChargeFeeTotal: undefined,
-			firstChargeFreeFeeTotal: undefined,
-			saleFeeTotal: undefined,
-			columns: [
-				{
-					title: '办卡时间',
-					dataIndex: 'creationTime',
-					width: 160
-				},
-				{
-					title: '卡号',
-					dataIndex: 'cardNo'
-				},
-				{
-					title: '会员卡类型',
-					dataIndex: 'cardType'
-				},
-				{
-					title: '姓名',
-					dataIndex: 'userName'
-				},
-				{
-					title: '手机号',
-					dataIndex: 'userPhone'
-				},
-				{
-					title: '卡费金额',
-					dataIndex: 'cardFee'
-				},
-				{
-					title: '首冲金额',
-					dataIndex: 'firstChargeFee'
-				},
-				{
-					title: '首冲赠送金额',
-					dataIndex: 'firstChargeFreeFee'
-				},
-				{
-					title: '销售员',
-					dataIndex: 'salerName'
-				},
-				{
-					title: '销售员手机号',
-					dataIndex: 'salerPhone'
-				},
-				{
-					title: '销售价格',
-					dataIndex: 'salePrice'
-				},
-				{
-					title: '收款方式',
-					dataIndex: 'chargeChannel'
-				},
-				{
-					title: '收银员',
-					dataIndex: 'operator'
-				}
-			],
-			dataSource: []
-		}
-	},
-	components: {
-		CollectButton,
-		DdDropdown,
-		DdDropdownItem,
-		DdTable,
-		DdSelect,
-		DdOption,
-		DdPagination
-	},
-	computed: {
-		...mapState(['date'])
-	},
-	created() {
-		this.getCollectStatus();
-		this.getVipCardSaleDetail();
-		this.getVipCardSetting();
-		this.getEmployeeList();
-	},
-	methods: {
-		exportUrl(type) {
-			const obj = {
+    data() {
+        return {
+            collectState: false,
+            pages: 0,
+            pageNo: 1,
+            cardType: -1,
+            cardTypes: [],
+            salerId: -1,
+            salers: [],
+            recordNum: undefined,
+            cardPriceTotal: undefined,
+            firstChargeFeeTotal: undefined,
+            firstChargeFreeFeeTotal: undefined,
+            saleFeeTotal: undefined,
+            columns: [
+                {
+                    title: '办卡时间',
+                    dataIndex: 'creationTime'
+                },
+                {
+                    title: '卡号',
+                    dataIndex: 'cardNo'
+                },
+                {
+                    title: '会员卡类型',
+                    dataIndex: 'cardType'
+                },
+                {
+                    title: '姓名',
+                    dataIndex: 'userName'
+                },
+                {
+                    title: '手机号',
+                    dataIndex: 'userPhone'
+                },
+                {
+                    title: '卡费金额',
+                    dataIndex: 'cardFee'
+                },
+                {
+                    title: '首冲金额',
+                    dataIndex: 'firstChargeFee'
+                },
+                {
+                    title: '首冲赠送金额',
+                    dataIndex: 'firstChargeFreeFee'
+                },
+                {
+                    title: '销售员',
+                    dataIndex: 'salerName'
+                },
+                {
+                    title: '销售员手机号',
+                    dataIndex: 'salerPhone'
+                },
+                {
+                    title: '销售价格',
+                    dataIndex: 'salePrice'
+                },
+                {
+                    title: '收款方式',
+                    dataIndex: 'chargeChannel'
+                },
+                {
+                    title: '收银员',
+                    dataIndex: 'operator'
+                }
+            ],
+            dataSource: []
+        };
+    },
+    components: {
+        CollectButton,
+        DdDropdown,
+        DdDropdownItem,
+        DdTable,
+        DdSelect,
+        DdOption,
+        DdPagination
+    },
+    computed: {
+        ...mapState(['date'])
+    },
+    created() {
+        this.getCollectStatus();
+        this.getVipCardSaleDetail();
+        this.getVipCardSetting();
+        this.getEmployeeList();
+    },
+    methods: {
+        exportUrl(type) {
+            const obj = {
                 cardType: this.cardType,
-				pageNo: this.pageNo,
-				pageSize: 30,
-				salerId: this.salerId,
-				startDate: this.date.startDate,
-				toDate: this.date.endDate
+                pageNo: this.pageNo,
+                pageSize: 30,
+                salerId: this.salerId,
+                startDate: this.date.startDate,
+                toDate: this.date.endDate
             };
-             // 后台要求如果为空就不传
+            // 后台要求如果为空就不传
             for (const ob in obj) {
                 if (obj[ob] === undefined || obj[ob] === '') {
                     delete obj[ob];
@@ -160,17 +159,17 @@ export default {
             pa.params = JSON.parse(pa.params);
             const params = http.paramsToString(pa);
             return `${host}?${params}`;
-		},
-		toggleCollect() {
-			if (this.collectState) {
-				http.get('/stat/removeFromCollection',{ statValue: 308 }).then(res => {
+        },
+        toggleCollect() {
+            if (this.collectState) {
+                http.get('/stat/removeFromCollection', { statValue: 308 }).then(res => {
                     let removeIndex = null;
                     this.$router.options.routes[2].children[0].children.map((item, index) => {
                         if (item.meta.id === 308) {
                             removeIndex = index;
                         }
                     });
-                    this.$router.options.routes[2].children[0].children.splice(removeIndex , 1);
+                    this.$router.options.routes[2].children[0].children.splice(removeIndex, 1);
                     if (this.$router.options.routes[2].children[0].children.length > 1) {
                         if (this.$route.params.id) {
                             this.$router.push('/reportCenter/collect/' + this.$router.options.routes[2].children[0].children[1].meta.id);
@@ -182,15 +181,15 @@ export default {
                     }
                     this.collectState = !this.collectState;
                 });
-			} else {
-				http.get('/stat/addToCollect',{ statValue: 308 }).then(res => {
-					if (res.code === 1) {
-						this.collectState = !this.collectState;
-					}
+            } else {
+                http.get('/stat/addToCollect', { statValue: 308 }).then(res => {
+                    if (res.code === 1) {
+                        this.collectState = !this.collectState;
+                    }
                 });
-			}
-		},
-		getCollectStatus() {
+            }
+        },
+        getCollectStatus() {
             /* http.get('/stat/getCollection')
             .then(res => {
                 if(res.code === 1) {
@@ -202,79 +201,79 @@ export default {
                 }
             }); */
             if (/^\/reportCenter\/collect/.test(this.$route.path)) {
-            	this.collectState = true;
+                this.collectState = true;
             }
         },
-		getVipCardSaleDetail(page) {
-			this.pageNo = page || this.pageNo;
-			http.get('/stat/getVipCardSaleDetailStat', {
-				cardType: this.cardType,
-				pageNo: this.pageNo,
-				pageSize: 30,
-				salerId: this.salerId,
-				startDate: this.date.startDate,
-				toDate: this.date.endDate
-			}).then((res) => {
-				if (res.code === 1) {
-					this.dataSource = res.data.entityList;
-					this.recordNum = res.data.total;
-					this.cardPriceTotal = res.data.cardPriceTotal;
-					this.firstChargeFeeTotal = res.data.firstChargeFeeTotal;
-					this.firstChargeFreeFeeTotal = res.data.firstChargeFreeFeeTotal;
-					this.saleFeeTotal = res.data.saleFeeTotal;
-					this.pages = Math.ceil(res.data.total / 30);
-				}
-			});
-		},
-		getVipCardSetting() {
-			http.get('/vipCard/getVipCardSettings', {}).then(res => {
-				if (res.code === 1) {
-					this.cardTypes = res.data.list.map(item => {
-						return { id: item.categoryId, name: item.name };
-					});
-					this.cardTypes.unshift({ id: -1, name: '全部会员卡类型' });
-				}
-			});
-		},
-		getEmployeeList() {
-			http.get('/user/getEmployeeList', { salerType: 2 }).then(res => {
-				if (res.code === 1) {
-					this.salers = res.data.list.map(item => {
-						return { id: item.employeeId, name: item.realName };
-					});
-					this.salers.unshift({ id: -1, name: '全部销售员' });
-				}
-			});
-		}
-	},
-	watch: {
-		cardType(newValue) {
-			this.pageNo = 1;
-			this.getVipCardSaleDetail();
-		},
-		salerId(newValue) {
-			this.pageNo = 1;
-			this.getVipCardSaleDetail();
-		},
-		date(newValue) {
-			this.pageNo = 1;
-			this.getVipCardSaleDetail();
-		}
-	},
-	beforeRouteEnter(to, from, next) {
+        getVipCardSaleDetail(page) {
+            this.pageNo = page || this.pageNo;
+            http.get('/stat/getVipCardSaleDetailStat', {
+                cardType: this.cardType,
+                pageNo: this.pageNo,
+                pageSize: 30,
+                salerId: this.salerId,
+                startDate: this.date.startDate,
+                toDate: this.date.endDate
+            }).then((res) => {
+                if (res.code === 1) {
+                    this.dataSource = res.data.entityList;
+                    this.recordNum = res.data.total;
+                    this.cardPriceTotal = res.data.cardPriceTotal;
+                    this.firstChargeFeeTotal = res.data.firstChargeFeeTotal;
+                    this.firstChargeFreeFeeTotal = res.data.firstChargeFreeFeeTotal;
+                    this.saleFeeTotal = res.data.saleFeeTotal;
+                    this.pages = Math.ceil(res.data.total / 30);
+                }
+            });
+        },
+        getVipCardSetting() {
+            http.get('/vipCard/getVipCardSettings', {}).then(res => {
+                if (res.code === 1) {
+                    this.cardTypes = res.data.list.map(item => {
+                        return { id: item.categoryId, name: item.name };
+                    });
+                    this.cardTypes.unshift({ id: -1, name: '全部会员卡类型' });
+                }
+            });
+        },
+        getEmployeeList() {
+            http.get('/user/getEmployeeList', { salerType: 2 }).then(res => {
+                if (res.code === 1) {
+                    this.salers = res.data.list.map(item => {
+                        return { id: item.employeeId, name: item.realName };
+                    });
+                    this.salers.unshift({ id: -1, name: '全部销售员' });
+                }
+            });
+        }
+    },
+    watch: {
+        cardType(newValue) {
+            this.pageNo = 1;
+            this.getVipCardSaleDetail();
+        },
+        salerId(newValue) {
+            this.pageNo = 1;
+            this.getVipCardSaleDetail();
+        },
+        date(newValue) {
+            this.pageNo = 1;
+            this.getVipCardSaleDetail();
+        }
+    },
+    beforeRouteEnter(to, from, next) {
         http.get('/stat/getCollection').then(res => {
             if (res.code === 1) {
                 next(vm => {
                     res.data.list.map(item => {
-                		if (item === 308) {
-                			vm.collectState = true;
-                		}
-                	});
-                })
+                        if (item === 308) {
+                            vm.collectState = true;
+                        }
+                    });
+                });
             }
         });
     }
-}	
+};
 </script>
 
 <style lang="scss" scoped>

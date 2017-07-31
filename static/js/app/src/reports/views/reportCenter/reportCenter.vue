@@ -66,7 +66,7 @@
         data() {
             return {
                 dataSelect: undefined
-            }
+            };
         },
         components: {
             LeftMenu,
@@ -85,7 +85,7 @@
             getDataSelect() {
                 const reg = /^\/reportCenter\/collect/;
                 if (reg.test(this.$route.path)) {
-                    for (let i=0;i<collectDateList.length;i++) {
+                    for (let i = 0; i < collectDateList.length; i ++) {
                         if (collectDateList[i].reportType === this.$route.params.id) {
                             this.dataSelect = true;
                             return;
@@ -94,7 +94,7 @@
                         }
                     }
                 } else {
-                    for (let i=0;i<list.length;i++) {
+                    for (let i = 0; i < list.length; i ++) {
                         if (list[i].name === this.$route.meta.name) {
                             this.dataSelect = true;
                             return;

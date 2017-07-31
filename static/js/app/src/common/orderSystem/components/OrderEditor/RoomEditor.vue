@@ -531,6 +531,7 @@ export default {
                         .filter(room => this.checkState !== 'checkIn' ||
                             (room.state === 0 && (util.isSameDay(new Date(room.startDate), new Date()) || new Date(room.startDate) <= new Date())));
                 this.rooms = filterRooms.map(item => {
+                    const startDate = new Date();
                     return {
                             // ...item,
                         categoryType: item.typeId,
@@ -541,7 +542,7 @@ export default {
                         room: {
                             roomId: item.roomId || 0,
                             startDate: this.checkState === 'checkIn' ? new Date() : new Date(item.startDate),
-                            endDate: (item.checkType === 1 && this.checkState === 'checkIn') ? new Date(new Date().getTime() + item.checkInLength * 60 * 60 * 1000) : new Date(item.endDate)
+                            endDate: (item.checkType === 1 && this.checkState === 'checkIn') ? new Date(new Date().getTime() + item.checkInLength * 60 * 60 * 1000) : ((new Date(item.endDate) < new Date() && this.checkState === 'checkIn') ? new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() + 1, 12, 0, 0) : new Date(item.endDate))
                         },
                         idCardList: item.idCardList,
                         datePriceList: item.datePriceList.map(dat => {
@@ -580,6 +581,7 @@ export default {
                 const roomInfo = order.roomInfo;
                 const RoomEndDate = new Date(roomInfo.checkOutDate);
                 const RoomStartDate = new Date(roomInfo.checkInDate);
+                const now = new Date();
                 const room = {
                         // ...roomInfo,
                     categoryType: roomInfo.subTypeId,
@@ -590,7 +592,7 @@ export default {
                     room: {
                         roomId: roomInfo.roomId || 0,
                         startDate: this.checkState === 'checkIn' ? new Date() : new Date(roomInfo.checkInDate),
-                        endDate: order.timeRoomTransform ? new Date(RoomStartDate.getFullYear(), RoomStartDate.getMonth(), RoomStartDate.getDate() + 1, 12, 0, 0) : (order.timeRoomAuto ? new Date(RoomEndDate.getFullYear(), RoomEndDate.getMonth(), RoomEndDate.getDate(), 12, 0, 0) : (roomInfo.checkType === 1 && this.checkState === 'checkIn') ? new Date(new Date().getTime() + roomInfo.checkInLength * 60 * 60 * 1000) : new Date(roomInfo.checkOutDate))
+                        endDate: (order.timeRoomTransform || (RoomEndDate < now && this.checkState === 'checkIn' && roomInfo.checkType !== 1)) ? new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 12, 0, 0) : (order.timeRoomAuto ? new Date(RoomEndDate.getFullYear(), RoomEndDate.getMonth(), RoomEndDate.getDate(), 12, 0, 0) : (roomInfo.checkType === 1 && this.checkState === 'checkIn') ? new Date(new Date().getTime() + roomInfo.checkInLength * 60 * 60 * 1000) : new Date(roomInfo.checkOutDate))
                     },
                     idCardList: order.idCardsList,
                     datePriceList: order.datePriceList.map(dat => {

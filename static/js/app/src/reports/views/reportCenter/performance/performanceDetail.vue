@@ -178,7 +178,7 @@ export default {
                 salerId: this.salerId,
                 startDate: this.date.startDate
             };
-             // 后台要求如果为空就不传
+            // 后台要求如果为空就不传
             for (const ob in obj) {
                 if (obj[ob] === undefined || obj[ob] === '') {
                     delete obj[ob];
@@ -236,93 +236,93 @@ export default {
                 }
             }); */
             if (/^\/reportCenter\/collect/.test(this.$route.path)) {
-            	this.collectState = true;
+                this.collectState = true;
             }
         },
-		getSalePerformance(page) {
-			this.pageNo = page || this.pageNo;
-			http.get('/stat/getSalesPerformanceStat4Salers', { 
-				endDate: this.date.endDate,
-				orderType: this.orderType === -1 ? '' : this.orderType,
-				originId: this.userOriginType.split('~')[1],
-				pageNo: this.pageNo,
-				salerId: this.salerId === -1 ? '' : this.salerId,
-				startDate: this.date.startDate
-			 }).then(res => {
-			 	if (res.code === 1) {
-			 		this.dataSource = res.data.list;
-			 		this.totalPrice = res.data.totalPrice;
-			 		this.count = res.data.count;
-			 		this.pages = Math.ceil(res.data.count / 30);
-			 	}
-			 });
-		},
-		getEmployeeList() {
-			http.get('/user/getEmployeeList', { salerType: 2 }).then(res => {
-				if (res.code === 1) {
-					this.salers = res.data.list.map(item => {
-						return { id: item.employeeId, name: item.realName };
-					});
-					this.salers.unshift({ id: -1, name: '全部销售员' });
-				}
-			});
-		},
-		getOrigin() {
-        // 获取全部客户来源渠道
-            http.get('/user/getChannels', { type: 2, isAll: false })
-            .then((res) => {
-                // 拼接originType 企业渠道：企业id~-5 会员-4～-4 自定义渠道 渠道id～渠道id
+        getSalePerformance(page) {
+            this.pageNo = page || this.pageNo;
+            http.get('/stat/getSalesPerformanceStat4Salers', {
+                endDate: this.date.endDate,
+                orderType: this.orderType === -1 ? '' : this.orderType,
+                originId: this.userOriginType.split('~')[1],
+                pageNo: this.pageNo,
+                salerId: this.salerId === -1 ? '' : this.salerId,
+                startDate: this.date.startDate
+            }).then(res => {
                 if (res.code === 1) {
-                    const originsList = res.data.list;
-                    const otherOrigins = [];
-                    originsList.forEach(origin => {
-                        if (origin.id < 0) {
-                            origin.originType = `${origin.id}~${origin.id}`;
-                            this.userSelfOrigins.push(origin);
-                        } else if (origin.id > 0) {
-                            origin.originType = `${origin.id}~${origin.id}`;
-                            origin.info = origin.name;
-                            otherOrigins.push(origin);
-                        }
-                    });
-                    this.userGroupOrigins.push({ label: '其他', origins: otherOrigins });
-                    // this.userOriginType = this.userSelfOrigins[0].originType;
+                    this.dataSource = res.data.list;
+                    this.totalPrice = res.data.totalPrice;
+                    this.count = res.data.count;
+                    this.pages = Math.ceil(res.data.count / 30);
                 }
             });
         },
-	},
-	watch: {
-		salerId(newValue) {
-			this.pageNo = 1;
-			this.getSalePerformance();
-		},
-		orderType(newValue) {
-			this.pageNo = 1;
-			this.getSalePerformance();
-		},
-		userOriginType(newValue) {
-			this.pageNo = 1;
-			this.getSalePerformance();
-		},
-		date(newValue) {
-			this.pageNo = 1;
-			this.getSalePerformance();
-		}
-	},
-	beforeRouteEnter(to, from, next) {
+        getEmployeeList() {
+            http.get('/user/getEmployeeList', { salerType: 2 }).then(res => {
+                if (res.code === 1) {
+                    this.salers = res.data.list.map(item => {
+                        return { id: item.employeeId, name: item.realName };
+                    });
+                    this.salers.unshift({ id: -1, name: '全部销售员' });
+                }
+            });
+        },
+        getOrigin() {
+        // 获取全部客户来源渠道
+            http.get('/user/getChannels', { type: 2, isAll: false })
+                .then((res) => {
+                // 拼接originType 企业渠道：企业id~-5 会员-4～-4 自定义渠道 渠道id～渠道id
+                    if (res.code === 1) {
+                        const originsList = res.data.list;
+                        const otherOrigins = [];
+                        originsList.forEach(origin => {
+                            if (origin.id < 0) {
+                                origin.originType = `${origin.id}~${origin.id}`;
+                                this.userSelfOrigins.push(origin);
+                            } else if (origin.id > 0) {
+                                origin.originType = `${origin.id}~${origin.id}`;
+                                origin.info = origin.name;
+                                otherOrigins.push(origin);
+                            }
+                        });
+                        this.userGroupOrigins.push({ label: '其他', origins: otherOrigins });
+                    // this.userOriginType = this.userSelfOrigins[0].originType;
+                    }
+                });
+        }
+    },
+    watch: {
+        salerId(newValue) {
+            this.pageNo = 1;
+            this.getSalePerformance();
+        },
+        orderType(newValue) {
+            this.pageNo = 1;
+            this.getSalePerformance();
+        },
+        userOriginType(newValue) {
+            this.pageNo = 1;
+            this.getSalePerformance();
+        },
+        date(newValue) {
+            this.pageNo = 1;
+            this.getSalePerformance();
+        }
+    },
+    beforeRouteEnter(to, from, next) {
         http.get('/stat/getCollection').then(res => {
             if (res.code === 1) {
                 next(vm => {
                     res.data.list.map(item => {
-                		if (item === 603) {
-                			vm.collectState = true;
-                		}
-                	});
-                })
+                        if (item === 603) {
+                            vm.collectState = true;
+                        }
+                    });
+                });
             }
         });
     }
-}	
+};
 </script>
 
 <style lang="scss" scoped>
