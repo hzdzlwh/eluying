@@ -43,82 +43,82 @@ import CollectButton from '../../../components/CollectButton';
 import { mapState } from 'vuex';
 import http from 'http';
 export default {
-	data() {
-		return {
-			collectState: false,
-			columnsSalesman: [
-				{
-					title: '销售员',
-					dataIndex: 'salerName'
-				},
-				{
-					title: '销售员手机号',
-					dataIndex: 'salerPhone'
-				},
-				{
-					title: '销售数量',
-					dataIndex: 'saleCount'
-				},
-				{
-					title: '卡费金额',
-					dataIndex: 'cardFee'
-				},
-				{
-					title: '首冲金额',
-					dataIndex: 'firstChargeFee'
-				},
-				{
-					title: '首冲赠送金额',
-					dataIndex: 'firstChargeFreeFee'
-				}
-			],
-			columnsVipcard: [
-				{
-					title: '会员卡类型',
-					dataIndex: 'cardType'
-				},
-				{
-					title: '销售数量',
-					dataIndex: 'saleCount'
-				},
-				{
-					title: '卡费金额',
-					dataIndex: 'cardFee'
-				},
-				{
-					title: '首冲金额',
-					dataIndex: 'firstChargeFee'
-				},
-				{
-					title: '首冲赠送金额',
-					dataIndex: 'firstChargeFreeFee'
-				}
-			],
-			dataSourceSalesman: [],
-			dataSourceVipcard: []
-		}
-	},
-	components: {
-		CollectButton,
-		DdDropdown,
-		DdDropdownItem,
-		DdTable
-	},
-	created() {
-		this.getVipCardSalesman();
-		this.getVipCardType();
-		this.getCollectStatus();
-	},
-	computed: {
-		...mapState(['date'])
-	},
-	methods: {
-		exportUrl(type) {
-			const obj = {
+    data() {
+        return {
+            collectState: false,
+            columnsSalesman: [
+                {
+                    title: '销售员',
+                    dataIndex: 'salerName'
+                },
+                {
+                    title: '销售员手机号',
+                    dataIndex: 'salerPhone'
+                },
+                {
+                    title: '销售数量',
+                    dataIndex: 'saleCount'
+                },
+                {
+                    title: '卡费金额',
+                    dataIndex: 'cardFee'
+                },
+                {
+                    title: '首冲金额',
+                    dataIndex: 'firstChargeFee'
+                },
+                {
+                    title: '首冲赠送金额',
+                    dataIndex: 'firstChargeFreeFee'
+                }
+            ],
+            columnsVipcard: [
+                {
+                    title: '会员卡类型',
+                    dataIndex: 'cardType'
+                },
+                {
+                    title: '销售数量',
+                    dataIndex: 'saleCount'
+                },
+                {
+                    title: '卡费金额',
+                    dataIndex: 'cardFee'
+                },
+                {
+                    title: '首冲金额',
+                    dataIndex: 'firstChargeFee'
+                },
+                {
+                    title: '首冲赠送金额',
+                    dataIndex: 'firstChargeFreeFee'
+                }
+            ],
+            dataSourceSalesman: [],
+            dataSourceVipcard: []
+        };
+    },
+    components: {
+        CollectButton,
+        DdDropdown,
+        DdDropdownItem,
+        DdTable
+    },
+    created() {
+        this.getVipCardSalesman();
+        this.getVipCardType();
+        this.getCollectStatus();
+    },
+    computed: {
+        ...mapState(['date'])
+    },
+    methods: {
+        exportUrl(type) {
+            const obj = {
                 startDate: this.date.startDate,
                 toDate: this.date.endDate
             };
-             // 后台要求如果为空就不传
+            // 后台要求如果为空就不传
             for (const ob in obj) {
                 if (obj[ob] === undefined || obj[ob] === '') {
                     delete obj[ob];
@@ -134,17 +134,17 @@ export default {
             pa.params = JSON.parse(pa.params);
             const params = http.paramsToString(pa);
             return `${host}?${params}`;
-		},
-		toggleCollect() {
-			if (this.collectState) {
-				http.get('/stat/removeFromCollection',{ statValue: 306 }).then(res => {
+        },
+        toggleCollect() {
+            if (this.collectState) {
+                http.get('/stat/removeFromCollection', { statValue: 306 }).then(res => {
                     let removeIndex = null;
                     this.$router.options.routes[2].children[0].children.map((item, index) => {
                         if (item.meta.id === 306) {
                             removeIndex = index;
                         }
                     });
-                    this.$router.options.routes[2].children[0].children.splice(removeIndex , 1);
+                    this.$router.options.routes[2].children[0].children.splice(removeIndex, 1);
                     if (this.$router.options.routes[2].children[0].children.length > 1) {
                         if (this.$route.params.id) {
                             this.$router.push('/reportCenter/collect/' + this.$router.options.routes[2].children[0].children[1].meta.id);
@@ -156,29 +156,29 @@ export default {
                     }
                     this.collectState = !this.collectState;
                 });
-			} else {
-				http.get('/stat/addToCollect',{ statValue: 306 }).then(res => {
-					if (res.code === 1) {
-						this.collectState = !this.collectState;
-					}
+            } else {
+                http.get('/stat/addToCollect', { statValue: 306 }).then(res => {
+                    if (res.code === 1) {
+                        this.collectState = !this.collectState;
+                    }
                 });
-			}
-		},
-		getVipCardSalesman() {
-			http.get('/stat/getVipCardSoldSumStat', { startDate: this.date.startDate, toDate: this.date.endDate }).then((res) => {
-				if (res.code === 1) {
-					this.dataSourceSalesman = res.data.entityList;
-				}
-			});
-		},
-		getVipCardType() {
-			http.get('/stat/getVipCardSoldStat', { startDate: this.date.startDate, toDate: this.date.endDate }).then((res) => {
-				if (res.code === 1) {
-					this.dataSourceVipcard = res.data.entityList;
-				}
-			});
-		},
-		getCollectStatus() {
+            }
+        },
+        getVipCardSalesman() {
+            http.get('/stat/getVipCardSoldSumStat', { startDate: this.date.startDate, toDate: this.date.endDate }).then((res) => {
+                if (res.code === 1) {
+                    this.dataSourceSalesman = res.data.entityList;
+                }
+            });
+        },
+        getVipCardType() {
+            http.get('/stat/getVipCardSoldStat', { startDate: this.date.startDate, toDate: this.date.endDate }).then((res) => {
+                if (res.code === 1) {
+                    this.dataSourceVipcard = res.data.entityList;
+                }
+            });
+        },
+        getCollectStatus() {
             /* http.get('/stat/getCollection')
             .then(res => {
                 if(res.code === 1) {
@@ -193,14 +193,14 @@ export default {
             	this.collectState = true;
             }
         }
-	},
-	watch: {
-		date(newValue) {
-			this.getVipCardSalesman();
-			this.getVipCardType();
-		}
-	},
-	beforeRouteEnter(to, from, next) {
+    },
+    watch: {
+        date(newValue) {
+            this.getVipCardSalesman();
+            this.getVipCardType();
+        }
+    },
+    beforeRouteEnter(to, from, next) {
         http.get('/stat/getCollection').then(res => {
             if (res.code === 1) {
                 next(vm => {
@@ -209,11 +209,11 @@ export default {
                 			vm.collectState = true;
                 		}
                 	});
-                })
+                });
             }
         });
     }
-}	
+};
 </script>
 
 <style lang="scss" scoped>
