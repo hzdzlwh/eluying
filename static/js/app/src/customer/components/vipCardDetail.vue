@@ -18,9 +18,10 @@
                             <div style="width: 25%;"><span style="font-size:12px;color:#999999;">类型</span> <span>{{card.type === 0? card.categoryName : '副卡'}}</span></div>
                         </div>
                         <div class="customer-info">
-                            <div style="width: 50%;"><span style="font-size:12px;color:#999999;">卡号</span> <span>{{card.vipCardNum}}</span></div>
+                            <div style="width: 25%;"><span style="font-size:12px;color:#999999;">卡号</span> <span>{{card.vipCardNum}}</span></div>
                             <div style="width: 25%;"><span style="font-size:12px;color:#999999;">办理日期</span> <span>{{card.creationTime}}</span></div>
                             <div style="width: 25%;"><span style="font-size:12px;color:#999999;">状态</span> <span>{{CARDSTATUS[card.status]}}</span></div>
+                            <div style="width: 25%;"><span style="font-size:12px;color:#999999;">销售员</span> <span>{{card.salerString}}</span></div>
                         </div>
                     </div>
                     <div class="info-item">

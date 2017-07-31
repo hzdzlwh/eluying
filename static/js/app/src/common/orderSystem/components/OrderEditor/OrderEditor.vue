@@ -647,6 +647,7 @@ export default {
             } else {
                 const unknown = this.userSelfOrigins.find(i => i.unknown);
                 const index = this.userSelfOrigins.indexOf(unknown);
+                this.saleId = -1;
                 if (index > -1) {
                     this.userSelfOrigins.splice(index, 1);
                 }
