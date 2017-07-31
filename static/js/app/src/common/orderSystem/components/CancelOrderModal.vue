@@ -168,9 +168,9 @@
                             modal.success('取消成功');
                             this.hideModal();
                             bus.$emit('refreshView');
-                            this[types.GET_ORDER_DETAIL]({ orderId: getOrderId(this.order), orderType: this.order.type }).then(bus.$emit('onShowDetail', {
+                            this[types.GET_ORDER_DETAIL]({ orderId: getOrderId(this.order), orderType: this.order.type }).then(() => bus.$emit('onShowDetail', {
                                 orderId: getOrderId(this.order),
-                                orderType: this.order.type
+                                type: this.order.type
                             }));
                             // bus.$emit('onShowDetail', {
                             //     orderId: getOrderId(this.order),
