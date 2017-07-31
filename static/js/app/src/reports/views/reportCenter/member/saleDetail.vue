@@ -61,7 +61,8 @@ export default {
 			columns: [
 				{
 					title: '办卡时间',
-					dataIndex: 'creationTime'
+					dataIndex: 'creationTime',
+					width: 160
 				},
 				{
 					title: '卡号',

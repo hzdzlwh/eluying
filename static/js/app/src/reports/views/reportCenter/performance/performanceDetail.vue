@@ -63,6 +63,7 @@ import { DdTable, DdPagination, DdDropdown, DdDropdownItem, DdSelect, DdOption, 
 import CollectButton from '../../../components/CollectButton';
 import { mapState } from 'vuex';
 import http from 'http';
+const ORDERTYPES = ['餐饮', '娱乐', '商超', '住宿'];
 export default {
 	data() {
 		return {
@@ -122,7 +123,7 @@ export default {
 				},
 				{
 					title: '订单类型',
-					dataIndex: 'orderType'
+					render: (h, row) => <span>{ORDERTYPES[row.orderType]}</span>
 				},
 				{
 					title: '订单金额',
