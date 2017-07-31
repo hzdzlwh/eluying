@@ -118,7 +118,7 @@
                 <div class="calendar-glyph"
                      :class="{'glyph-start': g.seeStart,
                         'draggable': g.draggable,
-                        'glyph-book': g.roomState === 0,
+                        'glyph-book': g.roomState === 0 || g.roomState === -1,
                         'glyph-ing': g.roomState === 1,
                         'glyph-finish': g.roomState === 2}"
                      v-for="g in glyphs"
