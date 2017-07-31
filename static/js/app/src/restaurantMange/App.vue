@@ -1,8 +1,11 @@
 <template>
 <div class="restaurant-mange">
     <div class="restaurant-top-menu">
-        <span class="restmange-list-menu"><span class="restmange-list-select">林宝坚尼西餐厅</span><img src="//static.dingdandao.com/673741C9-0BE5-4670-970E-37383302412F@1x.png" alt=""></span>
-        <div class="dividor">
+    <div class='restmange-list-menu'>
+        <dd-select v-model='restId' placeholder="请选择入住类型" >
+            <dd-option v-for="rest in restaurantList" :value="rest.restId" :key="rest.restId" :label="rest.restName">
+            </dd-option>
+        </dd-select>
         </div>
         <router-link to='/view/restaurantMange/order' class='restmange-link'>桌位点餐</router-link>
         <router-link to='/view/restaurantMange/orderList' class='restmange-link'>餐饮订单</router-link>
@@ -37,7 +40,7 @@
         position: fixed;
         width: 100%;
         height: 50px;
-        z-index: 1500;
+        z-index: 1;
         background: #fbfbfb;
         border-bottom: 1px solid #ccc;
         box-shadow: 0px 1px 3px #dadada;
@@ -45,43 +48,82 @@
         .restmange-list-menu{
             width: 168px;
             display: inline-block;
-            text-align: right;
-            .restmange-list-select{
-               
-            }
-            img{
-                position: absolute;
-                right: 17px;
-                top: 31px;
-            }
+            float: left;
+            position: relative;
+            margin-top: 12px;
+            border-right: 1px black solid;
+            height: 27px;
+            padding-right: 10px;
+        }     
+        .restmange-list-select{
+           
         }
-        .dividor{
-               height: 30px;
-    width: 1px;
-    background: #666666;
-    margin-left: 184px;
-    margin-top: 12px;
-    float: left;
+        img{
+            position: absolute;
+            right: 17px;
+            top: 31px;
         }
         .restmange-link{
             font-size: 16px;
             color: #999;
             margin-left: 16px;
             letter-spacing: 0;
-            height: 68px;
-            line-height: 68px;
+            height: 49px;
+            line-height: 49px;
             text-align: left;
             float: left;
             cursor: pointer;
         }
     }
     .restaurant-container{
-
+        margin-top:50px;
     }
 }
 
 </style>
 <script>
-    export default {
-    };
+import { mapState, mapMutations } from 'vuex';
+import http from '../common/http.js';
+import {
+    DdSelect,
+    DdOption
+} from 'dd-vue-component';
+export default {
+    data() {
+        return {
+            restId: 0,
+            restaurantList: []
+        };
+    },
+    computed: mapState({
+        RestState: state => state.restId
+    }),
+    watch: {
+        restId(val) {
+            this.setRest({ restId: val });
+        }
+    },
+    methods: {
+        ...mapMutations([
+            'setRest'
+        ]),
+        getRestList() {
+            http.get('/restaurant/listSimple').then(res => {
+                this.restaurantList = res.data.list;
+                const initId = res.data.list[0].restId;
+                if (!this.RestState) {
+                    this.setRest({ restId: initId });
+                }
+                this.restId = this.RestState;
+            });
+        }
+    },
+    components: {
+        DdSelect,
+        DdOption
+    },
+    created() {
+        this.getRestList();
+    }
+};
 </script>

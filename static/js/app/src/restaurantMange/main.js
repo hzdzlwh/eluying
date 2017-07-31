@@ -8,6 +8,7 @@ import { router } from './routes';
 import Router from 'vue-router';
 import init from '../common/init';
 import auth from '../common/auth';
+import store from './store/index.js';
 
 init({
     leftMenu: false,
@@ -15,6 +16,7 @@ init({
 });
 Vue.use(Router);
 const app = new Vue({
+    store,
     router,
     ...App
 });
