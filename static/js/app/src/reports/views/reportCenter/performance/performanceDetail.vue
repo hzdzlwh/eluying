@@ -64,17 +64,17 @@ import CollectButton from '../../../components/CollectButton';
 import { mapState } from 'vuex';
 import http from 'http';
 export default {
-	data() {
-		return {
-			collectState: undefined,
-			pages: 0,
-			pageNo: 1,
-			count: 0,
-			orderType: -1,
-			salerId: -1,
-			salers: [],
-			totalPrice: undefined,
-			orderTypeAll: [{
+    data() {
+        return {
+            collectState: undefined,
+            pages: 0,
+            pageNo: 1,
+            count: 0,
+            orderType: -1,
+            salerId: -1,
+            salers: [],
+            totalPrice: undefined,
+            orderTypeAll: [{
                 id: -1,
                 name: '全部订单类型',
                 orderType: 0
@@ -103,81 +103,81 @@ export default {
                 type: 2
             }],
             userGroupOrigins: [],
-			columns: [
-				{
-					title: '订单号',
-					dataIndex: ''
-				},
-				{
-					title: '创建时间',
-					dataIndex: ''
-				},
-				{
-					title: '销售员',
-					dataIndex: ''
-				},
-				{
-					title: '销售员手机号',
-					dataIndex: ''
-				},
-				{
-					title: '订单类型',
-					dataIndex: ''
-				},
-				{
-					title: '订单金额',
-					dataIndex: ''
-				},
-				{
-					title: '客户姓名',
-					dataIndex: ''
-				},
-				{
-					title: '手机号',
-					dataIndex: ''
-				},
-				{
-					title: '客源渠道',
-					dataIndex: ''
-				},
-				{
-					title: '创建人',
-					dataIndex: ''
-				}
-			],
-			dataSource: []
-		};
-	},
-	created() {
-		this.getSalePerformance();
-		this.getEmployeeList();
-		this.getOrigin();
-		this.getCollectStatus();
-	},
-	components: {
-		DdDropdown,
-		DdDropdownItem,
-		CollectButton,
-		DdTable,
-		DdSelect,
-		DdOption,
-		DdGroupOption,
-		DdPagination
-	},
-	computed: {
-		...mapState(['date'])
-	},
-	methods: {
-		exportUrl(type) {
-			const obj = {
+            columns: [
+                {
+                    title: '订单号',
+                    dataIndex: ''
+                },
+                {
+                    title: '创建时间',
+                    dataIndex: ''
+                },
+                {
+                    title: '销售员',
+                    dataIndex: ''
+                },
+                {
+                    title: '销售员手机号',
+                    dataIndex: ''
+                },
+                {
+                    title: '订单类型',
+                    dataIndex: ''
+                },
+                {
+                    title: '订单金额',
+                    dataIndex: ''
+                },
+                {
+                    title: '客户姓名',
+                    dataIndex: ''
+                },
+                {
+                    title: '手机号',
+                    dataIndex: ''
+                },
+                {
+                    title: '客源渠道',
+                    dataIndex: ''
+                },
+                {
+                    title: '创建人',
+                    dataIndex: ''
+                }
+            ],
+            dataSource: []
+        };
+    },
+    created() {
+        this.getSalePerformance();
+        this.getEmployeeList();
+        this.getOrigin();
+        this.getCollectStatus();
+    },
+    components: {
+        DdDropdown,
+        DdDropdownItem,
+        CollectButton,
+        DdTable,
+        DdSelect,
+        DdOption,
+        DdGroupOption,
+        DdPagination
+    },
+    computed: {
+        ...mapState(['date'])
+    },
+    methods: {
+        exportUrl(type) {
+            const obj = {
                 endDate: this.date.endDate,
-				orderType: this.orderType,
-				originId: this.userOriginType.split('~')[1],
-				pageNo: this.pageNo,
-				salerId: this.salerId,
-				startDate: this.date.startDate
+                orderType: this.orderType,
+                originId: this.userOriginType.split('~')[1],
+                pageNo: this.pageNo,
+                salerId: this.salerId,
+                startDate: this.date.startDate
             };
-             // 后台要求如果为空就不传
+            // 后台要求如果为空就不传
             for (const ob in obj) {
                 if (obj[ob] === undefined || obj[ob] === '') {
                     delete obj[ob];
@@ -193,17 +193,17 @@ export default {
             pa.params = JSON.parse(pa.params);
             const params = http.paramsToString(pa);
             return `${host}?${params}`;
-		},
-		toggleCollect() {
-			if (this.collectState) {
-				http.get('/stat/removeFromCollection',{ statValue: 603 }).then(res => {
+        },
+        toggleCollect() {
+            if (this.collectState) {
+                http.get('/stat/removeFromCollection', { statValue: 603 }).then(res => {
                     let removeIndex = null;
                     this.$router.options.routes[2].children[0].children.map((item, index) => {
                         if (item.meta.id === 603) {
                             removeIndex = index;
                         }
                     });
-                    this.$router.options.routes[2].children[0].children.splice(removeIndex , 1);
+                    this.$router.options.routes[2].children[0].children.splice(removeIndex, 1);
                     if (this.$router.options.routes[2].children[0].children.length > 1) {
                         if (this.$route.params.id) {
                             this.$router.push('/reportCenter/collect/' + this.$router.options.routes[2].children[0].children[1].meta.id);
@@ -215,15 +215,15 @@ export default {
                     }
                     this.collectState = !this.collectState;
                 });
-			} else {
-				http.get('/stat/addToCollect',{ statValue: 603 }).then(res => {
-					if (res.code === 1) {
-						this.collectState = !this.collectState;
-					}
+            } else {
+                http.get('/stat/addToCollect', { statValue: 603 }).then(res => {
+                    if (res.code === 1) {
+                        this.collectState = !this.collectState;
+                    }
                 });
-			}
-		},
-		getCollectStatus() {
+            }
+        },
+        getCollectStatus() {
             /* http.get('/stat/getCollection')
             .then(res => {
                 if(res.code === 1) {
@@ -238,15 +238,15 @@ export default {
             	this.collectState = true;
             }
         },
-		getSalePerformance(page) {
-			this.pageNo = page || this.pageNo;
-			http.get('/stat/getSalesPerformanceStat4Salers', { 
-				endDate: this.date.endDate,
-				orderType: this.orderType === -1 ? '' : this.orderType,
-				originId: this.userOriginType.split('~')[1],
-				pageNo: this.pageNo,
-				salerId: this.salerId === -1 ? '' : this.salerId,
-				startDate: this.date.startDate
+        getSalePerformance(page) {
+            this.pageNo = page || this.pageNo;
+            http.get('/stat/getSalesPerformanceStat4Salers', {
+                endDate: this.date.endDate,
+                orderType: this.orderType === -1 ? '' : this.orderType,
+                originId: this.userOriginType.split('~')[1],
+                pageNo: this.pageNo,
+                salerId: this.salerId === -1 ? '' : this.salerId,
+                startDate: this.date.startDate
 			 }).then(res => {
 			 	if (res.code === 1) {
 			 		this.dataSource = res.data.list;
@@ -255,60 +255,60 @@ export default {
 			 		this.pages = Math.ceil(res.data.count / 30);
 			 	}
 			 });
-		},
-		getEmployeeList() {
-			http.get('/user/getEmployeeList', { salerType: 2 }).then(res => {
-				if (res.code === 1) {
-					this.salers = res.data.list.map(item => {
-						return { id: item.employeeId, name: item.realName };
-					});
-					this.salers.unshift({ id: -1, name: '全部销售员' });
-				}
-			});
-		},
-		getOrigin() {
-        // 获取全部客户来源渠道
-            http.get('/user/getChannels', { type: 2, isAll: false })
-            .then((res) => {
-                // 拼接originType 企业渠道：企业id~-5 会员-4～-4 自定义渠道 渠道id～渠道id
+        },
+        getEmployeeList() {
+            http.get('/user/getEmployeeList', { salerType: 2 }).then(res => {
                 if (res.code === 1) {
-                    const originsList = res.data.list;
-                    const otherOrigins = [];
-                    originsList.forEach(origin => {
-                        if (origin.id < 0) {
-                            origin.originType = `${origin.id}~${origin.id}`;
-                            this.userSelfOrigins.push(origin);
-                        } else if (origin.id > 0) {
-                            origin.originType = `${origin.id}~${origin.id}`;
-                            origin.info = origin.name;
-                            otherOrigins.push(origin);
-                        }
+                    this.salers = res.data.list.map(item => {
+                        return { id: item.employeeId, name: item.realName };
                     });
-                    this.userGroupOrigins.push({ label: '其他', origins: otherOrigins });
-                    // this.userOriginType = this.userSelfOrigins[0].originType;
+                    this.salers.unshift({ id: -1, name: '全部销售员' });
                 }
             });
         },
-	},
-	watch: {
-		salerId(newValue) {
-			this.pageNo = 1;
-			this.getSalePerformance();
-		},
-		orderType(newValue) {
-			this.pageNo = 1;
-			this.getSalePerformance();
-		},
-		userOriginType(newValue) {
-			this.pageNo = 1;
-			this.getSalePerformance();
-		},
-		date(newValue) {
-			this.pageNo = 1;
-			this.getSalePerformance();
-		}
-	},
-	beforeRouteEnter(to, from, next) {
+        getOrigin() {
+        // 获取全部客户来源渠道
+            http.get('/user/getChannels', { type: 2, isAll: false })
+                .then((res) => {
+                // 拼接originType 企业渠道：企业id~-5 会员-4～-4 自定义渠道 渠道id～渠道id
+                    if (res.code === 1) {
+                        const originsList = res.data.list;
+                        const otherOrigins = [];
+                        originsList.forEach(origin => {
+                            if (origin.id < 0) {
+                                origin.originType = `${origin.id}~${origin.id}`;
+                                this.userSelfOrigins.push(origin);
+                            } else if (origin.id > 0) {
+                                origin.originType = `${origin.id}~${origin.id}`;
+                                origin.info = origin.name;
+                                otherOrigins.push(origin);
+                            }
+                        });
+                        this.userGroupOrigins.push({ label: '其他', origins: otherOrigins });
+                    // this.userOriginType = this.userSelfOrigins[0].originType;
+                    }
+                });
+        }
+    },
+    watch: {
+        salerId(newValue) {
+            this.pageNo = 1;
+            this.getSalePerformance();
+        },
+        orderType(newValue) {
+            this.pageNo = 1;
+            this.getSalePerformance();
+        },
+        userOriginType(newValue) {
+            this.pageNo = 1;
+            this.getSalePerformance();
+        },
+        date(newValue) {
+            this.pageNo = 1;
+            this.getSalePerformance();
+        }
+    },
+    beforeRouteEnter(to, from, next) {
         http.get('/stat/getCollection').then(res => {
             if (res.code === 1) {
                 next(vm => {
@@ -317,11 +317,11 @@ export default {
                 			vm.collectState = true;
                 		}
                 	});
-                })
+                });
             }
         });
     }
-}	
+};
 </script>
 
 <style lang="scss" scoped>

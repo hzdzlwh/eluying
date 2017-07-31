@@ -26,62 +26,62 @@ import CollectButton from '../../../components/CollectButton';
 import { mapState } from 'vuex';
 import http from 'http';
 export default {
-	data() {
-		return {
-			collectState: undefined,
-			columns: [
-				{
-					title: '销售员',
-					dataIndex: 'name'
-				},
-				{
-					title: '销售员手机号',
-					dataIndex: 'phone'
-				},
-				{
-					title: '住宿订单数量',
-					dataIndex: 'roomOrdersCount'
-				},
-				{
-					title: '餐饮订单数量',
-					dataIndex: 'caterOrdersCount'
-				},
-				{
-					title: '娱乐订单数量',
-					dataIndex: 'enterOrdersCount'
-				},
-				{
-					title: '商超订单数量',
-					dataIndex: 'goodsOrdersCount'
-				},
-				{
-					title: '总订单数量',
-					dataIndex: 'ordersCount'
-				}
-			],
-			dataSource: []
-		}
-	},
-	created() {
-		this.getOrderNumber();
-		this.getCollectStatus();
-	},
-	components: {
-		DdTable,
-		DdDropdown,
-		DdDropdownItem,
-		CollectButton
-	},
-	computed: {
-		...mapState(['date'])
-	},
-	methods: {
-		exportUrl(type) {
-			const obj = {
+    data() {
+        return {
+            collectState: undefined,
+            columns: [
+                {
+                    title: '销售员',
+                    dataIndex: 'name'
+                },
+                {
+                    title: '销售员手机号',
+                    dataIndex: 'phone'
+                },
+                {
+                    title: '住宿订单数量',
+                    dataIndex: 'roomOrdersCount'
+                },
+                {
+                    title: '餐饮订单数量',
+                    dataIndex: 'caterOrdersCount'
+                },
+                {
+                    title: '娱乐订单数量',
+                    dataIndex: 'enterOrdersCount'
+                },
+                {
+                    title: '商超订单数量',
+                    dataIndex: 'goodsOrdersCount'
+                },
+                {
+                    title: '总订单数量',
+                    dataIndex: 'ordersCount'
+                }
+            ],
+            dataSource: []
+        };
+    },
+    created() {
+        this.getOrderNumber();
+        this.getCollectStatus();
+    },
+    components: {
+        DdTable,
+        DdDropdown,
+        DdDropdownItem,
+        CollectButton
+    },
+    computed: {
+        ...mapState(['date'])
+    },
+    methods: {
+        exportUrl(type) {
+            const obj = {
                 endDate: this.date.endDate,
                 startDate: this.date.startDate
             };
-             // 后台要求如果为空就不传
+            // 后台要求如果为空就不传
             for (const ob in obj) {
                 if (obj[ob] === undefined || obj[ob] === '') {
                     delete obj[ob];
@@ -97,17 +97,17 @@ export default {
             pa.params = JSON.parse(pa.params);
             const params = http.paramsToString(pa);
             return `${host}?${params}`;
-		},
-		toggleCollect() {
-			if (this.collectState) {
-				http.get('/stat/removeFromCollection',{ statValue: 602 }).then(res => {
+        },
+        toggleCollect() {
+            if (this.collectState) {
+                http.get('/stat/removeFromCollection', { statValue: 602 }).then(res => {
                     let removeIndex = null;
                     this.$router.options.routes[2].children[0].children.map((item, index) => {
                         if (item.meta.id === 602) {
                             removeIndex = index;
                         }
                     });
-                    this.$router.options.routes[2].children[0].children.splice(removeIndex , 1);
+                    this.$router.options.routes[2].children[0].children.splice(removeIndex, 1);
                     if (this.$router.options.routes[2].children[0].children.length > 1) {
                         if (this.$route.params.id) {
                             this.$router.push('/reportCenter/collect/' + this.$router.options.routes[2].children[0].children[1].meta.id);
@@ -119,15 +119,15 @@ export default {
                     }
                     this.collectState = !this.collectState;
                 });
-			} else {
-				http.get('/stat/addToCollect',{ statValue: 602 }).then(res => {
-					if (res.code === 1) {
-						this.collectState = !this.collectState;
-					}
+            } else {
+                http.get('/stat/addToCollect', { statValue: 602 }).then(res => {
+                    if (res.code === 1) {
+                        this.collectState = !this.collectState;
+                    }
                 });
-			}
-		},
-		getCollectStatus() {
+            }
+        },
+        getCollectStatus() {
             /* http.get('/stat/getCollection')
             .then(res => {
                 if(res.code === 1) {
@@ -142,20 +142,20 @@ export default {
             	this.collectState = true;
             }
         },
-		getOrderNumber() {
-			http.get('/stat/getOrderCountStat4Salers', { endDate: this.date.endDate, startDate: this.date.startDate }).then(res => {
-				if (res.code === 1) {
-					this.dataSource = res.data.list;
-				}
-			});
-		}
-	},
-	watch: {
-		date(newValue) {
-			this.getOrderNumber();
-		}
-	},
-	beforeRouteEnter(to, from, next) {
+        getOrderNumber() {
+            http.get('/stat/getOrderCountStat4Salers', { endDate: this.date.endDate, startDate: this.date.startDate }).then(res => {
+                if (res.code === 1) {
+                    this.dataSource = res.data.list;
+                }
+            });
+        }
+    },
+    watch: {
+        date(newValue) {
+            this.getOrderNumber();
+        }
+    },
+    beforeRouteEnter(to, from, next) {
         http.get('/stat/getCollection').then(res => {
             if (res.code === 1) {
                 next(vm => {
@@ -164,11 +164,11 @@ export default {
                 			vm.collectState = true;
                 		}
                 	});
-                })
+                });
             }
         });
     }
-}	
+};
 </script>
 
 <style lang="scss" scoped>
