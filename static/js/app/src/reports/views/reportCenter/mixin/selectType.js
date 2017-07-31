@@ -346,7 +346,16 @@ export const getChannelType = {
             http.get('/user/getChannels', { type: 1, isAll: true })
                 .then(res => {
                     if (res.code === 1) {
-                        this.channels = [...this.channels, ...res.data.list];
+                        if (this.$route.path !== '/reportCenter/finance/rechargeDetails' && this.$route.path !== '/reportCenter/collect/305') {
+                            this.channels = [...this.channels, ...res.data.list];
+                        } else if (this.$route.path === '/reportCenter/finance/rechargeDetails' || this.$route.path === '/reportCenter/collect/305') {
+                            const channel = res.data.list;
+                            channel.forEach(item => {
+                                if (item.name !== '企业余额抵扣' && item.name !== '企业挂账' && item.name !== '一码通' && item.name !== '会员卡余额抵扣' && item.name !== '会员余额抵扣' && item.name !== '虚拟币抵扣') {
+                                    this.channels.push(item);
+                                }
+                            })
+                        }
                     }
                 });
         }
