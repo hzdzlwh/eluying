@@ -65,17 +65,17 @@ import { mapState } from 'vuex';
 import http from 'http';
 const ORDERTYPES = ['餐饮', '娱乐', '商超', '住宿'];
 export default {
-	data() {
-		return {
-			collectState: undefined,
-			pages: 0,
-			pageNo: 1,
-			count: 0,
-			orderType: -1,
-			salerId: -1,
-			salers: [],
-			totalPrice: undefined,
-			orderTypeAll: [{
+    data() {
+        return {
+            collectState: undefined,
+            pages: 0,
+            pageNo: 1,
+            count: 0,
+            orderType: -1,
+            salerId: -1,
+            salers: [],
+            totalPrice: undefined,
+            orderTypeAll: [{
                 id: -1,
                 name: '全部订单类型',
                 orderType: 0
@@ -104,79 +104,79 @@ export default {
                 type: 2
             }],
             userGroupOrigins: [],
-			columns: [
-				{
-					title: '订单号',
-					dataIndex: 'serialNum'
-				},
-				{
-					title: '创建时间',
-					dataIndex: 'creationTime'
-				},
-				{
-					title: '销售员',
-					dataIndex: 'name'
-				},
-				{
-					title: '销售员手机号',
-					dataIndex: 'phone'
-				},
-				{
-					title: '订单类型',
-					render: (h, row) => <span>{ORDERTYPES[row.orderType]}</span>
-				},
-				{
-					title: '订单金额',
-					dataIndex: 'orderPrice'
-				},
-				{
-					title: '客户姓名',
-					dataIndex: 'customerName'
-				},
-				{
-					title: '手机号',
-					dataIndex: 'customerPhone'
-				},
-				{
-					title: '客源渠道',
-					dataIndex: 'origin'
-				},
-				{
-					title: '创建人',
-					dataIndex: 'operator'
-				}
-			],
-			dataSource: []
-		};
-	},
-	created() {
-		this.getSalePerformance();
-		this.getEmployeeList();
-		this.getOrigin();
-		this.getCollectStatus();
-	},
-	components: {
-		DdDropdown,
-		DdDropdownItem,
-		CollectButton,
-		DdTable,
-		DdSelect,
-		DdOption,
-		DdGroupOption,
-		DdPagination
-	},
-	computed: {
-		...mapState(['date'])
-	},
-	methods: {
-		exportUrl(type) {
-			const obj = {
+            columns: [
+                {
+                    title: '订单号',
+                    dataIndex: 'serialNum'
+                },
+                {
+                    title: '创建时间',
+                    dataIndex: 'creationTime'
+                },
+                {
+                    title: '销售员',
+                    dataIndex: 'name'
+                },
+                {
+                    title: '销售员手机号',
+                    dataIndex: 'phone'
+                },
+                {
+                    title: '订单类型',
+                    render: (h, row) => <span>{ORDERTYPES[row.orderType]}</span>
+                },
+                {
+                    title: '订单金额',
+                    dataIndex: 'orderPrice'
+                },
+                {
+                    title: '客户姓名',
+                    dataIndex: 'customerName'
+                },
+                {
+                    title: '手机号',
+                    dataIndex: 'customerPhone'
+                },
+                {
+                    title: '客源渠道',
+                    dataIndex: 'origin'
+                },
+                {
+                    title: '创建人',
+                    dataIndex: 'operator'
+                }
+            ],
+            dataSource: []
+        };
+    },
+    created() {
+        this.getSalePerformance();
+        this.getEmployeeList();
+        this.getOrigin();
+        this.getCollectStatus();
+    },
+    components: {
+        DdDropdown,
+        DdDropdownItem,
+        CollectButton,
+        DdTable,
+        DdSelect,
+        DdOption,
+        DdGroupOption,
+        DdPagination
+    },
+    computed: {
+        ...mapState(['date'])
+    },
+    methods: {
+        exportUrl(type) {
+            const obj = {
                 endDate: this.date.endDate,
-				orderType: this.orderType,
-				originId: this.userOriginType.split('~')[1],
-				pageNo: this.pageNo,
-				salerId: this.salerId,
-				startDate: this.date.startDate
+                orderType: this.orderType,
+                originId: this.userOriginType.split('~')[1],
+                pageNo: this.pageNo,
+                salerId: this.salerId,
+                startDate: this.date.startDate
             };
              // 后台要求如果为空就不传
             for (const ob in obj) {
@@ -194,17 +194,17 @@ export default {
             pa.params = JSON.parse(pa.params);
             const params = http.paramsToString(pa);
             return `${host}?${params}`;
-		},
-		toggleCollect() {
-			if (this.collectState) {
-				http.get('/stat/removeFromCollection',{ statValue: 603 }).then(res => {
+        },
+        toggleCollect() {
+            if (this.collectState) {
+                http.get('/stat/removeFromCollection', { statValue: 603 }).then(res => {
                     let removeIndex = null;
                     this.$router.options.routes[2].children[0].children.map((item, index) => {
                         if (item.meta.id === 603) {
                             removeIndex = index;
                         }
                     });
-                    this.$router.options.routes[2].children[0].children.splice(removeIndex , 1);
+                    this.$router.options.routes[2].children[0].children.splice(removeIndex, 1);
                     if (this.$router.options.routes[2].children[0].children.length > 1) {
                         if (this.$route.params.id) {
                             this.$router.push('/reportCenter/collect/' + this.$router.options.routes[2].children[0].children[1].meta.id);
@@ -216,15 +216,15 @@ export default {
                     }
                     this.collectState = !this.collectState;
                 });
-			} else {
-				http.get('/stat/addToCollect',{ statValue: 603 }).then(res => {
-					if (res.code === 1) {
-						this.collectState = !this.collectState;
-					}
+            } else {
+                http.get('/stat/addToCollect', { statValue: 603 }).then(res => {
+                    if (res.code === 1) {
+                        this.collectState = !this.collectState;
+                    }
                 });
-			}
-		},
-		getCollectStatus() {
+            }
+        },
+        getCollectStatus() {
             /* http.get('/stat/getCollection')
             .then(res => {
                 if(res.code === 1) {
