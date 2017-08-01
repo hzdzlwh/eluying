@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-19 09:56:55
 * @Last Modified by:   linxinjian
-* @Last Modified time: 2017-08-01 20:32:55
+* @Last Modified time: 2017-08-01 21:39:04
 * @email: 783384903@qq.com
 */
 <!-- 有问题找产品，这个模块的功能一般人解释不清楚 -->
@@ -735,13 +735,14 @@ export default {
             this.orderPayment = [];
         },
         getPayChannels(item, index) {
+            const cashToHome = this.payChannels.some(pay => pay.channelId === -9);
             let payBack = JSON.parse(JSON.stringify(this.payChannels));
             if (item.type === 2) {
-                if (item.payChannelId === -14) {
+                if (item.payChannelId === -14 || item.payChannelId === -9) {
                     item.payChannelId = undefined;
                 }
                 payBack = payBack.filter(function(element) {
-                    return (element.channelId !== -6 && element.channelId !== -7 && element.channelId !== -11 && element.channelId !== -12);
+                    return (element.channelId !== -6 && element.channelId !== -7 && element.channelId !== -11 && element.channelId !== -12 && element.channelId !== -9);
                 });
             }
             if (item.type === 0 && this.isCompany && this.companyCityLedger && !payBack.some(pay => pay.channelId === -14)) {
