@@ -266,4 +266,7 @@ export default {
     .tab-content{
         margin-top: 10px;
     }
+    #salesman{
+        margin-top: 22px;
+    }
 </style>
