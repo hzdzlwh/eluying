@@ -20,6 +20,7 @@
     #leftMenu-children{
         min-width:86px;
         width:140px;
+        overflow: scroll;
     }
 </style>
 <script>
