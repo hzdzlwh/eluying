@@ -219,6 +219,8 @@ export default {
 	.tab-container{
 		display: flex;
 		justify-content: center;
+        font-size: 12px;
+        margin-top: 10px;
 		.show-dimension{
 			display: inline-block;
 	    	line-height: 24px;
@@ -226,22 +228,22 @@ export default {
 		.nav-tabs{
 			margin-bottom: 0;
 			li{
-                border: 1px solid #d9d9d9;
-                padding: 0 5px;
-                border-radius: 4px 0 0 4px;
 				a{
 					color: #666;
+                    border: 1px solid #d9d9d9;
+                    padding: 0 5px;
+                    border-radius: 4px 0 0 4px;
 				}
 				&.active{
-                    border-color: #178ce6;
 					a{
-						background-color: #fff;
-						color: #178ce6;
+						background-color: #178ce6;
+						color: #fff;
 					}
 				}
 				&:nth-child(2){
-					line-height: 25px;
-                    border-radius: 0 4px 4px 0;
+                    a{
+                        border-radius: 0 4px 4px 0;
+                    }
 				}
 			}
 		}
@@ -260,5 +262,8 @@ export default {
             font-size: 24px;
             color: #178ce6;
         }
+    }
+    .tab-content{
+        margin-top: 10px;
     }
 </style>
