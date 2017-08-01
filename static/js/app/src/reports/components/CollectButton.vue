@@ -6,28 +6,27 @@
 
 <script>
 export default {
-	data() {
-		return {
-
-		};
-	},
-	props: {
-		state: {
-			type: Boolean,
-			default: undefined
-		}
-	},
-	computed: {
-		name() {
-			return this.state ? '已收藏' : '加入收藏'
-		}
-	},
-	methods: {
-		toggleState() {
-			this.$emit('toggleCollect');
-		}
-	}
-}	
+    data() {
+        return {
+        };
+    },
+    props: {
+        state: {
+            type: Boolean,
+            default: undefined
+        }
+    },
+    computed: {
+        name() {
+            return this.state ? '已收藏' : '加入收藏';
+        }
+    },
+    methods: {
+        toggleState() {
+            this.$emit('toggleCollect');
+        }
+    }
+};
 </script>
 
 <style lang="scss">
