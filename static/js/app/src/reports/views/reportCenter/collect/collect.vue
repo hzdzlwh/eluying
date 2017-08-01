@@ -7,8 +7,6 @@
 </style>
 <script>
     import http from 'http';
-    import { mapActions } from 'vuex';
-    import bus from '../../../bus.js';
     import noCollect from './noCollect.vue';
     import morrowArrive from '../accommodation/morrowArrive.vue';
     import todayArrive from '../accommodation/todayArrive.vue';
@@ -86,7 +84,6 @@
                 } else {
                     this.currentView = 'noCollect';
                 }
-                
             }
         }
     };

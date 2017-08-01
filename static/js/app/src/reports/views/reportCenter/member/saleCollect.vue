@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import { DdTable, DdPagination, DdDropdown, DdDropdownItem, DdSelect, DdOption, DdGroupOption } from 'dd-vue-component';
+import { DdTable, DdDropdown, DdDropdownItem } from 'dd-vue-component';
 import CollectButton from '../../../components/CollectButton';
 import { mapState } from 'vuex';
 import http from 'http';
@@ -190,7 +190,7 @@ export default {
                 }
             }); */
             if (/^\/reportCenter\/collect/.test(this.$route.path)) {
-            	this.collectState = true;
+                this.collectState = true;
             }
         }
     },
@@ -205,10 +205,10 @@ export default {
             if (res.code === 1) {
                 next(vm => {
                     res.data.list.map(item => {
-                		if (item === 306) {
-                			vm.collectState = true;
-                		}
-                	});
+                        if (item === 306) {
+                            vm.collectState = true;
+                        }
+                    });
                 });
             }
         });
@@ -243,5 +243,19 @@ export default {
 			}
 		}
 	}
-	
+	.btn-container{
+        display: flex;
+        justify-content: flex-end;
+        .export{
+            margin-right: 20px;
+        }
+    }
+    .content{
+        margin-top: 20px;
+        h4{
+            text-align: center;
+            font-size: 24px;
+            color: #178ce6;
+        }
+    }
 </style>

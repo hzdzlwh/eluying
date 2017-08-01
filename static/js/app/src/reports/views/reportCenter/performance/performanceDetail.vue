@@ -63,6 +63,7 @@ import { DdTable, DdPagination, DdDropdown, DdDropdownItem, DdSelect, DdOption, 
 import CollectButton from '../../../components/CollectButton';
 import { mapState } from 'vuex';
 import http from 'http';
+const ORDERTYPES = ['餐饮', '娱乐', '商超', '住宿'];
 export default {
     data() {
         return {
@@ -106,43 +107,43 @@ export default {
             columns: [
                 {
                     title: '订单号',
-                    dataIndex: ''
+                    dataIndex: 'serialNum'
                 },
                 {
                     title: '创建时间',
-                    dataIndex: ''
+                    dataIndex: 'creationTime'
                 },
                 {
                     title: '销售员',
-                    dataIndex: ''
+                    dataIndex: 'name'
                 },
                 {
                     title: '销售员手机号',
-                    dataIndex: ''
+                    dataIndex: 'phone'
                 },
                 {
                     title: '订单类型',
-                    dataIndex: ''
+                    render: (h, row) => <span>{ORDERTYPES[row.orderType]}</span>
                 },
                 {
                     title: '订单金额',
-                    dataIndex: ''
+                    dataIndex: 'orderPrice'
                 },
                 {
                     title: '客户姓名',
-                    dataIndex: ''
+                    dataIndex: 'customerName'
                 },
                 {
                     title: '手机号',
-                    dataIndex: ''
+                    dataIndex: 'customerPhone'
                 },
                 {
                     title: '客源渠道',
-                    dataIndex: ''
+                    dataIndex: 'origin'
                 },
                 {
                     title: '创建人',
-                    dataIndex: ''
+                    dataIndex: 'operator'
                 }
             ],
             dataSource: []
@@ -235,7 +236,7 @@ export default {
                 }
             }); */
             if (/^\/reportCenter\/collect/.test(this.$route.path)) {
-            	this.collectState = true;
+                this.collectState = true;
             }
         },
         getSalePerformance(page) {
@@ -247,14 +248,14 @@ export default {
                 pageNo: this.pageNo,
                 salerId: this.salerId === -1 ? '' : this.salerId,
                 startDate: this.date.startDate
-			 }).then(res => {
-			 	if (res.code === 1) {
-			 		this.dataSource = res.data.list;
-			 		this.totalPrice = res.data.totalPrice;
-			 		this.count = res.data.count;
-			 		this.pages = Math.ceil(res.data.count / 30);
-			 	}
-			 });
+            }).then(res => {
+                if (res.code === 1) {
+                    this.dataSource = res.data.list;
+                    this.totalPrice = res.data.totalPrice;
+                    this.count = res.data.count;
+                    this.pages = Math.ceil(res.data.count / 30);
+                }
+            });
         },
         getEmployeeList() {
             http.get('/user/getEmployeeList', { salerType: 2 }).then(res => {
@@ -268,7 +269,7 @@ export default {
         },
         getOrigin() {
         // 获取全部客户来源渠道
-            http.get('/user/getChannels', { type: 2, isAll: false })
+            http.get('/user/getChannels', { type: 2, isAll: true })
                 .then((res) => {
                 // 拼接originType 企业渠道：企业id~-5 会员-4～-4 自定义渠道 渠道id～渠道id
                     if (res.code === 1) {
@@ -313,10 +314,10 @@ export default {
             if (res.code === 1) {
                 next(vm => {
                     res.data.list.map(item => {
-                		if (item === 603) {
-                			vm.collectState = true;
-                		}
-                	});
+                        if (item === 603) {
+                            vm.collectState = true;
+                        }
+                    });
                 });
             }
         });
@@ -347,4 +348,19 @@ export default {
 	    justify-content: space-between;
 	    align-items: center;
 	}
+    .btn-container{
+        display: flex;
+        justify-content: flex-end;
+        .export{
+            margin-right: 20px;
+        }
+    }
+    .content{
+        margin-top: 20px;
+        h4{
+            text-align: center;
+            font-size: 24px;
+            color: #178ce6;
+        }
+    }
 </style>

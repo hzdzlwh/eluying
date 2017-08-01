@@ -26,7 +26,6 @@
     import bus from '../bus.js';
     const reg1 = /^\/dataCenter/;
     const reg2 = /^\/reportCenter/;
-    import http from 'http';
     import collectLinkList from '../collectList.js';
     export default{
         data() {

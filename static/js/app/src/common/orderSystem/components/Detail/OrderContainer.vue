@@ -187,7 +187,7 @@
                                     </span>
                                 </span>
                                  <span class="order-price-text" v-if='order.payments.some(pay => pay.type === 18)'>
-                                    现金已收:
+                                    常规收款已收:
                                     <span >
                                     ¥{{findTypePrice(order.payments, 18)}}
                                     </span>
