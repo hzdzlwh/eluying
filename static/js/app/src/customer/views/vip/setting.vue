@@ -6,7 +6,7 @@
             <span class="help-button" data-toggle="modal" data-target="#helpModal">帮助</span>
             <button v-if="settings && settings.length < 30 && contral.VIP_EDIT_ID" class="dd-btn dd-btn-primary" style="float:right" @click="openCreate">新增</button>
             <div style="margin-top:18px;">
-                <vipLevel v-for='(dd ,index) in settings' :editor='dd.addType === 1' :data='dd' :key="dd.vipLevelSettingId" :type='Number(autoUpgrade)' @delet='deletLevel' @addCard='getLevelList' @select='select'></vipLevel>
+                <vipLevel v-for='(dd ,index) in settings' :editor='dd.addType === 1' :data='dd' :isShowVirturlCurrency="isShowVirtualCurrency" :key="dd.vipLevelSettingId" :type='Number(autoUpgrade)' @delet='deletLevel' @addCard='getLevelList' @select='select'></vipLevel>
             </div>
         </div>
         <div style="text-align: center; margin-top: 87px" v-if="settings && settings.length === 0">
@@ -189,7 +189,9 @@ export default {
             columns: [],
             id: undefined,
             nodes: [],
-            selectType: 'discount'
+            selectType: 'discount',
+            isShowVirtualCurrency: true,
+            virtualCurrencyName: undefined
         };
     },
     components: {
@@ -232,6 +234,13 @@ export default {
                     .then(res => {
                         if (res.code === 1) {
                             this.settings = res.data.vipSettingItemList;
+                            this.isShowVirtualCurrency = res.data.isOpenVirtualCurrency;
+                            this.virtualCurrencyName = res.data.virtualCurrencyName;
+                            this.settings.forEach(i => {
+                                if (i.weekLimit.length === 0) {
+                                    i.weekLimit = [-1, -1, -1, -1, -1, -1, -1];
+                                }
+                            });
                             if (this.settings.length > 0) {
                                 this.autoUpgrade = res.data.autoUpgrade;
                             }
@@ -242,7 +251,12 @@ export default {
             this.settings.unshift({
                 consumeItems: [],
                 discountInfoList: [],
-                addType: 1
+                addType: 1,
+                weekLimit: [-1, -1, -1, -1, -1, -1, -1],
+                virCurrencyRechargeItems: [],
+                vipPayItems: [],
+                vipRechargeItems: [],
+                virtualCurrencyName: this.virtualCurrencyName
             });
         },
         selectSystem() {

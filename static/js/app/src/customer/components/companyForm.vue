@@ -3,8 +3,8 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" @click='close'><span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title">{{data.id? '编辑企业客户' : '添加企业客户'}}</h4>
+                    <button type="button" class="close" @click='close'><span aria-hidden="true">&times;</span></button>
                 </div>
                 <div class="modal-body modal-line">
                     <p>
@@ -79,7 +79,7 @@
     <categorySelect :onConfirm="handleCategorySelect" type="discount" :list="nodes" />
     </div>
 </template>
-<style scoped>
+<style scoped lang="scss">
 .addpre {
     color: #178ce6;
     cursor: pointer;
@@ -139,6 +139,9 @@
 
 #add .modal-dialog {
     width: 480px;
+    .modal-body{
+        padding-top: 20px;
+    }
 }
 
 #add {

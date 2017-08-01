@@ -28,6 +28,16 @@
                         :channels="payChannels"
                         @refreshView="getCardList">
         </main-card-form>
+        <vip-card-detail :propsCard="card"
+                         :visible="modalList['detail']"
+                         @closeModal="hideModal"
+                         @openModal="openModal">                        
+        </vip-card-detail>
+        <vip-card-edit :visible="modalList['edit']"
+                       @closeModal="hideModal"
+                       :propsCard="card"
+                       @refreshView="getCardList">
+        </vip-card-edit>
         <additional-card-form :visible="modalList['additional']"
                               :card="card"
                               :channels="payChannels"
@@ -222,6 +232,8 @@
 </style>
 <script type="text/jsx">
     import { DdTable, DdPagination } from 'dd-vue-component';
+    import vipCardDetail from '../../components/vipCardDetail.vue';
+    import vipCardEdit from '../../components/vipCardEdit.vue';
     import mainCardForm from '../../components/mainCardForm.vue';
     import additionalCardForm from '../../components/additionalCardForm.vue';
     import repairCardForm from '../../components/repairCardForm.vue';
@@ -251,7 +263,9 @@
                     recharge: false,
                     given: false,
                     operate: false,
-                    payCode: false
+                    payCode: false,
+                    detail: false,
+                    edit: false
                 },
                 col: [
                     {
@@ -293,15 +307,9 @@
                         title: '操作',
                         render: (h, row) =>
                             <span>
-                                {row.rechargeAble && <span class="list-action-button card-operation-btn" onClick={() => this.openModal(row, 'recharge')}>充值</span>}
-                                {row.status === 0 && <span class="list-action-button card-operation-btn" onClick={() => { this.openModal(row, 'operate'); this.type = 'lose'; }}>挂失</span>}
-                                {row.givingAble && <span class="list-action-button card-operation-btn" onClick={() => this.openModal(row, 'given')}>转赠</span>}
-                                {row.viceAble && <span class="list-action-button card-operation-btn" onClick={() => this.openModal(row, 'additional')}>办理副卡</span>}
-                                {row.reapplyAble && <span class="list-action-button card-operation-btn" onClick={() => this.openModal(row, 'repair')}>补办</span>}
-                                {row.status === 1 && <span class="list-action-button card-operation-btn" onClick={() => { this.openModal(row, 'operate'); this.type = 'recover'; }}>恢复</span>}
-                                {row.status === 1 && <span class="list-action-button card-operation-btn" onClick={() => { this.openModal(row, 'operate'); this.type = 'useless'; }}>失效</span>}
+                                {<span class="list-action-button card-operation-btn" onClick={() => this.openDetail(row)}>详情</span>}
                             </span>,
-                        width: 200
+                        width: 80
                     }
                 ],
                 cardList: []
@@ -363,9 +371,21 @@
                 this.payWithCodeInterfaceUrl = params.url;
                 this.modalList['payCode'] = true;
             },
-            openModal(card, type) {
-                this.card = card;
+            openDetail(card) {
+                http.get('/vipCard/getVipCardDetail', { vipCardId: card.id }).then(res => {
+                    if (res.code === 1) {
+                        this.card = res.data;
+                        this.modalList['detail'] = true;
+                    }
+                });
+            },
+            openModal(type, loseOrrecoverOruseless) {
+                // this.card = card;
+                this.hideModal();
                 this.modalList[type] = true;
+                if (loseOrrecoverOruseless) {
+                    this.type = loseOrrecoverOruseless;
+                }
             },
             search() {
                 this.pageNo = 1;
@@ -391,7 +411,9 @@
             rechargeCardForm,
             givenCardForm,
             simpleCardForm,
-            payWithCode
+            payWithCode,
+            vipCardDetail,
+            vipCardEdit
         }
     };
 </script>

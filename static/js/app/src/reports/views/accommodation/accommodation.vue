@@ -1,6 +1,9 @@
 <template>
     <div>
-        <p style="margin-bottom: 22px">订单金额拆分到每日订单，统计每日产生的消费金额</p>
+        <div style="margin: 20px 0;">
+            <p><i>订单金额拆分到每日订单，统计每日产生的消费金额，</i></p>
+            <p><i>包括已预订、进行中、已结束订单的订单金额，以及已取消订单的违约金。</i></p>
+        </div>
         <div style="display: flex">
             <div class="card"
                  style="width: 204px;height: 420px; margin-right: 20px; display: flex;justify-content: space-around;flex-direction: column">

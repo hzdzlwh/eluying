@@ -192,7 +192,7 @@
             order: Object
         },
         data() {
-            return {REST_STATUS};
+            return { REST_STATUS };
         },
         computed: {
             foodItems() {
@@ -208,13 +208,13 @@
                     obj.foodPrice = this.order.totalPrice;
                     obj.originTotalPrice = this.order.originTotalPrice;
                     obj.showDiscount = this.order.showDiscount;
-                    obj.itemsMap = this.order.itemsMap.forEach(function (element) {
-                       element.dishItemResp.forEach(function(el){
+                    obj.itemsMap = this.order.itemsMap.forEach(function(element) {
+                        element.dishItemResp.forEach(function(el) {
                             if (el.serviceType === 1 || el.serviceType === 2 || el.serviceType === 4) {
-                                el.price = -el.price
+                                el.price = -el.price;
                             }
-                       })
-                    })
+                        });
+                    });
                     foodItems[0] = obj;
                 } else {
                     foodItems = this.order.foodItems;

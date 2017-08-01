@@ -54,7 +54,7 @@
                         <div class="content-item" >
                             <p class="content-item-title"><span>订单总结</span></p>
                             <span>订单金额:<span>¥{{totalPrice}}</span></span>
-                            <span style="margin-left: 24px">已收金额:<span>¥{{payed}}</span></span>
+                            <!-- <span style="margin-left: 24px">已收金额:<span>¥{{payed.toFixed(0)}}</span></span> -->
                         </div>
                     </div>
                     <div class="roomModals-footer">
@@ -98,40 +98,40 @@ import type from '../store/types';
 import types from '../store/types';
 export default {
     data() {
-            return {
-                penalty: undefined,
-                tadayFeeType: 1,
-                totalFee: 0,
-                backroomBusinessInfo: undefined,
-                timeCount: true,
-                subOrderIds: []
-            };
-        },
-        computed: {
-            ...mapState({
-                orderDetail: state => state.orderSystem.orderDetail,
-                roomBusinessInfo: state => state.orderSystem.roomBusinessInfo
-            }),
-            number() {
-                let sum = 0;
-                if (!this.roomBusinessInfo.roomOrderInfoList) {
-                    return sum;
-                }
-                this.roomBusinessInfo.roomOrderInfoList.map(
+        return {
+            penalty: undefined,
+            tadayFeeType: 1,
+            totalFee: 0,
+            backroomBusinessInfo: undefined,
+            timeCount: true,
+            subOrderIds: []
+        };
+    },
+    computed: {
+        ...mapState({
+            orderDetail: state => state.orderSystem.orderDetail,
+            roomBusinessInfo: state => state.orderSystem.roomBusinessInfo
+        }),
+        number() {
+            let sum = 0;
+            if (!this.roomBusinessInfo.roomOrderInfoList) {
+                return sum;
+            }
+            this.roomBusinessInfo.roomOrderInfoList.map(
                     room => {
                         if (room.selected) {
                             sum += 1;
                         }
                     }
                 );
-                return Number(sum);
-            },
-            totalPrice() {
-                let sum = 0;
-                if (!this.roomBusinessInfo.roomOrderInfoList) {
-                    return sum;
-                }
-                this.roomBusinessInfo.roomOrderInfoList.map(
+            return Number(sum);
+        },
+        totalPrice() {
+            let sum = 0;
+            if (!this.roomBusinessInfo.roomOrderInfoList) {
+                return sum;
+            }
+            this.roomBusinessInfo.roomOrderInfoList.map(
                     room => {
                         if (room.selected) {
                             sum += room.totalPrice;
@@ -141,17 +141,17 @@ export default {
                 // if (this.tadayFeeType !== undefined) {
                 //     sum += this.tadayFee;
                 // }
-                return Number(sum.toFixed(2));
-            },
-            tadayFee() {
-                let sum = 0;
-                if (!this.roomBusinessInfo.roomOrderInfoList) {
-                    return sum;
-                }
-                if (this.tadayFeeType === undefined) {
-                    return Number(this.totalFee);
-                }
-                this.roomBusinessInfo.roomOrderInfoList.map(
+            return Number(sum.toFixed(2));
+        },
+        tadayFee() {
+            let sum = 0;
+            if (!this.roomBusinessInfo.roomOrderInfoList) {
+                return sum;
+            }
+            if (this.tadayFeeType === undefined) {
+                return Number(this.totalFee);
+            }
+            this.roomBusinessInfo.roomOrderInfoList.map(
                     room => {
                         if (room.selected) {
                             if (this.tadayFeeType === 0.5) {
@@ -163,15 +163,15 @@ export default {
                         }
                     }
                 );
-                return Number(sum.toFixed(2));
-            },
-            payed() {
-                let sum = 0;
-                if (!this.roomBusinessInfo.roomOrderInfoList) {
-                    return sum;
-                }
+            return Number(sum.toFixed(2));
+        },
+        payed() {
+            let sum = 0;
+            if (!this.roomBusinessInfo.roomOrderInfoList) {
+                return sum;
+            }
 
-                this.roomBusinessInfo.roomOrderInfoList.map(
+            this.roomBusinessInfo.roomOrderInfoList.map(
                     room => {
                         if (room.selected) {
                             sum += room.payments.reduce((a, b) => {
@@ -191,23 +191,23 @@ export default {
                         }
                     }
                 );
-                return sum;
-            },
-            hourLength() {
-                let res = [];
-                this.roomBusinessInfo.roomOrderInfoList.forEach((room) => {
-                    res.push({ 
-                        hour : Math.floor((new Date(room.checkOutTime).getTime() - new Date(room.checkInTime).getTime())/3600000),
-                        minute: Math.floor(((new Date(room.checkOutTime).getTime() - new Date(room.checkInTime).getTime())%3600000)/60000)
-                    }); 
-                });
-                return res;
-            }
+            return sum;
         },
-        watch: {
-            roomBusinessInfo() {
-                this.backroomBusinessInfo = JSON.parse(JSON.stringify(this.roomBusinessInfo));
-                this.roomBusinessInfo.roomOrderInfoList.map(
+        hourLength() {
+            const res = [];
+            this.roomBusinessInfo.roomOrderInfoList.forEach((room) => {
+                res.push({
+                    hour: Math.floor((new Date(room.checkOutTime).getTime() - new Date(room.checkInTime).getTime()) / 3600000),
+                    minute: Math.floor(((new Date(room.checkOutTime).getTime() - new Date(room.checkInTime).getTime()) % 3600000) / 60000)
+                });
+            });
+            return res;
+        }
+    },
+    watch: {
+        roomBusinessInfo() {
+            this.backroomBusinessInfo = JSON.parse(JSON.stringify(this.roomBusinessInfo));
+            this.roomBusinessInfo.roomOrderInfoList.map(
                     room => {
                         this.backroomBusinessInfo.roomOrderInfoList.map(
                             item => {
@@ -219,22 +219,22 @@ export default {
                                         room.totalPrice = Number(item.totalPrice) + Number(item.todayPriceHalf);
                                     }
                                     if (this.tadayFeeType === 0) {
-                                        room.totalPrice = Number(item.totalPrice)
+                                        room.totalPrice = Number(item.totalPrice);
                                     }
                                 }
                             }
                         );
                     }
                 );
-            },
-            tadayFee() {
-                this.totalFee = this.tadayFee;
-            },
-            tadayFeeType(n, o) {
+        },
+        tadayFee() {
+            this.totalFee = this.tadayFee;
+        },
+        tadayFeeType(n, o) {
                 // if (!this.backroomBusinessInfo) {
                 //     this.backroomBusinessInfo = JSON.parse(JSON.stringify(this.roomBusinessInfo));
                 // }
-                this.roomBusinessInfo.roomOrderInfoList.map(
+            this.roomBusinessInfo.roomOrderInfoList.map(
                     room => {
                         this.backroomBusinessInfo.roomOrderInfoList.map(
                             item => {
@@ -247,44 +247,44 @@ export default {
                                         room.totalPrice = Number(item.totalPrice) + Number(item.todayPriceHalf);
                                     }
                                     if (n === 0) {
-                                        room.totalPrice = Number(item.totalPrice)
+                                        room.totalPrice = Number(item.totalPrice);
                                     }
                                 }
                             }
                         );
                     }
                 );
-            }
+        }
+    },
+    methods: {
+        ...mapActions([type.LOAD_ROOM_BUSINESS_INFO]),
+        changeTadayFeeType(TadayFeeType) {
+            this.tadayFeeType = TadayFeeType;
         },
-        methods: {
-            ...mapActions([type.LOAD_ROOM_BUSINESS_INFO]),
-            changeTadayFeeType(TadayFeeType) {
-                this.tadayFeeType = TadayFeeType;
-            },
-            changeTotalFee() {
-                clearTimeout(this.timeCount);
-                this.timeCount = setTimeout(() => {
-                    this.changeTotalFeefn()
-                }, 500);
-            },
-            changeTotalFeefn() {
+        changeTotalFee() {
+            clearTimeout(this.timeCount);
+            this.timeCount = setTimeout(() => {
+                this.changeTotalFeefn();
+            }, 500);
+        },
+        changeTotalFeefn() {
                 // this.tadayFeeType = undefined;
                 // const subOrderIds = [];
-                this.subOrderIds = [];
-                if (!this.backroomBusinessInfo) {
-                    this.backroomBusinessInfo = JSON.parse(JSON.stringify(this.roomBusinessInfo));
-                }
-                this.roomBusinessInfo.roomOrderInfoList.map(
+            this.subOrderIds = [];
+            if (!this.backroomBusinessInfo) {
+                this.backroomBusinessInfo = JSON.parse(JSON.stringify(this.roomBusinessInfo));
+            }
+            this.roomBusinessInfo.roomOrderInfoList.map(
                     room => {
                         if (room.selected) {
                             this.subOrderIds.push(room.roomOrderId);
                         }
                     }
                 );
-                http.get(' /room/getCustomCheckOutFee', {
-                        subOrderIds: JSON.stringify(this.subOrderIds),
-                        totalFee: this.totalFee
-                    })
+            http.get(' /room/getCustomCheckOutFee', {
+                subOrderIds: JSON.stringify(this.subOrderIds),
+                totalFee: this.totalFee
+            })
                     .then(res => {
                         res.data.list.map(
                             item => {
@@ -302,118 +302,116 @@ export default {
                             }
                         );
                     });
-            },
-            show() {
-                this[types.LOAD_ROOM_BUSINESS_INFO]({ businessType: this.roomBusinessInfo.businessType }).then(res => {
-                    $('#checkOut').modal({
-                        backdrop: 'static'
-                    });
+        },
+        show() {
+            this[types.LOAD_ROOM_BUSINESS_INFO]({ businessType: this.roomBusinessInfo.businessType }).then(res => {
+                $('#checkOut').modal({
+                    backdrop: 'static'
                 });
-                
-            },
-            returnPreStep() {
-                this.hideModal();
-                bus.$emit('back');
+            });
+        },
+        returnPreStep() {
+            this.hideModal();
+            bus.$emit('back');
                 // bus.$emit('onShowDetail');
-            },
-            hideModal() {
-                this.penalty = undefined;
-                this.totalFee = 0;
-                this.tadayFeeType = 1;
-                this.subOrderIds = [];
-                $('#checkOut').modal('hide');
-            },
-            toggleRoomSelectedState(room) {
-                if (room.selected) {
-                    this.backroomBusinessInfo.roomOrderInfoList.map(
+        },
+        hideModal() {
+            this.penalty = undefined;
+            this.totalFee = 0;
+            this.tadayFeeType = 1;
+            this.subOrderIds = [];
+            $('#checkOut').modal('hide');
+        },
+        toggleRoomSelectedState(room) {
+            if (room.selected) {
+                this.backroomBusinessInfo.roomOrderInfoList.map(
                         item => {
                             if (item.roomId === room.roomId) {
                                 room.totalPrice = Number(item.totalPrice) + Number(item.todayPrice);
                             }
                         }
                     );
-                }
-                room.selected = !room.selected;
-                this.tadayFeeType = 1;
-            },
-            checkOut() {
-                let night = null;
-                switch(this.tadayFeeType) {
-                    case 1:
-                        night = 1;
-                        break;
-                    case 0.5:
-                        night = 2
-                        break;
-                    case 0:
-                        night = 0;
-                        break;
-                }
-                const rooms = [] 
-                this.roomBusinessInfo.roomOrderInfoList.map((room, index) => {
-                     this.backroomBusinessInfo.roomOrderInfoList.map(item => {
-                        if (room.selected && room.roomId === item.roomId) {
-                            rooms.push({
-                                startDate: room.checkInDate,
-                                endDate: room.checkOutDate,
-                                idCardList: room.idCardList,
-                                roomId: room.roomId,
-                                roomOrderId: room.roomOrderId,
-                                fee: room.checkType === 1 ? room.roomHoursPrice : room.totalPrice - item.totalPrice,
-                                night: night
-                            });
-                        }
-                    });
+            }
+            room.selected = !room.selected;
+            this.tadayFeeType = 1;
+        },
+        checkOut() {
+            let night = null;
+            switch (this.tadayFeeType) {
+                case 1:
+                    night = 1;
+                    break;
+                case 0.5:
+                    night = 2;
+                    break;
+                case 0:
+                    night = 0;
+                    break;
+            }
+            const rooms = [];
+            this.roomBusinessInfo.roomOrderInfoList.map((room, index) => {
+                this.backroomBusinessInfo.roomOrderInfoList.map(item => {
+                    if (room.selected && room.roomId === item.roomId) {
+                        rooms.push({
+                            startDate: room.checkInDate,
+                            endDate: room.checkOutDate,
+                            idCardList: room.idCardList,
+                            roomId: room.roomId,
+                            roomOrderId: room.roomOrderId,
+                            fee: room.checkType === 1 ? room.roomHoursPrice : room.totalPrice - item.totalPrice,
+                            night: night
+                        });
+                    }
                 });
-                const filterRooms = rooms.filter(room => {
-                    return room;
-                });
-                if (filterRooms.length <= 0) {
-                    modal.warn('请选择房间！');
-                    return false;
-                }
-                const business = {
-                    type: this.roomBusinessInfo.businessType,
-                    orderId: this.roomBusinessInfo.orderId,
-                    rooms: filterRooms
-                };
-                if (business.type === 2) {
-                    business.penalty = this.penalty;
-                }
+            });
+            const filterRooms = rooms.filter(room => {
+                return room;
+            });
+            if (filterRooms.length <= 0) {
+                modal.warn('请选择房间！');
+                return false;
+            }
+            const business = {
+                type: this.roomBusinessInfo.businessType,
+                orderId: this.roomBusinessInfo.orderId,
+                rooms: filterRooms
+            };
+            if (business.type === 2) {
+                business.penalty = this.penalty;
+            }
 
-                if ((this.totalPrice + (this.penalty || 0) - this.payed) === 0) {
-                    const roomsFix = rooms;
-                    roomsFix.forEach(function(element, index) {
-
-                        if (element === null) {
-                            roomsFix.splice(index, 1);
-                        }
+            if ((this.totalPrice + (this.penalty || 0) - this.payed) === 0) {
+                const roomsFix = rooms;
+                roomsFix.forEach(function(element, index) {
+                    if (element === null) {
+                        roomsFix.splice(index, 1);
+                    }
                         // if (element.roomId === ) {}
-                    });
+                });
                     // 清理rooms里为null的值，如果要改回原来的用就行了
-                    http.get('/order/checkInOrCheckout', {
-                            ...business,
-                            rooms: JSON.stringify(roomsFix)
-                        })
+                http.get('/order/checkInOrCheckout', {
+                    ...business,
+                    rooms: JSON.stringify(roomsFix)
+                })
                         .then(res => {
                             this.hideModal();
                             modal.success('退房成功');
                             bus.$emit('refreshView');
-                           // bus.$emit('onShowDetail', { type: this.orderDetail.orderType, orderId: this.orderDetail.roomOrderId });
+                            bus.$emit('onShowDetail', { type: this.orderDetail.orderType, orderId:  this.orderDetail.orderType === -1 ? this.orderDetail.orderId : this.orderDetail.roomOrderId });
                         });
-                } else {
-                    if (this.penalty) {
-                        business.penalty = Number(this.penalty);
-                    }
-                    business.functionType = 1;
-                    const todayFeeMap = [];
-                    this.roomBusinessInfo.roomOrderInfoList.map(
+            } else {
+                if (this.penalty) {
+                    business.penalty = Number(this.penalty);
+                }
+                business.functionType = 1;
+                const todayFeeMap = [];
+                this.roomBusinessInfo.roomOrderInfoList.map(
                         (room, index) => {
                             this.backroomBusinessInfo.roomOrderInfoList.map(
                                 item => {
                                     if (item.roomId === room.roomId && room.selected) {
                                         todayFeeMap.push({
-                                            fee: room.checkType === 1? room.roomHoursPrice : (room.totalPrice - item.totalPrice).toFixed(2),
+                                            fee: room.checkType === 1 ? room.roomHoursPrice : (room.totalPrice - item.totalPrice).toFixed(2),
                                             subOrderId: item.roomOrderId
                                         });
                                     }
@@ -421,25 +419,25 @@ export default {
                             );
                         }
                     );
-                    business.todayFeeMap = JSON.stringify(todayFeeMap);
-                    this.hideModal();
+                business.todayFeeMap = JSON.stringify(todayFeeMap);
+                this.hideModal();
                     // this.$emit('showCashier', { type: 'checkOut', business });
-                    bus.$emit('showCashier', {
-                        type: 'checkOut',
-                        business
-                    });
+                bus.$emit('showCashier', {
+                    type: 'checkOut',
+                    business
+                });
 
                     // bus.$emit('showCashier', {
                     //     type: 'checkOut',
                     //     business
                     // });
-                    bus.$emit('changeBack', this.show);
-                }
-            },
-            changeHourRoomPrice(room) {
-                room.totalPrice = Number(room.roomHoursPrice) + room.extraPrice;
+                bus.$emit('changeBack', this.show);
             }
         },
-        components: {}
+        changeHourRoomPrice(room) {
+            room.totalPrice = Number(room.roomHoursPrice) + room.extraPrice;
+        }
+    },
+    components: {}
 };
 </script>

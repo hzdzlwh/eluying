@@ -474,7 +474,7 @@ default {
                             const otherOrigins = [];
                             this.userOrigins = originsList;
                             originsList.forEach(origin => {
-                                if (origin.id === -1 || origin.id === -4) {
+                                if (origin.id < 0 && origin.id !== -5) {
                                     origin.originType = `${origin.id}~${origin.id}`;
                                     this.userSelfOrigins.push(origin);
                                 } else if (origin.id === -5) {

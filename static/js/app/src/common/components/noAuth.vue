@@ -1,3 +1,10 @@
+/*
+* @Author: lxj
+* @Date:   2017-04-24 13:57:52
+* @Last Modified by:   lxj
+* @Last Modified time: 2017-07-19 11:04:39
+* @email: 783384903@qq.com
+*/
 <template>
     <div class="main">
         <img class="robot" src="http://static.dingdandao.com/CE9D872B-A001-4662-B7AE-71F2E1D409D4@1x.png" alt="robot"/>

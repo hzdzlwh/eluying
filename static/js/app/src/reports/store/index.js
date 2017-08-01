@@ -13,14 +13,16 @@ export default new Vuex.Store({
     state: {
         date: {
             startDate: util.dateFormat(util.diffDate(today, -7)),
-            endDate: util.dateFormat(util.diffDate(today, -1))
+            endDate: util.dateFormat(util.diffDate(today, -1)),
+            type: 0
         }
     },
     mutations: {
-        [types.SET_DATE](state, { startDate, endDate }) {
+        [types.SET_DATE](state, { startDate, endDate, type }) {
             state.date = {
                 startDate,
-                endDate
+                endDate,
+                type
             };
         }
     }

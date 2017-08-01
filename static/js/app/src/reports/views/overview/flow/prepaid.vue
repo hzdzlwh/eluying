@@ -79,6 +79,14 @@
                     {
                         id: 1,
                         name: '一码通'
+                    },
+                    {
+                        id: 3,
+                        name: '会员'
+                    },
+                    {
+                        id: 4,
+                        name: '虚拟币'
                     }
                 ],
                 operationId: -1,

@@ -49,6 +49,53 @@
                     </div>
                 </div>
             </div>
+            <div class="vipLevelBox" v-if="isShowVirturlCurrency">
+                <div class="vipLevelBoxtitle" style="height:61px;line-height:61px;">{{data.virtualCurrencyName}}</div>
+                <div style="padding:15px 20px;" class="vipLevelBoxContent">
+                    <!-- <div class="topLimit currency-item">
+                        <div class="currency-sub-title">使用上限</div>
+                        <div class="currency-sub-content">
+                            <p style="height:32px;line-height:32px;">每日使用上限<span style="margin-left:30px;color:#999999;">不填表示没有上限</span></p>
+                            <table border="1" width="100%">
+                                <tr style="background:#f0f0f0;">
+                                    <th v-for="item in week">{{item}}</th>
+                                </tr>
+                                <tr>
+                                    <td v-for="(item, index) in vipLevel.weekLimit">
+                                        <input type="number" style="width:87px;border:none;text-align:center;" v-model.number="vipLevel.weekLimit[index]" v-if="edit" @input="weekLimitInt(index)"><span v-else>{{vipLevel.weekLimit[index]}}</span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div> -->
+                    <div class="charge currency-item" style="margin-top:16px;">
+                        <div class="currency-sub-title">{{data.virtualCurrencyName}}充值</div>
+                        <div class="currency-sub-content" style="display:inline-block;">
+                            <div style="height: 32px;line-height:32px;" v-for="(item, index) in vipLevel['virCurrencyRechargeItems']">充<input type="number" style="width:102px;" v-if="edit" v-model="item.rechargeNum" @input="inputValide('virCurrencyRechargeItems', 'rechargeNum', index)"><span v-else>{{item.rechargeNum}}</span>个，送<input type="number" style="width:102px;" v-if="edit" v-model="item.freeNum" @input="inputValide('virCurrencyRechargeItems', 'freeNum', index)"><span v-else>{{item.freeNum}}</span>个<img src="/static/image/modal/room_modal_delete.png" alt="" style="cursor: pointer;margin-left:30px;" v-if="edit" @click="deleteNode('virCurrencyRechargeItems', index)"></div>
+                        </div>
+                       <div class="vipLevelChose" v-if='edit' @click="addRule('virCurrencyRechargeItems')">添加规则</div>
+                    </div>
+                </div>
+            </div>
+            <div class="vipLevelBox">
+                <div class="vipLevelBoxtitle" style="height:61px;line-height:61px;">储值账户</div>
+                <div style="padding:15px 20px;" class="vipLevelBoxContent">
+                    <div class="currency-item">
+                        <div class="currency-sub-title">储值账户可支付项目</div>
+                        <div class="currency-sub-content" style="display:inline-block;">
+                            <div style="height: 32px;line-height:32px;" v-for="(item, index) in vipLevel['vipPayItems']"><span style="display:inline-block;width:300px;">{{item.nodeName}}</span><img src="/static/image/modal/room_modal_delete.png" alt="" style="cursor: pointer;" v-if="edit" @click="deleteNode('vipPayItems', index)"></div>
+                        </div>
+                        <div class="vipLevelChose" v-if='edit' @click='openSelectNode("vipPayItems")'>选择项目</div>
+                    </div>
+                    <div class="currency-item" style="margin-top:16px;">
+                        <div class="currency-sub-title">储值账户充值</div>
+                        <div class="currency-sub-content" style="display:inline-block;">
+                            <div style="height: 32px;line-height:32px;" v-for="(item, index) in vipLevel['vipRechargeItems']">充<input type="number" style="width:102px;" v-if="edit" v-model="item.rechargeFee" @input="inputValide('vipRechargeItems', 'rechargeFee', index)"><span v-else>{{item.rechargeFee}}</span>元，送<input type="number" style="width:102px;" v-if="edit" v-model="item.freeFee" @input="inputValide('vipRechargeItems', 'freeFee', index)"><span v-else>{{item.freeFee}}</span>元<img src="/static/image/modal/room_modal_delete.png" alt="" style="cursor: pointer;margin-left:30px;" v-if="edit" @click="deleteNode('vipRechargeItems', index)"></div>
+                        </div>
+                        <div class="vipLevelChose" v-if='edit' @click="addRule('vipRechargeItems')">添加规则</div>
+                    </div>
+                </div>
+            </div>
             <div v-if='edit' style="text-align:right">
                 <div class="dd-btn  dd-btn-ghost" style="margin-right:20px;" @click='canel'>取消</div>
                 <div class="dd-btn  dd-btn-primary" @click='subDate'>保存</div>
@@ -186,6 +233,37 @@
                     color: #178ce6;
                 }
             }
+            .vipLevelBoxContent{
+                .currency-item{
+                    box-shadow: 0 0 5px 0 rgba(0,0,0,0.15);
+                    border-radius: 2px 2px 0 2px;
+                    .currency-sub-title{
+                        height: 32px;
+                        line-height: 32px;
+                        background: #f0f0f0;
+                        padding-left: 20px;
+                        font-size: 12px;
+                        font-weight: bold;
+                    }
+                    .currency-sub-content{
+                        padding: 4px 20px;
+                        table{
+                            border: 1px solid #ccc;
+                            tr{
+                                height: 32px;
+                                th{
+                                    text-align: center;
+                                }
+                                td{
+                                    text-align: center;
+                                    line-height: 32px;
+                                }
+                            }
+                        }
+                    }
+                }
+                
+            }
         }
     }
 }
@@ -193,6 +271,7 @@
 <script>
 import http from '../../common/http';
 import switchbtn from '../../common/components/switch.vue';
+import inputValid from '../../common/components/inputVaild.vue';
 import modal from '../../common/modal';
 import bus from '../event.js';
 export default {
@@ -207,6 +286,10 @@ export default {
         type: {
             type: Number,
             default: 0
+        },
+        isShowVirturlCurrency: {
+            type: Boolean,
+            default: true
         }
 
     },
@@ -239,11 +322,13 @@ export default {
                 2: 0,
                 3: 0
             },
-            url: this.type ? '/vipUser/createEditVipLevel' : ' /vipUser/createEditVipLevelNotAuto'
+            url: this.type ? '/vipUser/createEditVipLevel' : '/vipUser/createEditVipLevelNotAuto',
+            week: ['日', '一', '二', '三', '四', '五', '六']
         };
     },
     components: {
-        switchbtn
+        switchbtn,
+        inputValid
     },
     methods: {
         canel() {
@@ -266,6 +351,11 @@ export default {
                     }
                 }
             }
+            cardData.weekLimit.forEach((i, index) => {
+                if (i === -1) {
+                    cardData.weekLimit[index] = '';
+                }
+            });
             return cardData;
         },
         editChange() {
@@ -319,10 +409,90 @@ export default {
                     }
                 }
             }
+            if (this.vipLevel.vipRechargeItems) {
+                for (let i = 0; i < this.vipLevel.vipRechargeItems.length; i ++) {
+                    if (isNaN(this.vipLevel.vipRechargeItems[i].rechargeFee) || isNaN(this.vipLevel.vipRechargeItems[i].freeFee)) {
+                        modal.warn('储值账户充值规则必填');
+                        return false;
+                    }
+                }
+            }
+            if (this.vipLevel.virCurrencyRechargeItems) {
+                for (let i = 0; i < this.vipLevel.virCurrencyRechargeItems.length; i ++) {
+                    if (isNaN(this.vipLevel.virCurrencyRechargeItems[i].rechargeNum) || isNaN(this.vipLevel.virCurrencyRechargeItems[i].freeNum)) {
+                        modal.warn('虚拟币充值规则必填');
+                        return false;
+                    }
+                }
+            }
             const data = Object.assign({}, this.vipLevel);
+            /* data.discountInfoList.map(item => {
+                if (item.nodeType === 0) {
+                    switch (item.nodeName) {
+                        case '正常入住':
+                            item.nodeSubType = 0;
+                            break;
+                        case '钟点房':
+                            item.nodeSubType = 1;
+                            break;
+                        case '自用房':
+                            item.nodeSubType = 2;
+                            break;
+                        case '免费房':
+                            item.nodeSubType = 3;
+                            break;
+                    }
+                }
+            }); */
             data.discountListReq = JSON.stringify(data.discountInfoList);
             delete data.discountInfoList;
+            const processWeekLimit = [-1, -1, -1, -1, -1, -1, -1];
+            data.weekLimit.forEach((i, index) => {
+                if (i) {
+                    processWeekLimit[index] = data.weekLimit[index];
+                }
+            });
+            /* data.vipPayItems.map(item => {
+                if (item.nodeType === 0) {
+                    switch (item.nodeName) {
+                        case '正常入住':
+                            item.nodeSubType = 0;
+                            break;
+                        case '钟点房':
+                            item.nodeSubType = 1;
+                            break;
+                        case '自用房':
+                            item.nodeSubType = 2;
+                            break;
+                        case '免费房':
+                            item.nodeSubType = 3;
+                            break;
+                    }
+                }
+            }); */
+            data.vipPayItems = JSON.stringify(data.vipPayItems);
+            data.vipRechargeItems = JSON.stringify(data.vipRechargeItems);
+            data.virCurrencyRechargeItems = JSON.stringify(data.virCurrencyRechargeItems);
+            data.weekLimit = JSON.stringify(processWeekLimit);
             if (this.type) {
+                /* data.consumeItems.map(item => {
+                    if (item.nodeType === 0) {
+                        switch (item.nodeName) {
+                            case '正常入住':
+                                item.nodeSubType = 0;
+                                break;
+                            case '钟点房':
+                                item.nodeSubType = 1;
+                                break;
+                            case '自用房':
+                                item.nodeSubType = 2;
+                                break;
+                            case '免费房':
+                                item.nodeSubType = 3;
+                                break;
+                        }
+                    }
+                }); */
                 data.consumeListReq = JSON.stringify(data.consumeItems);
                 delete data.consumeItems;
             }
@@ -361,6 +531,30 @@ export default {
             bus.$on('vipLevelCategory', this.handleCategorySelect);
             this.selectType = type;
             // this.nodes = item[type];
+        },
+        addRule(type) {
+            if (type === 'virCurrencyRechargeItems') {
+                this.vipLevel[type].push({ rechargeNum: undefined, freeNum: undefined });
+            } else if (type === 'vipRechargeItems') {
+                this.vipLevel[type].push({ rechargeFee: '', freeFee: '' });
+            }
+        },
+        inputValide(type, field, index) {
+            this.vipLevel[type][index][field] = parseInt(this.vipLevel[type][index][field]);
+            if (this.vipLevel[type][index][field] > 20000000) {
+                this.vipLevel[type][index][field] = 20000000;
+            }
+        },
+        weekLimitInt(index) {
+            this.vipLevel.weekLimit[index] = parseInt(this.vipLevel.weekLimit[index]);
+            if (this.vipLevel.weekLimit[index] > 20000000) {
+                this.vipLevel.weekLimit[index] = 20000000;
+            }
+        }
+    },
+    watch: {
+        data(newValue) {
+            this.vipLevel = this.getdata();
         }
     }
 };

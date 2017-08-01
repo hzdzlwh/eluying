@@ -38,11 +38,11 @@
                         <div class="content-item">
                             <p class="content-item-title"><span>客户信息</span></p>
                             <div class="userInfo-items">
-                                <div class="userInfo-item">
+                                <div class="userInfo-text-item">
                                     <label class="label-text">联系人</label>
                                     <span>{{ order.customerName }}</span>
                                 </div>
-                                <div class="userInfo-item vip-level-container">
+                                <div class="userInfo-text-item vip-level-container">
                                     <label class="label-text">手机号</label>
                                     <span style="position: relative">
                                         <span>{{ order.customerPhone }}</span>
@@ -52,13 +52,17 @@
                                         </span>
                                     </span>
                                 </div>
-                                <div class="userInfo-item">
+                                <div class="userInfo-text-item">
                                     <label class="label-text">客源渠道</label>
                                     <span>{{ order.origin }}</span>
                                 </div>
-                                <div v-if="order.originId === -4 || order.discountChannel === 4 || order.discountChannel === 1" class="userInfo-item">
+                                <div v-if="order.originId === -4 || order.discountChannel === 4 || order.discountChannel === 1" class="userInfo-text-item text-hidden" :title='order.discountRelatedName'>
                                     <label class="label-text">会员卡</label>
                                     <span>{{ order.discountRelatedName || '不使用' }}</span>
+                                </div>
+                                <div class="userInfo-text-item">
+                                    <label class="label-text">销售员</label>
+                                    <span>{{ order.salerString || '无' }}</span>
                                 </div>
                             </div>
                         </div>
@@ -161,24 +165,47 @@
                                         ¥{{findTypePrice(order.payments, 4)}}
                                     </span>
                                 </span>
-                                <span class="order-price-text">
-                                    {{findTypePrice(order.payments, 14) >= 0 ? '已收金额:' : '已退金额:'}}
-                                    <span class="order-price-num grey">
-                                        ¥{{Math.abs(findTypePrice(order.payments, 14))}}
-                                    </span>
-                                </span>
-                                <span class="order-price-text">
-                                    {{findTypePrice(order.payments, 15) >= 0 ? '需补金额:' : '需退金额:'}}
-                                    <span class="order-price-num red">
-                                        ¥{{Math.abs(findTypePrice(order.payments, 15))}}
-                                    </span>
-                                </span>
+
                                <!--  <span class="order-price-text">
                                     需退押金:
                                     <span class="order-price-num green">
                                         ¥{{findTypePrice(order.payments, 16)}}
                                     </span>
                                 </span> -->
+                            </div>
+                            <div class="footer-price" style="color:#999;">
+                                 <span class="order-price-text" v-if='order.payments.some(pay => pay.type === 19)'>
+                                    {{order.payments.find(pay => pay.type === 19).payChannel}}抵扣:
+                                    <span >
+                                    ¥{{findTypePrice(order.payments, 19)}}
+                                    </span>
+                                </span>
+                                 <span class="order-price-text" v-if='order.payments.some(pay => pay.type === 20)'>
+                                    余额已抵扣:
+                                    <span >
+                                    ¥{{findTypePrice(order.payments, 20)}}
+                                    </span>
+                                </span>
+                                 <span class="order-price-text" v-if='order.payments.some(pay => pay.type === 18)'>
+                                    常规收款已收:
+                                    <span >
+                                    ¥{{findTypePrice(order.payments, 18)}}
+                                    </span>
+                                </span>
+                            </div>
+                            <div class="footer-price">
+                              <!--   <span class="order-price-text">
+                                    {{findTypePrice(order.payments, 14) >= 0 ? '已收金额:' : '已退金额:'}}
+                                    <span class="order-price-num grey">
+                                        ¥{{Math.abs(findTypePrice(order.payments, 14))}}
+                                    </span>
+                                </span> -->
+                                <span class="order-price-text">
+                                    还需收款:
+                                    <span class="order-price-num red" :class="{green : !Number(findTypePrice(order.payments, 15))}" >
+                                        ¥{{findTypePrice(order.payments, 15)}}
+                                    </span>
+                                </span>
                             </div>
                             <p class="order-info">
                                 <span class="order-info-text">订单号:{{order.orderNum || order.serialNum}}</span>
@@ -257,7 +284,6 @@
 </template>
 <style lang="scss">
     @import "~dd-common-css/src/variables";
-
     .blueimp-gallery {
         background: rgba(0,0,0,.8)!important;
     }
@@ -292,7 +318,7 @@
             color: #666666;
         }
         .green {
-            color: #00af10;
+            color: #2ab367!important;
         }
         .red {
             color: #f24949;
@@ -588,7 +614,6 @@
             }
         }
         .order-price-text {
-            color: $gary-daker;
             font-size: $font-size-base;
             margin-right: 24px;
         }
@@ -753,11 +778,24 @@
             align-items: center;
         }
         .userInfo-item {
-            margin-right: 32px;
-            min-width: 165px;
+            margin-right: 22px;
+            // min-width: 165px;
             &:last-of-type {
                 margin-right: 0;
             }
+        }
+        .userInfo-text-item {
+            margin-right: 24px;
+            min-width: 135px;
+            &:last-of-type {
+                margin-right: 0;
+            }
+        }
+        userInfo-text-overflow {
+            max-width: 170px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
         }
         .userVip-list {
             position: absolute;
@@ -1323,7 +1361,6 @@
                     this.order.timeRoomTransform = true;
                 }
                 $('#orderDetail').one('hidden.bs.modal', () => { bus.$emit('editOrder', 'editOrder', this.order); });
-                
             },
             cancelOrder() {
                 this.hideModal();
@@ -1364,7 +1401,7 @@
                         }
                         bus.$emit('changeBack', this.show);
                         this.hideModal();
-                });
+                    });
             },
             checkoutTimeOut(room) {
                 const outRoom = room.filter(function(room) {
