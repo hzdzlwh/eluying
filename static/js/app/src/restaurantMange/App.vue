@@ -7,9 +7,9 @@
             </dd-option>
         </dd-select>
         </div>
-        <router-link to='/view/restaurantMange/order' class='restmange-link'>桌位点餐</router-link>
-        <router-link to='/view/restaurantMange/orderList' class='restmange-link'>餐饮订单</router-link>
-        <router-link to='/view/restaurantMange/book' class='restmange-link'>预订沽清</router-link>
+        <router-link to='/order' class='restmange-link'>桌位点餐</router-link>
+        <router-link to='/orderList' class='restmange-link'>餐饮订单</router-link>
+        <router-link to='/book' class='restmange-link'>预订沽清</router-link>
     </div>
     <div class="restaurant-container">
         <ul class='leftMenu' v-if='$route.meta.invisible'>
