@@ -23,6 +23,10 @@
     }
 </style>
 <script>
+    const reg1 = /^\/dataCenter\/overview\/operation/;
+    const reg2 = /^\/dataCenter\/overview\/flow/;
+    const reg3 = /^\/dataCenter\/catering\/operation/;
+    const reg4 = /^\/dataCenter\/entertainment\/operation/;
     export default{
         data() {
             return {
@@ -30,11 +34,27 @@
             };
         },
         created() {
-            this.routes = this.$route.matched[1].meta.children;
+            if (reg1.test(this.$route.fullPath)) {
+                this.routes = this.$route.matched[1].meta.children[0].children;
+            } else if (reg2.test(this.$route.fullPath)) {
+                this.routes = this.$route.matched[1].meta.children[1].children;
+            } else if (reg3.test(this.$route.fullPath)) {
+                this.routes = this.$route.matched[1].meta.children[0].children;
+            } else if (reg4.test(this.$route.fullPath)) {
+                this.routes = this.$route.matched[1].meta.children[0].children;
+            }
         },
         watch: {
             '$route.path'() {
-                this.routes = this.$route.matched[1].meta.children;
+                if (reg1.test(this.$route.fullPath)) {
+                    this.routes = this.$route.matched[1].meta.children[0].children;
+                } else if (reg2.test(this.$route.fullPath)) {
+                    this.routes = this.$route.matched[1].meta.children[1].children;
+                } else if (reg3.test(this.$route.fullPath)) {
+                    this.routes = this.$route.matched[1].meta.children[0].children;
+                } else if (reg4.test(this.$route.fullPath)) {
+                    this.routes = this.$route.matched[1].meta.children[0].children;
+                }
             }
         }
     };

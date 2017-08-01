@@ -18,7 +18,7 @@
                             <p class="content-item-title"><span>违约信息</span></p>
                             <div v-if="order && order.type !== -1" >
                                 <span>违约金：</span>
-                                <input v-model="penalty" type="number" class="dd-input" placeholder="请输入违约金">
+                                <inputVaild v-model="penalty"  :placeholder="'请输入违约金'"/>
                             </div>
                             <div v-if="order && order.type === -1">
                                 <div class="cashier-getMoney-channels" v-if="subOrderPenaltys.length > 0">
@@ -27,7 +27,7 @@
                                             <dd-option :key="subOrder.nodeId" v-for="subOrder in subOrders" :value="subOrder.nodeId" :label="`${subOrder.nodeName}(¥${subOrder.totalPrice})`">
                                             </dd-option>
                                         </dd-select>
-                                        <input type="number" class="dd-input" v-model="subOrderPenalty.penalty" style="margin-left: 12px" placeholder="请输入违约金">
+                                        <inputVaild  v-model="subOrderPenalty.penalty" style="margin-left: 12px" :placeholder="'请输入违约金'"/>
                                         <span class="cashier-delBtn-icon" @click="deletePenalty(index)"></span>
                                     </div>
                                 </div>
@@ -37,7 +37,7 @@
                                      
                                 </span>
                             </div>
-                            <div style="margin-top:10px"><label>用余额收取<input type="checkbox" class="dd-checkbox" v-model="PenaltyFee" value="1" style="margin-left:10px" /></label></div>
+                      <!--       <div style="margin-top:10px"><label>用余额收取<input type="checkbox" class="dd-checkbox" v-model="PenaltyFee" value="1" style="margin-left:10px" /></label></div> -->
                         </div>
                     </div>
                     <div class="roomModals-footer">
@@ -62,8 +62,10 @@
     import modal from '../../modal';
     import bus from '../../eventBus';
     import { getOrderId } from '../utils/order';
-    import { mapState } from 'vuex';
+    import { mapActions, mapState } from 'vuex';
     import { DdSelect, DdOption } from 'dd-vue-component';
+    import inputVaild from '../../components/inputVaild.vue';
+    import types from '../store/types';
     export default{
         props: {
             show: Boolean
@@ -76,7 +78,8 @@
                 subOrderPenaltys: [],
                 oldPenalty: undefined,
                 subOrders: [],
-                PenaltyFee: true
+                backPenalty: undefined,
+                backSubOrderPenaltys: []
             };
         },
         computed: {
@@ -97,7 +100,10 @@
             }
         },
         methods: {
+            ...mapActions([types.GET_ORDER_DETAIL]),
             showModal() {
+                this.penalty = this.backPenalty;
+                this.subOrderPenaltys = this.backSubOrderPenaltys.slice(0);
                 bus.$emit('showCancelOrder');
             },
             returnPreStep() {
@@ -154,30 +160,36 @@
                     });
                     business.subOrderPenaltys = JSON.stringify(this.subOrderPenaltys);
                 }
-                // if (this.need === 0 && !this.PenaltyFee) {
-                //     http.get('/order/cancel', business)
-                //         .then(res => {
-                //             modal.success('取消成功');
-                //             this.hideModal();
-                //             bus.$emit('refreshView');
-                //             bus.$emit('showOrder', this.orderId);
-                //         });
-                // } else {
-                bus.$emit('changeBack', this.showModal);
-                business.penalty = Number(totalPenalty);
-                business.functionType = 0;
-                if (this.PenaltyFee) {
-                    business.PenaltyFee = Number(totalPenalty);
+                this.backPenalty = this.penalty;
+                this.backSubOrderPenaltys = this.subOrderPenaltys.slice(0);
+                if (Number(this.need) === 0) {
+                    http.get('/order/cancel', business)
+                        .then(res => {
+                            modal.success('取消成功');
+                            this.hideModal();
+                            bus.$emit('refreshView');
+                            this[types.GET_ORDER_DETAIL]({ orderId: getOrderId(this.order), orderType: this.order.type }).then(() => bus.$emit('onShowDetail', {
+                                orderId: getOrderId(this.order),
+                                type: this.order.type
+                            }));
+                            // bus.$emit('onShowDetail', {
+                            //     orderId: getOrderId(this.order),
+                            //     orderType: this.order.type
+                            // });
+                        });
+                } else {
+                    bus.$emit('changeBack', this.showModal);
+                    business.penalty = Number(totalPenalty);
+                    business.functionType = 0;
+                    this.hideModal();
+                    bus.$emit('showCashier', { type: 'cancel', business });
                 }
-                this.PenaltyFee = true;
-                this.hideModal();
-                bus.$emit('showCashier', { type: 'cancel', business });
-                // }
             }
         },
         components: {
             DdSelect,
-            DdOption
+            DdOption,
+            inputVaild
         }
     };
 </script>

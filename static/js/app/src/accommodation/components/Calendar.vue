@@ -118,7 +118,7 @@
                 <div class="calendar-glyph"
                      :class="{'glyph-start': g.seeStart,
                         'draggable': g.draggable,
-                        'glyph-book': g.roomState === 0,
+                        'glyph-book': g.roomState === 0 || g.roomState === -1,
                         'glyph-ing': g.roomState === 1,
                         'glyph-finish': g.roomState === 2}"
                      v-for="g in glyphs"
@@ -203,7 +203,7 @@
             </div>
         </contextmenu>
         <dayOrderForm :visible='dayOrderFormVisible' :formNumber='formNumber' :outOrIn='outOrIn' @close='closeDayForm' :room='roomdata && roomdata.data'></dayOrderForm>
-        <change-room-dialog>
+        <change-room-dialog :clearAllSelectedProps="clearAllSelected" :changePriceProps="changePrice" @changeDragState="changeIsDrag" @resetChangePrice="resetChangePrice">
             <label><input type="checkbox" v-model="changePrice">重新获取房费</label>
         </change-room-dialog>
     </div>
@@ -683,7 +683,7 @@
     import http from '../../common/http';
     import Clickoutside from 'dd-vue-component/src/utils/clickoutside';
     import bus from '../../common/eventBus';
-    import modal from '../../common/modal';
+    // import modal from '../../common/modal';
     import contextmenu from '../../common/components/contextmenu';
     import dayOrderForm from './dayOrderForm.vue';
     import { roomCheckType } from '../../common/orderSystem/roomCheckType.js';
@@ -715,7 +715,10 @@
                 outOrIn: 0,
                 date: new Date(),
                 roomdata: undefined,
-                changePrice: true
+                changePrice: false,
+                dragStopDate: undefined,
+                dragStopRoom: undefined,
+                outerUi: undefined
             };
         },
         components: {
@@ -973,7 +976,7 @@
                 $(document).on('mousedown', '.calendar-glyph', function() {
                     that.isDrag = false;
                 });
-                $(document).on('mouseover', '.calendar-glyph.draggable', function() {
+                /* $(document).on('mouseover', '.calendar-glyph.draggable', function() {
                     const $element = $(this);
                     let startX = 0;
                     let startY = 0;
@@ -1004,9 +1007,12 @@
                             const tr = $('.calendar-status-row').eq(offsetTop);
                             const td = tr.find('td').eq(offsetLeft);
                             const date = td.attr('date');
+                            that.dragStopDate = date;
                             const room = td.attr('room');
+                            that.dragStopRoom = room;
+                            that.outerUi = ui;
 
-                            function rest() {
+                            const rest = function() {
                                 ui.helper.css({
                                     top: startY + 'px',
                                     left: startX + 'px'
@@ -1015,14 +1021,14 @@
                                     top: targetStartY + 'px',
                                     left: targetStartX + 'px'
                                 });
-                            }
+                            };
                             if (offsetLeft === originalOffsetLeft && offsetTop === originalOffsetTop) {
                                 rest();
                                 return;
                             }
-                            let targetOrder;
-                            let targetStartX;
-                            let targetStartY;
+                            var targetOrder;
+                            var targetStartX;
+                            var targetStartY;
                             // 第一次先检验能否拖拽，可以的话预览，并提示确认框，不行的话重置
                             http.post('/room/dragChangeRoom', {
                                 checkRoomOnly: true,
@@ -1065,30 +1071,17 @@
                                         },
                                         rest
                                     );
-                                    /* $('#changeRoomDialog').modal('show');
-                                    $('#changeRoomOk').click(function() {
-                                        $('#changeRoomDialog').modal('hide');
-                                        http.post('/room/dragChangeRoom', {
-                                            checkRoomOnly: false,
-                                            roomId: room,
-                                            startDate: date,
-                                            roomOrderId: ui.helper.attr('roomOrderId'),
-                                            updatePrice: that.changePrice
-                                        })
-                                            .then(res => {
-                                                bus.$emit('refreshView');
-                                            })
-                                            .catch(rest);
-                                    });
-                                    $('#changeRoomCancel').click(function() {
-                                        rest();
-                                        $('#changeRoomDialog').modal('hide');
-                                    }); */
                                 })
                                 .catch(rest);
                         }
                     });
-                });
+                }); */
+            },
+            changeIsDrag() {
+                this.isDrag = true;
+            },
+            resetChangePrice() {
+                this.changePrice = false;
             }
         },
         directives: {

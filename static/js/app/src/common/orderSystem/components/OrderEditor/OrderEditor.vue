@@ -25,7 +25,7 @@
                                         </p>
                                     </div>
                                     <label for="name">联系人</label>
-                                    <input class="dd-input" type="text" maxlength="16" placeholder="联系人姓名" id="name" autocomplete="off" :disabled="(this.checkState === 'editOrder' || this.checkState === 'checkIn') && !(order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder))" v-model="name" @input="changeVipList(1)">
+                                    <input style="width:90px" class="dd-input" type="text" maxlength="16" placeholder="联系人姓名" id="name" autocomplete="off" :disabled="(this.checkState === 'editOrder' || this.checkState === 'checkIn') && !(order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder))" v-model="name" @input="changeVipList(1)">
                                 </div>
                                 <div class="userInfo-item userInfo-phone vip-level-container">
                                     <label for="phone">手机号</label>
@@ -38,7 +38,7 @@
                                         <span style="vertical-align: text-bottom">&uarr;</span> 请输入正确的手机号
                                     </span>
                                 </div>
-                                <div class="userInfo-item" style="position: relative">
+                                <div class="userInfo-item" style="position: relative;margin-right: 26px;">
                                     <label>客户来源</label>
                                     <div class="select-component-container">
                                         <dd-select v-model="userOriginType" :disabled="(this.checkState === 'editOrder' || this.checkState === 'checkIn') && !(order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder))">
@@ -66,7 +66,37 @@
                                 </div>
                                 <div class="userInfo-item" v-show="showVipCardSelect">
                                     <label>会员卡</label>
-                                    <span class="vipcard-select" style="width: 210px">
+                                    <span  style="width: 150px">
+                                        <dd-select v-model="vipCardId" :disabled="(this.checkState === 'editOrder' || this.checkState === 'checkIn') && !(order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder))">
+                                            <dd-option :value="0" label="不使用">
+                                                不使用
+                                            </dd-option>
+                                            <dd-group-option v-for="item in vipCardsAndLevel" :label="item.label"
+                                                             :key="item" v-if="item.levels && item.levels.length > 0">
+                                                <dd-option v-for="level in item.levels" :key="level"
+                                                           :value="level.id" :label="level.name+(level.serialNum || '')">
+                                                    <span :title="level.serialNum" class="text-over-ellips">{{level.name}} {{level.serialNum}}</span>
+                                    </dd-option>
+                                    </dd-group-option>
+                                    </dd-select>
+                                    </span>
+                                </div>
+                                <div class="userInfo-item">
+                                    <label>销售员：</label>
+                                    <span  style="width: 150px">
+                                        <dd-select v-model="saleId" :disabled="(this.checkState === 'editOrder' || this.checkState === 'checkIn') && !(order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder))">
+                                            <dd-option :value="-1" label="无">
+                                                无
+                                            </dd-option>
+                                            <dd-option v-for="sale in saleList" :key="sale.employeeId"  :value="sale.employeeId" :label="sale.realName + (sale.phone ? '(' + sale.phone+ ')' : '')">
+                                            <span class="text-over-ellips" :title="sale.realName + (sale.phone ? '(' + sale.phone+ ')' : '')">{{sale.realName + (sale.phone ? '(' + sale.phone+ ')' : '')}}</span>
+                                            </dd-option>
+                                    </dd-select>
+                                    </span>
+                                </div>
+                               <!--  <div class="userInfo-item" v-show="showVipCardSelect">
+                                    <label>会员卡</label>
+                                    <span  style="width: 150px">
                                         <dd-select v-model="vipCardId" :disabled="(this.checkState === 'editOrder' || this.checkState === 'checkIn') && !(order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder))">
                                             <dd-option :value="0" label="不使用">
                                                 不使用
@@ -80,7 +110,7 @@
                                     </dd-group-option>
                                     </dd-select>
                                     </span>
-                                </div>
+                                </div> -->
                             </div>
                             <orderExtInfo :checkState='"team"' v-model='ExtInDate' v-if='checkState === "team"'></orderExtInfo>
                             <!-- checkstate先放着，以后应该能复用到 -->
@@ -319,7 +349,9 @@ export default {
             vipCardId: undefined,
             vipCardInfo: {},
             hasBack: false,
-            whenCheckInDeleteRooms: []
+            whenCheckInDeleteRooms: [],
+            saleList: [],
+            saleId: -1
         };
     },
     props: {
@@ -466,6 +498,7 @@ export default {
     },
     created() {
         this.getData();
+        this.getSaleList();
         bus.$on('OrderExtInfochange', this.OrderExtInfochange);
         bus.$on('setBack', this.setBack);
     },
@@ -585,6 +618,7 @@ export default {
                 if (this.checkState === 'editOrder' || this.checkState === 'checkIn') {
                     this.name = this.order.customerName;
                     this.phone = this.order.customerPhone;
+                    this.saleId = this.order.salerId || '-1';
                     this.remark = this.order.remark || '';
 
                     this.userOriginType = this.getOrigin(this.order.originId, this.order.discountRelatedId);
@@ -613,6 +647,7 @@ export default {
             } else {
                 const unknown = this.userSelfOrigins.find(i => i.unknown);
                 const index = this.userSelfOrigins.indexOf(unknown);
+                this.saleId = -1;
                 if (index > -1) {
                     this.userSelfOrigins.splice(index, 1);
                 }
@@ -627,7 +662,7 @@ export default {
             types.LOAD_OTHER_GOODS_LIST
         ]),
         OrderExtInfochange(date) {
-            this.$set(this, date.name, date.val)
+            this.$set(this, date.name, date.val);
                 // this[date.name] = date.val;
         },
         returnPreStep() {
@@ -692,7 +727,7 @@ export default {
             };
             http.get('/vipUser/getVipDiscount', params)
                 .then(res => {
-                    this.vipDiscountDetail = {...res.data,
+                    this.vipDiscountDetail = { ...res.data,
                         phone: phone,
                         tag: res.data.vipDetail && res.data.vipDetail.level
                     };
@@ -771,11 +806,16 @@ export default {
                     };
                 });
         },
+        getSaleList() {
+            http.get('/user/getEmployeeList', {
+                salerType: 2
+            }).then(res => this.saleList = res.data.list);
+        },
         getData() {
             http.get('/user/getChannels', {
-                    type: 2,
-                    isAll: true
-                })
+                type: 2,
+                isAll: true
+            })
                 .then((res) => {
                     const originsList = res.data.list;
                     const otherOrigins = [];
@@ -955,10 +995,10 @@ export default {
             if (vipDetail && vipDetail.discountList && vipDetail.discountList.length > 0) {
                 vipDetail.discountList.forEach(list => {
                     if ((nodeType === 0 || nodeType === 3) && list.nodeId === 0 && list.nodeType === nodeType) {
-                        item = {...list
+                        item = { ...list
                         };
                     } else if ((nodeType !== 0 && nodeType !== 3) && (list.nodeId === nodeId && list.nodeType === nodeType)) {
-                        item = {...list
+                        item = { ...list
                         };
                     }
                 });
@@ -1098,14 +1138,15 @@ export default {
                 extraItems: JSON.stringify(room.extraItems),
                 whenCheckIn: this.checkState === 'checkIn',
                 ...this.getDiscountRelatedIdAndOrigin(),
-                checkType: room.checkType
+                checkType: room.checkType,
+                salerId: this.saleId
             };
             const callback = function() {
                 http.post('/order/modifyRoomOrder', params)
                 .then(res => {
                     this.hideModal();
                     bus.$emit('refreshView');
-                    bus.$emit('onShowDetail', {...this.order,
+                    bus.$emit('onShowDetail', { ...this.order,
                         orderId: getOrderId(this.order)
                     });
                 });
@@ -1119,7 +1160,6 @@ export default {
             } else {
                 callback();
             }
-            
         },
         modifyFoodOrder() {
             const params = {
@@ -1130,7 +1170,7 @@ export default {
                 .then(res => {
                     this.hideModal();
                     bus.$emit('refreshView');
-                    bus.$emit('onShowDetail', {...this.order,
+                    bus.$emit('onShowDetail', { ...this.order,
                         orderId: getOrderId(this.order)
                     });
                 });
@@ -1146,13 +1186,14 @@ export default {
                 timeAmount: enterItems.timeAmount,
                 totalPrice: enterItems.totalPrice,
                 date: enterItems.date,
+                salerId: this.saleId,
                 ...this.getDiscountRelatedIdAndOrigin()
             };
             http.post('/order/modifyEnterOrder', params)
                 .then(res => {
                     this.hideModal();
                     bus.$emit('refreshView');
-                    bus.$emit('onShowDetail', {...this.order,
+                    bus.$emit('onShowDetail', { ...this.order,
                         orderId: getOrderId(this.order)
                     });
                 });
@@ -1168,7 +1209,7 @@ export default {
                 .then(res => {
                     this.hideModal();
                     bus.$emit('refreshView');
-                    bus.$emit('onShowDetail', {...this.order,
+                    bus.$emit('onShowDetail', { ...this.order,
                         orderId: getOrderId(this.order)
                     });
                 });
@@ -1217,15 +1258,16 @@ export default {
                 orderId: this.order.orderId,
                 whenCheckIn: this.checkState === 'checkIn',
                 whenCheckInDeleteRooms: JSON.stringify(this.whenCheckInDeleteRooms),
-                ...this.getDiscountRelatedIdAndOrigin()
+                ...this.getDiscountRelatedIdAndOrigin(),
+                salerId: this.saleId
             };
-            
+
             const callback = function() {
                 http.post('/order/modify', params)
                 .then(res => {
                     this.hideModal();
                     bus.$emit('refreshView');
-                    bus.$emit('onShowDetail', {...this.order,
+                    bus.$emit('onShowDetail', { ...this.order,
                         orderId: getOrderId(this.order)
                     });
                 });
@@ -1257,7 +1299,8 @@ export default {
                 entertainmentItems: JSON.stringify(entertainmentItems),
                 items: JSON.stringify(this.newGoodItems),
                 goods: JSON.stringify(this.previousGoods),
-                ...this.getDiscountRelatedIdAndOrigin()
+                ...this.getDiscountRelatedIdAndOrigin(),
+                salerId: this.saleId
             };
             if (type && type === 'auto') {
                 params.type = 1;
@@ -1312,7 +1355,8 @@ export default {
                 entertainmentItems: JSON.stringify(entertainmentItems),
                 items: JSON.stringify(this.newGoodItems),
                 goods: JSON.stringify(this.previousGoods),
-                ...this.getDiscountRelatedIdAndOrigin()
+                ...this.getDiscountRelatedIdAndOrigin(),
+                salerId: this.saleId
             };
             // const str = util.dateFormat(new Date());
             // const arr = str.split('-');
@@ -1338,7 +1382,7 @@ export default {
                     business.businessJson = JSON.parse(JSON.stringify(params));
                     business.businessJson.functionType = 1;
                     business.businessJson.orderId = res.data.orderId;
-                    business.orderDetail = {...res.data
+                    business.orderDetail = { ...res.data
                     };
                     business.cashierType = this.checkState;
                     if (this.checkState === 'ing') {
@@ -1367,7 +1411,6 @@ export default {
             } else {
                 callback();
             }
-            
         },
         submitInfo() {
             // 获取 shopGoodsItems enterItems rooms
@@ -1379,40 +1422,40 @@ export default {
 
             const rooms = this.getOverTimeRooms();
             // 编辑订单根据不同的type调用不同的接口
-            
-                if (this.checkState === 'editOrder' || this.checkState === 'checkIn') {
+
+            if (this.checkState === 'editOrder' || this.checkState === 'checkIn') {
                     // 住宿订单
-                    if (this.order.type === ORDER_TYPE.ACCOMMODATION && this.order.isCombinationOrder) {
-                        this.modifyRoomOrder();
-                    }
+                if (this.order.type === ORDER_TYPE.ACCOMMODATION && this.order.isCombinationOrder) {
+                    this.modifyRoomOrder();
+                }
 
                     // 餐饮订单
-                    if (this.order.type === ORDER_TYPE.CATERING) {
-                        this.modifyFoodOrder();
-                    }
+                if (this.order.type === ORDER_TYPE.CATERING) {
+                    this.modifyFoodOrder();
+                }
 
                     // 娱乐订单
-                    if (this.order.type === ORDER_TYPE.ENTERTAINMENT) {
-                        this.modifyEntertainmentOrder();
-                    }
+                if (this.order.type === ORDER_TYPE.ENTERTAINMENT) {
+                    this.modifyEntertainmentOrder();
+                }
 
                     // 商超订单
-                    if (this.order.type === ORDER_TYPE.RETAIL) {
-                        this.modifyShopOrder();
-                    }
+                if (this.order.type === ORDER_TYPE.RETAIL) {
+                    this.modifyShopOrder();
+                }
 
                     // 住宿独立订单使用组合订单编辑接口
-                    if (this.order.type === ORDER_TYPE.COMBINATION || (this.order.type === ORDER_TYPE.ACCOMMODATION && !this.order.isCombinationOrder)) {
-                        this.modifyCombinationOrder();
-                    }
-                } else {
-                    // 住宿业务
-                    this.handleRoomBusiness();
+                if (this.order.type === ORDER_TYPE.COMBINATION || (this.order.type === ORDER_TYPE.ACCOMMODATION && !this.order.isCombinationOrder)) {
+                    this.modifyCombinationOrder();
                 }
+            } else {
+                    // 住宿业务
+                this.handleRoomBusiness();
+            }
 
             // 判断钟点房时是否超时
             // const outRome = this.checkoutTimeOut(rooms);
-            /*if (outRome.length) {
+            /* if (outRome.length) {
                 const name = outRome[0].roomeName;
                 const roomeType = outRome[0].checktypeName;
                 modal.confirm({ title: '提示', message: roomeType + '[' + name + ']已超时，确定保存订单吗？' }, callback);

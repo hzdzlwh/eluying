@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+    <meta name="robots" content="index">
+    <meta name="description" content="订单来了，旅游目的地营销管理系统。降低运营成本，发现更多合作伙伴，管理更高效。 0571-86906982">
+    <meta name="keywords" content="订单来了,露营地管理软件,露营地,露营地营销管理,酒店管理,餐饮管理,酒店管理系统,餐饮管理系统,房车,一卡通,旅游管理">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,Chrome=1">
+    <meta name="viewport" content="width=device-width">
+    <title>订单来了——旅游目的地营销管理神器</title>
+    <link rel ="Shortcut Icon" href="/static/image/favicon.ico">
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <!--<link rel="stylesheet" href="/static/bootstrap2/css/bootstrap.min.css">-->
+    <link rel="stylesheet" href="/static/css/dist/main.min.css">
+
+    <!--[if lte IE 9]>
+    <script src="/static/js/lib/html5shiv.min.js"></script>
+    <script src="/static/js/lib/respond.min.js"></script>
+    <![endif]-->
+    <!--[if lte IE 6]>
+    <script type="text/javascript" src="/static/js/lib/bootstrap-ie.js"></script>
+    <![endif]-->
+    <!--[if IE 7]>
+    <style>
+        .col-md-2{ width: 13%;}
+        .col-md-3{ width: 20%;}
+        .get_code.col-md-3{ width: 15%;}
+        .col-md-4{ width: 30%;}
+        .col-md-6{ width: 40%;}
+        .col-md-7{ width: 50%;}
+        .col-md-9{ width: 72%;}
+        .col-md-10{ width: 72%;}
+        .form_row input{ display: block!important; width: 100%!important; height: 41px!important; }
+        .group .icon img{ position: relative; top: 14px; }
+        .group input{ width: 180px!important; }
+        .log .checkbox input{ top: -8px; }
+        #loginForgetPwd .get_code, #loginRegister .get_code{ height: 23px!important; }
+        #loginSection1 .log{ top: 56px; }
+    </style>
+    <![endif]-->
+    <!--[if IE 6]>
+    <style>
+        #loginForgetPwd .hr{ height: 2px!important; }
+        .col-md-2, .col-xs-2, .col-sm-2{ width: 13%;}
+        .col-md-3, .col-xs-3, .col-sm-3{ width: 20%;}
+        .get_code.col-md-3, .get_code.col-xs-3, .get_code.col-sm-3{ width: 15%;}
+        .col-md-4, .col-xs-4, .col-sm-4{ width: 30%;}
+        .col-md-6, .col-xs-6, .col-sm-6{ width: 40%;}
+        .col-md-7, .col-xs-7, .col-sm-7{ width: 50%;}
+        .col-md-9, .col-xs-9, .col-sm-9{ width: 72%;}
+        .col-md-10, .col-xs-10, .col-sm-10{ width: 72%;}
+        .form_row input{ display: block!important; width: 100%!important; height: 41px!important; }
+        .group .icon img{ position: relative; top: 14px; }
+        .group input{ width: 180px!important; }
+        .log .checkbox input{ top: -8px; }
+        #loginForgetPwd .get_code, #loginRegister .get_code{ height: 23px!important; }
+        #loginForgetPwd, #loginRegister{ overflow-y: auto!important; top: 0; }
+        #loginSection1 .log{ top: 56px; }
+    </style>
+    <![endif]-->
+    <script>
+        var ua = window.navigator.userAgent;
+        if(!!ua.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/) || ua.indexOf('Android') > -1 ) {
+            location.href = '//www.dingdandao.com/wap';
+        }
+    </script>
+    <script src="/static/js/app/dist/common.js"></script>
+    <script src="/static/js/app/dist/login/login.js"></script>
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "//hm.baidu.com/hm.js?d4f2f5e0ddbc68fbadc1dceff1cfd94e";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+</head>
+<body id="login2-body">
+    <div class="login2-top">
+    <div class="logo">
+        <a href="/">
+            <img src="/static/image/logo_login2.png" alt="erweima">
+        </a>
+    </div>
+    <div class="navbar">
+        <div class="item navitem"><a href="/" id="js-navbar-home">首页</a></div>
+        <div class="item navitem"><a href="/view/home/feature.html" id="js-navbar-feat">功能</a></div>
+        <div class="item navitem"><a href="/view/home/customerCase.html" id="customerCase">客户案例</a></div>
+        <div class="item sbtn log" data-toggle="modal" data-target="#loginRegister">注册</div>
+        <div class="item sbtn reg" data-toggle="modal" data-target="#loginModal">登录</div>
+    </div>
+</div>
+    <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+        <!-- Indicators -->
+        <ol class="carousel-indicators">
+            <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+            <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+        </ol>
+
+        <!-- Wrapper for slides -->
+        <div class="carousel-inner" role="listbox">
+            <div class="item active">
+                <img src="./static/image/login-background1.png" class="bg-img" alt="background1">
+                <div class="carousel-caption">
+                    <div class="title">专注旅游目的地营销管理软件</div>
+                    <div class="titletwo">业态无缝协作  |  移动管事管账  |  数据多端同步</div>
+                </div>
+            </div>
+            <div class="item">
+                <img src="./static/image/login-background2.png" class="bg-img" alt="background1">
+                <div class="carousel-caption">
+                    <div class="title">独家提供微官网建设服务</div>
+                    <div class="titletwo">直接获客增收  | 订单提前收款  |  营销会员体系</div>
+                </div>
+            </div>
+        </div>
+        <div class="btns">
+            <div class="sbtn reg" data-toggle="modal" data-target="#loginRegister">免费注册</div>
+            <div class="sbtn video">快速了解</div>
+        </div>
+    </div>
+    <div class="login2-chart">
+        <img src="./static/image/login2-chartbackground.jpg" alt="shining_point">
+        <div class="wrapper">
+            <div class="shining_points">
+                <div class="item left">
+                    <div class="title">多渠道盈利</div>
+                    <div class="text">微官网带来直接订单、品牌沉淀</div>
+                    <div class="text">增加单次消费金额和二次消费</div>
+                    <div class="text">OTA直连，获取OTA流量</div>
+                </div>
+                <div class="item right">
+                    <div class="title">多业态整合</div>
+                    <div class="text">集合餐饮、住宿、娱乐、商超等管理</div>
+                    <div class="text">无需单独部署系统、理账对账</div>
+                    <div class="text">无需多次反复统计数据</div>
+                </div>
+                <div class="item left">
+                    <div class="title">移动同步管理</div>
+                    <div class="text">多终端同屏，无缝切换</div>
+                    <div class="text">移动收银，移动对账</div>
+                    <div class="text">移动录入会员</div>
+                    <div class="text">移动管理订单</div>
+                </div>
+                <div class="item right">
+                    <div class="title">在线预订</div>
+                    <div class="text">餐饮、住宿、娱乐、商超等在线预订</div>
+                    <div class="text">提前接收订单、接收款项</div>
+                    <div class="text">优化人力、物料安排</div>
+                </div>
+                <div class="item left">
+                    <div class="title">一码通</div>
+                    <div class="text">游客扫描营地二维码，生成个人的一码通</div>
+                    <div class="text">先充值后消费，有效减少偷单跳单问题</div>
+                </div>
+                <div class="item right">
+                    <div class="title">0硬件部署</div>
+                    <div class="text">无需额外采购、升级硬件</div>
+                    <div class="text">无需增购一码通设备</div>
+                    <div class="text">APP支持安卓、苹果系统各终端设备</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="login2-sell">
+        <div class="stitle">营销与管理</div>
+        <div class="desc">Marketing and Management</div>
+        <div class="shr"></div>
+        <div class="feat-sell">
+            <div class="feat-help-box-selected" >
+                <img src="./static/image/sellselected.png" alt="">
+                <div class="text">营销功能</div>
+            </div>
+            <div class="feat-help-box" style="display:none">
+            <img src="./static/image/sellicon.png" alt="">
+                <div class="text">营销功能</div>
+            </div>
+        </div>
+        <div class="feat-manage">
+            <div class="fead-help-box-selected" style="display:none">
+                <img src="./static/image/manageselected.png" alt="">
+                <div class="text">管理功能</div>
+            </div>
+            <div class="fead-help-box">
+                <img src="./static/image/manageicon.png" alt="">
+                <div class="text">管理功能</div>
+            </div>
+        </div>
+        <div class="swrapper-selected">
+            <img src="./static/image/sellphone.png" class="sellphone" alt="">
+            <div class="item right">
+                <div class="hr"></div>
+                <img src="./static/image/wgw.png">
+                <div class="title">微官网</div>
+                <div class="text">无佣金的移动预定网站，自主营销</div>
+                <div class="text">社交工具轻松推广，吸引一手客源</div>
+            </div>
+            <div class="item right">
+                <div class="hr"></div>
+                <img src="./static/image/hyxt.png">
+                <div class="title">会员系统</div>
+                <div class="text">积累粉丝，二次营销，提升复购率</div>
+                <div class="text">数据库追踪会员动态，服务分类需求</div>
+            </div>
+            <div class="item right">
+                <div class="hr"></div>
+                <img src="./static/image/ddhz.png">
+                <div class="title">订单盒子</div>
+                <div class="text">智能硬件获取清晰的客户画像</div>
+                <div class="text">大数据分析助力精准营销</div>
+            </div>
+            <div class="item right">
+                <div class="hr"></div>
+                <img src="./static/image/fxgl.png">
+                <div class="title">分销管理</div>
+                <div class="text">直连OTA，多渠道统一管理</div>
+                <div class="text">新活动一键直推合作伙伴</div>
+            </div>
+        </div>
+        <div class="swrapper"  style="display:none">
+            <img src="./static/image/managephone.png" class="sellphone" alt="">
+            <div class="item left">
+                <div class="title">移动收银</div>
+                <div class="text">分散收银，统一账户，让消费随时发生</div>
+                <div class="text">游客手机支付，员工移动收银</div>
+                <div class="text">收款对账明确，无漏单走单</div>
+                <div class="hr"></div>
+                <img src="./static/image/ydsy.png">
+            </div>
+            <div class="item left">
+                <div class="title">统计报表</div>
+                <div class="text">实时汇总，营收状况一目了然</div>
+                <div class="text">随时手机查看订单，渠道信息，营收报表</div>
+                <div class="hr"></div>
+                <img src="./static/image/tjbb.png">
+            </div>
+            <div class="item left">
+                <div class="title">订单管理</div>
+                <div class="text">多业态统一管理，预订信息实时跟进</div>
+                <div class="text">高度定制房态，餐饮，娱乐管理</div>
+                <div class="hr"></div>
+                <img src="./static/image/ddgl.png">
+            </div>
+            <div class="item left">
+                <div class="title">库存管理</div>
+                <div class="text">云端存储，实时更新库存</div>
+                <div class="text">减少中间环节，提升管理效率</div>
+                <div class="hr"></div>
+                <img src="./static/image/kcgl.png">
+            </div>
+        </div>
+        </div>
+    </div>
+    <div class="login2-feature">
+        <div class="stitle">产品特色</div>
+        <div class="desc">Feature of Product</div>
+        <div class="hr"></div>
+        <div class="featureone">
+            <div class="feature-directorone">
+                <div class="text">房态模块</div>
+            </div>
+            <div class="feature-text">
+                移动录入会员
+                <img src="./static/image/swoosh.png">
+                移动管理
+                <img src="./static/image/swoosh.png">
+            </div>
+            <div class="feature-text">
+                会员信息推送
+                <img src="./static/image/swoosh.png">
+                移动收银
+                <img src="./static/image/swoosh.png">
+            </div>
+            <div class="feature-text">
+                无需培训
+                <img src="./static/image/swoosh.png">
+                &nbsp微官网
+                <img src="./static/image/swoosh.png">
+            </div>
+        </div>
+        <div class="featuretwo">
+            <div class="featuretwos">
+            <div class="feature-directortwo">
+                <div class="text">餐饮模块</div>
+            </div>
+            <div class="feature-text">
+                <img src="./static/image/swoosh.png">
+                自助下单
+                <img src="./static/image/swoosh.png">
+                移动收银
+            </div>
+            <div class="feature-text">
+                <img src="./static/image/swoosh.png">
+                自助预约
+                <img src="./static/image/swoosh.png">
+                会员信息推送
+            </div>
+            <div class="feature-text">
+                <img src="./static/image/swoosh.png">
+                无需排队
+                <img src="./static/image/swoosh.png">
+                无需培训
+            </div>
+            </div>
+        </div>
+        <div class="featurethree">
+            <div class="feature-directorthree">
+                <div class="text">一码通模块</div>
+            </div>
+            <div class="feature-text">
+                便捷操作
+                <img src="./static/image/swoosh.png">
+            </div>
+            <div class="feature-text">
+                无需额外采购设备
+                <img src="./static/image/swoosh.png">
+            </div>
+            <div class="feature-text">
+                防丢失
+                <img src="./static/image/swoosh.png">
+            </div>
+        </div>
+    </div>
+    <div class="login2-partners">
+        <div class="stitle">他们都在用“订单来了”</div>
+        <div class="desc">Client</div>
+        <div class="hr"></div>
+        <img src="./static/image/login-partner.png" class="img partner" alt="">
+        </div>
+        </div>
+    </div>
+    <div class="login2-about">
+        <div class="stitle">关于订单来了</div>
+        <div class="desc">About</div>
+        <div class="hr"></div>
+        <div class="text">“杭州旅居星球网络科技有限公司”成立于 2014年4月，是旅游行业领先的互联网科技公司。累积获得数千万元融资。</div>
+            <br/>
+        <div class="text">创始团队来源于阿里巴巴、网易、携程等国内一线企业。公司致力于新一代旅游目的地营销管理云开放平台，提供行业领先的SaaS云服务。通过数据处理、技术优化、管理流程，达到多终端设备移动协同，实现旅游目的地信息化管理。</div>
+            <br/>
+        <div class="text">更有专业营销功能模块，帮助打造旅游目的地专属互联网营销平台。现已与露云娜美、利尔春天、WOWCAMP等多家露营地管理企业建立长期合作关系，成功为百余家各类旅游目的地提供有助于发展的云营销管理软件。</div>
+            <br/>
+        <div class="text">使用“订单来了,助你获取更多订单。</div>
+    </div>
+    <div class="login2-useit">
+        <img src="//static.dingdandao.com//login2/background_4.jpg" class="bg-img" alt=""/>
+        <div class="stitle">现在开始使用订单来了</div>
+        <div class="desc">让目的地管理进入新时代</div>
+        <div class="btns">
+            <div class="sbtn reg" data-toggle="modal" data-target="#loginRegister">免费注册</div>
+            <a href="//www.dingdandao.com/app.html"><div class="sbtn app">APP下载</div></a>
+            <!--<a href="//www.dingdandao.com/app.html"><div class="sbtn video">APP下载</div></a>-->
+        </div>
+    </div>
+    <script src="//cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+    <script>
+        $(".feat-help-box").hover( function() {
+            $(this).hide()
+            $(".feat-help-box-selected").show()
+            $(".fead-help-box").show()
+            $(".fead-help-box-selected").hide()
+            $(".swrapper-selected").show()
+            $(".swrapper").hide()
+        })
+        $(".fead-help-box").hover( function() {
+            $(this).hide()
+            $(".fead-help-box-selected").show()
+            $(".feat-help-box").show()
+            $(".feat-help-box-selected").hide()
+            $(".swrapper-selected").hide()
+            $(".swrapper").show()
+        })
+    </script>
+<div class="login2-contact">
+    <div class="wrapper">
+        <img src="/static/image/erweima_login2.jpg" class="erweima" alt="">
+        <div class="erweima-text">微信公众号</div>
+        <div class="phone-text">联系我们</div>
+        <div class="phone">400-600-9394</div>
+        <div class="email-text">意见反馈</div>
+        <div class="email">suggestion@dingdandao.com</div>
+        <div class="vr"></div>
+        <div class="copyright">© Copyright 2014-2016 杭州旅居星球网络科技有限公司 浙ICP备14029301号</div>
+    </div>
+</div>
+</body>
+<div class="modal fade out" id="loginRegister" style="display: none!important;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="my_close" data-dismiss="modal" aria-hidden="true">
+                <img src="/static/image/ic_close.png" alt="关闭"/>
+            </div>
+            <div class="title">用户注册</div>
+            <div class="hr"></div>
+            <div class="form_row row">
+                <div class="col col-md-2 col-sm-2 col-xs-2 label">手机号</div>
+                <div class="col col-md-10 col-sm-10 col-xs-10 input"><input type="text" placeholder="请输入大陆的手机号码" class="phone"/></div>
+            </div>
+            <div class="form_row row picture_container" style="margin-top: 20px;">
+                <div class="col col-md-2 col-sm-2 col-xs-2 label">图形验证</div>
+                <div class="col col-md-7 col-sm-7 col-xs-7"><input type="text" placeholder="请输入右图中的字符" class="picture"/></div>
+                <div class="col col-md-3 col-sm-3 col-xs-3 get_picture"><img src=""></div>
+            </div>
+            <div class="form_row row" style="margin-top: 20px;">
+                <div class="col col-md-2 col-sm-2 col-xs-2 label">验证码</div>
+                <div class="col col-md-7 col-sm-7 col-xs-7"><input type="text" placeholder="请输入您收到的验证码" class="verifyCode"/></div>
+                <div class="col col-md-3 col-sm-3 col-xs-3 btn btn-primary btn-lg get_code">获取验证码</div>
+            </div>
+            <div class="form_row row" style="margin-top: 35px;">
+                <div class="col col-md-2 col-sm-2 col-xs-2 label">姓名</div>
+                <div class="col col-md-10 col-sm-10 col-xs-10 input"><input type="text" placeholder="请输入2~16个字符" class="realName"/></div>
+            </div>
+            <div class="form_row row"style="margin-top: 20px;">
+                <div class="col col-md-2 col-sm-2 col-xs-2 label">密码</div>
+                <div class="col col-md-10 col-sm-10 col-xs-10 input"><input type="password" placeholder="请设置6-15位密码" class="pwd"/></div>
+            </div>
+            <!--<div class="safety" style="margin-top: 16px;"></div>-->
+            <div class="form_row row" style="margin-top: 16px;">
+                <div class="col col-md-2 col-sm-2 col-xs-2 label">确认密码</div>
+                <div class="col col-md-10 col-sm-10 col-xs-10 input"><input type="password" placeholder="请再次输入您的密码" class="pwdConfirm"/></div>
+            </div>
+            <div class="errorTips" style="display: none;"></div>
+            <button class="confirm btn btn-primary btn-lg btn-block">注册</button>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<div class="modal fade out" id="loginForgetPwd" style="display: none!important;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="my_close" data-dismiss="modal" aria-hidden="true">
+                <img src="/static/image/ic_close.png" alt="关闭"/>
+            </div>
+            <div class="title">忘记密码</div>
+            <div class="hr"></div>
+            <div class="form_row row">
+                <div class="col col-md-3 col-sm-3 col-xs-3 label">手机号</div>
+                <div class="col col-md-9 col-sm-9 col-xs-9 input"><input type="text" placeholder="请输入大陆的手机号码" class="phone"/></div>
+            </div>
+            <div class="form_row row picture_container" style="margin-top: 20px;">
+                <div class="col col-md-3 col-sm-3 col-xs-3 label">图形验证</div>
+                <div class="col col-md-6 col-sm-6 col-xs-6"><input type="text" placeholder="请输入右图中的字符" class="picture"/></div>
+                <div class="col col-md-3 col-sm-3 col-xs-3 get_picture"><img src=""></div>
+            </div>
+            <div class="form_row row" style="margin-top: 20px;">
+                <div class="col col-md-3 col-sm-3 col-xs-3 label">验证码</div>
+                <div class="col col-md-6 col-sm-6 col-xs-6"><input type="text" placeholder="请输入您收到的四位验证码" class="verifyCode"/></div>
+                <div class="col col-md-3 col-sm-3 col-xs-3 btn btn-primary btn-lg get_code">获取验证码</div>
+            </div>
+            <div class="form_row row"style="margin-top: 47px;">
+                <div class="col col-md-3 col-sm-3 col-xs-3 label">新密码</div>
+                <div class="col col-md-9 col-sm-9 col-xs-9 input"><input type="password" placeholder="6到15位数字与字母的组合" class="pwd"/></div>
+            </div>
+            <!--<div class="safety" style="margin-top: 16px;"></div>-->
+            <div class="form_row row" style="margin-top: 16px;">
+                <div class="col col-md-3 col-sm-3 col-xs-3 label">确认密码</div>
+                <div class="col col-md-9 col-sm-9 col-xs-9 input"><input type="password" placeholder="再次输入您的密码" class="pwdConfirm"/></div>
+            </div>
+            <div class="errorTips" style="display: none">用户名错误</div>
+            <button class="confirm btn btn-primary btn-lg btn-block">重置密码</button>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<div class="modal fade out" id="loginModal" style="display: none!important;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="my_close" data-dismiss="modal" aria-hidden="true">
+                <img src="/static/image/ic_close.png" alt="关闭"/>
+            </div>
+            <div class="log">
+                <div class="text">用户登录</div>
+                <div class="errorTips">
+                    用户名错误
+                </div>
+                <div class="group username">
+                    <div class="icon"><img src="/static/image/ic_email.png" alt=""/></div>
+                    <input type="text" placeholder="手机号码" class="loginName"/>
+                </div>
+                <div class="group pwd">
+                    <div class="icon"><img src="/static/image/ic_password.png" alt=""/></div>
+                    <input type="password" placeholder="密码" class="password"/>
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" id="loginSave">记住密码
+                    </label>
+                    <div class="forget">忘记密码</div>
+                </div>
+                <!--<div class="forget" data-toggle="modal" data-target="#loginApplySuccess">忘记密码</div>-->
+                <button type="button" class="btn btn-primary btn-lg btn-block">登录</button>
+                <div class="reg">还没有账号，免费注册</div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<div class="modal fade out in dialogCommon" id="joinNetwork_step1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="my_close" data-dismiss="modal" aria-hidden="true">
+                <img src="/static/image/ic_close.png" alt="关闭"/>
+            </div>
+            <div class="title">加入网络</div>
+            <div class="hr"></div>
+            <div class="form_row row" style="margin-top: 20px;">
+                <div class="col col-md-2 label required">网络号</div>
+                <div class="col col-md-10 input"><input type="text" placeholder="请输入网络号" class="networkId"/></div>
+            </div>
+            <button class="createNetworkButton btn btn-primary btn-lg btn-block">加入网络</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade out in dialogCommon" id="joinNetwork_step2">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="my_close" data-dismiss="modal" aria-hidden="true">
+                <img src="/static/image/ic_close.png" alt="关闭"/>
+            </div>
+            <div class="title">加入网络</div>
+            <div class="hr"></div>
+            <div class="form_row row" style="margin-top: 20px;">
+                <div class="col col-md-2 label required">网络名称</div>
+                <div class="col col-md-10 content">杭州西湖玉皇山营地</div>
+            </div>
+            <div class="form_row row" style="margin-top: 20px;">
+                <div class="col col-md-2 label required">我的部门</div>
+                <div class="col col-md-10 input"><input type="text" placeholder="10个汉字以内" class="department"/></div>
+            </div>
+            <div class="form_row row" style="margin-top: 20px;">
+                <div class="col col-md-2 label required">我的职位</div>
+                <div class="col col-md-10 input"><input type="text" placeholder="10个汉字以内" class="position"/></div>
+            </div>
+            <button class="createNetworkButton btn btn-primary btn-lg btn-block">加入网络</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade out in dialogCommon small" id="createSuccess">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="title">创建成功</div>
+            <section>
+                您已经成功创建网络西湖区余杭塘路啦啦啦啦啦（网络号：7867834）。
+            </section>
+            <section>
+                在手机端邀请同事，可以更好地体验和使用产品
+            </section>
+            <button class="createNetworkButton btn btn-primary btn-lg btn-block">立刻体验</button>
+        </div>
+    </div>
+</div>
+
+<!-- suzhou add ended-->
+
+<div class="modal fade out" role="dialog" id="createOrJoinNetwork">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <p class="title" style="text-align: center">您还没有加入网络</p>
+            <p class="text" style="text-align: center">现在您可以</p>
+            <div class="line"></div>
+            <div class="item clearfloat" id="createNewNetwork">
+                <img src="/static/image/ic_create_net_big.png" alt="加入网络">
+                <div class="sub-item">
+                    <p class="sub-title">创建新网络</p>
+                    <p class="text">如果您是营地、景区、农庄、度假村</p>
+                    <p class="text">的老板或者管理员</p>
+                </div>
+            </div>
+            <div class="item clearfloat" id="joinNetwork">
+                <img src="/static/image/ic_join_net_big.png" alt="加入网络">
+                <div class="sub-item">
+                    <p class="sub-title">加入现有网络</p>
+                    <p class="text">如果您的老板或者同事</p>
+                    <p class="text">已经创建了网络</p>
+                </div>
+            </div>
+            <!--<div class="item" style="padding-top: 20px; padding-bottom: 20px">-->
+            <!--<p class="text" style="text-align: center">暂时还没有网络，先看介绍</p>-->
+            <!--</div>-->
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" role="dialog" id="loginRegSuccess">
+    <div class="modal-dialog">
+        <div class="modal-content" >
+            <div class="label1">账号创建成功</div>
+            <div class="label2">正在进入系统</div>
+            <div class="hr"></div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<div class="modal fade" role="dialog" id="videoModal">
+    <div class="modal-dialog">
+        <div class="modal-content" >
+            <div class="my_close" data-dismiss="modal" aria-hidden="true">
+                <img src="/static/image/ic_close.png" alt="关闭"/>
+            </div>
+            <div class="videoWrapper">
+                <video src="//static.dingdandao.com/dingdandao.mp4" width="800"
+                       height="550" controls="controls"><source type="video/mp4">Your browser does not support the video tag.</video>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<div class="modal fade" role="dialog" id="resetSuccess">
+    <div class="modal-dialog">
+        <div class="modal-content" >
+            <div class="label1">密码修改成功</div>
+            <div class="label2">请重新登录</div>
+            <div class="hr"></div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<div class="modal fade" role="dialog" id="loginLogSuccess">
+    <div class="modal-dialog">
+        <div class="modal-content" >
+            <div class="label1">账号登录成功</div>
+            <div class="label2">正在进入系统</div>
+            <div class="hr"></div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+<div class="modal fade" role="dialog" id="loginApplySuccess">
+    <div class="modal-dialog">
+        <div class="modal-content" >
+            <div class="label1">感谢您的注册</div>
+            <div class="label2">订单来了的工作人员尽快与您取得联系。 您将在审核通过之后开始移动管理。</div>
+            <div class="hr"></div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+</html>

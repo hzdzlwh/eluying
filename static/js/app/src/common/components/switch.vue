@@ -1,3 +1,10 @@
+/*
+* @Author: lxj
+* @Date:   2017-07-18 15:30:17
+* @Last Modified by:   lxj
+* @Last Modified time: 2017-07-19 11:04:37
+* @email: 783384903@qq.com
+*/
 <template>
     <label>
         <input class="dd-switch dd-switch-animbg" type="checkbox" :disabled='disabled' v-model="inputValue" :checked='inputValue'  >{{label}} </label>
@@ -106,6 +113,9 @@ export default {
         };
     },
     watch: {
+        // value(val) {
+        //     this.inputValue = val;
+        // },
         value(val) {
             this.inputValue = !this.value;
         },

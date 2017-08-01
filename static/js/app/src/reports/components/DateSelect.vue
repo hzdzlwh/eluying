@@ -64,6 +64,43 @@
         },
         created() {
             // this.type = 0;
+            this.type = this.stateType;
+            this.dateDisabled = this.type !== 6;
+            const today = new Date();
+            switch (this.type) {
+                case 0:
+                    this.startDate = util.dateFormat(util.diffDate(today, -7));
+                    this.endDate = util.dateFormat(util.diffDate(today, -1));
+                    break;
+                case 1:
+                    this.startDate = util.dateFormat(util.diffDate(today, 1));
+                    this.endDate = util.dateFormat(util.diffDate(today, 7));
+                    break;
+                case 2:
+                    this.startDate = util.dateFormat(today);
+                    this.endDate = util.dateFormat(today);
+                    break;
+                case 3:
+                    this.startDate = util.dateFormat(util.diffDate(today, -1));
+                    this.endDate = util.dateFormat(util.diffDate(today, -1));
+                    break;
+                case 4:
+                    const day = today.getDay();
+                    this.startDate = util.dateFormat(util.diffDate(today, 1 - day));
+                    this.endDate = util.dateFormat(util.diffDate(today, 7 - day));
+                    break;
+                case 5:
+                    const month = today.getMonth();
+                    const year = today.getFullYear();
+                    this.startDate = util.dateFormat(new Date(year, month, 1));
+                    this.endDate = util.dateFormat(new Date(year, month + 1, 0));
+                    break;
+            }
+        },
+        computed: {
+            stateType() {
+                return this.$store.state.date.type;
+            }
         },
         watch: {
             type(val) {
@@ -132,6 +169,10 @@
                 }
 
                 this.emitDateChange();
+            },
+            stateType(newValue) {
+                console.log(newValue);
+                this.type = newValue;
             }
         },
         methods: {
@@ -147,7 +188,8 @@
                     });
                     this[types.SET_DATE]({
                         startDate: this.startDate,
-                        endDate: this.endDate
+                        endDate: this.endDate,
+                        type: this.type
                     });
                 }, 300);
             }

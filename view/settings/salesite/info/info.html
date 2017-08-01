@@ -27,7 +27,7 @@
                     <div class="info-definition">店铺类型</div>
                     <div class="info-selections">
                         <dd-select placeholder="请选择店铺类型" style="width:160px;" v-model="shopType">
-                            <dd-option v-for="option in optionShopType" :value="option.id" :label="option.name">
+                            <dd-option v-for="option in optionShopType" :value="option.id" :label="option.name" :key='option.id'>
                             </dd-option>
                         </dd-select>
                     </div>
@@ -38,7 +38,7 @@
                     <div class="info-definition">店铺地址</div>
                     <div class="info-imgs" style="float: left ;margin-left: 10px ;">
                         <dd-select class="info-choose" v-model="provinceType" placeholder="请选择">
-                            <dd-option v-for="option in provinceItems"  :value="option.id" :label="option.name">
+                            <dd-option v-for="option in provinceItems"  :value="option.id" :label="option.name" :key='option.id'>
                             </dd-option>
                         </dd-select>
                         <dd-select class="info-choose" v-model="cityType" placeholder="请选择">
@@ -67,9 +67,9 @@
                             </div>
                             <span class="info-num" v-text="`${imgUrls.length}/20`"></span>
                         </div>
-                        <input id="saleSite-uploadBtn" type="file" name="file" accept="image/*" style="height: 1px;width: 1px;opacity: 0;" />
+                        <input id="saleSite-uploadBtn" type="file" name="file" accept="image/jpg,image/jpeg,image/png" style="height: 1px;width: 1px;opacity: 0;" />
                         <div class="info-img-container">
-                            <div class='detail-imgs' v-for="(imgUrl, index) in imgUrls">
+                            <div class='detail-imgs' v-for="(imgUrl, index) in imgUrls" :key='index'>
                                 <img :src='imgUrl' style='height:72px; width:72px;'/>
                                 <div class='img-handle'>
                                     <img src='//static.dingdandao.com/eluyun3E02A1DF-ECB8-45AD-97B8-855C0F1A2815@1x.png' class='info-close'@click='remove(index)'/>

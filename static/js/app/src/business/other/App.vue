@@ -125,7 +125,7 @@
                 intervalTime: null,
                 intervalBase: 0.5,
                 intervalBaseAlert: false,
-                autoManageHouse: 0
+                autoManageHouse: 1
             }
         },
         components: {
@@ -229,8 +229,10 @@
             },
             getAutoManageHouse() {
                 http.get('/room/getDirectRoomAutoSelectStatus', {}).then(res => {
-                    if (res.code === 1) {
-                        this.autoManageHouse = res.data ? 1 : 0;
+                    if (res.data) {
+                        this.autoManageHouse = 1;
+                    } else {
+                        this.autoManageHouse = 0;
                     }
                 });
             },

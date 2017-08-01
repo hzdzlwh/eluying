@@ -1,3 +1,10 @@
+/*
+* @Author: lxj
+* @Date:   2017-06-16 14:39:38
+* @Last Modified by:   lxj
+* @Last Modified time: 2017-07-19 11:00:24
+* @email: 783384903@qq.com
+*/
 <template>
     <div>
         <div class="modal fade roomModals" id="reaminder" role="dialog">
@@ -182,11 +189,10 @@ export default {
                     this.$set(this.fee, 0, Math.min(Number(this.remainder.cardFee), Number(this.remainder.cards[0].balanceFee)));
                     // this.fee.$set(0, );
                     this.payed = this.fee[0].toFixed(2);
-                    this.needPay = (this.remainder.cardFee - this.payed).toFixed(2)
-
+                    this.needPay = (this.remainder.cardFee - this.payed).toFixed(2);
                 }
                 if (this.remainder.type === 2) {
-                    for (let i = 0; i < this.remainder.cards.length; i++) {
+                    for (let i = 0; i < this.remainder.cards.length; i ++) {
                         this.$set(this.paycard, i, JSON.parse(JSON.stringify(this.remainder.cards[i])));
                         this.$set(this.fee, i, Number(this.remainder.cards[i].refundFee));
                         this.payed = this.payed + this.fee[i];
@@ -219,10 +225,10 @@ export default {
             if (this.remainder.type === 2) {
                 total = this.remainder.paidFee;
             }
-            for (let i = 0; i < this.paycard.length; i++) {
-                let minfee = Math.min(Number(total), Number(this.remainder.cards.find((item) => {return item.serialNum === this.paycard[i].serialNum}).balanceFee));
+            for (let i = 0; i < this.paycard.length; i ++) {
+                let minfee = Math.min(Number(total), Number(this.remainder.cards.find((item) => { return item.serialNum === this.paycard[i].serialNum; }).balanceFee));
                 if (this.remainder.type === 2) {
-                    minfee = Number(this.remainder.cards.find((item) => {return item.serialNum === this.paycard[i].serialNum}).refundFee);
+                    minfee = Number(this.remainder.cards.find((item) => { return item.serialNum === this.paycard[i].serialNum; }).refundFee);
                 }
                 this.$set(this.fee, i, minfee);
                 total = (total - minfee).toFixed(2);

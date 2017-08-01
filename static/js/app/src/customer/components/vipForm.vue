@@ -374,6 +374,7 @@
             },
             addEditVip() {
                 const vip = this.vip;
+                vip.accountLIst = JSON.stringify(vip.accountLIst);
                 this.hasSubmit = true;
                 if ((vip.email && !this.mailFilter.test(vip.email))) {
                     return false;

@@ -47,9 +47,20 @@ var monthManage = {
                         id: result.data[name][0].channelId
                     });
                 }
+                // 新增虚拟币tab
+                channelArray.push({ name: '虚拟币', id: 1 });
                 $(".monthCategory").html("月份管理-" + result.data["0"][0].name);
                 monthManage.tab(channelArray);
-                monthManage.priceGrid(result.data);
+                // 获取虚拟币的数据,再和之前的数据合并
+                http.get('/virCurrency/getVirtualCurrencyMonthLimitList', {
+                    startDate: startDate,
+                    endDate: endDate,
+                    categoryId: $('#editMonth').attr('data-category-id')
+                }).then(res => {
+                    // 把两个请求拿到的数据合并 此处的1和 channelArray.push({ name: '虚拟币', id: 1 }); 中的1一样才能找到对应的tab-content
+                    monthManage.priceGrid({ ...result.data, 1: res.data.list });
+                });
+                
             });
     },
 
@@ -148,6 +159,34 @@ var monthManage = {
                     }
                     count ++;
                 });
+            } else if (name === '1') {
+                // name === 1 是虚拟币
+                var count = 0;
+                $.each(data[name], function(index, element){
+                    if (count % 7 === 0){
+                        tbody += "<tr><td><p>每间夜<br>使用上限</p></td>"
+                    }
+                    //定位首个价格在表格中的位置
+                    if (index === 0) {
+                        if (util.stringToDate(element.date).getDay() === 0 ){
+                            for (var i = 0; i < 6; i ++) {
+                                tbody += "<td></td>";
+                                count ++;
+                            }
+                        } else {
+                            for (var i = 0; i < util.stringToDate(element.date).getDay() - 1; i ++) {
+                                tbody += "<td></td>";
+                                count ++;
+                            }
+                        }
+                    }
+                    tbody += "<td class='netPrice' date='" + element.date + "' channel-id='" + element.channelId + "'><span class='date'>" + element.date.substring(8) + "日</span>" +
+                        "<p>" + element.limit + "</p></td>";
+                    if (count != 0 && (count + 1) % 7 ===0) {
+                        tbody += "</tr>";
+                    }
+                    count ++;
+                });
             }
             else {
                 //渠道表格
@@ -197,7 +236,20 @@ var monthManage = {
                 }
             }
         })*/
-        http.post("batchModifyAccommodationSpecialPrice",data)
+        if ($('#editMonth .nav-tabs-li.active').find('a').html() === '虚拟币') {
+            const processData = JSON.stringify(JSON.parse(data.items).map(item => {
+                return { date: item.date, newLimit: item.newSalePrice };
+            }));
+            http.get('/virCurrency/batchSetVirtualCurrencyDayLimit', {categoryId: data.categoryId, items: processData }).then(res => {
+                accommodationPriceList.getAccommodationPriceList($('#datePicker').datepicker('getDate'));
+                $('.priceOperate .second').addClass('hide');
+                $('.priceOperate .first .operateItem ').addClass('hide');
+                if (that) {
+                    modal.clearModal(that);
+                }
+            });
+        } else {
+            http.post("batchModifyAccommodationSpecialPrice",data)
             .then(function(result){
                 accommodationPriceList.getAccommodationPriceList($('#datePicker').datepicker('getDate'));
                 $('.priceOperate .second').addClass('hide');
@@ -206,6 +258,7 @@ var monthManage = {
                     modal.clearModal(that);
                 }
             })
+        }
     },
     events: {
         "click #editMonthButton": function(){
@@ -308,6 +361,13 @@ var monthManage = {
             }
         },
         "click #editMonthNetPriceButton": function(){
+            if ($('#editMonth .nav-tabs-li.active').find('a').html() === '虚拟币') {
+                $('#editMonthNetPrice').find('h1').html('修改虚拟币上限');
+                $('#editMonthNetPrice').find('label').html('使用上限');
+            } else {
+                $('#editMonthNetPrice').find('h1').html('修改微官网价');
+                $('#editMonthNetPrice').find('label').html('微官网价');
+            }
             if ($("#editMonth .selected").length === 1) {
                 /*$("#monthCommissionPrice").val($("#editMonth .selected").find("p:eq(0)").html());*/
                 $("#monthNetPrice").val($("#editMonth .selected").find("p:eq(0)").html());
