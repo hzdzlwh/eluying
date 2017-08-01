@@ -13,12 +13,11 @@
 		<div class="content">
 			<h4>会员卡销售汇总表</h4>
 			<div class="tab-container">
-				<span class="show-dimension">显示维度</span>
+				<span class="show-dimension">显示维度：</span>
 				<ul class="nav nav-tabs">
 					<li class="active" ref="activeTab">
 						<a href="#salesman" data-toggle="tab">销售员</a>
 					</li>
-					<li>/</li>
 					<li>
 						<a href="#vipcard" data-toggle="tab">会员卡类型</a>
 					</li>
@@ -223,15 +222,18 @@ export default {
 		.show-dimension{
 			display: inline-block;
 	    	line-height: 24px;
-	    	margin-right: 10px;
 		}
 		.nav-tabs{
 			margin-bottom: 0;
 			li{
+                border: 1px solid #d9d9d9;
+                padding: 0 5px;
+                border-radius: 4px 0 0 4px;
 				a{
 					color: #666;
 				}
 				&.active{
+                    border-color: #178ce6;
 					a{
 						background-color: #fff;
 						color: #178ce6;
@@ -239,6 +241,7 @@ export default {
 				}
 				&:nth-child(2){
 					line-height: 25px;
+                    border-radius: 0 4px 4px 0;
 				}
 			}
 		}
