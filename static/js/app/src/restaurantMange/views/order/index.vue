@@ -9,7 +9,7 @@
 <template>
     <div class="restContain">
         <div class="rest-order-left">
-            <div v-if="true">
+            <div v-if="false">
                 <div>
                     <date-select @change="handleDateChange" :defaultDate="defaultStrDate" :disabledDate="true"></date-select>
                 </div>
@@ -18,7 +18,11 @@
                 </div>
             </div>
             <div v-else>
-                
+                <div style="position:absolute;width: 200px;height: 400px;border: 1px solid #ccc;overflow:scroll;" @scroll="handleScroll">
+                    <ul>
+                        <li v-for="i in 20">{{i}}</li>
+                    </ul>
+                </div>
             </div>
         </div>
         <div class="rest-order-right">
@@ -56,6 +60,9 @@ export default {
     methods: {
         handleDateChange(date) {
             this.defaultStrDate = date;
+        },
+        handleScroll(ev) {
+            console.log(ev.target.scrollTop);
         }
     },
     watch: {
