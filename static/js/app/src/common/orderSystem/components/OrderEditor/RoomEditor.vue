@@ -1059,13 +1059,13 @@ export default {
         setDayFee(room) {
             const price = room.price;
             const priceScale = room.priceScale;
-            let totalFee = 0;
+            // let totalFee = 0;
             room.datePriceList.forEach((item, index) => {
                 item.dateFee = Number((price * priceScale[index]).toFixed(2));
-                totalFee += item.dateFee;
-                if (index === room.datePriceList.length - 1) {
-                    item.dateFee = (item.dateFee + (price - totalFee)).toFixed(2);
-                }
+                // totalFee += item.dateFee;
+                // if (index === room.datePriceList.length - 1) {
+                //     item.dateFee = (item.dateFee + (price - totalFee)).toFixed(2);
+                // }
             });
             this.setFirstDayFee(room);
         },
