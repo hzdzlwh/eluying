@@ -1071,7 +1071,8 @@ export default {
         },
             // 误差处理，将误差加至第一天
         setFirstDayFee(room) {
-            if (this.checkState !== 'ing' && room.checkType !== 1) {
+            // if (this.checkState !== 'ing' && room.checkType !== 1) {
+            if (room.checkType !== 1) {
                 const price = room.price;
                 if (price === undefined || price === '') {
                     return false;
