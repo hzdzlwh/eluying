@@ -38,7 +38,7 @@
                 </span>
             </div>
         <div class="report-select-top">
-            <div class="date" style="float:left;line-height:24px;">{{date}}</div>
+            <div class="date" style="float:left;line-height:24px;">日期：{{date}}</div>
         </div>
         <div style="display: flex;margin:10px auto;">
             <table style="width: 98px" class="l">
@@ -226,7 +226,7 @@
         data() {
             return {
                 date: '',
-                statType: '',
+                statType: '入住类型',
                 dayStat: [],
                 monStat: []
             };
