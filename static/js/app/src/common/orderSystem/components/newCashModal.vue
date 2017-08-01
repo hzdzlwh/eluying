@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-19 09:56:55
 * @Last Modified by:   linxinjian
-* @Last Modified time: 2017-08-01 17:02:09
+* @Last Modified time: 2017-08-01 17:21:36
 * @email: 783384903@qq.com
 */
 <!-- 有问题找产品，这个模块的功能一般人解释不清楚 -->
@@ -594,6 +594,8 @@ export default {
                         el.fee = parseInt(payed);
                         needPay = (needPay - (payed * el.rate).toFixed(2)).toFixed(2) * 1;
                         gameTotal += (el.fee * el.rate);
+                    } else {
+                        gameTotal += (el.paidFee - (el.fee * el.rate));
                     }
                 });
             }
@@ -839,8 +841,8 @@ export default {
                     res.data.member && res.data.member.forEach(element => {
                         // element.max = element.ableFee;
                         if (res.data.gameFeeMemberAble) {
-                            element.max = Math.abs(element.ableFee - element.paidFee - gamePaied).toFixed(2);
-                            element.ableFee = Math.abs(element.ableFee - element.paidFee - gamePaied).toFixed(2);
+                            element.max = Math.max((element.ableFee - element.paidFee).toFixed(2), 0);
+                            element.ableFee = Math.max((element.ableFee - element.paidFee - gamePaied).toFixed(2), 0);
                         } else {
                             element.max = Math.abs(element.ableFee - element.paidFee).toFixed(2);
                             element.ableFee = Math.abs(element.ableFee - element.paidFee).toFixed(2);
