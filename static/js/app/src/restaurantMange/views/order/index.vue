@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-28 16:16:45
 * @Last Modified by:   linxinjian
-* @Last Modified time: 2017-07-31 12:32:32
+* @Last Modified time: 2017-07-31 15:16:54
 * @email: 783384903@qq.com
 */
 
@@ -12,7 +12,7 @@
             
         </div>
         <div class="rest-order-right">
-            
+            <taday></taday>
         </div>
     </div>
 </template>
@@ -30,24 +30,26 @@
     }
 </style>
 <script>
-    export default {
-        props: {
-        },
-        data() {
-            return {
-            };
-        },
-        conputed: {
-        },
-        methods: {
-        },
-        watch: {
-        },
-        components: {
-        },
-        create() {
-    
-        }
+import taday from '../../components/tadayRestDate.vue';
+export default {
+    props: {
+    },
+    data() {
+        return {
+        };
+    },
+    conputed: {
+    },
+    methods: {
+    },
+    watch: {
+    },
+    components: {
+        taday
+    },
+    create() {
 
-    };
+    }
+
+};
 </script>
