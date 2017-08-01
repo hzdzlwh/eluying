@@ -243,6 +243,7 @@ export default {
 				&:nth-child(2){
                     a{
                         border-radius: 0 4px 4px 0;
+                        border-left: snow;
                     }
 				}
 			}
