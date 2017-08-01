@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-19 09:56:55
 * @Last Modified by:   linxinjian
-* @Last Modified time: 2017-07-31 17:44:55
+* @Last Modified time: 2017-08-01 10:10:00
 * @email: 783384903@qq.com
 */
 <!-- 有问题找产品，这个模块的功能一般人解释不清楚 -->
@@ -603,7 +603,7 @@ export default {
                     if (el.type === 0) {
                         let abelFee = 0;
                         if (this.orderPayment.gameFeeMemberAble) {
-                            abelFee = Math.min((el.max - gameTotal).toFixed(2), Math.max(0, needPay));
+                            abelFee = Math.max(Math.min((el.max - gameTotal).toFixed(2), Math.max(0, needPay)), 0);
                         } else {
                             abelFee = Math.min(el.max, Math.max(0, needPay));
                         }
