@@ -1,25 +1,25 @@
 /*
 * @Author: lxj
 * @Date:   2017-07-18 19:49:19
-* @Last Modified by:   lxj
-* @Last Modified time: 2017-07-24 21:02:50
+* @Last Modified by:   linxinjian
+* @Last Modified time: 2017-08-01 15:51:11
 * @email: 783384903@qq.com
 */
 <template>
-     <input class="dd-input inputVaild" v-model='num'  type='Number' @input='changeNum' :disabled='disabled' ref='inputVaild' :placeholder='placeholder'></input>
+     <input class="dd-input inputVaild" :style="{width:width}" v-model='num'  type='Number' @input='changeNum' :disabled='disabled' ref='inputVaild' :placeholder='placeholder'></input>
 </template>
 <style lang="scss" rel="stylesheet/scss" type="text/css">
 .inputVaild{
     background:#ffffff;
 border:1px solid #cccccc;
 border-radius:2px;
-width:80px!important;
 height:23px;
 }
 </style>
 <script>
     export default{
         props: {
+            width: String,
             placeholder: String,
             min: {
                 type: Number,
@@ -95,16 +95,21 @@ height:23px;
                         }
                     }
                 }
-            },
-            watch: {
-                value(newVal) {
+            }
+        },
+        watch: {
+            value(newVal) {
+                if (Number(newVal) < 20000000) {
                     this.num = newVal;
-                },
-                max(newVal) {
-                    if (this.num > newVal) {
-                        this.num = newVal;
-                        this.changeNum();
-                    }
+                } else {
+                    this.num = 20000000;
+                    this.$emit('input', 20000000);
+                }
+            },
+            max(newVal) {
+                if (this.num > newVal) {
+                    this.num = newVal;
+                    this.changeNum();
                 }
             }
         }
