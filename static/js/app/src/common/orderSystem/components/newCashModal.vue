@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-19 09:56:55
 * @Last Modified by:   linxinjian
-* @Last Modified time: 2017-08-01 10:10:00
+* @Last Modified time: 2017-08-01 17:21:36
 * @email: 783384903@qq.com
 */
 <!-- 有问题找产品，这个模块的功能一般人解释不清楚 -->
@@ -24,7 +24,7 @@
                                     <span class="cashier-money-text" v-if="orderPayment.need.penalty">违约金:<span>¥{{orderPayment.need.penalty}}</span></span>
                                 </div>
                                 <div style='margin-top:12px;'>
-                                    <span class="cashier-money-text" v-if='orderPayment.paid.game && orderPayment.game'>{{orderPayment.paid.gameName}}已抵扣:<span>¥{{orderPayment.paid.game}}</span></span>
+                                    <span class="cashier-money-text" v-if='orderPayment.paid.game'>{{orderPayment.paid.gameName}}已抵扣:<span>¥{{orderPayment.paid.game}}</span></span>
                                     <span class="cashier-money-text" v-if='orderPayment.paid.balance'>余额已抵扣:<span>¥{{orderPayment.paid.balance}}</span></span>
                                     <span class="cashier-money-text">常规收款已收:<span>¥{{ orderPayment.paid.normal }}</span></span>
                                 </div>
@@ -594,6 +594,8 @@ export default {
                         el.fee = parseInt(payed);
                         needPay = (needPay - (payed * el.rate).toFixed(2)).toFixed(2) * 1;
                         gameTotal += (el.fee * el.rate);
+                    } else {
+                        gameTotal += (el.paidFee - (el.fee * el.rate));
                     }
                 });
             }
@@ -603,9 +605,10 @@ export default {
                     if (el.type === 0) {
                         let abelFee = 0;
                         if (this.orderPayment.gameFeeMemberAble) {
-                            abelFee = Math.max(Math.min((el.max - gameTotal).toFixed(2), Math.max(0, needPay)), 0);
+                            abelFee = Math.max((el.max - gameTotal).toFixed(2), 0);
                         } else {
-                            abelFee = Math.min(el.max, Math.max(0, needPay));
+                            // abelFee = Math.min(el.max, Math.max(0, needPay));
+                            abelFee = Math.max(el.max, 0);
                         }
                         // const abelFee = Math.min(needPay, el.lastFee);
                         const payed = Math.min(abelFee, el.fee);
@@ -838,8 +841,8 @@ export default {
                     res.data.member && res.data.member.forEach(element => {
                         // element.max = element.ableFee;
                         if (res.data.gameFeeMemberAble) {
-                            element.max = Math.abs(element.ableFee - element.paidFee - gamePaied).toFixed(2);
-                            element.ableFee = Math.abs(element.ableFee - element.paidFee - gamePaied).toFixed(2);
+                            element.max = Math.max((element.ableFee - element.paidFee).toFixed(2), 0);
+                            element.ableFee = Math.max((element.ableFee - element.paidFee - gamePaied).toFixed(2), 0);
                         } else {
                             element.max = Math.abs(element.ableFee - element.paidFee).toFixed(2);
                             element.ableFee = Math.abs(element.ableFee - element.paidFee).toFixed(2);
