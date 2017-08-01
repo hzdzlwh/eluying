@@ -18,11 +18,22 @@
                 </div>
             </div>
             <div v-else>
-                <div style="position:absolute;width: 200px;height: 400px;border: 1px solid #ccc;overflow:scroll;" @scroll="handleScroll">
-                    <ul>
-                        <li v-for="i in 20">{{i}}</li>
-                    </ul>
-                </div>
+                <transition name="move">
+                    <div style="position:absolute;width: 200px;height: 400px;border: 1px solid #ccc;overflow:scroll;display:flex" @scroll="handleScroll" ref="menu">
+                        <div>
+                            <ul>
+                                <li @click="setMenu(1, $event)">a</li>
+                                <li>b</li>
+                                <li>c</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <ul>
+                                <li v-for="i in 40">{{i}}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </transition>
             </div>
         </div>
         <div class="rest-order-right">
@@ -42,6 +53,9 @@
     }
     .rest-order-right{
         width: 400px;
+    }
+    .move-enter-active {
+        transition: all 2s;
     }
 </style>
 <script>
@@ -74,6 +88,10 @@ export default {
         },
         handleDateChange(date) {
             this.defaultStrDate = date;
+        },
+        setMenu(index, event) {
+            // this.$refs.menu.scrollTop = 200;
+            $(this.$refs.menu).animate({ scrollTop: 200 }, 200);
         },
         handleScroll(ev) {
             console.log(ev.target.scrollTop);
