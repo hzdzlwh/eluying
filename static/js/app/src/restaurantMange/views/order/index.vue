@@ -9,7 +9,9 @@
 <template>
     <div class="restContain">
         <div class="rest-order-left">
-            
+            <div>
+                <date-select @change="handleDateChange" :defaultDate="defaultStrDate"></date-select>
+            </div>
         </div>
         <div class="rest-order-right">
             <taday></taday>
@@ -31,21 +33,28 @@
 </style>
 <script>
 import taday from '../../components/tadayRestDate.vue';
+import DateSelect from '../../../accommodation/components/DateSelect';
+import { dateFormat } from '../../../common/util';
 export default {
     props: {
     },
     data() {
         return {
+            defaultStrDate: dateFormat(new Date())
         };
     },
     conputed: {
     },
     methods: {
+        handleDateChange(date) {
+            this.defaultStrDate = date;
+        }
     },
     watch: {
     },
     components: {
-        taday
+        taday,
+        DateSelect
     },
     create() {
 
