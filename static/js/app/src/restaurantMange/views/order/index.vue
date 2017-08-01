@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-28 16:16:45
 * @Last Modified by:   linxinjian
-* @Last Modified time: 2017-08-01 17:56:24
+* @Last Modified time: 2017-08-01 18:02:44
 * @email: 783384903@qq.com
 */
 
@@ -42,30 +42,23 @@
 </style>
 <script>
 import taday from '../../components/tadayRestDate.vue';
-<<<<<<< HEAD
 import inputKeyboard from '../../../common/components/inputKeyboard.vue';
-=======
 import DateSelect from '../../../accommodation/components/DateSelect';
 import { dateFormat } from '../../../common/util';
->>>>>>> 80649117da4a06c475c1cc3f1b6951cf946c7441
 export default {
     props: {
 
     },
     data() {
         return {
-<<<<<<< HEAD
             keyboardVisible: false,
-            restNum: 0
-=======
+            restNum: 0,
             defaultStrDate: dateFormat(new Date())
->>>>>>> 80649117da4a06c475c1cc3f1b6951cf946c7441
         };
     },
     computed: {
     },
     methods: {
-<<<<<<< HEAD
         numChange(val) {
             this.restNum = val;
         },
@@ -74,21 +67,17 @@ export default {
         },
         closeKeyboard() {
             this.keyboardVisible = false;
-=======
+        },
         handleDateChange(date) {
             this.defaultStrDate = date;
->>>>>>> 80649117da4a06c475c1cc3f1b6951cf946c7441
         }
     },
     watch: {
     },
     components: {
         taday,
-<<<<<<< HEAD
-        inputKeyboard
-=======
+        inputKeyboard,
         DateSelect
->>>>>>> 80649117da4a06c475c1cc3f1b6951cf946c7441
     },
     created() {
 
