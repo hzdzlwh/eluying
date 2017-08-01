@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-28 16:16:45
 * @Last Modified by:   linxinjian
-* @Last Modified time: 2017-07-31 15:16:54
+* @Last Modified time: 2017-08-01 18:02:44
 * @email: 783384903@qq.com
 */
 
@@ -28,6 +28,7 @@
         <div class="rest-order-right">
             <taday></taday>
         </div>
+        <inputKeyboard :visible='keyboardVisible' :num='restNum' @numChange='numChange' @close='closeKeyboard'></inputKeyboard>
     </div>
 </template>
 <style scoped>
@@ -45,19 +46,32 @@
 </style>
 <script>
 import taday from '../../components/tadayRestDate.vue';
+import inputKeyboard from '../../../common/components/inputKeyboard.vue';
 import DateSelect from '../../../accommodation/components/DateSelect';
 import { dateFormat } from '../../../common/util';
 export default {
     props: {
+
     },
     data() {
         return {
+            keyboardVisible: false,
+            restNum: 0,
             defaultStrDate: dateFormat(new Date())
         };
     },
-    conputed: {
+    computed: {
     },
     methods: {
+        numChange(val) {
+            this.restNum = val;
+        },
+        getNum(val) {
+            this.keyboardVisible = true;
+        },
+        closeKeyboard() {
+            this.keyboardVisible = false;
+        },
         handleDateChange(date) {
             this.defaultStrDate = date;
         },
@@ -69,9 +83,10 @@ export default {
     },
     components: {
         taday,
+        inputKeyboard,
         DateSelect
     },
-    create() {
+    created() {
 
     }
 

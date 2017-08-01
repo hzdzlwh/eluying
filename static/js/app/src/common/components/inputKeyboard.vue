@@ -1,24 +1,19 @@
 <template>
-    <div>
-        <div class="modal fade roomModals" id="checkOut" role="dialog">
+        <div class="modal fade roomModals" id="keyboard" role="dialog">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="roomModals-header">
-                        <span class="header-text">预订人数</span>
-                        <span class="close-icon" @click="hideModal"></span>
+                        <span class="header-text">填写人数</span><span>大圆桌4</span>
                     </div>
                     <div class="roomModals-body">
                         <div class="content-item">
-                            <p class="content-item-title" style="margin-bottom:0;"><span>房间信息</span></p>
-                            <table v-touch:tap="typing" v-touch:long="longTab">
-                                <tbody>
+                            <inpuVaild :isInt='true' v-model='val' />
+                            <table >
+                                <tbody @click='addValue'>
                                     <tr>
-                                        <td>7</td>
-                                        <td>8</td>
-                                        <td>9</td>
-                                        <td data-code='D' rowspan="2">
-                                            <icon name='del' />
-                                        </td>
+                                        <td>1</td>
+                                        <td>2</td>
+                                        <td>3</td>
                                     </tr>
                                     <tr>
                                         <td>4</td>
@@ -26,46 +21,101 @@
                                         <td>6</td>
                                     </tr>
                                     <tr>
-                                        <td>1</td>
-                                        <td>2</td>
-                                        <td>3</td>
-                                        <td data-code='K' rowspan="2" :class="{active: activeOk}">{{ okText || 'OK' }}</td>
+                                        <td>7</td>
+                                        <td>8</td>
+                                        <td>9</td>
                                     </tr>
                                     <tr>
-                                        <td>{{ point ? '.' : '' }}</td>
+                                        <td></td>
                                         <td>0</td>
-                                        <td data-code='F'>
-                                            <icon name="keyfold" />
-                                        </td>
+                                        <td>D</td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
                     </div>
                     <div class="roomModals-footer">
+                        <span @click='close'>取消</span><span @click='submit'>确定</span>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 </template>
 <style scoped lang="scss" rel="stylesheet/scss">
-
+#keyboard {
+    .modal-dialog{
+        width: 300px;
+        .roomModals-header{
+            display:flex;
+            justify-content: space-between;
+            align-items:flex-start;
+        }
+        table{
+            width: 100%;
+            text-align: center;
+            border-spacing: 10px;
+            border-collapse: inherit;
+            tr{
+                margin: 10px -10px;
+            }
+            td {
+                border: 1px solid black;
+                margin:0 10px;
+            }
+        }
+    }
+}
 </style>
 <script>
-import http from '../../http';
+import inpuVaild from './inputVaild.vue';
 export default {
+    props: {
+        visible: Boolean,
+        num: Number,
+        numChange: Function
+    },
     data() {
         return {
-            
+            val: 10
         };
     },
     computed: {
-       
+
+    },
+    methods: {
+        addValue(e) {
+            if (e.target.innerText === 'D') {
+                this.val = Number(this.val.toString().slice(0, -1));
+            }
+            if (e.target.innerText && !isNaN(Number(e.target.innerText))) {
+                this.val = Number(this.val + e.target.innerText);
+            }
+        },
+        changeValue(val) {
+            this.val = val;
+        },
+        close() {
+            this.$emit('close');
+        },
+        submit() {
+            this.$emit('numChange', this.num);
+            this.close();
+        }
     },
     watch: {
-        
+        visible(val) {
+            if (val) {
+                $('#keyboard').modal({ backdrop: 'static' });
+            } else {
+                $('#keyboard').modal('hide');
+            }
+        },
+        num(val) {
+            this.val = val;
+        }
     },
-    components: {}
+    components: {
+        inpuVaild
+    }
 };
 </script>
