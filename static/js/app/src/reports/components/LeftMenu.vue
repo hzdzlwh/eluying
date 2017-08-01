@@ -22,6 +22,9 @@
         width:140px;
         overflow: scroll;
     }
+    #leftMenu-children::-webkit-scrollBar{
+        width: 0;
+    }
 </style>
 <script>
     import bus from '../bus.js';
