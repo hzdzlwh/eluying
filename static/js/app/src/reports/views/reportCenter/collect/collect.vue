@@ -17,6 +17,8 @@
     import historyGuest from '../accommodation/historyGuest.vue';
     import businessRoom from '../accommodation/businessRoom.vue';
     import forecastRoom from '../accommodation/forecastRoom.vue';
+    import cateringDaily from '../catering/cateringDaily.vue';
+    import cateringReceiptGather from '../catering/cateringReceiptGather.vue';
     import dishesPresent from '../catering/dishesPresent.vue';
     import dishesStatistics from '../catering/dishesStatistics.vue';
     import receiptDetails from '../finance/receiptDetails.vue';
@@ -63,6 +65,8 @@
             historyGuest,
             businessRoom,
             forecastRoom,
+            cateringDaily,
+            cateringReceiptGather,
             dishesPresent,
             dishesStatistics,
             receiptDetails,

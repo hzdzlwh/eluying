@@ -6,13 +6,13 @@
             </div>
             <div class="export" style="float:right;margin-left:20px;margin-top:-20px;">
                 <dd-dropdown text="导出明细" trigger="click" style="width:100px;">
-                  <!-- <dd-dropdown-item><span><a :href="exportUrl(1)">导出PDF</a></span></dd-dropdown-item> -->
-                  <dd-dropdown-item><span><a :href="exportUrl(0)">导出Excel</a></span></dd-dropdown-item>
+                    <!-- <dd-dropdown-item><span><a :href="exportUrl(1)">导出PDF</a></span></dd-dropdown-item> -->
+                    <dd-dropdown-item><span><a :href="exportUrl(0)">导出Excel</a></span></dd-dropdown-item>
                 </dd-dropdown>
             </div>
         </div>
         <p class="report-title">
-            菜品统计汇总表
+            营业日收银汇总表
         </p>
         <div class="report-select-top">
             <div class="date">日期 : <i>{{date.startDate}} ~ {{date.endDate}}</i></div>
@@ -22,92 +22,25 @@
                         <dd-option :key="item.id" v-for="item in restTypeAll" :value="item.restType" :label="item.name"></dd-option>
                     </dd-select>
                 </div>
-                <div style="margin-right:20px;width: 120px;" class="fr region" >
-                    <dd-select v-model="name" >
-                        <dd-option :key="item.id" v-for="item in dishTypeAll" :value="item.name" :label="item.name"></dd-option>
-                    </dd-select>
-                </div>
             </div>
-            <label><input type="checkbox" value="" v-model="showChildren">显示套餐子菜数量</label>
         </div>
-        <table border="1" class="report-dishesStat-table">
-            <thead>
-                <tr>
-                    <th>餐厅名称</th>
-                    <th>菜品种类</th>
-                    <th>菜品名称</th>
-                    <th style="width:170px;">总数</th>
-                    <th>售卖数量</th>
-                    <th>赠送数量</th>
-                </tr>
-            </thead>
-            <tbody v-for="(rest, restIndex) in vips">
-                <tr v-for="(dishType, dishTypeIndex) in rest.dishTypeList">
-                    <td :rowspan="rest.dishTypeList.length" :class=" dishTypeIndex > 0 && dishTypeIndex <= rest.dishTypeList.length ?'table-desplay-rest':''">{{rest.restName}}</td>
-                    <td>{{dishType.dishType}}</td>
-                    <td>
-                        <div v-for="(dish, dishIndex) in dishType.dishList">{{dish.dishName}}</div>
-                    </td>
-                    <td>
-                        <div v-for="(dish, dishIndex) in dishType.dishList">{{dish.totalAmount}}</div>
-                    </td>
-                    <td>
-                        <div v-for="(dish, dishIndex) in dishType.dishList">{{dish.sellNum}}</div>
-                    </td>
-                    <td>
-                        <div v-for="(dish, dishIndex) in dishType.dishList">{{dish.sendNum}}</div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div> 
+        <dd-table :columns="col" :data-source="vips" :bordered="true" style="margin:20px 0 10px;"></dd-table>
+        <div class="foot footfix">
+            <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo" style="float:right;margin-top:20px;"/>
+        </div>
+    </div>
 </template>
-<style lang="scss" scoped>
-    .report-select-top {
-        label {
-            float: left;
-            margin-left: 20px;
-            margin-bottom: 0;
-            height:24px;
-            display:flex;
-            align-items:center;
-            input {
-                margin-top: -1px;
-            }
-        }
-    }
-    .report-dishesStat-table{
-        width: 1200px;
-        margin:0 auto;
-        margin-top: 20px;
-        th{
-            height: 30px;
-            background: #99CCFF;
-            text-align:center;
-        }
-        .table-desplay-rest{
-            display:none;
-        }
-        td{
-            text-align:center;
-        }
-        div{
-            height: 30px;
-            line-height: 28px;
-            text-align:center;
-            border-bottom: 1px solid #ccc;
-        }
-    }
+<style lang='scss' scoped>
 </style>
 <script>
+    import { DdTable, DdPagination, DdDropdown, DdDropdownItem, DdSelect, DdOption, DdGroupOption } from 'dd-vue-component';
     import http from 'http';
     import { mapState } from 'vuex';
-    import { DdDropdown, DdDropdownItem, DdSelect, DdOption, DdTable } from 'dd-vue-component';
-    import { getRestType, getDishType } from '../mixin/selectType';
+    import { getRestType } from '../mixin/selectType';
     import { collect } from '../mixin/collect';
     import pagination from '../mixin/pagination';
     export default {
-        mixins: [getRestType, getDishType, collect, pagination],
+        mixins: [getRestType, collect, pagination],
         props: {
             startDate: String,
             endDate: String
@@ -115,7 +48,58 @@
         data() {
             return {
                 vips: [],
-                showChildren: false
+                col: [
+                    {
+                        title: '餐厅名称',
+                        dataIndex: 'restName',
+                        width: 100
+                    },
+                    {
+                        title: '营业日期',
+                        dataIndex: 'orderNum',
+                        width: 160
+                    },
+                    {
+                        title: '总金额',
+                        dataIndex: '',
+                        width: 60
+                    },
+                    {
+                        title: '折扣金额',
+                        dataIndex: '',
+                        width: 60
+                    },
+                    {
+                        title: '全单优惠',
+                        dataIndex: '',
+                        width: 60
+                    },
+                    {
+                        title: '零头处理',
+                        dataIndex: '',
+                        width: 60
+                    },
+                    {
+                        title: '应收金额',
+                        dataIndex: '',
+                        width: 60
+                    },
+                    {
+                        title: '实收金额',
+                        dataIndex: '',
+                        width: 60
+                    },
+                    {
+                        title: '收款明细',
+                        dataIndex: 'dishType',
+                        width: 100
+                    },
+                    {
+                        title: '收银员',
+                        dataIndex: 'dishName',
+                        width: 100
+                    }
+                ]
             };
         },
         beforeRouteEnter(to, from, next) {
@@ -125,7 +109,7 @@
                         next(vm => {
                             const collectList = res.data.list;
                             for (let i = 0; i < collectList.length; i ++) {
-                                if (collectList[i] === 502) {
+                                if (collectList[i] === 2) {
                                     vm.collectNum = 1;
                                     vm.collectName = '已收藏';
                                 }
@@ -135,17 +119,21 @@
                 });
         },
         created() {
-            this.getRestType();
-            this.getDishType();
             this.getData();
+            this.getRestType();
             this.collectStat();
+        },
+        components: {
+            DdTable,
+            DdPagination,
+            DdDropdown,
+            DdDropdownItem,
+            DdSelect,
+            DdOption,
+            DdGroupOption
         },
         watch: {
             date() {
-                this.pageNo = 1;
-                this.getData();
-            },
-            showChildren() {
                 this.pageNo = 1;
                 this.getData();
             }
@@ -153,27 +141,20 @@
         computed: {
             ...mapState(['date'])
         },
-        components: {
-            DdDropdown,
-            DdDropdownItem,
-            DdSelect,
-            DdOption,
-            DdTable
-        },
         methods: {
             collectUrl(num) {
                 if (num === 0) {
-                    http.get('/stat/addToCollect', { statValue: 502 }).then(res => {
+                    http.get('/stat/addToCollect', { statValue: 2 }).then(res => {
                         this.collectNum = 1;
                         this.collectName = '已收藏';
                     });
                 } else if (num === 1) {
-                    http.get('/stat/removeFromCollection', { statValue: 502 }).then(res => {
+                    http.get('/stat/removeFromCollection', { statValue: 2 }).then(res => {
                         this.collectNum = 0;
                         this.collectName = '加入收藏';
                         let removeIndex = null;
                         this.$router.options.routes[2].children[0].children.map((item, index) => {
-                            if (item.meta.id === 502) {
+                            if (item.meta.id === 2) {
                                 removeIndex = index;
                             }
                         });
@@ -192,13 +173,16 @@
             },
             exportUrl(type) {
                 const obj = {
+                    pageNo: this.pageNo,
                     restId: this.restType.split('~')[1],
                     startDate: this.date.startDate,
-                    endDate: this.date.endDate,
-                    showPackageDish: 0
+                    endDate: this.date.endDate
                 };
                 if (this.name !== '全部菜品分类') {
                     obj.dishType = this.name;
+                };
+                if (this.operatorId !== 'ALL') {
+                    obj.operatorId = this.operatorId;
                 };
                 // 后台要求如果为空就不传
                 for (const ob in obj) {
@@ -208,7 +192,7 @@
                 };
                 const paramsObj = {
                     exportType: type,
-                    reportType: 502,
+                    reportType: 2,
                     params: JSON.stringify(obj)
                 };
                 const host = http.getUrl('/stat/exportReport');
@@ -219,17 +203,11 @@
             },
             getData() {
                 const obj = {
+                    pageNo: this.pageNo,
                     restId: this.restType.split('~')[1],
                     startDate: this.date.startDate,
-                    endDate: this.date.endDate
-                };
-                if (this.showChildren) {
-                    obj.showPackageDish = 1;
-                } else if (!this.showChildren) {
-                    obj.showPackageDish = 0;
-                }
-                if (this.name !== '全部菜品分类') {
-                    obj.dishType = this.name;
+                    endDate: this.date.endDate,
+                    showPackageDish: 0
                 };
                 // 后台要求如果为空就不传
                 for (const ob in obj) {
@@ -237,10 +215,11 @@
                         delete obj[ob];
                     }
                 };
-                http.post('/stat/getDishGather', obj).then(res => {
+                http.post('/stat/getDishSendDetail', obj).then(res => {
                     if (res.code === 1) {
-                        this.vips = res.data.list;
-                    };
+                        this.vips = res.data.list || [];
+                        this.pages = Math.ceil(res.data.count / 30);
+                    }
                 });
             }
         }

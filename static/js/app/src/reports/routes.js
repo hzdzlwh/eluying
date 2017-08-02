@@ -37,6 +37,8 @@ import forecastRoom from './views/reportCenter/accommodation/forecastRoom.vue';
 import businessRoom from './views/reportCenter/accommodation/businessRoom.vue';
 // import clearRoom from './views/reportCenter/accommodation/clearRoom.vue';
 import reportCatering from './views/reportCenter/catering/catering.vue';
+import cateringDaily from './views/reportCenter/catering/cateringDaily.vue';
+import cateringReceiptGather from './views/reportCenter/catering/cateringReceiptGather.vue';
 import dishesStatistics from './views/reportCenter/catering/dishesStatistics.vue';
 import dishesPresent from './views/reportCenter/catering/dishesPresent.vue';
 // import reportEntertainment from './views/reportCenter/entertainment/entertainment.vue';
@@ -71,6 +73,8 @@ export const routeList = {
     morrowLeave,
     businessRoom,
     forecastRoom,
+    cateringDaily,
+    cateringReceiptGather,
     dishesStatistics,
     dishesPresent,
     receiptDetails,
@@ -440,8 +444,22 @@ export const routes = [
                     name: '餐饮'
                 },
                 component: reportCatering,
-                redirect: '/reportCenter/catering/dishesStatistics',
+                redirect: '/reportCenter/catering/cateringDaily',
                 children: [
+                    {
+                        path: '/reportCenter/catering/cateringDaily',
+                        meta: {
+                            name: '详细日报表'
+                        },
+                        component: cateringDaily
+                    },
+                    {
+                        path: '/reportCenter/catering/cateringReceiptGather',
+                        meta: {
+                            name: '营业日收银汇总表'
+                        },
+                        component: cateringReceiptGather
+                    },
                     {
                         path: '/reportCenter/catering/dishesStatistics',
                         meta: {

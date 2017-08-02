@@ -1,17 +1,17 @@
 <template>
 <div class="restaurant-mange">
     <div class="restaurant-top-menu">
-    <div class='restmange-list-menu'>
-        <dd-select v-model='restId' placeholder="请选择入住类型" >
-            <dd-option v-for="rest in restaurantList" :value="rest.restId" :key="rest.restId" :label="rest.restName">
-            </dd-option>
-        </dd-select>
+        <div class='restmange-list-menu'>
+            <dd-select v-model='restId' placeholder="请选择入住类型" >
+                <dd-option v-for="rest in restaurantList" :value="rest.restId" :key="rest.restId" :label="rest.restName">
+                </dd-option>
+            </dd-select>
         </div>
         <router-link to='/order' class='restmange-link'>桌位点餐</router-link>
         <router-link to='/orderList' class='restmange-link'>餐饮订单</router-link>
         <router-link to='/book' class='restmange-link'>预订沽清</router-link>
     </div>
-    <div class="restaurant-container">
+    <div class="restaurant-mange-container">
         <ul class='leftMenu' v-if='$route.meta.invisible'>
             <li v-if="route.meta.invisible" v-for="route in $router.options.routes" class="leftMenu-item">
                 <router-link :to="route.path">{{route.meta.name}}</router-link>
@@ -36,11 +36,10 @@
         top:118px;
     }
     .restaurant-top-menu{
-        z-index:1;
+        z-index:1070;
         position: fixed;
         width: 100%;
         height: 50px;
-        z-index: 1;
         background: #fbfbfb;
         border-bottom: 1px solid #ccc;
         box-shadow: 0px 1px 3px #dadada;
