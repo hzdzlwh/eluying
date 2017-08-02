@@ -2,10 +2,17 @@
 <div class="restaurant-mange">
     <div class="restaurant-top-menu">
     <div class='restmange-list-menu'>
-        <dd-select v-model='restId' placeholder="请选择入住类型" >
-            <dd-option v-for="rest in restaurantList" :value="rest.restId" :key="rest.restId" :label="rest.restName">
+        <div class="restmange-list-select" @click='changeMenu'  v-clickoutside='closeMenu' :title='getName(restId)'>{{getName(restId)}}<img src="//static.dingdandao.com/673741C9-0BE5-4670-970E-37383302412F@1x.png" class="upload">
+        <div class="restmange-menu-containe" ref='restmangeMenuContaine' :style='{maxHeight: menuHeight}'>
+            <div class="restmange-menu-item" v-for='item in restaurantList' :key='item.restId' @click='setRestId(item.restId)' :title='item.restName'>
+                {{item.restName}}
+            </div>
+        </div>
+        </div>
+        <!-- <dd-select v-model='restId' placeholder="请选择入住类型" >
+            <dd-option v-for="rest inrestId restaurantList" :value="rest.restId" :key="rest.restId" :label="rest.restName">
             </dd-option>
-        </dd-select>
+        </dd-select> -->
         </div>
         <router-link to='/order' class='restmange-link'>桌位点餐</router-link>
         <router-link to='/orderList' class='restmange-link'>餐饮订单</router-link>
@@ -46,14 +53,40 @@
         box-shadow: 0px 1px 3px #dadada;
         padding-left:200px;
         .restmange-list-menu{
+
             width: 168px;
             display: inline-block;
             float: left;
             position: relative;
             margin-top: 12px;
-            border-right: 1px black solid;
+            border-right: 1px #d3dce5 solid;
             height: 27px;
             padding-right: 10px;
+            .restmange-list-select{
+                text-align: right;
+                padding-right: 23px;
+                line-height: 26px;
+                color: #999;
+                 max-width: 100%;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+            }
+            .restmange-menu-containe{
+                overflow-y: scroll;
+                background: #393b4a;
+                width: 169px;
+                font-size: 14px;
+                font-weight: normal;
+                padding-right: 38px;
+                transition: max-height 0.3s linear;
+                .restmange-menu-item{
+                    max-width: 100%;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                }
+            }
         }     
         .restmange-list-select{
            
@@ -61,7 +94,7 @@
         img{
             position: absolute;
             right: 17px;
-            top: 31px;
+            top: 10px;
         }
         .restmange-link{
             font-size: 16px;
@@ -84,6 +117,7 @@
 <script>
 import { mapState, mapMutations } from 'vuex';
 import http from '../common/http.js';
+import Clickoutside from 'dd-vue-component/src/utils/clickoutside';
 import {
     DdSelect,
     DdOption
@@ -92,7 +126,8 @@ export default {
     data() {
         return {
             restId: 0,
-            restaurantList: []
+            restaurantList: [],
+            menuHeight: '0'
         };
     },
     computed: mapState({
@@ -107,6 +142,26 @@ export default {
         ...mapMutations([
             'setRest'
         ]),
+        setRestId(id) {
+            this.restId = id;
+        },
+        changeMenu() {
+            if (this.menuHeight === '400px') {
+                this.menuHeight = '0';
+            } else {
+                this.$refs.restmangeMenuContaine.scrollTop = 0;
+                this.menuHeight = '400px';
+            }
+        },
+        closeMenu() {
+            this.menuHeight = '0';
+        },
+        getName(restId) {
+            if (restId) {
+                const selected = this.restaurantList.find(item => item.restId === restId);
+                return selected.restName;
+            }
+        },
         getRestList() {
             http.get('/restaurant/listSimple').then(res => {
                 this.restaurantList = res.data.list;
@@ -117,6 +172,9 @@ export default {
                 this.restId = this.RestState;
             });
         }
+    },
+    directives: {
+        Clickoutside
     },
     components: {
         DdSelect,
