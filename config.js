@@ -45,9 +45,9 @@ module.exports = {
     },
     html: ['./static/tpl/feature.html', './static/tpl/customerCase.html'],
     port: 3000,
-    devServer: '//www.dingdandao.com:3443',
+    // devServer: '//www.dingdandao.com:3443',
     testServer: '//www.dingdandao.com:1443',
-    // devServer: '//beta.dingdandao.com',
+    devServer: '//beta.dingdandao.com',
     // testServer: '//www.dingdandao.com:1443',
     SPA: [
         { url: '/view/reports', path: '/view/reports/index.html' },

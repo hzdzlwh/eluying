@@ -1059,14 +1059,20 @@ export default {
         setDayFee(room) {
             const price = room.price;
             const priceScale = room.priceScale;
+            // let totalFee = 0;
             room.datePriceList.forEach((item, index) => {
                 item.dateFee = Number((price * priceScale[index]).toFixed(2));
+                // totalFee += item.dateFee;
+                // if (index === room.datePriceList.length - 1) {
+                //     item.dateFee = (item.dateFee + (price - totalFee)).toFixed(2);
+                // }
             });
             this.setFirstDayFee(room);
         },
             // 误差处理，将误差加至第一天
         setFirstDayFee(room) {
-            if (this.checkState !== 'ing' && room.checkType !== 1) {
+            // if (this.checkState !== 'ing' && room.checkType !== 1) {
+            if (room.checkType !== 1) {
                 const price = room.price;
                 if (price === undefined || price === '') {
                     return false;

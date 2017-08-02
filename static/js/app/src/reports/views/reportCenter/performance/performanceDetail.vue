@@ -107,7 +107,8 @@ export default {
             columns: [
                 {
                     title: '订单号',
-                    dataIndex: 'serialNum'
+                    dataIndex: 'serialNum',
+                    width: 170
                 },
                 {
                     title: '创建时间',
@@ -172,10 +173,10 @@ export default {
         exportUrl(type) {
             const obj = {
                 endDate: this.date.endDate,
-                orderType: this.orderType,
+                orderType: this.orderType === -1 ? '' : this.orderType,
                 originId: this.userOriginType.split('~')[1],
                 pageNo: this.pageNo,
-                salerId: this.salerId,
+                salerId: this.salerId === -1 ? '' : this.salerId,
                 startDate: this.date.startDate
             };
             // 后台要求如果为空就不传
