@@ -20,6 +20,10 @@
     #leftMenu-children{
         min-width:86px;
         width:140px;
+        overflow: scroll;
+    }
+    #leftMenu-children::-webkit-scrollBar{
+        width: 0;
     }
 </style>
 <script>
