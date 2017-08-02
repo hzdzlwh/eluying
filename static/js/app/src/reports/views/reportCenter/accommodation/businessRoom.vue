@@ -12,8 +12,8 @@
                 </dd-dropdown>
             </div>
         </div>
-        <p class="report-title">
-            客房营业统计表
+        <p class="report-title report-business-title">
+            <span>客房营业统计表</span>
             <span class="ic">i
                 <div class="i">
                     报表说明： <br>
@@ -27,16 +27,18 @@
                 </div>
             </span>
         </p>
-        <div class="report-business-top">
-            <div class="date" style="float:left;line-height:24px;">{{date}}</div>
-            <div style="float:left;height:inherit;line-height:24px;">
-                <span style="float:left;margin-right:10px;">统计维度</span>
-                <div style="margin-right:20px;width: 120px;float:left;" class="fr report-business-select">
-                    <dd-select v-model="statType">
-                        <dd-option :key="item.id" v-for="item in statTypeAll" :value="item.statType" :label="item.name"></dd-option>
-                    </dd-select>
-            `   </div>
+        <div class="report-business-select">
+                <span>
+                    统计维度：
+                </span>
+                <span class="report-business-select-box">
+                    <div @click="getCheckData" :class="{active: this.statType === '入住类型'}">入住类型</div>
+                    <div @click="getRoomData" :class="{active: this.statType === '房间类型'}">房间类型</div>
+                    <div @click="getOriginData" style="border-right:0;" :class="{active: this.statType === '客源渠道'}">客源渠道</div>
+                </span>
             </div>
+        <div class="report-select-top">
+            <div class="date" style="float:left;line-height:24px;">日期：{{date}}</div>
         </div>
         <div style="display: flex;margin:10px auto;">
             <table style="width: 98px" class="l">
@@ -47,7 +49,7 @@
                 </thead>
                 <tbody class="td-body-color">
                 <tr>
-                    <td>{{statTypeAll[statType].name}}</td>
+                    <td>{{statType}}</td>
                 </tr>
                 <tr v-for="r in dayStat" :class="{b: r.name === '合计'}">
                     <td class="ellipsis">
@@ -124,17 +126,43 @@
     </div>
 </template>
 <style lang="scss" scoped>
-    .report-business-top{
-        height:24px;
-        .date{
-            float:left;
-            margin-right:20px;
-        }
-        .report-business-select{
-            float:left;
+    .report-business-title {
+        display:flex;
+        justify-content:center;
+    }
+    .report-business-select {
+        height: 26px;
+        margin:-20px auto -5px;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        color: #999999;
+        font-size: 12px;
+        .report-business-select-box {
+            background:#ffffff;
+            border:1px solid #d9d9d9;
+            border-radius:4px;
+            line-height:26px;
+            width:166px;
+            display:flex;
+            justify-content:space-between;
+            overflow:hidden;
+            div {
+                flex:1;
+                text-align:center;
+                border-right:1px solid #d9d9d9;
+                cursor:pointer;
+            }
+            div:hover {
+                color: #178ce6;
+            }
+            div.active {
+                color:#ffffff;
+                background:#178ce6;
+            }
         }
     }
-    .td-body-color{
+    .td-body-color {
         background:#eee;
     }
     th {
@@ -187,39 +215,18 @@
     .b {
         font-weight: bold;
     }
-    .report-collect {
-        float: left;
-        margin-left:20px;
-        height: 24px;
-        width: 100px;
-        border-radius:2px;
-        text-align: center;
-        line-height:24px;
-        cursor:pointer;
-        font-family:MicrosoftYaHei;
-        font-size:14px;
-        color:#ffffff;
-        text-align:center;
-    }
-    .report-collect-add {
-        background:#178ce6;
-    }
-    .report-collect-dis {
-        background:#f39c30;
-    }
 </style>
 <script>
-    import { DdDatepicker, DdDropdown, DdDropdownItem, DdSelect, DdOption } from 'dd-vue-component';
+    import { DdDatepicker, DdDropdown, DdDropdownItem } from 'dd-vue-component';
     import http from 'http';
     import util from 'util';
     import { collect } from '../mixin/collect';
-    import { getStatType } from '../mixin/selectType';
     export default {
-        mixins: [collect, getStatType],
+        mixins: [collect],
         data() {
             return {
                 date: '',
-                showTypeAll: [],
+                statType: '入住类型',
                 dayStat: [],
                 monStat: []
             };
@@ -231,15 +238,13 @@
         },
         watch: {
             date() {
-                this.getData();
+                this.getCheckData();
             }
         },
         components: {
             DdDatepicker,
             DdDropdown,
-            DdDropdownItem,
-            DdSelect,
-            DdOption
+            DdDropdownItem
         },
         beforeRouteEnter(to, from, next) {
             http.get('/stat/getCollection')
@@ -309,19 +314,30 @@
             disabledDate(date) {
                 return util.DateDiff(date, new Date()) < 1;
             },
-            getData() {
+            getCheckData() {
                 http.get('/stat/getRoomDailyStat', { date: this.date }).then(res => {
                     if (res.code === 1) {
-                        if (this.statType === 0) {
-                            this.dayStat = res.data.checkTypeDayStat;
-                            this.monStat = res.data.checkTypeMonStat;
-                        } else if (this.statType === 1) {
-                            this.dayStat = res.data.roomTypeDayStat;
-                            this.monStat = res.data.roomTypeMonStat;
-                        } else if (this.statType === 2) {
-                            this.dayStat = res.data.originDayStat;
-                            this.monStat = res.data.originMonStat;
-                        }
+                        this.statType = '入住类型';
+                        this.dayStat = res.data.checkTypeDayStat;
+                        this.monStat = res.data.checkTypeMonStat;
+                    }
+                });
+            },
+            getRoomData() {
+                http.get('/stat/getRoomDailyStat', { date: this.date }).then(res => {
+                    if (res.code === 1) {
+                        this.statType = '房间类型';
+                        this.dayStat = res.data.roomTypeDayStat;
+                        this.monStat = res.data.roomTypeMonStat;
+                    }
+                });
+            },
+            getOriginData() {
+                http.get('/stat/getRoomDailyStat', { date: this.date }).then(res => {
+                    if (res.code === 1) {
+                        this.statType = '客源渠道';
+                        this.dayStat = res.data.originDayStat;
+                        this.monStat = res.data.originMonStat;
                     }
                 });
             }

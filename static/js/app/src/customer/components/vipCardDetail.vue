@@ -21,7 +21,7 @@
                             <div style="width: 25%;"><span style="font-size:12px;color:#999999;">卡号</span> <span>{{card.vipCardNum}}</span></div>
                             <div style="width: 25%;"><span style="font-size:12px;color:#999999;">办理日期</span> <span>{{card.creationTime}}</span></div>
                             <div style="width: 25%;"><span style="font-size:12px;color:#999999;">状态</span> <span>{{CARDSTATUS[card.status]}}</span></div>
-                            <div style="width: 25%;"><span style="font-size:12px;color:#999999;">销售员</span> <span>{{card.salerString}}</span></div>
+                            <div style="width: 25%;display: block;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><span style="font-size:12px;color:#999999;">销售员</span> <span :title='card.salerString'>{{card.salerString || '无'}}</span></div>
                         </div>
                     </div>
                     <div class="info-item">
