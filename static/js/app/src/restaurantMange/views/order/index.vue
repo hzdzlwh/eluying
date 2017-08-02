@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-28 16:16:45
 * @Last Modified by:   linxinjian
-* @Last Modified time: 2017-08-02 17:29:24
+* @Last Modified time: 2017-08-02 17:32:14
 * @email: 783384903@qq.com
 */
 
@@ -54,8 +54,8 @@
             </div>
         </div>
         <div class="rest-order-right">
-            <taday></taday>
-            <resetContain></resetContain>
+            <taday v-if='leftType === 0'></taday>
+            <resetContain v-if='leftType === 1'></resetContain>
         </div>
     </div>
 </template>
