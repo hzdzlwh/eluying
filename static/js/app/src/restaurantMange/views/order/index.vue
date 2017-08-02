@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-28 16:16:45
 * @Last Modified by:   linxinjian
-* @Last Modified time: 2017-08-01 18:02:44
+* @Last Modified time: 2017-08-02 17:29:24
 * @email: 783384903@qq.com
 */
 
@@ -55,15 +55,17 @@
         </div>
         <div class="rest-order-right">
             <taday></taday>
+            <resetContain></resetContain>
         </div>
-        <inputKeyboard :visible='keyboardVisible' :num='restNum' @numChange='numChange' @close='closeKeyboard'></inputKeyboard>
     </div>
 </template>
 <style lang="scss" scoped>
     .restContain{
-        width: 1200px;
-        margin:auto;
+        width: 1210px;
+        margin: auto;
+        justify-content: space-between;
         display: flex;
+        padding-top:50px;
     }
     .rest-order-left{
         width: 792px;
@@ -133,39 +135,29 @@
 <script>
 import types from '../../store/types';
 import taday from '../../components/tadayRestDate.vue';
-import inputKeyboard from '../../../common/components/inputKeyboard.vue';
 import DateSelect from '../../../accommodation/components/DateSelect';
 import { dateFormat } from '../../../common/util';
 import customerRadio from '../../components/customerRadio.vue';
 import { mapState, mapMutations } from 'vuex';
+import resetContain from '../../components/resetConstain.vue';
 export default {
     props: {
 
     },
     data() {
         return {
-            keyboardVisible: false,
-            restNum: 0,
             defaultStrDate: this.date,
             selectArea: ''
         };
     },
     computed: {
-        ...mapState(['date'])
+        ...mapState(['date', 'leftType'])
     },
     methods: {
         ...mapMutations([
-            types.SET_DATE
+            types.SET_DATE,
+            types.SET_LEFT_TYPE
         ]),
-        numChange(val) {
-            this.restNum = val;
-        },
-        getNum(val) {
-            this.keyboardVisible = true;
-        },
-        closeKeyboard() {
-            this.keyboardVisible = false;
-        },
         handleDateChange(date) {
             this.defaultStrDate = date;
         },
@@ -185,9 +177,9 @@ export default {
     },
     components: {
         taday,
-        inputKeyboard,
         DateSelect,
-        customerRadio
+        customerRadio,
+        resetContain
     },
     created() {
 
