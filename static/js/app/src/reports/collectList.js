@@ -22,6 +22,8 @@ export default {
     '403': { component: 'transferDetails', name: '转应收帐明细表' },
     '405': { component: 'ARGather', name: 'AR结算汇总表' },
     '305': { component: 'rechargeDetails', name: '充值明细表' },
+    '1': { component: 'cateringDaily', name: '详细日报表' },
+    '2': { component: 'cateringReceiptGather', name: '营业日收银汇总表' },
     '502': { component: 'dishesStatistics', name: '菜品统计汇总表' },
     '501': { component: 'dishesPresent', name: '菜品赠送明细表' },
     '18': { component: 'dailyReport', name: '营业日报表' },
@@ -70,6 +72,12 @@ export const list = [
     },
     {
         'name': '销售员业绩明细表'
+    },
+    {
+        'name': '详细日报表'
+    },
+    {
+        'name': '营业日收银汇总表'
     }
 ];
 export const collectDateList = [
@@ -111,5 +119,11 @@ export const collectDateList = [
     },
     {
         'reportType': '603'
+    },
+    {
+        'reportType': '1'
+    },
+    {
+        'reportType': '2'
     }
 ];

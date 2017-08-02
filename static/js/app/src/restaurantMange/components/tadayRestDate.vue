@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-31 13:58:30
 * @Last Modified by:   linxinjian
-* @Last Modified time: 2017-08-02 15:17:45
+* @Last Modified time: 2017-08-02 16:48:18
 * @email: 783384903@qq.com
 */
 
@@ -209,13 +209,10 @@ export default {
         this.fetchDate();
     },
     mounted() {
-        window.inter = [];
-        window.inter.push(window.setInterval(this.fetchDate, 5000));
+        window.restinter = window.setInterval(this.fetchDate, 5000);
     },
     beforeDestroy() {
-        for (let i = window.inter.length - 1; i >= 0; i --) {
-            window.clearInterval(window.inter[i]);
-        }
+        window.clearInterval(window.restinter);
     }
 };
 </script>

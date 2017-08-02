@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-28 16:16:45
 * @Last Modified by:   linxinjian
-* @Last Modified time: 2017-08-01 18:02:44
+* @Last Modified time: 2017-08-02 17:32:14
 * @email: 783384903@qq.com
 */
 
@@ -30,16 +30,18 @@
             </div>
         </div>
         <div class="rest-order-right">
-            <taday></taday>
+            <taday v-if='leftType === 0'></taday>
+            <resetContain v-if='leftType === 1'></resetContain>
         </div>
-        <inputKeyboard :visible='keyboardVisible' :num='restNum' @numChange='numChange' @close='closeKeyboard'></inputKeyboard>
     </div>
 </template>
 <style lang="scss" scoped>
     .restContain{
-        width: 1200px;
-        margin:auto;
+        width: 1210px;
+        margin: auto;
+        justify-content: space-between;
         display: flex;
+        padding-top:50px;
     }
     .rest-order-left{
         width: 792px;
@@ -92,6 +94,5 @@ export default {
     created() {
 
     }
-
 };
 </script>
