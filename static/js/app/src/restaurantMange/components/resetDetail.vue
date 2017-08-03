@@ -2,12 +2,12 @@
 * @Author: lxj
 * @Date:   2017-08-01 14:45:58
 * @Last Modified by:   linxinjian
-* @Last Modified time: 2017-08-03 16:50:38
+* @Last Modified time: 2017-08-03 18:39:29
 * @email: 783384903@qq.com
 */
 
 <template>
-    <div class="rest-taday-contain">
+    <div class="rest-taday-contain" style="height:auto">
         <div class="rest-taday-count">
             <div class="restDetail-title-tip">桌号</div>
             <div class="restDetail-title-display">
@@ -36,8 +36,8 @@
                 </thead>
                 <tbody>
                 <template v-for='item in restDate.data.itemsMap'>
-                    <tr> <td><div><span class="rest-restDetail-dishname"> <span class="triangle-down"></span>{{item.dishName}}</span><span>送</span></div></td><td><div>x{{item.bookNum}}</div></td><td>{{item.price}}</td></tr>
-                    <tr v-for='sub in item.subDishList' >
+                    <tr @click='changeItem(item)'> <td><div><span class="rest-restDetail-dishname" :class='{"rest-item-del" : item.serviceState === 1}'> <span  :class='getTriangle(item)'></span>{{item.dishName}}</span><span class="rest-item-send" v-if='item.serviceState === 2'>送</span></div></td><td><div :class='{"rest-item-del" : item.serviceState === 1}'>x{{item.bookNum}}</div></td><td :class='{"rest-item-del" : item.serviceState === 1}'>{{item.price}}</td></tr>
+                    <tr v-for='sub in item.subDishList' v-if='item.select' :class='{"rest-item-del" : sub.serviceState === 1}'>
                         <td class="rest-restDetail-trchild">{{sub.dishName}}</td><td><div>x{{sub.bookNum}}</div></td><td></td>
                     </tr>
                 </template> 
@@ -45,23 +45,104 @@
                 </tbody>
             </table>
         </div>
+        <div class="rest-restDetail-foot">
+        <div style="padding:15px;border-bottom:1px solid #e0e6ed">
+        <div class="rest-foot-count">            
+        <div class="restDetail-title-tip">
+                共5项
+            </div>
+            <div class="rest-restDetail-dishcount">
+                <span class="restDetail-title-tip">合计</span>3000.00
+                <div><s class="restDetail-title-tip">5000.00</s><span class="rest-restDetail-tag">金卡6.0折</span></div>
+            </div>
+            </div>
+            <div class="restDetail-foot-check">
+                <div class="restDetail-check-item" @click='needpay = !needpay'><span ><span :class="getCheckeStatus(needpay)"></span>应收金额</span> <span>3000.00</span></div>
+                <div class="restDetail-check-list" v-show='needpay'>
+                    <div class="restDetail-check-item"><span>总金额</span> <span>￥2010.20</span></div>
+                    <div class="restDetail-check-item"><span>折扣金额</span> <span>￥2010.20</span></div>
+                    <div class="restDetail-check-item"><span>整单优惠</span> <span>￥2010.20</span></div>
+                    <div class="restDetail-check-item"><span>零头处理</span> <span>￥2010.20</span></div>
+                </div>
+                 <div class="restDetail-check-item" @click='paied = !paied'><span ><span :class="getCheckeStatus(paied)"></span>实收金额</span> <span>3000.00</span></div>
+                <div class="restDetail-check-list" v-show='paied'>
+                    <div class="restDetail-check-item"><span>07-04 11:23 星球币抵扣</span> <span>￥2010.20</span></div>
+                    <div class="restDetail-check-item"><span>07-04 11:23 会员余额</span> <span>￥2010.20</span></div>
+                    <div class="restDetail-check-item"><span>07-04 11:23 现金</span> <span>￥2010.20</span></div>
+                </div>
+                 <div class="restDetail-check-item"><span><span></span>违约金</span> <span>3000.00</span></div>
+                 <div class="restDetail-check-item"><span><span></span>还需收款</span> <span>3000.00</span></div>
+            </div>
+        </div>
+        </div>
     </div>
 </template>
 <style lang='scss'>
-    .triangle-down {
-        width: 0;
-        height: 0;
-        border-left: 12px solid transparent;
-        border-right: 12px solid transparent;
-        border-top: 8px solid red;
-    }
-    .rest-restDetail-constain{
-        padding: 0 20px;
-    }
     @mixin flex-just-between {
         display: flex;
         justify-content: space-between;
     }
+    .restDetail-foot-check{
+        .restDetail-check-list{
+            padding-left: 20px;
+        }
+        .restDetail-check-item{
+            @include flex-just-between;
+        }
+    }
+    .rest-restDetail-foot{
+        background:#ffffff;
+        box-shadow:0 -4px 4px 0 rgba(154,162,167,0.19);
+        width:318px;
+        border-bottom-right-radius: 8px;
+        border-bottom-left-radius: 8px;
+        .rest-foot-count{
+             @include flex-just-between;
+            border-bottom: 1px dashed #99a9bf;
+            .rest-restDetail-dishcount{
+                .rest-restDetail-tag{
+                    background:#ff9326;
+                    border-radius:4px;
+                    height:16px;
+                    color: #fff;
+                    font-size: 14px;
+                    line-height: 16px;
+                    height: 16px;
+                }
+            }
+        }
+    }
+    .rest-item-del{
+        text-decoration: line-through;
+    }
+    .rest-item-send{
+        font-size:14px;
+        color:#178ce6;
+    }
+    .triangle-down {
+        width: 0;
+        height: 0;
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
+        border-top: 8px solid #8e8e8e;
+        display: inline-block;
+        margin-right: 5px;
+    }
+    .triangle-right {
+        width: 0;
+        height: 0;
+        border-bottom: 6px solid transparent;
+        border-left: 8px solid #8e8e8e;
+        border-top: 6px solid transparent;
+        display: inline-block;
+        margin-right: 5px;
+    }
+    .rest-restDetail-constain{
+        padding: 0 20px;
+        height: 400px;
+        overflow-y: scroll;
+    }
+
     .restDetail-title-tip{
         font-size:12px;
         color:#8492a6;
@@ -119,6 +200,7 @@
                 border-bottom: 1px dashed #99a9bf;
             }
             tr{
+                cursor: pointer;
                 td:nth-child(1){
                     text-align: left;
                 }
@@ -178,6 +260,8 @@ export default {
             ORDER_TYPE,
             ORDER_STATE_TEXT,
             orderWay,
+            needpay: false,
+            paied: false,
             restDate: {
                 'code': 61058, 'data':
                 {
@@ -187,9 +271,9 @@ export default {
                         }
                     ], 'boardInfoStatus': 60315, 'boardState': 15170, 'canCancelSaleOrder': true, 'cancelAble': false, 'caterOrderId': 82081, 'changeBoard': false, 'channelDiscount': 75345, 'colseBoardTime': '测试内容76o1', 'creationTime': '测试内容98xi', 'customerName': '测试内容o8su', 'customerPhone': '测试内容9b4v', 'customerType': 46771, 'discount': 34406, 'discountChannel': 72281, 'discountRelatedId': 10840, 'discountRelatedName': '测试内容rh4n', 'editAble': false, 'expectStartTime': '测试内容1173', 'hasPrinter': true, 'hasRole': true, 'infoStatus': 53553, 'isCombinationOrder': false, 'isExistComplimentary': 13066, 'isExistDish': 83004, 'isExistPackage': 71415, 'itemsMap': [
                         {
-                            'bookNum': 12266, 'creationTime': '测试内容7ih9', 'dishId': 65546, 'dishName': '测试内容161y', 'dishType': 15172, 'isSend': false, 'operatorName': '测试内容k432', 'price': 57527, 'remark': '测试内容4fm6', 'serviceState': 14473, 'subDishList': [
+                            'bookNum': 12266, 'creationTime': '测试内容7ih9', 'dishId': 65546, 'dishName': '测试内容161y', 'dishType': 15172, 'isSend': false, 'operatorName': '测试内容k432', 'price': 57527, 'remark': '测试内容4fm6', 'serviceState': 1, 'subDishList': [
                                 {
-                                    'bookNum': 45563, 'dishId': 15876, 'dishName': '测试内容4285', 'price': 74613, 'serviceState': 37527
+                                    'bookNum': 45563, 'dishId': 15876, 'dishName': '测试内容4285', 'price': 74613, 'serviceState': 1
                                 }
                             ]
                         }
@@ -207,6 +291,32 @@ export default {
         'restId'
     ]),
     methods: {
+        changeItem(item) {
+            if (!item.subDishList || !item.subDishList.length) {
+                return;
+            }
+            if (item.select === undefined) {
+                this.$set(item, 'select', true);
+            } else {
+                item.select = !item.select;
+            }
+        },
+        getCheckeStatus(falg) {
+            if (falg) {
+                return 'triangle-down';
+            }
+            return 'triangle-right';
+        },
+        getTriangle(item) {
+            if (!item.subDishList || !item.subDishList.length) {
+                return '';
+            }
+            if (item.select) {
+                return 'triangle-down';
+            } else {
+                return 'triangle-right';
+            }
+        },
         getState(id, type) {
             return this.ORDER_STATE_TEXT[this.ORDER_TYPE.CATERING][id][type];
         }
