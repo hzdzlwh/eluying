@@ -277,7 +277,7 @@
                 userOrigins: [],
                 userSelfOrigins: [{
                     id: '',
-                    name: '全部客源渠道',
+                    name: '全部客户来源',
                     originType: '-2~',
                     type: 2
                 }],
@@ -360,7 +360,7 @@
                         width: 120
                     },
                     {
-                        title: '客源渠道',
+                        title: '客户来源',
                         dataIndex: 'origin'
                     },
                     {
@@ -488,7 +488,7 @@
                         this.vips = res.data.list;
                         this.totalMany = res.data.orderTotalPrice;
                         this.count = res.data.orderAmount;
-                        this.pages = Math.ceil(res.data.orderAmount / 30);
+                        this.pages = Math.ceil(res.data.total / 30);
                         // if (keyword) {
                         //     this.originId = -2;
                         //     this.endTime = undefined;

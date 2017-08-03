@@ -1,7 +1,7 @@
 <template>
     <div class="vipLevel">
         <div class="vipLevelTitle"><span class="vipLevelRed"> <span v-show='namewarn && edit'>*</span></span>
-            <input type="text" v-model='vipLevel.levelName' placeholder="请输入会员卡等级名称" v-if='edit' maxlength='16'>
+            <input type="text" v-model='vipLevel.levelName' placeholder="请输入会员等级名称" v-if='edit' maxlength='16'>
             <span v-else>{{vipLevel.levelName}}</span>
             <span>
                 <div class="vipLevelWarn" v-if='namewarn && edit' >↑必填字段</div>

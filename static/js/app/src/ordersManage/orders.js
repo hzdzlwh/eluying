@@ -1,5 +1,5 @@
 import http from 'http';
-import { DdDatepicker, DdDropdown, DdDropdownItem, DdOption, DdPagination, DdSelect } from 'dd-vue-component';
+import { DdDatepicker, DdDropdown, DdDropdownItem, DdOption, DdPagination, DdSelect, DdGroupOption } from 'dd-vue-component';
 /**
  * Created by zhaoyongsheng on 16/9/22.
  */
@@ -64,8 +64,15 @@ $(function() {
                 '8': '反结账'
             },
             optionsOrderState: ORDER_STATE_LIST,
-            customerChannel: null,
-            customerChannelList: [],
+            userOriginType: '-2~',
+            userOrigins: [],
+            userSelfOrigins: [{
+                id: '',
+                name: '全部客户来源',
+                originType: '-2~',
+                type: 2
+            }],
+            userGroupOrigins: [],
             startDate: '',
             endDate: '',
             orderNum: 0,
@@ -89,6 +96,7 @@ $(function() {
 
             this.getOrdersList({}, false);
             this.getCustomerChannels();
+            this.getOriginType();
         },
         beforeDestroy: function() {
             bus.$off('refreshView', this.refreshView);
@@ -157,7 +165,9 @@ $(function() {
                     keyword: this.searchContent,
                     sort: this.sort,
                     orderType: this.orderType,
-                    originId: this.customerChannel
+                    // originId: this.customerChannel
+                    relatedId: this.userOriginType.split('~')[1] !== '-5' ? undefined : this.userOriginType.split('~')[0],
+                    originId: this.userOriginType.split('~')[1]
                 };
                 return Object.assign({}, obj, this.orderParams);
             },
@@ -209,11 +219,45 @@ $(function() {
                 }
             },
             getCustomerChannels() {
-                http.get('/user/getChannels', { isAll: false, type: 2 }).then(res => {
+                http.get('/user/getChannels', { isAll: true, type: 2 }).then(res => {
                     if (res.code === 1) {
-                        this.customerChannelList = [{ id: null, name: '全部客源渠道' }, { id: -3, name: '微官网', type: 2 }].concat(res.data.list);
+                        this.customerChannelList = [{ id: null, name: '全部客户来源' }, { id: -3, name: '微官网', type: 2 }].concat(res.data.list);
                     }
                 });
+            },
+            getOriginType() {
+                http.get('/user/getChannels', { type: 2, isAll: true })
+                    .then((res) => {
+                        // 拼接originType 企业渠道：企业id~-5 会员-4～-4 自定义渠道 渠道id～渠道id
+                        if (res.code === 1) {
+                            const originsList = res.data.list;
+                            const otherOrigins = [];
+                            this.userOrigins = originsList;
+                            originsList.forEach(origin => {
+                                if (origin.id < 0 && origin.id !== -5) {
+                                    origin.originType = `${origin.id}~${origin.id}`;
+                                    this.userSelfOrigins.push(origin);
+                                } else if (origin.id === -5) {
+                                    origin.companyList.forEach(company => {
+                                        const companyName = `企业名称:${company.companyName}(${company.companyType ? '可挂帐' : '不可挂帐'})`;
+                                        const number = `企业编号:${company.contractNum || ''}`;
+                                        const name = `联系人:${company.contactName || ''}`;
+                                        const phone = `联系人电话:${company.contactPhone || ''}`;
+                                        company.name = company.companyName;
+                                        company.originType = `${company.id}~${origin.id}`;
+                                        company.info = `${companyName}\n${number}\n${name}\n${phone}`;
+                                    });
+                                    this.userGroupOrigins.push({ label: '企业', origins: origin.companyList });
+                                } else if (origin.id > 0) {
+                                    origin.originType = `${origin.id}~${origin.id}`;
+                                    origin.info = origin.name;
+                                    otherOrigins.push(origin);
+                                }
+                            });
+                            this.userGroupOrigins.push({ label: '其他', origins: otherOrigins });
+                            // this.userOriginType = this.userSelfOrigins[0].originType;
+                        }
+                    });
             },
             searchOrders() {
                 const obj = this.getParams();
@@ -303,7 +347,14 @@ $(function() {
                 } */
             },
 
-            customerChannel: function(newVal) {
+            // customerChannel: function(newVal) {
+            //     this.$nextTick(() => {
+            //         this.orderStatus = '-1';
+            //         const obj = this.getParams();
+            //         this.getOrdersList(obj, false);
+            //     });
+            // },
+            userOriginType: function(newVal) {
                 this.$nextTick(() => {
                     this.orderStatus = '-1';
                     const obj = this.getParams();
@@ -347,6 +398,7 @@ $(function() {
             DdOption,
             DdSelect,
             DdDatepicker,
+            DdGroupOption,
             NoAuth,
             OrderSystem
         }

@@ -108,7 +108,7 @@ export const getOriginType = {
             userOriginType: '-2~',
             userSelfOrigins: [{
                 id: '',
-                name: '全部客源渠道',
+                name: '全部客户来源',
                 originType: '-2~',
                 type: 2
             }],
@@ -160,7 +160,7 @@ export const getStatType = {
                 statType: 1
             }, {
                 id: 2,
-                name: '客源渠道',
+                name: '客户来源',
                 statType: 2
             }],
             statType: 0

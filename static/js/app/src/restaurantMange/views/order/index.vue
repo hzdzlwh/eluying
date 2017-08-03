@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-28 16:16:45
 * @Last Modified by:   linxinjian
-* @Last Modified time: 2017-08-02 17:32:14
+* @Last Modified time: 2017-08-03 16:44:48
 * @email: 783384903@qq.com
 */
 
@@ -19,6 +19,7 @@
         <div class="rest-order-right">
             <taday v-if='leftType === 0'></taday>
             <resetContain v-if='leftType === 1'></resetContain>
+            <resetdetail v-if='leftType === 2'></resetdetail>
         </div>
     </div>
 </template>
@@ -44,6 +45,9 @@ import inputKeyboard from '../../../common/components/inputKeyboard.vue';
 import restSeats from '../../components/restSeats.vue';
 import restMenu from '../../components/restMenu';
 import { dateFormat } from '../../../common/util';
+import { mapState, mapMutations } from 'vuex';
+import resetContain from '../../components/resetConstain.vue';
+import resetdetail from '../../components/resetDetail.vue';
 export default {
     props: {
 
@@ -54,8 +58,9 @@ export default {
             restNum: 0,
         };
     },
-    computed: {
-    },
+    computed: mapState([
+        'leftType'
+    ]),
     methods: {
         numChange(val) {
             this.restNum = val;
@@ -70,8 +75,10 @@ export default {
     components: {
         taday,
         inputKeyboard,
-        restSeats,
-        restMenu
+        restMenu,
+        resetContain,
+        resetdetail,
+        restSeats
     },
     created() {
 

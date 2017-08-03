@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-31 13:58:30
 * @Last Modified by:   linxinjian
-* @Last Modified time: 2017-08-02 16:48:18
+* @Last Modified time: 2017-08-03 11:20:24
 * @email: 783384903@qq.com
 */
 
@@ -31,7 +31,7 @@
 
     </div>
 </template>
-<style scoped lang="scss">
+<style lang="scss">
     .rest-taday-contain{
             background:#fafafa;
             box-shadow:0 0 4px 4px rgba(0,0,0,0.10);
@@ -103,64 +103,64 @@
                         line-height:12px;
                         margin-top:5px;
                     }
-                    .rest-taday-tag{
-                        color: #ffffff;
-                        font-size: 12px;
-                        display: inline-flex;
-                        width: 40px;
-                        height: 22px;
-                        justify-content: center;
-                        align-items: center;
-                        border-radius: 1px;
-                        padding-right: 3px;
-                        position: relative;
-                        margin-left: 32px;
-                        margin-top:8px;
-                    &::before{
-                        position: absolute;
-                        content: '';
-                        display: inline-block;
-                        border-right: 12px solid;
-                        border-top: 11px solid transparent;
-                        border-bottom: 11px solid transparent;
-                        border-left: 0;
-                        left: -12px;
-                    }
-                    &.yellow {
-                        background: #ffba75;
-                        &::before {
-                            border-right-color: #ffba75;
-                        }
-                    }
-                    &.grey {
-                        background: #bfbfbf;
-                        &::before {
-                            border-right-color: #bfbfbf;
-                        }
-                    }
-                    &.blue {
-                        background: #82beff;
-                        &::before {
-                            border-right-color: #82beff;
-                        }
-                    }
-                    &.red {
-                        background: #f27979;
-                        &::before {
-                            border-right-color: #f27979;
-                        }
-                    }
-                    &.green {
-                        background: #62d99d;
-                        &::before {
-                            border-right-color: #62d99d;
-                        }
-                    }
-                }
                 }
             }
             }
     }
+    .rest-taday-tag{
+        color: #ffffff;
+        font-size: 12px;
+        display: inline-flex;
+        width: 40px;
+        height: 22px;
+        justify-content: center;
+        align-items: center;
+        border-radius: 1px;
+        padding-right: 3px;
+        position: relative;
+        margin-left: 32px;
+        margin-top:8px;
+    &::before{
+        position: absolute;
+        content: '';
+        display: inline-block;
+        border-right: 12px solid;
+        border-top: 11px solid transparent;
+        border-bottom: 11px solid transparent;
+        border-left: 0;
+        left: -12px;
+    }
+    &.yellow {
+        background: #ffba75;
+        &::before {
+            border-right-color: #ffba75;
+        }
+    }
+    &.grey {
+        background: #bfbfbf;
+        &::before {
+            border-right-color: #bfbfbf;
+        }
+    }
+    &.blue {
+        background: #82beff;
+        &::before {
+            border-right-color: #82beff;
+        }
+    }
+    &.red {
+        background: #f27979;
+        &::before {
+            border-right-color: #f27979;
+        }
+    }
+    &.green {
+        background: #62d99d;
+        &::before {
+            border-right-color: #62d99d;
+        }
+    }
+}
 </style>
 <script>
 import { ORDER_TYPE, ORDER_STATE_TEXT } from '../../ordersManage/constant.js';
@@ -188,14 +188,14 @@ export default {
         fetchDate() {
             // http.get('/catering/getDayTurnover',{restId: this.restId},{loading: false}).then()
             window.console.log('refresh');
-            this.DayDate = 
-                {
-                    "newOrders":[
+            this.DayDate =
+            {
+                'newOrders': [
                     {
-                        "borardList":["string1","string2","string3","string4","string5"],"date":"测试内容o0mt","foodOrderId":86546,"foodState":1,"orderNum":"测试内容ntvx","orderWay":1,"peopleNum":25
+                        'borardList': ['string1', 'string2', 'string3', 'string4', 'string5'], 'date': '测试内容o0mt', 'foodOrderId': 86546, 'foodState': 1, 'orderNum': '测试内容ntvx', 'orderWay': 1, 'peopleNum': 25
                     }
-                    ],"orderCount":(Math.random() * 1000).toFixed(0),"peopleCount":(Math.random() * 1000).toFixed(0),"priceSum":(Math.random() * 1000).toFixed(0)
-                }
+                ], 'orderCount': (Math.random() * 1000).toFixed(0), 'peopleCount': (Math.random() * 1000).toFixed(0), 'priceSum': (Math.random() * 1000).toFixed(0)
+            };
         }
     },
     watch: {

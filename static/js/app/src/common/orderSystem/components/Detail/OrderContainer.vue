@@ -53,7 +53,7 @@
                                     </span>
                                 </div>
                                 <div class="userInfo-text-item">
-                                    <label class="label-text">客源渠道</label>
+                                    <label class="label-text">客户来源</label>
                                     <span>{{ order.origin }}</span>
                                 </div>
                                 <div v-if="order.originId === -4 || order.discountChannel === 4 || order.discountChannel === 1" class="userInfo-text-item text-hidden" :title='order.discountRelatedName'>

@@ -3,7 +3,7 @@
     <div class="restaurant-top-menu">
     <div class='restmange-list-menu'>
         <div class="restmange-list-select" @click='changeMenu'  v-clickoutside='closeMenu' :title='getName(restId)'>{{getName(restId)}}<img src="//static.dingdandao.com/673741C9-0BE5-4670-970E-37383302412F@1x.png" class="upload">
-        <div class="restmange-menu-containe" ref='restmangeMenuContaine' :style='{maxHeight: menuHeight}'>
+        <div class="restmange-menu-containe" ref='restmangeMenuContaine' :style='{maxHeight: menuHeight,visibility : menuHeight !== "0" ? "visible": "hidden"}'>
             <div class="restmange-menu-item" v-for='item in restaurantList' :key='item.restId' @click='setRestId(item.restId)' :title='item.restName'>
                 {{item.restName}}
             </div>
@@ -68,14 +68,22 @@
                     text-overflow: ellipsis;
             }
             .restmange-menu-containe{
+                background:#ffffff;
+                border:1px solid #d3dce6;
+                box-shadow:0 2px 4px 0 rgba(0,0,0,0.12), 0 0 6px 0 rgba(0,0,0,0.04);
+                border-radius:2px;
+                height:190px;
                 overflow-y: scroll;
-                background: #393b4a;
-                width: 169px;
                 font-size: 14px;
                 font-weight: normal;
-                padding-right: 38px;
+                text-align:left;
+                margin-left: 45px;
+                width:106px;
                 transition: max-height 0.3s linear;
                 .restmange-menu-item{
+                    padding:10px;
+                    font-size:14px;
+                    color:#475669;
                     max-width: 100%;
                     overflow: hidden;
                     white-space: nowrap;
