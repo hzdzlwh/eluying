@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-28 16:16:45
 * @Last Modified by:   linxinjian
-* @Last Modified time: 2017-08-03 15:54:46
+* @Last Modified time: 2017-08-03 16:28:04
 * @email: 783384903@qq.com
 */
 
@@ -68,7 +68,7 @@ export default {
     data() {
         return {
             keyboardVisible: false,
-            restNum: 0,
+            restNum: 0
         };
     },
     computed: {
@@ -93,10 +93,9 @@ export default {
     },
     components: {
         taday,
-        DateSelect,
         customerRadio,
         resetContain,
-        resetdetail
+        resetdetail,
         restSeats
     },
     created() {

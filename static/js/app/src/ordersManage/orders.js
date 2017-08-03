@@ -222,7 +222,6 @@ $(function() {
                 http.get('/user/getChannels', { isAll: true, type: 2 }).then(res => {
                     if (res.code === 1) {
                         this.customerChannelList = [{ id: null, name: '全部客户来源' }, { id: -3, name: '微官网', type: 2 }].concat(res.data.list);
-
                     }
                 });
             },
