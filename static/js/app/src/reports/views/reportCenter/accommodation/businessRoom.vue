@@ -34,7 +34,7 @@
                 <span class="report-business-select-box">
                     <div @click="getCheckData" :class="{active: this.statType === '入住类型'}">入住类型</div>
                     <div @click="getRoomData" :class="{active: this.statType === '房间类型'}">房间类型</div>
-                    <div @click="getOriginData" style="border-right:0;" :class="{active: this.statType === '客源渠道'}">客源渠道</div>
+                    <div @click="getOriginData" style="border-right:0;" :class="{active: this.statType === '客户来源'}">客户来源</div>
                 </span>
             </div>
         <div class="report-select-top">
@@ -335,7 +335,7 @@
             getOriginData() {
                 http.get('/stat/getRoomDailyStat', { date: this.date }).then(res => {
                     if (res.code === 1) {
-                        this.statType = '客源渠道';
+                        this.statType = '客户来源';
                         this.dayStat = res.data.originDayStat;
                         this.monStat = res.data.originMonStat;
                     }

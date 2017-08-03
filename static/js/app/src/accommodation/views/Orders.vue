@@ -21,7 +21,7 @@
                 <span style="color:#999;font-size:14px;">～</span>
                 <dd-datepicker placeholder="结束时间" v-model="endTime" :disabled-date="disableEndDate" />
             </div>
-                   <div class="add-button fr">
+            <div class="add-button fr">
                 <div class="dd-dropdown">
                     <DdDropdown text="导出明细" trigger="click">
                         <dd-dropdown-item>
@@ -33,7 +33,7 @@
                     </DdDropdown>
                 </div>
             </div>
-               <div class="select-component-container fr">
+            <div class="select-component-container fr">
                 <dd-select v-model="userOriginType" >
                     <dd-option :key="origin.originType" v-for="origin in userSelfOrigins"
                                :value="origin.originType" :label="origin.name">
@@ -303,7 +303,7 @@ default {
                userOrigins: [],
                userSelfOrigins: [{
                    id: '',
-                   name: '全部客源渠道',
+                   name: '全部客户来源',
                    originType: '-2~',
                    type: 2
                }],
@@ -363,7 +363,7 @@ default {
                        width: 120
                    },
                    {
-                       title: '客源渠道',
+                       title: '客户来源',
                        dataIndex: 'originName'
                    },
                    {

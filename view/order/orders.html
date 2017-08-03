@@ -67,9 +67,30 @@
                     </dd-option>
                 </dd-select>
             </div>
+            <!--<div class="dd-select-customerChannel">-->
+                <!--<dd-select v-model="customerChannel">-->
+                    <!--<dd-option v-for="option in customerChannelList" :key="option.id" :value="option.id" :label="option.name"></dd-option>-->
+                <!--</dd-select>-->
+            <!--</div>-->
             <div class="dd-select-customerChannel">
-                <dd-select v-model="customerChannel">
-                    <dd-option v-for="option in customerChannelList" :key="option.id" :value="option.id" :label="option.name"></dd-option>
+                <dd-select v-model="userOriginType" >
+                    <dd-option :key="origin.originType" v-for="origin in userSelfOrigins"
+                               :value="origin.originType" :label="origin.name">
+                        <span :title="origin.name">{{origin.name}}</span>
+                    </dd-option>
+                    <dd-group-option v-for="item in userGroupOrigins" :label="item.label"
+                                     :key="item" v-if="item.origins.length > 0">
+                        <dd-option v-for="origin in item.origins" :key="origin.originType"
+                                   :value="origin.originType" :label="origin.type && origin.type === 2 ? origin.name : `企业(${origin.name})`">
+                            <div class="user-group-origin">
+                                <span class="user-group-company" :title="origin.name">
+                                    {{ origin.name }}
+                                </span>
+                                <span class="user-group-img" v-if="!origin.type"
+                                      :title="origin.info"></span>
+                            </div>
+                        </dd-option>
+                    </dd-group-option>
                 </dd-select>
             </div>
             <span class="dd-date-label">使用时间:</span>
@@ -107,7 +128,7 @@
                         <th>支付方式</th>
                         <th>客户姓名</th>
                         <th style="width: 104px;">手机号码</th>
-                        <th>客源渠道</th>
+                        <th>客户来源</th>
                         <th style="position: relative; cursor: pointer; width: 100px;" @click="changeListByDate">
                             使用时间
                             <div class="dd-arrowTop-useDate dd-orderArrow" v-show="showBothArrow || (!showBothArrow && showTopArrow)"></div>
@@ -115,6 +136,7 @@
                         </th>
                         <th>订单状态</th>
                         <th>收银员</th>
+                        <th>操作人</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -157,6 +179,7 @@
                                     ? `${item.operators.join('、')}共${item.operators.length}人`
                                     : '没有收银员'">
                         </td>
+                        <td v-text="item.operator"></td>
                     </tr>
                         <!--<template v-if="false && item.orderType === -1 && !!item.subOrderList && item.subOrderList.length > 1 && item.showSub">
                             <tr :class="['orders-tr', 'orders-sub-tr', index % 2 === 1 ? 'orders-tr-even' : 'orders-tr-odd']"
