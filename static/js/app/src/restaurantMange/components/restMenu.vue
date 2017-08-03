@@ -2,7 +2,7 @@
  * @Author: lwh
  * @Date:   2017-08-03 15:13:42
  * @Last Modified by:   lwh
- * @Last Modified time: 2017-08-03 20:40:57
+ * @Last Modified time: 2017-08-03 21:04:15
  */
 
  <template>
@@ -290,7 +290,14 @@ export default {
                 this.$refs.foodListHeader[this.currentIndex].style.top = 155 + 'px';
                 this.$refs.foodListHeader[this.currentIndex].style.width = 640 + 'px';
                 this.$refs.foodListHeader[this.currentIndex].style.background = '#fafafa'; */
-                $(this.$refs.foodListHeader[this.currentIndex]).css({ 'position' : 'fixed', 'top' : '155px', 'width' : '640px', 'background' : '#fff' });
+                if (this.currentIndex === 0) {
+                    if (this.scrollY >= 30) {
+                        $(this.$refs.foodListHeader[this.currentIndex]).css({ 'position' : 'fixed', 'top' : '160px', 'width' : '640px', 'background' : '#fff' });
+                    }
+                } else {
+                    $(this.$refs.foodListHeader[this.currentIndex]).css({ 'position' : 'fixed', 'top' : '160px', 'width' : '640px', 'background' : '#fff' });
+                }
+                // $(this.$refs.foodListHeader[this.currentIndex]).css({ 'position' : 'fixed', 'top' : '155px', 'width' : '640px', 'background' : '#fff' });
 
             }
         },
@@ -359,7 +366,7 @@ export default {
                 }
             }
             .food-container{
-                padding-top: 30px;
+                margin-top: 30px;
                 height: 600px;
                 overflow: scroll;
                 h4{
