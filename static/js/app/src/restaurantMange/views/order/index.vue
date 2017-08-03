@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-28 16:16:45
 * @Last Modified by:   linxinjian
-* @Last Modified time: 2017-08-02 17:32:14
+* @Last Modified time: 2017-08-03 11:14:08
 * @email: 783384903@qq.com
 */
 
@@ -56,6 +56,7 @@
         <div class="rest-order-right">
             <taday v-if='leftType === 0'></taday>
             <resetContain v-if='leftType === 1'></resetContain>
+            <resetdetail v-if='leftType === 2'></resetdetail>
         </div>
     </div>
 </template>
@@ -140,6 +141,7 @@ import { dateFormat } from '../../../common/util';
 import customerRadio from '../../components/customerRadio.vue';
 import { mapState, mapMutations } from 'vuex';
 import resetContain from '../../components/resetConstain.vue';
+import resetdetail from '../../components/resetDetail.vue';
 export default {
     props: {
 
@@ -179,7 +181,8 @@ export default {
         taday,
         DateSelect,
         customerRadio,
-        resetContain
+        resetContain,
+        resetdetail
     },
     created() {
 
