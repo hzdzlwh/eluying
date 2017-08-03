@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-08-01 14:45:58
 * @Last Modified by:   linxinjian
-* @Last Modified time: 2017-08-03 18:39:29
+* @Last Modified time: 2017-08-03 18:42:06
 * @email: 783384903@qq.com
 */
 
@@ -138,7 +138,7 @@
         margin-right: 5px;
     }
     .rest-restDetail-constain{
-        padding: 0 20px;
+        padding: 10px 20px;
         height: 400px;
         overflow-y: scroll;
     }
