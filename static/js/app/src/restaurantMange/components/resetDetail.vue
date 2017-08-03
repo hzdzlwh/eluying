@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-08-01 14:45:58
 * @Last Modified by:   linxinjian
-* @Last Modified time: 2017-08-03 15:50:51
+* @Last Modified time: 2017-08-03 16:50:38
 * @email: 783384903@qq.com
 */
 
@@ -36,7 +36,7 @@
                 </thead>
                 <tbody>
                 <template v-for='item in restDate.data.itemsMap'>
-                    <tr> <td><div><span class="rest-restDetail-dishname">{{item.dishName}}</span><span>送</span></div></td><td><div>x{{item.bookNum}}</div></td><td>{{item.price}}</td></tr>
+                    <tr> <td><div><span class="rest-restDetail-dishname"> <span class="triangle-down"></span>{{item.dishName}}</span><span>送</span></div></td><td><div>x{{item.bookNum}}</div></td><td>{{item.price}}</td></tr>
                     <tr v-for='sub in item.subDishList' >
                         <td class="rest-restDetail-trchild">{{sub.dishName}}</td><td><div>x{{sub.bookNum}}</div></td><td></td>
                     </tr>
@@ -48,6 +48,13 @@
     </div>
 </template>
 <style lang='scss'>
+    .triangle-down {
+        width: 0;
+        height: 0;
+        border-left: 12px solid transparent;
+        border-right: 12px solid transparent;
+        border-top: 8px solid red;
+    }
     .rest-restDetail-constain{
         padding: 0 20px;
     }
