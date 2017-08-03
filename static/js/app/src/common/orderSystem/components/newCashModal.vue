@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-19 09:56:55
 * @Last Modified by:   linxinjian
-* @Last Modified time: 2017-08-01 21:39:04
+* @Last Modified time: 2017-08-03 15:56:28
 * @email: 783384903@qq.com
 */
 <!-- 有问题找产品，这个模块的功能一般人解释不清楚 -->
@@ -1048,12 +1048,6 @@ export default {
             // 订单详情允许多次收银条件
             // const allowGetMoneyTimes = (this.type === 'orderDetail' && this.orderDetail.type !== -1);
             const allowGetMoneyTimes = (this.type === 'collect');
-            if (this.isCompany && this.companyCityLedger) {
-                this.payChannels = [{
-                    channelId: -14,
-                    name: `企业挂帐(${this.companyName || ''})`
-                }].concat(this.payChannels);
-            }
             if (Number(this.needPayed) !== 0 && !allowGetMoneyTimes) {
                 modal.warn('订单未结清，无法完成收银！');
                 return false;
