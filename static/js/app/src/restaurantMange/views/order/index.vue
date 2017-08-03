@@ -9,24 +9,11 @@
 <template>
     <div class="restContain">
         <div class="rest-order-left">
-            <div v-if="true">
+            <div v-if="false">
                 <rest-seats></rest-seats>
             </div>
             <div v-else>
-                    <div style="position:absolute;width: 200px;height: 400px;border: 1px solid #ccc;overflow:scroll;display:flex" @scroll="handleScroll" ref="menu">
-                        <div>
-                            <ul>
-                                <li @click="setMenu(1, $event)">a</li>
-                                <li>b</li>
-                                <li>c</li>
-                            </ul>
-                        </div>
-                        <div>
-                            <ul>
-                                <li v-for="i in 40">{{i}}</li>
-                            </ul>
-                        </div>
-                    </div>
+                <rest-menu></rest-menu>
             </div>
         </div>
         <div class="rest-order-right">
@@ -55,6 +42,7 @@
 import taday from '../../components/tadayRestDate.vue';
 import inputKeyboard from '../../../common/components/inputKeyboard.vue';
 import restSeats from '../../components/restSeats.vue';
+import restMenu from '../../components/restMenu';
 import { dateFormat } from '../../../common/util';
 export default {
     props: {
@@ -77,19 +65,13 @@ export default {
         },
         closeKeyboard() {
             this.keyboardVisible = false;
-        },
-        setMenu(index, event) {
-            // this.$refs.menu.scrollTop = 200;
-            $(this.$refs.menu).animate({ scrollTop: 200 }, 400);
-        },
-        handleScroll(ev) {
-            console.log(ev.target.scrollTop);
         }
     },
     components: {
         taday,
         inputKeyboard,
-        restSeats
+        restSeats,
+        restMenu
     },
     created() {
 

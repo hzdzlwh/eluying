@@ -2,7 +2,7 @@
  * @Author: lwh
  * @Date:   2017-08-02 16:04:29
  * @Last Modified by:   Tplant
- * @Last Modified time: 2017-08-02 20:30:25
+ * @Last Modified time: 2017-08-03 14:56:00
  */
 
  <template>
@@ -12,16 +12,14 @@
                 <date-select @change="handleDateChange" :defaultDate="defaultStrDate" :disabledDate="true"></date-select>
             </div>
             <div class="area-select">
-                <div>全部区域</div>
-                <div>A区</div>
-                <div>希尔顿贵宾</div>
+                <div v-for="area in areas" @click="toggleArea(area)" :class="{selected: area.selected}">{{area.name}}</div>
             </div>
             <div class="state-select">
-                <customer-radio name="area" value="a" v-model="selectArea" checked>全部座位</customer-radio>
-                <customer-radio name="area" value="b" v-model="selectArea">使用中</customer-radio>
-                <customer-radio name="area" value="c" v-model="selectArea">空闲</customer-radio>
-                <customer-radio name="area" value="d" v-model="selectArea">开台未点菜</customer-radio>
-                <customer-radio name="area" value="e" v-model="selectArea">已预订</customer-radio>
+                <customer-radio name="area" value="a" v-model="selectState" checked>全部座位</customer-radio>
+                <customer-radio name="area" value="b" v-model="selectState">使用中</customer-radio>
+                <customer-radio name="area" value="c" v-model="selectState">空闲</customer-radio>
+                <customer-radio name="area" value="d" v-model="selectState">开台未点菜</customer-radio>
+                <customer-radio name="area" value="e" v-model="selectState">已预订</customer-radio>
             </div>
             <div class="order-menu">
                 <div class="order">预订</div>
@@ -31,11 +29,34 @@
         <div class="area-container">
             <h3>A区</h3>
             <div class="seats-container">
-                <div v-for="i in 20" class="seat">
-                    
+                <div v-for="(i, index) in 20" class="seat" @click="getSeatOrder($event)" @contextmenu.prevent="$refs.ctxMenu.open($event, {data: 1})">
+                    <div class="state-twoCode">
+                        <div class="state">已结账</div>
+                        <div class="two-dimensionalcode"></div>
+                    </div>
+                    <div class="seat-num">桌位1</div>
+                    <div class="eating-time">1小时20分钟</div>
+                    <div class="reserve-time">预12:00</div>
+                    <div class="order-list" v-if="i === 1">
+                        <div class="rest-arrow-up"></div>
+                        <div><span>桌位1</span><span>空闲</span></div>
+                        <div v-for="i in 2" @click.prevent="getSeatOrder($event)">
+                            <div class="order-list-item">
+                                <div><span>人数: 2</span><span>用餐时间: 2017-07-18 17:00</span></div>
+                                <div>已预订</div>
+                            </div>
+                            <div class="order-list-item">
+                                <div>张三 11111111111 会员</div>
+                                <div>前台下单</div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
+        <contextmenu id="context-menu" ref="ctxMenu" @ctx-open="onCtxOpen" @ctx-cancel="resetCtxLocals" @ctx-close="onCtxClose">
+            <div class="rest-add-order" @click="addRestOrder">新增预订</div>
+        </contextmenu>
     </div>
  </template>
 
@@ -44,11 +65,29 @@
  import { mapState, mapMutations } from 'vuex';
  import customerRadio from './customerRadio.vue';
  import DateSelect from '../../accommodation/components/DateSelect';
+ import contextmenu from '../../common/components/contextmenu';
 export default {
     data() {
         return {
             defaultStrDate: this.date,
-            selectArea: ''
+            selectState: '',
+            areas: [
+                {
+                    id: 1,
+                    name: '全部区域',
+                    selected: true
+                },
+                {
+                    id: 2,
+                    name: 'A区',
+                    selected: false
+                },
+                {
+                    id: 3,
+                    name: 'B区',
+                    selected: false
+                }
+            ]
         }
     },
     computed: {
@@ -60,6 +99,22 @@ export default {
         ]),
         handleDateChange(date) {
             this.defaultStrDate = date;
+        },
+        getSeatOrder(event, data) {
+            event.cancelBubble = true;
+            console.log(data);
+        },
+        toggleArea(area) {
+            area.selected = !area.selected;
+        },
+        onCtxOpen(locals) {
+            console.log(locals)
+        },
+        resetCtxLocals() {
+        },
+        onCtxClose() {
+        },
+        addRestOrder() {
         }
     },
     watch: {
@@ -70,7 +125,8 @@ export default {
     },
     components: {
         customerRadio,
-        DateSelect
+        DateSelect,
+        contextmenu
     }
 }
  </script>
@@ -101,6 +157,10 @@ export default {
                 color: #a3a3a3;
                 margin: 4px 8px 4px 0;
                 cursor: pointer;
+                &.selected{
+                    color: #178ce6;
+                    border: 1px solid #178ce6;
+                }
             }
         }
         .state-select{
@@ -159,9 +219,94 @@ export default {
                 &:nth-child(8n){
                     margin-right: 0;
                 }
+                .state{
+                    width: 50px;
+                    height: 16px;
+                    line-height: 16px;
+                    border-radius: 0 8px 8px 0;
+                    background: #178ce6;
+                    font-size: 12px;
+                    padding-left: 8px;
+                    color: #fff;
+                    position: relative;
+                }
+                .state-twoCode{
+                    display: flex;
+                    justify-content: space-between;
+                    padding: 6px 6px 0 0;
+                    .two-dimensionalcode{
+                        width: 16px;
+                        height: 16px;
+                        background: url('../../../../../image/two-dimensionalcode.png');
+                    }
+                }
+                .seat-num{
+                    padding-top: 7px;
+                    text-align: center;
+                    font-size: 14px;
+                    color: #333333;
+                    opacity: 0.87;
+                }
+                .eating-time{
+                    font-size: 12px;
+                    color: #999999;
+                    text-align: center;
+                    opacity: 0.87;
+                }
+                .reserve-time{
+                    width: 58px;
+                    height: 16px;
+                    font-size: 12px;
+                    color: #fff;
+                    background: #ffba75;
+                    text-align: center;
+                    margin-left: 15px;
+                    border-radius: 8px;
+                }
+                .order-list{
+                    position: absolute;
+                    width: 300px;
+                    background: #fafafa;
+                    z-index: 2;
+                    padding: 10px 8px;
+                    display: none;
+                    .rest-arrow-up{
+                        position: absolute;
+                        left: 20px;
+                        top: -10px;
+                        width: 0;
+                        height: 0;
+                        border-left: 10px solid transparent;
+                        border-right: 10px solid transparent;
+                        border-bottom: 10px solid #fafafa;
+                        line-height: 0;
+                    }
+                    .order-list-item{
+                        display: flex;
+                        justify-content: space-between;
+                        height: 30px;
+                        line-height: 30px;
+                    }
+                }
+                &:hover{
+                    .order-list{
+                        display: block;
+                    }
+                }
+                
             }
         }
         
+    }
+    #context-menu{
+        .rest-add-order{
+            background: #fafafa;
+            box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.15);
+            text-align: center;
+            line-height: 32px;
+            z-index: 1;
+            cursor: pointer;
+        }
     }
  </style>
 
