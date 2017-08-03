@@ -127,7 +127,7 @@
                         width: 120
                     },
                     {
-                        title: '客源渠道',
+                        title: '客户来源',
                         dataIndex: 'origin',
                         width: 80
                     },

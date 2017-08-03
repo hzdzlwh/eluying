@@ -89,7 +89,7 @@
                             '金额（元）');
                         const tableData = getTableData({
                             list: channelsStatByDate.map(i => ({ ...i, dateValues: i.channelsStatByDate })),
-                            firstTitle: '客源渠道',
+                            firstTitle: '客户来源',
                             secondTitle: '合计',
                             foot: true
                         });
