@@ -9,7 +9,7 @@
 <template>
     <div class="restContain">
         <div class="rest-order-left">
-            <div v-if="false">
+            <div v-if="true">
                 <rest-seats></rest-seats>
             </div>
             <div v-else>
