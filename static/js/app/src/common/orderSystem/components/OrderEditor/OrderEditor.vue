@@ -526,7 +526,7 @@ export default {
             }
 
             if (originType !== -5 && originType !== -4) {
-                this.vipCardId = 0;
+                // this.vipCardId = 0;
                 this.vipDiscountDetail = {};
             }
 
