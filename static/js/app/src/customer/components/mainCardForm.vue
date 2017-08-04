@@ -42,6 +42,8 @@
                                     class="dd-input"
                                     maxlength="18"
                                     placeholder="请输入会员卡卡号"
+                                    onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))"
+                                    onkeyup="value=value.replace(/[\W]/g,'')"
                                     v-model="cardNum" />
                         </div>
                     </div>
