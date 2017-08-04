@@ -360,7 +360,7 @@ export default {
                 discounts: discounts
             });
             const changeId = id === 0 ? 0 : this.userOriginType.id;
-            this.handleVipCardChange(changeId, oldId !== undefined);
+            this.handleVipCardChange(changeId, oldId !== undefined && oldId !== 0);
         },
         vipDiscountDetail(newVal, oldVal) {
             if (!newVal.vipDetail || !oldVal.vipDetail) {

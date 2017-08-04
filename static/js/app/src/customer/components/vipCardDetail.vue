@@ -18,7 +18,7 @@
                             <div style="width: 25%;"><span style="font-size:12px;color:#999999;">类型</span> <span>{{card.type === 0? card.categoryName : '副卡'}}</span></div>
                         </div>
                         <div class="customer-info">
-                            <div style="width: 25%;"><span style="font-size:12px;color:#999999;">卡号</span> <span>{{card.vipCardNum}}</span></div>
+                            <div style="width: 25%;display:flex;align-items:center;"><span style="font-size:12px;color:#999999;">卡号</span> <span style="display: inline-block;width:130px;overflow:hidden;text-overflow: ellipsis;margin-left:3px;" :title="card.vipCardNum">{{card.vipCardNum}}</span></div>
                             <div style="width: 25%;"><span style="font-size:12px;color:#999999;">办理日期</span> <span>{{card.creationTime}}</span></div>
                             <div style="width: 25%;"><span style="font-size:12px;color:#999999;">状态</span> <span>{{CARDSTATUS[card.status]}}</span></div>
                             <div style="width: 25%;display: block;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><span style="font-size:12px;color:#999999;">销售员</span> <span :title='card.salerString'>{{card.salerString || '无'}}</span></div>
