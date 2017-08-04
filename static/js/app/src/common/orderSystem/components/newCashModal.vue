@@ -1074,7 +1074,7 @@ export default {
                 const channel = this.payChannels.find(c => c.channelId === payment.payChannelId);
                 return {
                     ...payment,
-                    payChannel: channel.name
+                    payChannel: payment.payChannelId === -14 ? '' : channel.name
                 };
             });
 
