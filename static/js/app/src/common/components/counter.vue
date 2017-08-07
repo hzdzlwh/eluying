@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-17 17:37:17
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-07-19 11:04:43
+* @Last Modified time: 2017-08-07 20:00:45
 * @email: 783384903@qq.com
 */
 <template>
@@ -48,6 +48,10 @@
 <script>
     export default{
         props: {
+            del: {
+                type: Boolean,
+                default: false
+            },
             step: {
                 type: Number,
                 default: 1
@@ -93,7 +97,7 @@
                 if (this.disabled) {
                     return false;
                 }
-                if (this.value <= this.min || this.value <= this.step) {
+                if ((this.value <= this.min || this.value <= this.step) && !this.del) {
                     return false;
                 }
                 this.value -= this.step;
