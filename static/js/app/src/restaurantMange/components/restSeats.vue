@@ -2,7 +2,7 @@
  * @Author: lwh
  * @Date:   2017-08-02 16:04:29
  * @Last Modified by:   Tplant
- * @Last Modified time: 2017-08-07 17:49:22
+ * @Last Modified time: 2017-08-07 20:32:26
  */
 
  <template>
@@ -130,7 +130,7 @@ export default {
             this.$emit('reserve');
         },
         orderDish() {
-            this[types.SET_LEFT_TYPE]({ leftType: 2 });
+            this[types.SET_LEFT_TYPE]({ leftType: 4 });
         },
         getSeatList() {
             http.get('/board/list', { date: this.date, restId: this.restId }).then(res => {

@@ -2,7 +2,7 @@
  * @Author: lwh
  * @Date:   2017-08-03 15:13:42
  * @Last Modified by:   lwh
- * @Last Modified time: 2017-08-03 21:04:15
+ * @Last Modified time: 2017-08-07 20:38:45
  */
 
  <template>
@@ -34,6 +34,8 @@
  </template>
 
  <script>
+import http from '../../common/http';
+import { mapState } from 'vuex';
 export default {
     data() {
         return {
@@ -267,6 +269,7 @@ export default {
         });
     },
     computed: {
+        ...mapState(['restId']),
         currentIndex() {
             for (let i =0; i < this.heightList.length; i++) {
                 let preHeight = this.heightList[i];
@@ -311,6 +314,10 @@ export default {
             foodList.map(food => {
                 height += food.clientHeight;
                 this.heightList.push(height);
+            });
+        },
+        getMenu() {
+            http.get('/catering/getMenu', {}).then(res => {
             });
         }
     },

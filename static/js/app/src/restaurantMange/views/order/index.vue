@@ -9,10 +9,10 @@
 <template>
     <div class="restContain">
         <div class="rest-order-left">
-            <div v-if="leftType === 1">
+            <div v-if="leftType === 0 || leftType === 1 || leftType === 2 || leftType === 3">
                 <rest-seats @reserve="changeReserveInfoVisible"></rest-seats>
             </div>
-            <div v-else>
+            <div v-if="leftType === 4">
                 <rest-menu></rest-menu>
             </div>
         </div>
