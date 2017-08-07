@@ -10,7 +10,7 @@
     <div class="restContain">
         <div class="rest-order-left">
             <div v-if="true">
-                <rest-seats></rest-seats>
+                <rest-seats @reserve="changeReserveInfoVisible"></rest-seats>
             </div>
             <div v-else>
                 <rest-menu></rest-menu>
@@ -21,6 +21,7 @@
             <resetContain v-if='leftType === 1'></resetContain>
             <resetdetail v-if='leftType === 2 || leftType === 3 || leftType === 4'></resetdetail>
         </div>
+        <reserve-info-modal :visible="reserveInfoVisible" @hideModal="hideReserveInfoModal"></reserve-info-modal>
     </div>
 </template>
 <style lang="scss" scoped>
@@ -48,6 +49,7 @@ import { dateFormat } from '../../../common/util';
 import { mapState, mapMutations } from 'vuex';
 import resetContain from '../../components/resetConstain.vue';
 import resetdetail from '../../components/resetDetail.vue';
+import reserveInfoModal from '../../components/reserveInfo';
 export default {
     props: {
 
@@ -55,7 +57,8 @@ export default {
     data() {
         return {
             keyboardVisible: false,
-            restNum: 0
+            restNum: 0,
+            reserveInfoVisible: false
         };
     },
     computed: mapState([
@@ -70,6 +73,12 @@ export default {
         },
         closeKeyboard() {
             this.keyboardVisible = false;
+        },
+        changeReserveInfoVisible() {
+            this.reserveInfoVisible = true;
+        },
+        hideReserveInfoModal() {
+            this.reserveInfoVisible = false;
         }
     },
     components: {
@@ -78,7 +87,8 @@ export default {
         restMenu,
         resetContain,
         resetdetail,
-        restSeats
+        restSeats,
+        reserveInfoModal
     },
     created() {
 
