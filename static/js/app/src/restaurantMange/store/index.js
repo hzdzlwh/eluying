@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-31 10:52:58
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-08-07 11:54:25
+* @Last Modified time: 2017-08-07 20:02:04
 * @email: 783384903@qq.com
 */
 
@@ -17,23 +17,52 @@ const store = new Vuex.Store({
     state: {
         restId: 0,
         date: dateFormat(new Date()),
-        leftType: 1,
+        leftType: 3,
+        // 0:今日营业额，1:空桌选中，2:订单详情，3:开台，4:加菜点菜
         board: {
             id: 1122,
-            dishName: '大圆桌',
-            dishId: '4'
+            boardName: '大圆桌',
+            boardId: '4'
         },
-        selectDish: [{ id: 123, dishName: '大圆桌', dishId: '2' }],
+        selectDish: [{ id: 123, boardName: '大圆桌', boardId: '2' }, { id: 123, boardName: '大圆桌', boardId: '3' }],
         openData: {
             list: [1, 2, 3, 4],
+            boardDetailResps: [{ id: 123, boardName: '大圆桌', boardId: '2' }, { id: 123, boardName: '大圆桌', boardId: '3' }],
             openTime: new Date(),
             operatorName: 'mockDate',
             peopleNum: 10,
             restName: 'asdasd',
-            state: 2
-        }
+            state: 2,
+            orderState: 1
+        },
+        addFood: [{ id: 1, name: '西湖醋鱼', num: 0, price: 20 }, { id: 2, name: '可乐', num: 0, price: 30 }]
     },
     mutations: {
+        [types.ADD_FOOD](state, { food }) {
+            const selectFood = state.find((el, index) => {
+                el.id === food.id;
+            });
+            if (selectFood) {
+                selectFood.num = selectFood.num + 1;
+                // 妈个鸡，傻逼es lin t++ 也能报错
+            } else {
+                state.push(food);
+            }
+        },
+        [types.CHANGE_FOOD](state, { food }) {
+            state.addFood.forEach((el, index) => {
+                if (el.id === food.id) {
+                    if (food.num > 0) {
+                        el.num = food.num;
+                    } else {
+                        state.addFood.splice(index, 1);
+                    }
+                }
+            });
+        },
+        [types.SET_OPEN_DATA](state, { openData }) {
+            state.openData = openData;
+        },
         [types.SET_LEFT_TYPE](state, { leftType }) {
             state.leftType = leftType;
         },

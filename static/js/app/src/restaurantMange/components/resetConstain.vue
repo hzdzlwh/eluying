@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-08-01 14:28:15
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-08-07 11:54:46
+* @Last Modified time: 2017-08-07 14:31:38
 * @email: 783384903@qq.com
 */
 
@@ -11,7 +11,7 @@
      <div class="rest-taday-count">
            <div class="restDetail-title-tip">桌号</div>
             <div class="restDetail-title-display">
-                <div><span class="restDetail-title-dish">大圆桌4</span></div>
+                <div><span class="restDetail-title-dish">{{selectDish[0].boardName}}{{selectDish[0].boardName}}</span> <span v-if='selectDish.length > 1' class="restDetail-type-tag" :title='selectDishText'>并</span></div>
                 <!-- <div><span class="rest-taday-tag " :class="getState(item.foodState, 'color')">{{getState(item.foodState, 'text')}}</span></div> -->
             </div>
             <div class="rest-btn-head"><button class="reset-btn-base reset-btn-start" @click='getNum'>开台</button><button class="reset-btn-base reset-btn-book">预订</button></div>
@@ -59,14 +59,39 @@ export default {
             restNum: 0
         };
     },
-    computed: mapState([
-        'restId',
-        'board'
-    ]),
+    computed: {
+        ...mapState([
+            'restId',
+            'board',
+            'selectDish'
+        ]),
+        selectDishText() {
+            let str = '';
+                this.selectDish.forEach((el, index) => {
+                    if (index !== 0) {
+                        str +='\r\n'
+                    }
+                    str += el.boardName + el.boardId;
+                });
+                return str;
+            }
+    },
     methods: {
+        ...mapMutations([
+            'setLeftType',
+            'setOpenData'
+        ]),
         numChange(val) {
-            http.get('/board/openBoard', { boardIds: [this.board.id], peopleNum: val, resetId: this.restId }).then(res => {
-
+            const boardIds = [];
+            this.selectDish.forEach(el =>{
+                boardIds.push(el.id);
+            });
+            // http.get('/board/openBoard', { boardIds: JSON.stringify(boardIds), peopleNum: val, restId: this.restId }).then(res => {
+            //     this.setOpenData(res.data);
+            //     this.setLeftType({leftType: 2});
+            // });
+            this.$nextTick(()=> {
+                this.setLeftType({leftType: 3});
             });
         },
         getNum(val) {

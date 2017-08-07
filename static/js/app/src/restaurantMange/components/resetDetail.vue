@@ -1,8 +1,8 @@
 /*
 * @Author: lxj
 * @Date:   2017-08-01 14:45:58
-* @Last Modified by:   linxinjian
-* @Last Modified time: 2017-08-03 18:42:06
+* @Last Modified by:   lxj
+* @Last Modified time: 2017-08-07 20:00:46
 * @email: 783384903@qq.com
 */
 
@@ -11,42 +11,69 @@
         <div class="rest-taday-count">
             <div class="restDetail-title-tip">桌号</div>
             <div class="restDetail-title-display">
-                <div><span class="restDetail-title-dish">大圆桌4</span> <span class="restDetail-type-tag">并</span></div>
+                 <div><span class="restDetail-title-dish">{{openData.boardDetailResps[0].boardName}}{{openData.boardDetailResps[0].boardId}}</span> <span v-if='openData.boardDetailResps.length > 1' class="restDetail-type-tag" :title='selectDishText'>并</span></div>
                 <!-- <div><span class="rest-taday-tag " :class="getState(item.foodState, 'color')">{{getState(item.foodState, 'text')}}</span></div> -->
-                 <div><span class="rest-taday-tag yellow" >已预定</span></div>
+                 <div><span class="rest-taday-tag " :class='getState("color")' >{{getState("text")}}</span></div>
             </div>
             <div>
                 <div class="rest-restDetail-left">
                     <div class="restDetail-title-tip">人数</div>
-                    <div>3 <img src="/static/image/icon/edit.png" alt=""></div>
+                    <div>{{this.openData.peopleNum}}<!-- <inputVaild :value='changeNum' :max='2000' :isInt='true' ></inputVaild> --> <img src="/static/image/icon/edit.png" alt="" @click='editor()'></div>
                 </div>
                 <div class="rest-restDetail-right">
-                    <div class="restDetail-title-tip">用餐时间</div>
-                    <div class="restDetail-title-data">2017-03-29 12:30</div>
+                    <div class="restDetail-title-tip">{{this.openData.orderState === 1 ? '用餐时长' :'用餐时间' }}</div>
+                    <div class="restDetail-title-data" v-if='this.openData.orderState !== 1'>{{this.openData.creationTime}}</div>
+                    <div class="restDetail-title-data" v-if='this.openData.orderState === 1'>{{this.openData.timer}}</div>
                 </div>
             </div>
-            <div class="rest-restDetail-other ">
+            <div class="rest-restDetail-other" @click='moreShow = !moreShow'>
                 肖斯昆 13926585665查看详情 <span >>></span>
             </div>
-        </div>
+        </div>  <div  class="rest-restDetail-transform" :style='{maxHeight: moreShow ? "400px" : "0"}'>
+                        <div class="rest-restDetail-otherDetail"  >
+                    <div>
+                        <div><span>客户姓名：</span><span>王老六</span></div>
+                        <div><span>手机号：</span><span class="rest-restDetail-span">13926585665</span></div>
+                    </div>
+                     <div>
+                        <div><span>客户来源：</span><span>微官网</span></div>
+                        <div><span>销售员：</span><span class="rest-restDetail-span">无</span></div>
+                    </div>
+                     <div>
+                        <div><span>整单优惠：</span><span>无</span></div>
+                        <div><span>折扣方案：</span><span class="rest-restDetail-span">微官网</span></div>
+                    </div>
+                    <div>订单备注：Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sunt repellat ab vitae facere, nobis reiciendis ullam atque quam aperiam voluptates molestiae adipisci repellendus porro nostrum quaerat quo officia quod ut unde. Doloribus at sint vel, facilis eum dolor illum tempora possimus culpa saepe aperiam, soluta ea, alias iste suscipit rem atque nisi accusantium incidunt! Quasi at cumque, soluta iusto. Laborum atque possimus, non rerum cum enim placeat voluptatibus. Ipsa suscipit, debitis voluptas quis laboriosam dolores ullam asperiores vero, ipsam aliquid, iste est alias esse reiciendis velit quisquam soluta nam ab. A doloremque alias beatae, placeat esse fuga harum dignissimos, dolore.</div>
+                    <div><span><span style="display: inline-block;width: 4em;text-align: right;">订单号</span>：3010210120120120120</span></div>
+                    <div><span>开台时间：2017-07-11 18:30:21</span></div>
+                    <div>
+                        <div><span style="display: inline-block;width: 4em;text-align: right;">操作人</span>：邱丽</div>
+                        <div style="color:#178ce6;">编辑详情</div>
+                    </div>
+                </div>
+                </div>
         <div class="rest-restDetail-constain">
             <table class="rest-restDetail-table">
                 <thead>
                     <tr><td width="150px">菜品名称</td><td width="45px">数量</td><td width='80px'>金额</td></tr>
                 </thead>
                 <tbody>
-                <template v-for='item in restDate.data.itemsMap'>
+                <template v-for='item in restDate.data.itemsMap' v-if='restDate.data.itemsMap && leftType !== 4'>
                     <tr @click='changeItem(item)'> <td><div><span class="rest-restDetail-dishname" :class='{"rest-item-del" : item.serviceState === 1}'> <span  :class='getTriangle(item)'></span>{{item.dishName}}</span><span class="rest-item-send" v-if='item.serviceState === 2'>送</span></div></td><td><div :class='{"rest-item-del" : item.serviceState === 1}'>x{{item.bookNum}}</div></td><td :class='{"rest-item-del" : item.serviceState === 1}'>{{item.price}}</td></tr>
                     <tr v-for='sub in item.subDishList' v-if='item.select' :class='{"rest-item-del" : sub.serviceState === 1}'>
                         <td class="rest-restDetail-trchild">{{sub.dishName}}</td><td><div>x{{sub.bookNum}}</div></td><td></td>
                     </tr>
                 </template> 
-       
+                <template v-if='leftType === 4'>
+                    <tr v-for='(item,index) in addFood'>
+                        <td class="rest-restDetail-trchild">{{item.name}}</td><td><div style='width:100px;'><count :del=true :min = -1 :num='item.num' :onNumChange='onNumChange' :id='item.id'></count></div></td><td>{{item.price * item.num }}</td>
+                    </tr>
+                </template>
                 </tbody>
             </table>
         </div>
         <div class="rest-restDetail-foot">
-        <div style="padding:15px;border-bottom:1px solid #e0e6ed">
+        <div style="padding:15px; 15px 10px;border-bottom:1px solid #e0e6ed">
         <div class="rest-foot-count">            
         <div class="restDetail-title-tip">
                 共5项
@@ -73,6 +100,16 @@
                  <div class="restDetail-check-item"><span><span></span>违约金</span> <span>3000.00</span></div>
                  <div class="restDetail-check-item"><span><span></span>还需收款</span> <span>3000.00</span></div>
             </div>
+
+        </div>
+        <div class="resetmange-click-list">
+            <div class="resetMange-btn-base resetMange-btn-promise" @click='addNewFood'>{{openData.itemsMap && openData.itemsMap.length ? '加' : '点'}}菜</div>
+            <div class="resetMange-btn-base ">换桌</div>
+            <div class="resetMange-btn-base ">撤台</div>
+            <div class="resetMange-btn-base " v-if='this.leftType !== 3'>取消订单</div>
+            <div class="resetMange-btn-base " v-if='this.leftType !== 3'>打印</div>
+            <div class="resetMange-btn-base " v-if='this.leftType !== 3'>收银</div>
+            <div class="resetMange-btn-base resetMange-btn-promise resetMange-btn-lager" v-if='this.leftType !== 3'>开台并入厨</div>
         </div>
         </div>
     </div>
@@ -81,6 +118,27 @@
     @mixin flex-just-between {
         display: flex;
         justify-content: space-between;
+    }
+    .resetMange-btn-base {
+        border-radius:4px;
+        width:70px;
+        text-align: center;
+        height:32px;
+        line-height: 32px;
+        font-size:14px;
+        color:#99a9bf;
+        border:1px solid #99a9bf;
+        display: inline-block;
+        margin-top: 10px;
+        cursor: pointer;
+    }
+    .resetMange-btn-lager{
+        width: 140px;
+    }
+    .resetMange-btn-promise{
+        border-color: #178ce6;
+        background:#178ce6;
+        color: #fff;
     }
     .restDetail-foot-check{
         .restDetail-check-list{
@@ -96,6 +154,9 @@
         width:318px;
         border-bottom-right-radius: 8px;
         border-bottom-left-radius: 8px;
+        .resetmange-click-list{
+            padding: 0 8px 8px;
+        }
         .rest-foot-count{
              @include flex-just-between;
             border-bottom: 1px dashed #99a9bf;
@@ -168,12 +229,16 @@
             line-height: 24px;
             height: 24px;
             vertical-align: text-bottom;
+            cursor: pointer;
         }
     }
     .rest-restDetail-left{
         width: 100px;
         border-right: 1px dashed #99a9bf;
         display: inline-block;
+        img{
+            cursor: pointer;
+        }
     }
     .rest-restDetail-right{
         padding-left: 20px;
@@ -187,10 +252,33 @@
         text-align: right;
         font-size:12px;
         color:#c0ccda;
-        span{
+        & > span{
             transform: scaleY(0.7) scaleX(1.7) rotate(90deg);
             display: inline-block;
         }
+    }
+    .rest-restDetail-transform{
+         transition: max-height 0.6s;
+        overflow: hidden;
+        position: absolute;
+        width: 318px;
+    }
+    .rest-restDetail-otherDetail{
+       
+            padding: 15px;
+    background-color: #fff;
+    box-shadow: 0 4px 4px 0 rgba(154,162,167,0.19);
+font-size:12px;
+color:#475669;
+& > div {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    .rest-restDetail-span{
+        width: 80px;
+        display: inline-block;
+    }
+}
     }
     .rest-restDetail-constain{
         .rest-restDetail-table{
@@ -237,7 +325,7 @@
                     color:#475669;
                 }
                 td:nth-child(2){
-                    div{
+                    & > div{
                         border-left:1px dashed #99a9bf;
                         border-right:1px dashed #99a9bf;
                     }
@@ -250,8 +338,10 @@
 <script>
 import { ORDER_TYPE, ORDER_STATE_TEXT } from '../../ordersManage/constant.js';
 import http from '../../common/http.js';
-import { mapState } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 import { orderWay } from '../orderWay.js';
+import inputVaild from '../../common/components/inputVaild.vue';
+import count from '../../common/components/counter.vue';
 export default {
     props: {
     },
@@ -262,6 +352,8 @@ export default {
             orderWay,
             needpay: false,
             paied: false,
+            editNum: false,
+            moreShow: false,
             restDate: {
                 'code': 61058, 'data':
                 {
@@ -287,10 +379,37 @@ export default {
             }
         };
     },
-    computed: mapState([
-        'restId'
-    ]),
+    computed: {
+        ...mapState([
+            'restId',
+            'board',
+            'selectDish',
+            'openData',
+            'leftType',
+            'addFood'
+        ]),
+        selectDishText() {
+            let str = '';
+            this.openData.boardDetailResps.forEach((el, index) => {
+                if (index !== 0) {
+                    str += '\r\n';
+                }
+                str += el.boardName + el.boardId;
+            });
+            return str;
+        }
+    },
     methods: {
+        ...mapMutations([
+            'setLeftType',
+            'changeFood'
+        ]),
+        addNewFood() {
+            this.setLeftType({ leftType: 4 });
+        },
+        editor() {
+            this.editNum = !this.editNum;
+        },
         changeItem(item) {
             if (!item.subDishList || !item.subDishList.length) {
                 return;
@@ -317,16 +436,43 @@ export default {
                 return 'triangle-right';
             }
         },
-        getState(id, type) {
-            return this.ORDER_STATE_TEXT[this.ORDER_TYPE.CATERING][id][type];
+        getState(type) {
+            const state = this.openData.orderState;
+            return this.ORDER_STATE_TEXT[this.ORDER_TYPE.CATERING][state][type];
+        },
+        timer() {
+            const now = new Date();
+            const time = now - new Date(this.openData.expectStartTime || this.openData.openTime);
+            const ht = parseInt(time / (1000 * 60 * 60));
+            const mt = parseInt((time / (1000 * 60)) % 60);
+            if (!this.openData.timer) {
+                this.$set(this.openData, 'timer', this.getNumSte(ht, 2) + ':' + this.getNumSte(mt, 2));
+            } else {
+                this.openData.timer = this.getNumSte(ht, 2) + ':' + this.getNumSte(mt, 2);
+            }
+        },
+        getNumSte(str, fill) {
+            const full = '00000' + str;
+            return full.slice(full.length - fill, full.length);
+        },
+        onNumChange(type, index, num) {
+            this.changeFood({food: { id: index, num: num }});
         }
     },
     watch: {
     },
     components: {
+        inputVaild,
+        count
     },
     created() {
-
+        if (this.openData.orderState === 1) {
+            this.timer();
+            window.inter = window.setInterval(this.timer, 1000 * 60);
+        }
+    },
+    beforeDestroy() {
+        window.clearInterval(window.inter);
     }
 
 };

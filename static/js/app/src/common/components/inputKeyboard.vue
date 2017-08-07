@@ -58,6 +58,7 @@
         .reset-btn-base{
             line-height:34px;
             background-color: #fff;
+            cursor:pointer;
         }
         .reset-btn-canel{
             color: #99a9bf;
@@ -102,6 +103,7 @@
                 text-align:center;
                 font-size:18px;
                 color:#99a9bf;
+                cursor:pointer;
             }
         }
     }
@@ -125,11 +127,16 @@ export default {
     },
     methods: {
         addValue(e) {
-            if (e.target.innerText === 'D') {
+            if (e.target.innerText === '') {
                 this.val = Number(this.val.toString().slice(0, -1));
             }
             if (e.target.innerText && !isNaN(Number(e.target.innerText))) {
-                this.val = Number(this.val + e.target.innerText);
+                const num = Number(this.val + e.target.innerText);
+                if (num > 2000) {
+                    this.val = 2000;
+                } else {
+                    this.val = num;
+                }
             }
         },
         changeValue(val) {

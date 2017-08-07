@@ -1,8 +1,8 @@
 /*
 * @Author: lxj
 * @Date:   2017-07-28 16:16:45
-* @Last Modified by:   linxinjian
-* @Last Modified time: 2017-08-03 16:44:48
+* @Last Modified by:   lxj
+* @Last Modified time: 2017-08-07 19:11:45
 * @email: 783384903@qq.com
 */
 
@@ -19,7 +19,7 @@
         <div class="rest-order-right">
             <taday v-if='leftType === 0'></taday>
             <resetContain v-if='leftType === 1'></resetContain>
-            <resetdetail v-if='leftType === 2'></resetdetail>
+            <resetdetail v-if='leftType === 2 || leftType === 3 || leftType === 4'></resetdetail>
         </div>
         <reserve-info-modal :visible="reserveInfoVisible" @hideModal="hideModal" @showRelevaneOrder="showRelevanceOrder"></reserve-info-modal>
         <relevance-order-modal :visible="relevanceOrderVisible" @hideModal="hideModal"></relevance-order-modal>
