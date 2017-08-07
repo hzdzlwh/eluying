@@ -2,7 +2,7 @@
  * @Author: lwh
  * @Date:   2017-08-02 16:04:29
  * @Last Modified by:   Tplant
- * @Last Modified time: 2017-08-07 15:16:11
+ * @Last Modified time: 2017-08-07 17:49:22
  */
 
  <template>
@@ -23,7 +23,7 @@
             </div>
             <div class="order-menu">
                 <div class="order" @click="reserve">预订</div>
-                <div class="menu">点菜</div>
+                <div class="menu" @click="orderDish">点菜</div>
             </div>
         </div>
         <div class="area-container">
@@ -103,7 +103,8 @@ export default {
     },
     methods: {
         ...mapMutations([
-            types.SET_DATE
+            types.SET_DATE,
+            types.SET_LEFT_TYPE
         ]),
         handleDateChange(date) {
             this.defaultStrDate = date;
@@ -127,6 +128,9 @@ export default {
         },
         reserve() {
             this.$emit('reserve');
+        },
+        orderDish() {
+            this[types.SET_LEFT_TYPE]({ leftType: 2 });
         },
         getSeatList() {
             http.get('/board/list', { date: this.date, restId: this.restId }).then(res => {

@@ -9,7 +9,7 @@
 <template>
     <div class="restContain">
         <div class="rest-order-left">
-            <div v-if="true">
+            <div v-if="leftType === 1">
                 <rest-seats @reserve="changeReserveInfoVisible"></rest-seats>
             </div>
             <div v-else>
@@ -21,7 +21,8 @@
             <resetContain v-if='leftType === 1'></resetContain>
             <resetdetail v-if='leftType === 2'></resetdetail>
         </div>
-        <reserve-info-modal :visible="reserveInfoVisible" @hideModal="hideReserveInfoModal"></reserve-info-modal>
+        <reserve-info-modal :visible="reserveInfoVisible" @hideModal="hideModal" @showRelevaneOrder="showRelevanceOrder"></reserve-info-modal>
+        <relevance-order-modal :visible="relevanceOrderVisible" @hideModal="hideModal"></relevance-order-modal>
     </div>
 </template>
 <style lang="scss" scoped>
@@ -50,6 +51,7 @@ import { mapState, mapMutations } from 'vuex';
 import resetContain from '../../components/resetConstain.vue';
 import resetdetail from '../../components/resetDetail.vue';
 import reserveInfoModal from '../../components/reserveInfo';
+import relevanceOrderModal from '../../components/relevanceOrder';
 export default {
     props: {
 
@@ -58,7 +60,8 @@ export default {
         return {
             keyboardVisible: false,
             restNum: 0,
-            reserveInfoVisible: false
+            reserveInfoVisible: false,
+            relevanceOrderVisible: false
         };
     },
     computed: mapState([
@@ -77,8 +80,12 @@ export default {
         changeReserveInfoVisible() {
             this.reserveInfoVisible = true;
         },
-        hideReserveInfoModal() {
+        hideModal() {
             this.reserveInfoVisible = false;
+            this.relevanceOrderVisible = false;
+        },
+        showRelevanceOrder() {
+            this.relevanceOrderVisible = true;
         }
     },
     components: {
@@ -88,7 +95,8 @@ export default {
         resetContain,
         resetdetail,
         restSeats,
-        reserveInfoModal
+        reserveInfoModal,
+        relevanceOrderModal
     },
     created() {
 

@@ -2,7 +2,7 @@
  * @Author: lwh
  * @Date:   2017-08-07 11:16:56
  * @Last Modified by:   lwh
- * @Last Modified time: 2017-08-07 17:02:24
+ * @Last Modified time: 2017-08-07 19:41:23
  */
 
 <template>
@@ -14,7 +14,11 @@
                     <button type="button" class="close" @click="hideModal"><span>&times;</span></button>
                 </div>
                 <div class="modal-body">
-                    <div><span>客户姓名：</span><input type="text" class="dd-input" style="width:200px;"></div>
+                    <div>
+                        <span>客户姓名：</span>
+                        <input type="text" class="dd-input" style="width:200px;">
+                        <span class="relevance-order" @click="showRelevanceOrder">关联订单</span>
+                    </div>
                     <div><span style="display:inline-block;width:70px;text-align:right;">手机号：</span><input type="number" class="dd-input" style="width:200px;"></div>
                     <div class="item">
                         <span>客户来源：</span>
@@ -112,6 +116,10 @@ export default {
     methods: {
         hideModal() {
             this.$emit('hideModal');
+        },
+        showRelevanceOrder() {
+            this.hideModal();
+            this.$emit('showRelevaneOrder');
         }
     },
     watch: {
@@ -139,6 +147,11 @@ export default {
             border-bottom: 1px solid #e5e5e5;
             > div{
                 margin-bottom: 16px;
+            }
+            .relevance-order{
+                margin-left: 10px;
+                color: #178ce6;
+                cursor: pointer;
             }
         }
         .modal-foot{
