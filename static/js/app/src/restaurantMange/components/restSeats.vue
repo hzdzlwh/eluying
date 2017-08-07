@@ -2,7 +2,7 @@
  * @Author: lwh
  * @Date:   2017-08-02 16:04:29
  * @Last Modified by:   Tplant
- * @Last Modified time: 2017-08-03 14:56:00
+ * @Last Modified time: 2017-08-07 15:16:11
  */
 
  <template>
@@ -22,14 +22,14 @@
                 <customer-radio name="area" value="e" v-model="selectState">已预订</customer-radio>
             </div>
             <div class="order-menu">
-                <div class="order">预订</div>
+                <div class="order" @click="reserve">预订</div>
                 <div class="menu">点菜</div>
             </div>
         </div>
         <div class="area-container">
             <h3>A区</h3>
             <div class="seats-container">
-                <div v-for="(i, index) in 20" class="seat" @click="getSeatOrder($event)" @contextmenu.prevent="$refs.ctxMenu.open($event, {data: 1})">
+                <div v-for="(i, index) in 20" class="seat leisure" @click="getSeatOrder($event)" @contextmenu.prevent="$refs.ctxMenu.open($event, {data: 1})">
                     <div class="state-twoCode">
                         <div class="state">已结账</div>
                         <div class="two-dimensionalcode"></div>
@@ -39,14 +39,14 @@
                     <div class="reserve-time">预12:00</div>
                     <div class="order-list" v-if="i === 1">
                         <div class="rest-arrow-up"></div>
-                        <div><span>桌位1</span><span>空闲</span></div>
-                        <div v-for="i in 2" @click.prevent="getSeatOrder($event)">
+                        <div class="seat-name"><span>桌位1</span><span>空闲</span></div>
+                        <div class="order-info" v-for="i in 2" @click.prevent="getSeatOrder($event)">
                             <div class="order-list-item">
-                                <div><span>人数: 2</span><span>用餐时间: 2017-07-18 17:00</span></div>
-                                <div>已预订</div>
+                                <div><span>人数: 2</span><span style="margin-left: 32px;">用餐时间: 2017-07-18 17:00</span></div>
+                                <div class="seat-state yellow">已预订</div>
                             </div>
                             <div class="order-list-item">
-                                <div>张三 11111111111 会员</div>
+                                <div>张三 11111111111<span style="margin-left: 8px;">会员</span></div>
                                 <div>前台下单</div>
                             </div>
                         </div>
@@ -62,6 +62,7 @@
 
  <script>
  import types from '../store/types';
+ import http from '../../common/http';
  import { mapState, mapMutations } from 'vuex';
  import customerRadio from './customerRadio.vue';
  import DateSelect from '../../accommodation/components/DateSelect';
@@ -87,11 +88,18 @@ export default {
                     name: 'B区',
                     selected: false
                 }
-            ]
+            ],
+            tableList: []
         }
     },
+    created() {
+        this.getSeatList();
+    },
     computed: {
-        ...mapState(['date'])
+        ...mapState([
+            'date',
+            'restId'
+        ])
     },
     methods: {
         ...mapMutations([
@@ -106,6 +114,7 @@ export default {
         },
         toggleArea(area) {
             area.selected = !area.selected;
+            this.getSeatList();
         },
         onCtxOpen(locals) {
             console.log(locals)
@@ -115,12 +124,22 @@ export default {
         onCtxClose() {
         },
         addRestOrder() {
+        },
+        reserve() {
+            this.$emit('reserve');
+        },
+        getSeatList() {
+            http.get('/board/list', { date: this.date, restId: this.restId }).then(res => {
+                console.log(res);
+            });
         }
     },
     watch: {
         defaultStrDate(newValue) {
-            console.log(newValue)
             this[types.SET_DATE]({ date: newValue });
+        },
+        selectState() {
+            this.getSeatList();
         }
     },
     components: {
@@ -213,6 +232,8 @@ export default {
                 border-radius: 8px;
                 box-shadow: 0 0 2px 0 rgba(0,0,0,0.3);
                 margin: 4px;
+                position: relative;
+                cursor: pointer;
                 &:nth-child(8n+1){
                     margin-left: 0;
                 }
@@ -265,10 +286,11 @@ export default {
                 }
                 .order-list{
                     position: absolute;
-                    width: 300px;
+                    top: 86px;
+                    width: 341px;
+                    box-shadow: 0 0 5px 0 rgba(0,0,0,0.15);
                     background: #fafafa;
                     z-index: 2;
-                    padding: 10px 8px;
                     display: none;
                     .rest-arrow-up{
                         position: absolute;
@@ -284,16 +306,77 @@ export default {
                     .order-list-item{
                         display: flex;
                         justify-content: space-between;
+                        align-items: center;
                         height: 30px;
                         line-height: 30px;
+                        font-size: 12px;
+                        .seat-state{
+                            width: 40px;
+                            height: 22px;
+                            position: relative;
+                            display: inline-flex;
+                            justify-content: center;
+                            align-items: center;
+                            color: #fff;
+                            &::before {
+                                position: absolute;
+                                content: '';
+                                display: inline-block;
+                                border-right: 12px solid;
+                                border-top: 11px solid transparent;
+                                border-bottom: 11px solid transparent;
+                                border-left: 0;
+                                left: -12px;
+                            }
+                            &.yellow {
+                                background: #ffba75;
+                                &::before {
+                                    border-right-color: #ffba75;
+                                }
+                            }
+                            &.blue {
+                                background: #82beff;
+                                &::before {
+                                    border-right-color: #82beff;
+                                }
+                            }
+                        }
+                        &:nth-child(2){
+                            color: #99a9bf;
+                        }
                     }
+                    .seat-name{
+                        color: #475669;
+                        font-weight: bold;
+                        line-height: 30px;
+                        padding: 0 8px;
+                    }
+                    .order-info{
+                        border-top: 1px dashed #99a9bf;
+                        padding: 0 8px;
+                        cursor: pointer;
+                        &:hover{
+                            background: #e1effa;
+                        }
+                    }
+                }
+                &.select-table{
+                    border: 2px solid #178ce6;
                 }
                 &:hover{
                     .order-list{
                         display: block;
                     }
                 }
-                
+                &.leisure{
+                    background: #ffffff;
+                }
+                &.using{
+                    background: #c6e5ff;
+                }
+                &.open-table{
+                    background: #ffe6c6;
+                }
             }
         }
         
