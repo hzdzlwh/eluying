@@ -1,12 +1,12 @@
 /*
 * @Author: lxj
 * @Date:   2017-07-18 19:49:19
-* @Last Modified by:   linxinjian
-* @Last Modified time: 2017-08-01 15:51:11
+* @Last Modified by:   lxj
+* @Last Modified time: 2017-08-07 10:40:27
 * @email: 783384903@qq.com
 */
 <template>
-     <input class="dd-input inputVaild" :style="{width:width}" v-model='num'  type='Number' @input='changeNum' :disabled='disabled' ref='inputVaild' :placeholder='placeholder'></input>
+     <input class="dd-input inputVaild" :style="{width:width}" :class='className' v-model='num'  type='Number' @input='changeNum' :disabled='disabled' ref='inputVaild' :placeholder='placeholder'></input>
 </template>
 <style lang="scss" rel="stylesheet/scss" type="text/css">
 .inputVaild{
@@ -41,7 +41,8 @@ height:23px;
                 type: Boolean,
                 default: false
             },
-            onNumChange: Function
+            onNumChange: Function,
+            className: String
         },
         data() {
             return {

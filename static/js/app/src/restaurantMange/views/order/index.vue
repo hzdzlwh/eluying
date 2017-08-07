@@ -55,7 +55,7 @@ export default {
     data() {
         return {
             keyboardVisible: false,
-            restNum: 0,
+            restNum: 0
         };
     },
     computed: mapState([
