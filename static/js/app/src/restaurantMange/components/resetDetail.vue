@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-08-01 14:45:58
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-08-08 15:23:40
+* @Last Modified time: 2017-08-08 19:18:13
 * @email: 783384903@qq.com
 */
 
@@ -117,16 +117,17 @@
         </div>
         <div class="resetmange-click-list">
             <div class="resetMange-btn-base resetMange-btn-promise" @click='addNewFood' v-if='this.leftType !== 4'>{{openData.itemsMap && openData.itemsMap.length ? '加' : '点'}}菜</div>
-            <div class="resetMange-btn-base " v-if='this.leftType !== 4'>换桌</div>
-            <div class="resetMange-btn-base " v-if='this.leftType !== 4'>撤台</div>
-            <div class="resetMange-btn-base resetMange-btn-lager" v-if='this.leftType === 4'>下单</div>
+            <div class="resetMange-btn-base " @click='openBoard' v-if='this.leftType !== 4'>换桌</div>
+            <div class="resetMange-btn-base " @click='closeBoard' v-if='this.leftType !== 4'>撤台</div>
+            <div class="resetMange-btn-base resetMange-btn-lager" v-if='this.leftType === 4' @click='submitAddFood'>下单</div>
             <div class="resetMange-btn-base resetMange-btn-lager" v-if='this.leftType === 4' @click='canlAddFood'>取消</div>
-            <div class="resetMange-btn-base " v-if='isHasOrder && this.leftType !== 4'>取消订单</div>
+            <div class="resetMange-btn-base " v-if='isHasOrder && this.leftType !== 4' @click='canOrder'>取消订单</div>
             <div class="resetMange-btn-base " v-if='isHasOrder && this.leftType !== 4'>打印</div>
-            <div class="resetMange-btn-base " v-if='isHasOrder && this.leftType !== 4'>收银</div>
-            <div class="resetMange-btn-base resetMange-btn-promise resetMange-btn-lager" v-if='isHasOrder && this.leftType !== 4'>开台并入厨</div>
+            <div class="resetMange-btn-base " v-if='isHasOrder && this.leftType !== 4' @click='crash'>收银</div>
+            <div class="resetMange-btn-base resetMange-btn-promise resetMange-btn-lager" v-if='isHasOrder && this.leftType !== 4' @click='openBoardAndCook'>开台并入厨</div>
         </div>
         </div>
+        <bookInfo :visible='bookInfoVisible' @hideModal='hidebookInfo'></bookInfo>
     </div>
 </template>
 <style lang='scss'>
@@ -367,6 +368,8 @@ import { orderWay } from '../orderWay.js';
 import inputVaild from '../../common/components/inputVaild.vue';
 import count from '../../common/components/counter.vue';
 import util from 'util';
+import bus from '../../common/eventBus.js';
+import bookInfo from './changeBookInfo.vue';
 export default {
     props: {
     },
@@ -377,9 +380,9 @@ export default {
             orderWay,
             needpay: false,
             paied: false,
-            editNum: false,
             moreShow: false,
             remark: '',
+            bookInfoVisible: false,
             restDate: {
                 'code': 61058, 'data':
                 {
@@ -435,18 +438,56 @@ export default {
             'canlFood',
             'setOpenData'
         ]),
+        hidebookInfo() {
+            this.bookInfoVisible = false;
+        },
+        openBoard() {
+            bus.$emit('changeBoard', { data: this.openData });
+        },
+        openBoardAndCook() {
+            http.get('/board/openBoardAndCook', { restId: this.restId, caterOrderId: this.openData.caterOrderId }).then;
+        },
+        crash() {
+            bus.$emit('showCashier', { type: 'orderDetail' });
+        },
+        canOrder() {
+            bus.$emit('showCancelOrder');
+        },
+        closeBoard() {
+            const parms = {
+            };
+            if (this.openData.boardDetailResps.length) {
+                parms.boardId = this.openData.boardDetailResps[0].id;
+            } else {
+                if (this.openData.list) {
+                    parms.boardLogIds = JSON.stringify(this.openData.list);
+                } else {
+                    if (this.openData.caterOrderId) {
+                        parms.caterOrderId = this.openData.caterOrderId;
+                    } else {
+                        return;
+                    }
+                }
+            }
+            parms.restId = this.restId;
+            http.get('/board/closeBoard', parms).then(res => {
+                this.setLeftType({ leftType: 0 });
+            });
+        },
         submitAddFood() {
             const parms = {
             };
             if (this.openData.boardDetailResps.length) {
+                const boardList = [];
                 this.openData.boardDetailResps.forEach(el => {
-                    parms.boardList.push(el.id);
+                    boardList.push(el.id);
                 });
+                parms.boardList = JSON.stringify(boardList);
             } else {
                 parms.boardList = [];
             }
             if (this.openData.list) {
-                parms.boardLogIds = this.this.openData.list;
+                parms.boardLogIds = JSON.stringify(this.openData.list);
             }
             parms.restId = this.restId;
             if (!this.isHasOrder) {
@@ -457,6 +498,7 @@ export default {
             }).then(id => {
                 http.get('/catering/getCaterOrderDetail', { caterOrderId: id });
             }).then(data => {
+                bus.$emit('setOrderDetail', data.data);
                 this.setOpenData(data.data);
                 this.canlAddFood;
             });
@@ -493,7 +535,7 @@ export default {
             return util.timeFormat(date);
         },
         editor() {
-            this.editNum = !this.editNum;
+            this.bookInfoVisible = true;
         },
         changeItem(item) {
             if (!item.subDishList || !item.subDishList.length) {
@@ -556,7 +598,8 @@ export default {
     },
     components: {
         inputVaild,
-        count
+        count,
+        bookInfo
     },
     created() {
         if (!this.openData.isHasOrder) {
