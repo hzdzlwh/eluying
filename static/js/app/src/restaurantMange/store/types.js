@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-31 11:05:38
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-08-07 19:43:35
+* @Last Modified time: 2017-08-08 14:09:48
 * @email: 783384903@qq.com
 */
 
@@ -13,5 +13,6 @@ export default {
     'SET_LEFT_TYPE': 'setLeftType',
     'SET_OPEN_DATA': 'setOpenData',
     'ADD_FOOD': 'addFood',
+    'CANL_FOOD': 'canlFood',
     'CHANGE_FOOD': 'changeFood'
 };

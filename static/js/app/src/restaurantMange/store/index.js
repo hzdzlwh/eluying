@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-31 10:52:58
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-08-07 20:02:04
+* @Last Modified time: 2017-08-08 14:15:05
 * @email: 783384903@qq.com
 */
 
@@ -18,11 +18,11 @@ const store = new Vuex.Store({
         restId: 0,
         date: dateFormat(new Date()),
         leftType: 3,
-        // 0:今日营业额，1:空桌选中，2:订单详情，3:开台，4:加菜点菜
+        // 0:今日营业额，1:空桌选中，2:订单详情，4:加菜点菜
         board: {
             id: 1122,
             boardName: '大圆桌',
-            boardId: '4'
+            boardId: '3'
         },
         selectDish: [{ id: 123, boardName: '大圆桌', boardId: '2' }, { id: 123, boardName: '大圆桌', boardId: '3' }],
         openData: {
@@ -33,20 +33,22 @@ const store = new Vuex.Store({
             peopleNum: 10,
             restName: 'asdasd',
             state: 2,
-            orderState: 1
+            isHasOrder: false
         },
         addFood: [{ id: 1, name: '西湖醋鱼', num: 0, price: 20 }, { id: 2, name: '可乐', num: 0, price: 30 }]
     },
     mutations: {
+        [types.CANL_FOOD](state) {
+            state.addFood = [];
+        },
         [types.ADD_FOOD](state, { food }) {
             const selectFood = state.find((el, index) => {
                 el.id === food.id;
             });
             if (selectFood) {
                 selectFood.num = selectFood.num + 1;
-                // 妈个鸡，傻逼es lin t++ 也能报错
             } else {
-                state.push(food);
+                state.addFood.push(food);
             }
         },
         [types.CHANGE_FOOD](state, { food }) {
