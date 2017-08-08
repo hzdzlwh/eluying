@@ -1,8 +1,8 @@
 /*
 * @Author: lxj
 * @Date:   2017-07-31 11:05:38
-* @Last Modified by:   lxj
-* @Last Modified time: 2017-08-08 14:09:48
+* @Last Modified by:   Tplant
+* @Last Modified time: 2017-08-08 17:06:40
 * @email: 783384903@qq.com
 */
 
@@ -14,5 +14,7 @@ export default {
     'SET_OPEN_DATA': 'setOpenData',
     'ADD_FOOD': 'addFood',
     'CANL_FOOD': 'canlFood',
-    'CHANGE_FOOD': 'changeFood'
+    'CHANGE_FOOD': 'changeFood',
+    'SET_SELECT_DISH': 'setSelectDish',
+    'DELETE_SELECT_DISH': 'deleteSelectDish'
 };

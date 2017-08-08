@@ -2,7 +2,7 @@
  * @Author: lwh
  * @Date:   2017-08-02 16:04:29
  * @Last Modified by:   Tplant
- * @Last Modified time: 2017-08-08 15:34:24
+ * @Last Modified time: 2017-08-08 17:40:38
  */
 
  <template>
@@ -29,15 +29,18 @@
         <div class="area-container" v-for="area in tableList">
             <h3>{{area.areaName}}</h3>
             <div class="seats-container">
-                <div v-for="(board, index) in area.boardList" class="seat leisure" @click="getSeatOrder($event)" @contextmenu.prevent="$refs.ctxMenu.open($event, {data: 1})">
+                <div v-for="(board, index) in area.boardList" class="seat" :class="{leisure: board.boardState === 0,
+                    using: board.boardState === 1,
+                    'open-table': !board.isHasOrder,
+                    'select-table': board.selected}" @click="getSeatOrder($event, board)" @contextmenu.prevent="$refs.ctxMenu.open($event, {data: 1})">
                     <div class="state-twoCode" :class="{'state-twoCode-right': board.orderState !== 2 && board.orderState !== 4 }">
                         <div class="state" :class="{'state-pending': board.orderState === 4 }" v-if="board.orderState === 2 || board.orderState === 4">{{orderState[board.orderState]}}</div>
                         <div class="two-dimensionalcode" v-if="board.hasScan"></div>
                     </div>
                     <div class="seat-num">{{`${board.kindName}${board.kindId}`}}</div>
                     <div class="eating-time" v-if="board.orderState === 1">{{board.duration.split(':')[0]}}小时{{board.duration.split(':')[1]}}分钟</div>
-                    <div class="reserve-time">预12:00</div>
-                    <div class="order-list" v-if="i === 1">
+                    <div class="reserve-time" v-if="board.orderState === 0">预{{board.time}}</div>
+                    <div class="order-list" v-if="board.caterOrderList.length">
                         <div class="rest-arrow-up"></div>
                         <div class="seat-name"><span>桌位1</span><span>空闲</span></div>
                         <div class="order-info" v-for="i in 2" @click.prevent="getSeatOrder($event)">
@@ -85,7 +88,6 @@ export default {
         };
     },
     created() {
-        this.getSeatList();
     },
     computed: {
         ...mapState([
@@ -96,14 +98,23 @@ export default {
     methods: {
         ...mapMutations([
             types.SET_DATE,
-            types.SET_LEFT_TYPE
+            types.SET_LEFT_TYPE,
+            types.SET_SELECT_DISH,
+            types.DELETE_SELECT_DISH
         ]),
         handleDateChange(date) {
             this.defaultStrDate = date;
         },
-        getSeatOrder(event, data) {
+        getSeatOrder(event, board) {
             event.cancelBubble = true;
-            console.log(data);
+            if (board.boardState === 0) {
+                this.$set(board, 'selected', !(board.selected));
+                if (board.selected) {
+                    this[types.SET_SELECT_DISH]({ dish: board });
+                } else {
+                    this[types.DELETE_SELECT_DISH]({ dish: board });
+                }
+            }
         },
         toggleArea(area) {
             area.selected = !area.selected;
@@ -157,6 +168,9 @@ export default {
             this[types.SET_DATE]({ date: newValue });
         },
         selectState() {
+            this.getSeatList();
+        },
+        restId(newValue) {
             this.getSeatList();
         }
     },
