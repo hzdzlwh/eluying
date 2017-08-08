@@ -2,7 +2,7 @@
  * @Author: lwh
  * @Date:   2017-08-02 16:04:29
  * @Last Modified by:   Tplant
- * @Last Modified time: 2017-08-07 20:32:26
+ * @Last Modified time: 2017-08-08 14:43:20
  */
 
  <template>
@@ -15,7 +15,7 @@
                 <div v-for="area in areas" @click="toggleArea(area)" :class="{selected: area.selected}">{{area.name}}</div>
             </div>
             <div class="state-select">
-                <customer-radio name="area" value="a" v-model="selectState" checked>全部座位</customer-radio>
+                <customer-radio name="area" value="a" v-model="selectState">全部座位</customer-radio>
                 <customer-radio name="area" value="b" v-model="selectState">使用中</customer-radio>
                 <customer-radio name="area" value="c" v-model="selectState">空闲</customer-radio>
                 <customer-radio name="area" value="d" v-model="selectState">开台未点菜</customer-radio>
@@ -26,15 +26,15 @@
                 <div class="menu" @click="orderDish">点菜</div>
             </div>
         </div>
-        <div class="area-container">
-            <h3>A区</h3>
+        <div class="area-container" v-for="area in tableList">
+            <h3>{{area.areaName}}</h3>
             <div class="seats-container">
-                <div v-for="(i, index) in 20" class="seat leisure" @click="getSeatOrder($event)" @contextmenu.prevent="$refs.ctxMenu.open($event, {data: 1})">
-                    <div class="state-twoCode">
-                        <div class="state">已结账</div>
-                        <div class="two-dimensionalcode"></div>
+                <div v-for="(board, index) in area.boardList" class="seat leisure" @click="getSeatOrder($event)" @contextmenu.prevent="$refs.ctxMenu.open($event, {data: 1})">
+                    <div class="state-twoCode" :class="{'state-twoCode-right': board.orderState !== 2 && board.orderState !== 4 }">
+                        <div class="state" :class="{'state-pending': board.orderState === 4 }" v-if="board.orderState === 2 || board.orderState === 4">{{orderState[board.orderState]}}</div>
+                        <div class="two-dimensionalcode" v-if="board.hasScan"></div>
                     </div>
-                    <div class="seat-num">桌位1</div>
+                    <div class="seat-num">{{`${board.kindName}${board.kindId}`}}</div>
                     <div class="eating-time">1小时20分钟</div>
                     <div class="reserve-time">预12:00</div>
                     <div class="order-list" v-if="i === 1">
@@ -60,37 +60,29 @@
     </div>
  </template>
 
- <script>
- import types from '../store/types';
- import http from '../../common/http';
- import { mapState, mapMutations } from 'vuex';
- import customerRadio from './customerRadio.vue';
- import DateSelect from '../../accommodation/components/DateSelect';
- import contextmenu from '../../common/components/contextmenu';
+<script>
+import types from '../store/types';
+import http from '../../common/http';
+import { mapState, mapMutations } from 'vuex';
+import customerRadio from './customerRadio.vue';
+import DateSelect from '../../accommodation/components/DateSelect';
+import contextmenu from '../../common/components/contextmenu';
+import { tableList } from '../mock/tableData.js';
 export default {
     data() {
         return {
             defaultStrDate: this.date,
-            selectState: '',
+            selectState: 'a',
             areas: [
                 {
-                    id: 1,
+                    id: 0,
                     name: '全部区域',
                     selected: true
-                },
-                {
-                    id: 2,
-                    name: 'A区',
-                    selected: false
-                },
-                {
-                    id: 3,
-                    name: 'B区',
-                    selected: false
                 }
             ],
-            tableList: []
-        }
+            tableList: [],
+            orderState: ['预订', '使用中', '已结账', '', '待处理']
+        };
     },
     created() {
         this.getSeatList();
@@ -118,7 +110,7 @@ export default {
             this.getSeatList();
         },
         onCtxOpen(locals) {
-            console.log(locals)
+            console.log(locals);
         },
         resetCtxLocals() {
         },
@@ -134,7 +126,29 @@ export default {
         },
         getSeatList() {
             http.get('/board/list', { date: this.date, restId: this.restId }).then(res => {
-                console.log(res);
+                if (res.code === 1) {
+                    const mockData = tableList;
+                    mockData.map(item => {
+                        const areaHasOrNot = this.areas.find(area => {
+                            return area.id === item.areaId;
+                        });
+                        if (areaHasOrNot === undefined) {
+                            this.areas.push({ id: item.areaId, name: item.areaName, selected: false });
+                        }
+                        var tableHasOrNot = this.tableList.find((table, index) => {
+                            return table.areaId === item.areaId;
+                        });
+                        if (tableHasOrNot === undefined) {
+                            this.tableList.push({
+                                areaId: item.areaId,
+                                areaName: item.areaName,
+                                boardList: [item]
+                            });
+                        } else {
+                            tableHasOrNot.boardList.push(item);
+                        }
+                    });
+                }
             });
         }
     },
@@ -151,8 +165,8 @@ export default {
         DateSelect,
         contextmenu
     }
-}
- </script>
+};
+</script>
 
  <style lang="scss" scoped>
     .select-container{
@@ -244,25 +258,31 @@ export default {
                 &:nth-child(8n){
                     margin-right: 0;
                 }
-                .state{
-                    width: 50px;
-                    height: 16px;
-                    line-height: 16px;
-                    border-radius: 0 8px 8px 0;
-                    background: #178ce6;
-                    font-size: 12px;
-                    padding-left: 8px;
-                    color: #fff;
-                    position: relative;
-                }
                 .state-twoCode{
                     display: flex;
                     justify-content: space-between;
                     padding: 6px 6px 0 0;
+                    &.state-twoCode-right{
+                        justify-content: flex-end;
+                    }
                     .two-dimensionalcode{
                         width: 16px;
                         height: 16px;
                         background: url('../../../../../image/two-dimensionalcode.png');
+                    }
+                    .state{
+                        width: 50px;
+                        height: 16px;
+                        line-height: 16px;
+                        border-radius: 0 8px 8px 0;
+                        background: #178ce6;
+                        font-size: 12px;
+                        padding-left: 8px;
+                        color: #fff;
+                        position: relative;
+                        &.state-pending{
+                            background: #f24949;
+                        }
                     }
                 }
                 .seat-num{

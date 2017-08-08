@@ -2,7 +2,7 @@
  * @Author: lwh
  * @Date:   2017-08-07 19:20:30
  * @Last Modified by:   lwh
- * @Last Modified time: 2017-08-07 19:56:11
+ * @Last Modified time: 2017-08-08 09:56:35
  */
 
  <template>
@@ -44,7 +44,7 @@ export default {
             }
         }
     }
-}
+};
  </script>
 
  <style lang="scss" scoped>

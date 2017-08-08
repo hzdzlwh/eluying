@@ -2,7 +2,7 @@
  * @Author: lwh
  * @Date:   2017-08-07 11:16:56
  * @Last Modified by:   lwh
- * @Last Modified time: 2017-08-07 19:41:23
+ * @Last Modified time: 2017-08-08 10:01:13
  */
 
 <template>
@@ -111,7 +111,7 @@ export default {
                     name: '李四'
                 }
             ]
-        }
+        };
     },
     methods: {
         hideModal() {
@@ -136,7 +136,7 @@ export default {
         DdOption,
         DatePicker
     }
-}
+};
 </script>
 
 <style lang="scss" scoped>

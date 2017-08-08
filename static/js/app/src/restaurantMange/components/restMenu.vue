@@ -2,7 +2,7 @@
  * @Author: lwh
  * @Date:   2017-08-03 15:13:42
  * @Last Modified by:   lwh
- * @Last Modified time: 2017-08-07 20:38:45
+ * @Last Modified time: 2017-08-08 10:06:35
  */
 
  <template>
@@ -261,7 +261,7 @@ export default {
                     ]
                 }
             ]
-        }
+        };
     },
     created() {
         this.$nextTick(() => {
@@ -271,9 +271,9 @@ export default {
     computed: {
         ...mapState(['restId']),
         currentIndex() {
-            for (let i =0; i < this.heightList.length; i++) {
-                let preHeight = this.heightList[i];
-                let nextHeight = this.heightList[i+1];
+            for (let i = 0; i < this.heightList.length; i ++) {
+                const preHeight = this.heightList[i];
+                const nextHeight = this.heightList[i + 1];
                 if (!nextHeight || (this.scrollY >= preHeight && this.scrollY < nextHeight)) {
                     return i;
                 }
@@ -286,7 +286,7 @@ export default {
         handleScroll(ev) {
             this.scrollY = ev.target.scrollTop;
             if (this.scrollY > this.heightList[this.currentIndex]) {
-                for (let i = 0; i < this.$refs.foodListHeader.length; i++) {
+                for (let i = 0; i < this.$refs.foodListHeader.length; i ++) {
                     this.$refs.foodListHeader[i].style.position = 'static';
                 }
                 /* this.$refs.foodListHeader[this.currentIndex].style.position = 'fixed';
@@ -295,20 +295,19 @@ export default {
                 this.$refs.foodListHeader[this.currentIndex].style.background = '#fafafa'; */
                 if (this.currentIndex === 0) {
                     if (this.scrollY >= 30) {
-                        $(this.$refs.foodListHeader[this.currentIndex]).css({ 'position' : 'fixed', 'top' : '160px', 'width' : '640px', 'background' : '#fff' });
+                        $(this.$refs.foodListHeader[this.currentIndex]).css({ 'position': 'fixed', 'top': '160px', 'width': '640px', 'background': '#fff' });
                     }
                 } else {
-                    $(this.$refs.foodListHeader[this.currentIndex]).css({ 'position' : 'fixed', 'top' : '160px', 'width' : '640px', 'background' : '#fff' });
+                    $(this.$refs.foodListHeader[this.currentIndex]).css({ 'position': 'fixed', 'top': '160px', 'width': '640px', 'background': '#fff' });
                 }
                 // $(this.$refs.foodListHeader[this.currentIndex]).css({ 'position' : 'fixed', 'top' : '155px', 'width' : '640px', 'background' : '#fff' });
-
             }
         },
         setMenu(index, event) {
             $(this.$refs.menu).animate({ scrollTop: this.heightList[index] }, 200);
         },
         calculateHeight() {
-            let foodList = this.$refs.foodList;
+            const foodList = this.$refs.foodList;
             let height = 0;
             this.heightList.push(height);
             foodList.map(food => {
@@ -328,7 +327,7 @@ export default {
             }
         }
     }
-}
+};
  </script>
 
  <style lang="scss" scoped>

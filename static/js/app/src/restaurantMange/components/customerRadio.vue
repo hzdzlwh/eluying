@@ -29,39 +29,39 @@ export default {
     props: {
         id: {
             type: String,
-            default: function () {
+            default: function() {
                 return 'radio-id-' + this._uid;
-            },
+            }
         },
         name: {
             type: String,
-            default: null,
+            default: null
         },
         value: {
             type: String,
-            default: '',
+            default: ''
         },
         modelValue: {
             type: String,
-            default: undefined,
+            default: undefined
         },
         className: {
             type: String,
-            default: null,
+            default: null
         },
         checked: {
             type: Boolean,
-            default: false,
+            default: false
         },
         required: {
             type: Boolean,
-            default: false,
+            default: false
         },
         model: {}
     },
 
     computed: {
-        state () {
+        state() {
             if (this.modelValue === undefined) {
                 return this.checked;
             }
@@ -92,8 +92,8 @@ export default {
         if (this.checked && !this.state) {
             this.toggle();
         }
-    },
-}
+    }
+};
 </script>
 
 <style lang="scss" scoped>
