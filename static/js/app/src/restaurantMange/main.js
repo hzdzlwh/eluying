@@ -9,7 +9,8 @@ import Router from 'vue-router';
 import init from '../common/init';
 import auth from '../common/auth';
 import store from './store/index.js';
-
+import { install, OrderSystem } from '../common/orderSystem';
+install(store);
 init({
     leftMenu: false,
     id: auth.VIP_ID
@@ -17,8 +18,12 @@ init({
 Vue.use(Router);
 const app = new Vue({
     store,
+    install,
     router,
-    ...App
+    ...App,
+    components: {
+        OrderSystem
+    }
 });
 document.addEventListener('DOMContentLoaded', () => {
     app.$mount('#app');

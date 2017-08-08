@@ -29,6 +29,7 @@
             <router-view></router-view>
         </div>
     </div>
+    <OrderSystem/>
 </div>
 </template>
 <style lang="scss">
