@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-08-01 14:45:58
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-08-08 17:43:15
+* @Last Modified time: 2017-08-08 19:18:13
 * @email: 783384903@qq.com
 */
 
@@ -127,6 +127,7 @@
             <div class="resetMange-btn-base resetMange-btn-promise resetMange-btn-lager" v-if='isHasOrder && this.leftType !== 4' @click='openBoardAndCook'>开台并入厨</div>
         </div>
         </div>
+        <bookInfo :visible='bookInfoVisible' @hideModal='hidebookInfo'></bookInfo>
     </div>
 </template>
 <style lang='scss'>
@@ -368,6 +369,7 @@ import inputVaild from '../../common/components/inputVaild.vue';
 import count from '../../common/components/counter.vue';
 import util from 'util';
 import bus from '../../common/eventBus.js';
+import bookInfo from './changeBookInfo.vue';
 export default {
     props: {
     },
@@ -378,9 +380,9 @@ export default {
             orderWay,
             needpay: false,
             paied: false,
-            editNum: false,
             moreShow: false,
             remark: '',
+            bookInfoVisible: false,
             restDate: {
                 'code': 61058, 'data':
                 {
@@ -436,6 +438,9 @@ export default {
             'canlFood',
             'setOpenData'
         ]),
+        hidebookInfo() {
+            this.bookInfoVisible = false;
+        },
         openBoard() {
             bus.$emit('changeBoard', { data: this.openData });
         },
@@ -530,7 +535,7 @@ export default {
             return util.timeFormat(date);
         },
         editor() {
-            this.editNum = !this.editNum;
+            this.bookInfoVisible = true;
         },
         changeItem(item) {
             if (!item.subDishList || !item.subDishList.length) {
@@ -593,7 +598,8 @@ export default {
     },
     components: {
         inputVaild,
-        count
+        count,
+        bookInfo
     },
     created() {
         if (!this.openData.isHasOrder) {
