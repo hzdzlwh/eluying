@@ -2,7 +2,7 @@
 * @Author: lwh
 * @Date:   2017-08-08 10:53:27
 * @Last Modified by:   Tplant
-* @Last Modified time: 2017-08-08 14:27:13
+* @Last Modified time: 2017-08-08 15:31:03
 */
 
 var tableList = [
@@ -15,11 +15,11 @@ var tableList = [
         caterOrderId: 12,
         caterOrderList: [],
         duration: '1:20',
-        hasScan: false,
+        hasScan: true,
         isHasOrder: false,
         kindId: 1,
         kindName: '圆桌',
-        orderState: 2,
+        orderState: 1,
         seriaNum: 1,
         time: '12:00'
     },
