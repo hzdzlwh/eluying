@@ -143,12 +143,12 @@
             border:1px solid #d9d9d9;
             border-radius:4px;
             line-height:26px;
-            width:166px;
             display:flex;
             justify-content:space-between;
             overflow:hidden;
             div {
                 flex:1;
+                padding:0 6px;
                 text-align:center;
                 border-right:1px solid #d9d9d9;
                 cursor:pointer;
