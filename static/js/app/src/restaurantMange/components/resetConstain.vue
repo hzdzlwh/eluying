@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-08-01 14:28:15
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-08-07 14:31:38
+* @Last Modified time: 2017-08-08 14:15:20
 * @email: 783384903@qq.com
 */
 
@@ -91,7 +91,7 @@ export default {
             //     this.setLeftType({leftType: 2});
             // });
             this.$nextTick(()=> {
-                this.setLeftType({leftType: 3});
+                this.setLeftType({leftType: 2});
             });
         },
         getNum(val) {

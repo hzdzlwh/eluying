@@ -1,8 +1,8 @@
 /*
 * @Author: lxj
 * @Date:   2017-07-31 13:58:30
-* @Last Modified by:   linxinjian
-* @Last Modified time: 2017-08-03 11:20:24
+* @Last Modified by:   lxj
+* @Last Modified time: 2017-08-08 09:56:48
 * @email: 783384903@qq.com
 */
 
@@ -179,23 +179,26 @@ export default {
         };
     },
     computed: mapState([
-        'restId'
+        'restId',
+        'date'
     ]),
     methods: {
         getState(id, type) {
             return this.ORDER_STATE_TEXT[this.ORDER_TYPE.CATERING][id][type];
         },
         fetchDate() {
-            // http.get('/catering/getDayTurnover',{restId: this.restId},{loading: false}).then()
-            window.console.log('refresh');
-            this.DayDate =
-            {
-                'newOrders': [
-                    {
-                        'borardList': ['string1', 'string2', 'string3', 'string4', 'string5'], 'date': '测试内容o0mt', 'foodOrderId': 86546, 'foodState': 1, 'orderNum': '测试内容ntvx', 'orderWay': 1, 'peopleNum': 25
-                    }
-                ], 'orderCount': (Math.random() * 1000).toFixed(0), 'peopleCount': (Math.random() * 1000).toFixed(0), 'priceSum': (Math.random() * 1000).toFixed(0)
-            };
+            http.get('/catering/getDayTurnover', { restId: this.restId, date: this.date }, { loading: false }).then((res) => {
+                this.DayDate = res.data;
+            });
+            // window.console.log('refresh');
+            // this.DayDate =
+            // {
+            //     'newOrders': [
+            //         {
+            //             'borardList': ['string1', 'string2', 'string3', 'string4', 'string5'], 'date': '测试内容o0mt', 'foodOrderId': 86546, 'foodState': 1, 'orderNum': '测试内容ntvx', 'orderWay': 1, 'peopleNum': 25
+            //         }
+            //     ], 'orderCount': (Math.random() * 1000).toFixed(0), 'peopleCount': (Math.random() * 1000).toFixed(0), 'priceSum': (Math.random() * 1000).toFixed(0)
+            // };
         }
     },
     watch: {

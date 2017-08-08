@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-08-01 14:45:58
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-08-07 20:00:46
+* @Last Modified time: 2017-08-08 15:23:40
 * @email: 783384903@qq.com
 */
 
@@ -13,41 +13,41 @@
             <div class="restDetail-title-display">
                  <div><span class="restDetail-title-dish">{{openData.boardDetailResps[0].boardName}}{{openData.boardDetailResps[0].boardId}}</span> <span v-if='openData.boardDetailResps.length > 1' class="restDetail-type-tag" :title='selectDishText'>并</span></div>
                 <!-- <div><span class="rest-taday-tag " :class="getState(item.foodState, 'color')">{{getState(item.foodState, 'text')}}</span></div> -->
-                 <div><span class="rest-taday-tag " :class='getState("color")' >{{getState("text")}}</span></div>
+                 <div v-if='openData.state !== 2 && openData.orderState'><span class="rest-taday-tag " :class='getState("color")' >{{getState("text")}}</span></div>
             </div>
             <div>
                 <div class="rest-restDetail-left">
                     <div class="restDetail-title-tip">人数</div>
-                    <div>{{this.openData.peopleNum}}<!-- <inputVaild :value='changeNum' :max='2000' :isInt='true' ></inputVaild> --> <img src="/static/image/icon/edit.png" alt="" @click='editor()'></div>
+                    <div>{{openData.peopleNum}}<!-- <inputVaild :value='changeNum' :max='2000' :isInt='true' ></inputVaild> --> <img src="/static/image/icon/edit.png" alt="" @click='editor()'></div>
                 </div>
                 <div class="rest-restDetail-right">
-                    <div class="restDetail-title-tip">{{this.openData.orderState === 1 ? '用餐时长' :'用餐时间' }}</div>
-                    <div class="restDetail-title-data" v-if='this.openData.orderState !== 1'>{{this.openData.creationTime}}</div>
-                    <div class="restDetail-title-data" v-if='this.openData.orderState === 1'>{{this.openData.timer}}</div>
+                    <div class="restDetail-title-tip">{{!openData.isHasOrder ? '用餐时长' :'用餐时间' }}</div>
+                    <div class="restDetail-title-data" v-if='openData.isHasOrder'>{{openData.creationTime}}</div>
+                    <div class="restDetail-title-data" v-if='!openData.isHasOrder'>{{openData.timer}}</div>
                 </div>
             </div>
-            <div class="rest-restDetail-other" @click='moreShow = !moreShow'>
-                肖斯昆 13926585665查看详情 <span >>></span>
+            <div class="rest-restDetail-other" @click='moreShow = !moreShow' v-if='openData.state !== 2 && openData.orderState'>
+                {{openData.customerName}} {{openData.customerPhone}}查看详情 <span >>></span>
             </div>
-        </div>  <div  class="rest-restDetail-transform" :style='{maxHeight: moreShow ? "400px" : "0"}'>
+        </div>  <div  class="rest-restDetail-transform" :style='{maxHeight: moreShow ? "400px" : "0"}' v-if='openData.state !== 2 && openData.orderState'>
                         <div class="rest-restDetail-otherDetail"  >
                     <div>
-                        <div><span>客户姓名：</span><span>王老六</span></div>
-                        <div><span>手机号：</span><span class="rest-restDetail-span">13926585665</span></div>
+                        <div><span>客户姓名：</span><span>{{openData.customerName || '无'}}</span></div>
+                        <div><span>手机号：</span><span class="rest-restDetail-span">{{openData.customerPhone || '无'}}</span></div>
                     </div>
                      <div>
-                        <div><span>客户来源：</span><span>微官网</span></div>
-                        <div><span>销售员：</span><span class="rest-restDetail-span">无</span></div>
+                        <div><span>客户来源：</span><span>{{orderWay[openData.originType]}}</span></div>
+                        <div><span>销售员：</span><span class="rest-restDetail-span">{{openData.salerString || '无'}}</span></div>
                     </div>
                      <div>
-                        <div><span>整单优惠：</span><span>无</span></div>
-                        <div><span>折扣方案：</span><span class="rest-restDetail-span">微官网</span></div>
+                        <div><span>整单优惠：</span><span>{{openData.discount === 1 ? '无' : openData.discount}}</span></div>
+                        <div><span>折扣方案：</span><span class="rest-restDetail-span">{{openData.discountRelatedName || '无'}}</span></div>
                     </div>
-                    <div>订单备注：Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sunt repellat ab vitae facere, nobis reiciendis ullam atque quam aperiam voluptates molestiae adipisci repellendus porro nostrum quaerat quo officia quod ut unde. Doloribus at sint vel, facilis eum dolor illum tempora possimus culpa saepe aperiam, soluta ea, alias iste suscipit rem atque nisi accusantium incidunt! Quasi at cumque, soluta iusto. Laborum atque possimus, non rerum cum enim placeat voluptatibus. Ipsa suscipit, debitis voluptas quis laboriosam dolores ullam asperiores vero, ipsam aliquid, iste est alias esse reiciendis velit quisquam soluta nam ab. A doloremque alias beatae, placeat esse fuga harum dignissimos, dolore.</div>
-                    <div><span><span style="display: inline-block;width: 4em;text-align: right;">订单号</span>：3010210120120120120</span></div>
-                    <div><span>开台时间：2017-07-11 18:30:21</span></div>
+                    <div>订单备注：{{openData.remark || '无'}}</div>
+                    <div><span><span style="display: inline-block;width: 4em;text-align: right;">订单号：</span>{{openData.caterOrderId}}</span></div>
+                    <div><span>开台时间：{{openData.operatorDate}}</span></div>
                     <div>
-                        <div><span style="display: inline-block;width: 4em;text-align: right;">操作人</span>：邱丽</div>
+                        <div><span style="display: inline-block;width: 4em;text-align: right;">操作人</span>{{openData.operatorName}}</div>
                         <div style="color:#178ce6;">编辑详情</div>
                     </div>
                 </div>
@@ -58,7 +58,7 @@
                     <tr><td width="150px">菜品名称</td><td width="45px">数量</td><td width='80px'>金额</td></tr>
                 </thead>
                 <tbody>
-                <template v-for='item in restDate.data.itemsMap' v-if='restDate.data.itemsMap && leftType !== 4'>
+                <template v-for='item in restDate.data.itemsMap' v-if='restDate.data.itemsMap && leftType !== 4 && openData.itemsMap'>
                     <tr @click='changeItem(item)'> <td><div><span class="rest-restDetail-dishname" :class='{"rest-item-del" : item.serviceState === 1}'> <span  :class='getTriangle(item)'></span>{{item.dishName}}</span><span class="rest-item-send" v-if='item.serviceState === 2'>送</span></div></td><td><div :class='{"rest-item-del" : item.serviceState === 1}'>x{{item.bookNum}}</div></td><td :class='{"rest-item-del" : item.serviceState === 1}'>{{item.price}}</td></tr>
                     <tr v-for='sub in item.subDishList' v-if='item.select' :class='{"rest-item-del" : sub.serviceState === 1}'>
                         <td class="rest-restDetail-trchild">{{sub.dishName}}</td><td><div>x{{sub.bookNum}}</div></td><td></td>
@@ -71,45 +71,60 @@
                 </template>
                 </tbody>
             </table>
+            <div v-if='leftType === 4'>
+            <p class="rest-text-title"><span>备注信息</span></p>
+            <textarea name="remark" placeholder="请输入备注信息" maxlength="500" v-model="remark" class="dd-input">
+                                </textarea>
+            </div>
         </div>
         <div class="rest-restDetail-foot">
         <div style="padding:15px; 15px 10px;border-bottom:1px solid #e0e6ed">
         <div class="rest-foot-count">            
-        <div class="restDetail-title-tip">
-                共5项
+        <div class="restDetail-title-tip" v-if='leftType !== 4'>
+                共{{(openData.itemsMap && openData.itemsMap.length) || 0}}项
             </div>
-            <div class="rest-restDetail-dishcount">
-                <span class="restDetail-title-tip">合计</span>3000.00
-                <div><s class="restDetail-title-tip">5000.00</s><span class="rest-restDetail-tag">金卡6.0折</span></div>
+        <div class="restDetail-title-tip" v-if='leftType === 4'>
+                共{{addFood.length}}项
+            </div>
+            <div class="rest-restDetail-dishcount" v-if='leftType !== 4'>
+                <span class="restDetail-title-tip">合计</span>{{openData.totalPrice || 0}}
+                <div><s class="restDetail-title-tip" v-if='openData.showDiscount'>{{openData.originTotalPrice || 0}}</s><span class="rest-restDetail-tag">{{openData.showDiscount}}</span></div>
+            </div>
+            <div class="rest-restDetail-dishcount" v-if='leftType === 4'>
+                <span class="restDetail-title-tip">合计</span>{{addFoodTotal()}}
             </div>
             </div>
-            <div class="restDetail-foot-check">
-                <div class="restDetail-check-item" @click='needpay = !needpay'><span ><span :class="getCheckeStatus(needpay)"></span>应收金额</span> <span>3000.00</span></div>
+            <div class="restDetail-foot-check" v-if='openData.payments'>
+                <div class="restDetail-check-item" @click='needpay = !needpay'><span ><span :class="getCheckeStatus(needpay)"></span>应收金额</span> <span>{{findTypePrice(openData.payments, 13)}}</span></div>
                 <div class="restDetail-check-list" v-show='needpay'>
-                    <div class="restDetail-check-item"><span>总金额</span> <span>￥2010.20</span></div>
-                    <div class="restDetail-check-item"><span>折扣金额</span> <span>￥2010.20</span></div>
-                    <div class="restDetail-check-item"><span>整单优惠</span> <span>￥2010.20</span></div>
-                    <div class="restDetail-check-item"><span>零头处理</span> <span>￥2010.20</span></div>
+                    <div class="restDetail-check-item"><span>总金额</span> <span>￥{{findTypePrice(openData.payments, 10)}}</span></div>
+                    <div class="restDetail-check-item" v-if='findTypePrice(openData.payments, 5) != 0'><span>折扣金额</span> <span>￥{{findTypePrice(openData.payments, 5)}}</span></div>
+                    <div class="restDetail-check-item" v-if='openData.discount != 0'><span>整单优惠</span> <span>￥{{openData.discount}}</span></div>
+                    <div class="restDetail-check-item" v-if='findTypePrice(openData.payments, 17) != 0'><span>零头处理</span> <span>￥{{findTypePrice(openData.payments, 17)}}</span></div>
                 </div>
-                 <div class="restDetail-check-item" @click='paied = !paied'><span ><span :class="getCheckeStatus(paied)"></span>实收金额</span> <span>3000.00</span></div>
+                 <div class="restDetail-check-item" @click='paied = !paied'><span ><span :class="getCheckeStatus(paied)"></span>{{findTypePrice(openData.payments, 14) >= 0 ? '实收金额'
+                                                : '实退金额'}}</span> <span>¥{{Math.abs(
+                                                findTypePrice(openData.payments, 14))}}</span></div>
                 <div class="restDetail-check-list" v-show='paied'>
-                    <div class="restDetail-check-item"><span>07-04 11:23 星球币抵扣</span> <span>￥2010.20</span></div>
-                    <div class="restDetail-check-item"><span>07-04 11:23 会员余额</span> <span>￥2010.20</span></div>
-                    <div class="restDetail-check-item"><span>07-04 11:23 现金</span> <span>￥2010.20</span></div>
+                    <div class="restDetail-check-item" v-if='openData.payments.some(pay => pay.type === 19)'><span>{{dateFormat(openData.payments.find(pay => pay.type === 19).creationTime)}} {{openData.payments.find(pay => pay.type === 19).payChannel}}抵扣</span> <span>￥findTypePrice(openData.payments, 19)</span></div>
+                    <div class="restDetail-check-item" v-if='openData.payments.some(pay => pay.type === 20)'><span>{{dateFormat(openData.payments.find(pay => pay.type === 20).creationTime)}}会员余额</span> <span>￥findTypePrice(openData.payments, 20)</span></div>
+                    <div class="restDetail-check-item" v-if='openData.payments.some(pay => pay.type === 18)'><span>{{dateFormat(openData.payments.find(pay => pay.type === 18).creationTime)}} 常规</span> <span>￥findTypePrice(openData.payments, 18)</span></div>
                 </div>
-                 <div class="restDetail-check-item"><span><span></span>违约金</span> <span>3000.00</span></div>
-                 <div class="restDetail-check-item"><span><span></span>还需收款</span> <span>3000.00</span></div>
+                 <div class="restDetail-check-item" v-if='findTypePrice(openData.payments, 4) != 0'><span><span></span>违约金</span> <span>findTypePrice(openData.payments, 4)</span></div>
+                 <div class="restDetail-check-item"><span><span></span>还需收款</span> <span class="order-price-num red" :class="{green : !Number(findTypePrice(openData.payments, 15))}">findTypePrice(openData.payments, 15)</span></div>
             </div>
 
         </div>
         <div class="resetmange-click-list">
-            <div class="resetMange-btn-base resetMange-btn-promise" @click='addNewFood'>{{openData.itemsMap && openData.itemsMap.length ? '加' : '点'}}菜</div>
-            <div class="resetMange-btn-base ">换桌</div>
-            <div class="resetMange-btn-base ">撤台</div>
-            <div class="resetMange-btn-base " v-if='this.leftType !== 3'>取消订单</div>
-            <div class="resetMange-btn-base " v-if='this.leftType !== 3'>打印</div>
-            <div class="resetMange-btn-base " v-if='this.leftType !== 3'>收银</div>
-            <div class="resetMange-btn-base resetMange-btn-promise resetMange-btn-lager" v-if='this.leftType !== 3'>开台并入厨</div>
+            <div class="resetMange-btn-base resetMange-btn-promise" @click='addNewFood' v-if='this.leftType !== 4'>{{openData.itemsMap && openData.itemsMap.length ? '加' : '点'}}菜</div>
+            <div class="resetMange-btn-base " v-if='this.leftType !== 4'>换桌</div>
+            <div class="resetMange-btn-base " v-if='this.leftType !== 4'>撤台</div>
+            <div class="resetMange-btn-base resetMange-btn-lager" v-if='this.leftType === 4'>下单</div>
+            <div class="resetMange-btn-base resetMange-btn-lager" v-if='this.leftType === 4' @click='canlAddFood'>取消</div>
+            <div class="resetMange-btn-base " v-if='isHasOrder && this.leftType !== 4'>取消订单</div>
+            <div class="resetMange-btn-base " v-if='isHasOrder && this.leftType !== 4'>打印</div>
+            <div class="resetMange-btn-base " v-if='isHasOrder && this.leftType !== 4'>收银</div>
+            <div class="resetMange-btn-base resetMange-btn-promise resetMange-btn-lager" v-if='isHasOrder && this.leftType !== 4'>开台并入厨</div>
         </div>
         </div>
     </div>
@@ -156,9 +171,13 @@
         border-bottom-left-radius: 8px;
         .resetmange-click-list{
             padding: 0 8px 8px;
+            display: flex;
+            justify-content: space-between;
+            flex-direction: row;
+            flex-wrap: wrap;
         }
         .rest-foot-count{
-             @include flex-just-between;
+            @include flex-just-between;
             border-bottom: 1px dashed #99a9bf;
             .rest-restDetail-dishcount{
                 .rest-restDetail-tag{
@@ -281,6 +300,11 @@ color:#475669;
 }
     }
     .rest-restDetail-constain{
+        .rest-text-title{
+            font-size: 12px;
+            color: #99a9bf;
+            padding: 10px 0;
+        }
         .rest-restDetail-table{
             thead{
                 font-size:12px;
@@ -300,13 +324,13 @@ color:#475669;
                 }
             }
             .rest-restDetail-dishname{
-                    display: inline-block;
-    white-space: nowrap;
-    overflow: hidden;
-    /* overflow-x: hidden; */
-    text-overflow: ellipsis;
-    max-width: 130px;
-    vertical-align: bottom;
+                display: inline-block;
+                white-space: nowrap;
+                overflow: hidden;
+                /* overflow-x: hidden; */
+                text-overflow: ellipsis;
+                max-width: 130px;
+                vertical-align: bottom;
             }
             tbody {
                 font-size:14px;
@@ -342,6 +366,7 @@ import { mapState, mapMutations } from 'vuex';
 import { orderWay } from '../orderWay.js';
 import inputVaild from '../../common/components/inputVaild.vue';
 import count from '../../common/components/counter.vue';
+import util from 'util';
 export default {
     props: {
     },
@@ -354,6 +379,7 @@ export default {
             paied: false,
             editNum: false,
             moreShow: false,
+            remark: '',
             restDate: {
                 'code': 61058, 'data':
                 {
@@ -397,15 +423,74 @@ export default {
                 str += el.boardName + el.boardId;
             });
             return str;
+        },
+        isHasOrder() {
+            return !!this.openData.isHasOrder;
         }
     },
     methods: {
         ...mapMutations([
             'setLeftType',
-            'changeFood'
+            'changeFood',
+            'canlFood',
+            'setOpenData'
         ]),
+        submitAddFood() {
+            const parms = {
+            };
+            if (this.openData.boardDetailResps.length) {
+                this.openData.boardDetailResps.forEach(el => {
+                    parms.boardList.push(el.id);
+                });
+            } else {
+                parms.boardList = [];
+            }
+            if (this.openData.list) {
+                parms.boardLogIds = this.this.openData.list;
+            }
+            parms.restId = this.restId;
+            if (!this.isHasOrder) {
+                parms.operationType = 1;
+            }
+            http.get('/catering/addOrder', parms).then(res => {
+                return res.data.caterOrderId;
+            }).then(id => {
+                http.get('/catering/getCaterOrderDetail', { caterOrderId: id });
+            }).then(data => {
+                this.setOpenData(data.data);
+                this.canlAddFood;
+            });
+        },
+        canlAddFood() {
+            this.canlFood();
+            this.remark = '';
+            this.setLeftType({ leftType: 2 });
+        },
+        addFoodTotal() {
+            if (!this.addFood || !this.addFood.length) {
+                return 0;
+            }
+            const price = this.addFood.reduce((pre, cur) => {
+                return pre + Number(cur.price * cur.num.toFixed(2));
+            }, Number(this.addFood[0].price * this.addFood[0].num.toFixed(2)));
+            return price.toFixed(2);
+        },
+        findTypePrice(arr, type) {
+            let price = 0;
+            if (arr) {
+                arr.forEach(item => {
+                    if (item.type === type) {
+                        price += item.fee;
+                    }
+                });
+            }
+            return Number(price.toFixed(2));
+        },
         addNewFood() {
             this.setLeftType({ leftType: 4 });
+        },
+        dateFormat(date) {
+            return util.timeFormat(date);
         },
         editor() {
             this.editNum = !this.editNum;
@@ -456,17 +541,25 @@ export default {
             return full.slice(full.length - fill, full.length);
         },
         onNumChange(type, index, num) {
-            this.changeFood({food: { id: index, num: num }});
+            this.changeFood({ food: { id: index, num: num } });
         }
     },
     watch: {
+        isHasOrder(val) {
+            if (val) {
+                this.timer();
+                window.inter = window.setInterval(this.timer, 1000 * 60);
+            } else {
+                window.clearInterval(window.inter);
+            }
+        }
     },
     components: {
         inputVaild,
         count
     },
     created() {
-        if (this.openData.orderState === 1) {
+        if (!this.openData.isHasOrder) {
             this.timer();
             window.inter = window.setInterval(this.timer, 1000 * 60);
         }
