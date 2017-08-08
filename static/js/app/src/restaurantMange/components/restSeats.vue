@@ -2,7 +2,7 @@
  * @Author: lwh
  * @Date:   2017-08-02 16:04:29
  * @Last Modified by:   Tplant
- * @Last Modified time: 2017-08-08 14:43:20
+ * @Last Modified time: 2017-08-08 15:34:24
  */
 
  <template>
@@ -35,7 +35,7 @@
                         <div class="two-dimensionalcode" v-if="board.hasScan"></div>
                     </div>
                     <div class="seat-num">{{`${board.kindName}${board.kindId}`}}</div>
-                    <div class="eating-time">1小时20分钟</div>
+                    <div class="eating-time" v-if="board.orderState === 1">{{board.duration.split(':')[0]}}小时{{board.duration.split(':')[1]}}分钟</div>
                     <div class="reserve-time">预12:00</div>
                     <div class="order-list" v-if="i === 1">
                         <div class="rest-arrow-up"></div>
@@ -262,6 +262,8 @@ export default {
                     display: flex;
                     justify-content: space-between;
                     padding: 6px 6px 0 0;
+                    position: absolute;
+                    width: 100%;
                     &.state-twoCode-right{
                         justify-content: flex-end;
                     }
@@ -286,7 +288,9 @@ export default {
                     }
                 }
                 .seat-num{
-                    padding-top: 7px;
+                    position: absolute;
+                    top: 29px;
+                    width: 100%;
                     text-align: center;
                     font-size: 14px;
                     color: #333333;
@@ -297,6 +301,9 @@ export default {
                     color: #999999;
                     text-align: center;
                     opacity: 0.87;
+                    position: absolute;
+                    top: 47px;
+                    width: 100%;
                 }
                 .reserve-time{
                     width: 58px;
@@ -307,6 +314,8 @@ export default {
                     text-align: center;
                     margin-left: 15px;
                     border-radius: 8px;
+                    position: absolute;
+                    top: 66px;
                 }
                 .order-list{
                     position: absolute;
