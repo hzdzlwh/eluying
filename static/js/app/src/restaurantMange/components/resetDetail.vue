@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-08-01 14:45:58
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-08-08 16:53:11
+* @Last Modified time: 2017-08-08 17:43:15
 * @email: 783384903@qq.com
 */
 
@@ -117,14 +117,14 @@
         </div>
         <div class="resetmange-click-list">
             <div class="resetMange-btn-base resetMange-btn-promise" @click='addNewFood' v-if='this.leftType !== 4'>{{openData.itemsMap && openData.itemsMap.length ? '加' : '点'}}菜</div>
-            <div class="resetMange-btn-base " v-if='this.leftType !== 4'>换桌</div>
+            <div class="resetMange-btn-base " @click='openBoard' v-if='this.leftType !== 4'>换桌</div>
             <div class="resetMange-btn-base " @click='closeBoard' v-if='this.leftType !== 4'>撤台</div>
             <div class="resetMange-btn-base resetMange-btn-lager" v-if='this.leftType === 4' @click='submitAddFood'>下单</div>
             <div class="resetMange-btn-base resetMange-btn-lager" v-if='this.leftType === 4' @click='canlAddFood'>取消</div>
             <div class="resetMange-btn-base " v-if='isHasOrder && this.leftType !== 4' @click='canOrder'>取消订单</div>
             <div class="resetMange-btn-base " v-if='isHasOrder && this.leftType !== 4'>打印</div>
-            <div class="resetMange-btn-base " v-if='isHasOrder && this.leftType !== 4'>收银</div>
-            <div class="resetMange-btn-base resetMange-btn-promise resetMange-btn-lager" v-if='isHasOrder && this.leftType !== 4'>开台并入厨</div>
+            <div class="resetMange-btn-base " v-if='isHasOrder && this.leftType !== 4' @click='crash'>收银</div>
+            <div class="resetMange-btn-base resetMange-btn-promise resetMange-btn-lager" v-if='isHasOrder && this.leftType !== 4' @click='openBoardAndCook'>开台并入厨</div>
         </div>
         </div>
     </div>
@@ -436,6 +436,15 @@ export default {
             'canlFood',
             'setOpenData'
         ]),
+        openBoard() {
+            bus.$emit('changeBoard', { data: this.openData });
+        },
+        openBoardAndCook() {
+            http.get('/board/openBoardAndCook', { restId: this.restId, caterOrderId: this.openData.caterOrderId }).then;
+        },
+        crash() {
+            bus.$emit('showCashier', { type: 'orderDetail' });
+        },
         canOrder() {
             bus.$emit('showCancelOrder');
         },
@@ -443,16 +452,11 @@ export default {
             const parms = {
             };
             if (this.openData.boardDetailResps.length) {
-                const boardList = []
-                this.openData.boardDetailResps.forEach(el => {
-                    boardList.push(el.id);
-
-                });
-                parms.boardList = JSON.stringify(boardList);
+                parms.boardId = this.openData.boardDetailResps[0].id;
             } else {
                 if (this.openData.list) {
                     parms.boardLogIds = JSON.stringify(this.openData.list);
-                 } else {
+                } else {
                     if (this.openData.caterOrderId) {
                         parms.caterOrderId = this.openData.caterOrderId;
                     } else {
@@ -469,10 +473,9 @@ export default {
             const parms = {
             };
             if (this.openData.boardDetailResps.length) {
-                const boardList = []
+                const boardList = [];
                 this.openData.boardDetailResps.forEach(el => {
                     boardList.push(el.id);
-
                 });
                 parms.boardList = JSON.stringify(boardList);
             } else {
