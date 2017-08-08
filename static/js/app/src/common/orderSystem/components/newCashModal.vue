@@ -1,8 +1,8 @@
 /*
 * @Author: lxj
 * @Date:   2017-07-19 09:56:55
-* @Last Modified by:   linxinjian
-* @Last Modified time: 2017-08-03 15:56:28
+* @Last Modified by:   lxj
+* @Last Modified time: 2017-08-08 17:57:09
 * @email: 783384903@qq.com
 */
 <!-- 有问题找产品，这个模块的功能一般人解释不清楚 -->
@@ -717,6 +717,15 @@ export default {
                 if (this.type === 'orderDetail') {
                     params.origin = 3;
                 }
+            }
+            if (this.type === 'checkOut' && this.business.rooms) {
+                const subOrderIds = [];
+                this.business.rooms.forEach(room => {
+                    if (room) {
+                        subOrderIds.push(room.roomOrderId);
+                    }
+                });
+                params.subOrderIds = JSON.stringify(subOrderIds);
             }
             Promise.all([this.getOrderPayment(), this.getChannels(params)]).then(() => {
                 $('#cashier').modal({
