@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-08-08 18:22:37
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-08-08 19:06:41
+* @Last Modified time: 2017-08-09 11:00:20
 * @email: 783384903@qq.com
 */
 
@@ -17,15 +17,15 @@
                 </div>
                 <div class="modal-body">
                     <p></p>
-                    <div><span>就餐人数：</span><input type="number" max="1000" class="dd-input" style="width:170px;"></div>
-                    <div class="item">
+                    <div><span>就餐人数：</span><input v-model='peopleNum' type="number" max="1000" class="dd-input" style="width:170px;"></div>
+                    <div class="item" v-if='type'>
                         <span>用餐时间：</span>
-                            <DatePicker v-model='date' @change='' :clearable='false' type="datetime" placeholder="选择日期时间" format='yyyy-MM-dd HH:mm'></DatePicker>
+                            <DatePicker v-model='resetData' @change='' :clearable='false' type="datetime" placeholder="选择日期时间" format='yyyy-MM-dd HH:mm'></DatePicker>
                     </div>
                 </div>
                 <div class="modal-foot">
                     <button class="dd-btn dd-btn-ghost" @click="hideModal">取消</button>
-                    <button class="dd-btn dd-btn-primary">确定</button>
+                    <button class="dd-btn dd-btn-primary" @click='changeBook'>确定</button>
                 </div>
             </div>
         </div>
@@ -35,58 +35,46 @@
 <script>
 import { DdSelect, DdOption } from 'dd-vue-component';
 import { DatePicker } from 'element-ui';
+import inputVaild from '../../common/components/inputVaild.vue';
+import util from 'util';
 export default {
     props: {
         visible: {
+            type: Boolean,
+            default: false
+        },
+        num: {
+            type: Number,
+            default: 0
+        },
+        data: {
+            type: String,
+            default: ''
+        },
+        type: {
             type: Boolean,
             default: false
         }
     },
     data() {
         return {
-            customerSource: 1,
-            vipCard: 1,
-            date: new Date((new Date().valueOf() + 1800000)),
-            saler: 1,
-            customerSources: [
-                {
-                    id: 1,
-                    name: '会员'
-                },
-                {
-                    id: 2,
-                    name: '自来客'
-                }
-            ],
-            vipCards: [
-                {
-                    id: 1,
-                    name: 'xxx'
-                },
-                {
-                    id: 2,
-                    name: 'yyy'
-                }
-            ],
-            salers: [
-                {
-                    id: 1,
-                    name: '张三'
-                },
-                {
-                    id: 2,
-                    name: '李四'
-                }
-            ]
+            peopleNum: 0,
+            resetData: undefined
         };
     },
     methods: {
         hideModal() {
+            this.resetData = undefined;
+            this.peopleNum = 0;
             this.$emit('hideModal');
         },
-        showRelevanceOrder() {
+        changeBook() {
+            const parms = { peopleNum: this.peopleNum };
+            if (this.resetData) {
+                parms.orderTime = util.dateFormatLong(this.resetData);
+            }
             this.hideModal();
-            this.$emit('showRelevaneOrder');
+            this.$emit('changeBook', parms);
         }
     },
     watch: {
@@ -96,12 +84,19 @@ export default {
             } else {
                 $('#changeBook').modal('hide');
             }
+        },
+        num(val) {
+            this.peopleNum = val;
+        },
+        resetData(val) {
+            this.resetData = new Date(val);
         }
     },
     components: {
         DdSelect,
         DdOption,
-        DatePicker
+        DatePicker,
+        inputVaild
     }
 };
 </script>

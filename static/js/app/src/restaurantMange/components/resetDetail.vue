@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-08-01 14:45:58
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-08-08 19:18:13
+* @Last Modified time: 2017-08-09 14:37:39
 * @email: 783384903@qq.com
 */
 
@@ -21,9 +21,9 @@
                     <div>{{openData.peopleNum}}<!-- <inputVaild :value='changeNum' :max='2000' :isInt='true' ></inputVaild> --> <img src="/static/image/icon/edit.png" alt="" @click='editor()'></div>
                 </div>
                 <div class="rest-restDetail-right">
-                    <div class="restDetail-title-tip">{{!openData.isHasOrder ? '用餐时长' :'用餐时间' }}</div>
-                    <div class="restDetail-title-data" v-if='openData.isHasOrder'>{{openData.creationTime}}</div>
-                    <div class="restDetail-title-data" v-if='!openData.isHasOrder'>{{openData.timer}}</div>
+                    <div class="restDetail-title-tip">{{!isHasOrder ? '用餐时长' :'用餐时间' }}</div>
+                    <div class="restDetail-title-data" v-if='isHasOrder'>{{openData.creationTime}}</div>
+                    <div class="restDetail-title-data" v-if='!isHasOrder'>{{openData.timer}}</div>
                 </div>
             </div>
             <div class="rest-restDetail-other" @click='moreShow = !moreShow' v-if='openData.state !== 2 && openData.orderState'>
@@ -58,9 +58,9 @@
                     <tr><td width="150px">菜品名称</td><td width="45px">数量</td><td width='80px'>金额</td></tr>
                 </thead>
                 <tbody>
-                <template v-for='item in restDate.data.itemsMap' v-if='restDate.data.itemsMap && leftType !== 4 && openData.itemsMap'>
-                    <tr @click='changeItem(item)'> <td><div><span class="rest-restDetail-dishname" :class='{"rest-item-del" : item.serviceState === 1}'> <span  :class='getTriangle(item)'></span>{{item.dishName}}</span><span class="rest-item-send" v-if='item.serviceState === 2'>送</span></div></td><td><div :class='{"rest-item-del" : item.serviceState === 1}'>x{{item.bookNum}}</div></td><td :class='{"rest-item-del" : item.serviceState === 1}'>{{item.price}}</td></tr>
-                    <tr v-for='sub in item.subDishList' v-if='item.select' :class='{"rest-item-del" : sub.serviceState === 1}'>
+                <template v-for='item in openData.itemsMap' v-if='restDate.data.itemsMap && leftType !== 4 && openData.itemsMap'>
+                    <tr @click='changeItem(item); dishClick(item)' > <td><div><span class="rest-restDetail-dishname" :class='{"rest-item-del" : item.serviceState === 1}'> <span  :class='getTriangle(item)'></span><span >{{item.dishName}}</span></span><span class="rest-item-send" v-if='item.serviceState === 2'>送</span></div></td><td><div :class='{"rest-item-del" : item.serviceState === 1}'>x{{item.bookNum}}</div></td><td :class='{"rest-item-del" : item.serviceState === 1}'>{{item.price}}</td></tr>
+                    <tr v-for='sub in item.subDishList' @click='dishClick(item)' v-if='item.select' :class='{"rest-item-del" : sub.serviceState === 1}'>
                         <td class="rest-restDetail-trchild">{{sub.dishName}}</td><td><div>x{{sub.bookNum}}</div></td><td></td>
                     </tr>
                 </template> 
@@ -77,14 +77,11 @@
                                 </textarea>
             </div>
         </div>
-        <div class="rest-restDetail-foot">
+        <div class="rest-restDetail-foot" v-if='!dishChange'>
         <div style="padding:15px; 15px 10px;border-bottom:1px solid #e0e6ed">
         <div class="rest-foot-count">            
-        <div class="restDetail-title-tip" v-if='leftType !== 4'>
+        <div class="restDetail-title-tip" >
                 共{{(openData.itemsMap && openData.itemsMap.length) || 0}}项
-            </div>
-        <div class="restDetail-title-tip" v-if='leftType === 4'>
-                共{{addFood.length}}项
             </div>
             <div class="rest-restDetail-dishcount" v-if='leftType !== 4'>
                 <span class="restDetail-title-tip">合计</span>{{openData.totalPrice || 0}}
@@ -111,7 +108,7 @@
                     <div class="restDetail-check-item" v-if='openData.payments.some(pay => pay.type === 18)'><span>{{dateFormat(openData.payments.find(pay => pay.type === 18).creationTime)}} 常规</span> <span>￥findTypePrice(openData.payments, 18)</span></div>
                 </div>
                  <div class="restDetail-check-item" v-if='findTypePrice(openData.payments, 4) != 0'><span><span></span>违约金</span> <span>findTypePrice(openData.payments, 4)</span></div>
-                 <div class="restDetail-check-item"><span><span></span>还需收款</span> <span class="order-price-num red" :class="{green : !Number(findTypePrice(openData.payments, 15))}">findTypePrice(openData.payments, 15)</span></div>
+                 <div class="restDetail-check-item"><span><span></span>还需收款</span> <span class="order-price-num red" :class="{green : !Number(findTypePrice(openData.payments, 15))}">{{findTypePrice(openData.payments, 15)}}</span></div>
             </div>
 
         </div>
@@ -127,13 +124,55 @@
             <div class="resetMange-btn-base resetMange-btn-promise resetMange-btn-lager" v-if='isHasOrder && this.leftType !== 4' @click='openBoardAndCook'>开台并入厨</div>
         </div>
         </div>
-        <bookInfo :visible='bookInfoVisible' @hideModal='hidebookInfo'></bookInfo>
+        <div class="rest-restDetail-foot reset-restDetail-resetChange" v-if='dishChange'>
+        <div class='reset-resetChange-detail'>
+             <div>菜品备注：{{dishChange.remark}} <span class="reset-resetChange-remark">修改</span></div>
+            <div>点菜员：{{dishChange.operatorName}}</div>
+            <div>下单时间：{{dishChange.creationTime}}</div>
+        </div>
+            <div class="resetChange-foot-btn">
+                <div class="resetMange-btn-base " v-if='dishChange.serviceState === 1'>退菜</div>
+                <div class="resetMange-btn-base " v-if='dishChange.isSend'>赠送</div>
+            </div>
+            <div class="">
+                <div>
+                   
+                </div>
+                <div>
+                
+                </div>
+            </div>
+        </div>
+        <bookInfo :visible='bookInfoVisible' :num='bookPeopleNUm' :data='bookData' @hideModal='hidebookInfo' :type='isHasOrder' @changeBook='changeBook'></bookInfo>
     </div>
 </template>
 <style lang='scss'>
     @mixin flex-just-between {
         display: flex;
         justify-content: space-between;
+    }
+    .reset-restDetail-resetChange{
+        padding:15px 15px 5px;
+        font-size: 12px;
+            color: #99a9bf;
+            .reset-resetChange-detail{
+                padding: 0 15px ;
+                box-shadow: 0 4px 4px 0 rgba(154, 162, 167, 0.19);
+                margin: 0 -15px;
+                &>div{
+                    margin-bottom: 10px;
+                }
+                .reset-resetChange-remark{
+                    color: #82beff;
+                    margin-left: 10px;
+                    cursor: pointer;
+                }
+
+            }
+
+        .resetChange-foot-btn{
+            text-align: right;
+        }
     }
     .resetMange-btn-base {
         border-radius:4px;
@@ -272,6 +311,7 @@
         text-align: right;
         font-size:12px;
         color:#c0ccda;
+        cursor: pointer;
         & > span{
             transform: scaleY(0.7) scaleX(1.7) rotate(90deg);
             display: inline-block;
@@ -383,6 +423,9 @@ export default {
             moreShow: false,
             remark: '',
             bookInfoVisible: false,
+            bookPeopleNUm: 0,
+            bookData: '',
+            dishChange: undefined,
             restDate: {
                 'code': 61058, 'data':
                 {
@@ -428,7 +471,9 @@ export default {
             return str;
         },
         isHasOrder() {
-            return !!this.openData.isHasOrder;
+            if (this.openData.isHasOrder || this.openData.caterOrderId) {return true;
+            }
+            return false;
         }
     },
     methods: {
@@ -438,6 +483,25 @@ export default {
             'canlFood',
             'setOpenData'
         ]),
+        dishClick(dish){
+            if (dish.serviceState === 1) {
+                return;
+            }
+            this.dishChange = dish;
+        },
+        changeBook(parm) {
+            let parms = parm;
+            if (this.openData.list) {
+                parms.boardLogIds = this.openData.list;
+            }
+            if (this.openData.caterOrderId) {
+                parms.caterOrderId = this.openData.caterOrderId;
+            }
+            parms = Object.assign(parms, parm);
+            http.get('/catering/modifyPeopleNum', parms).then(res => {
+                this.$emit('refresh');
+            });
+        },
         hidebookInfo() {
             this.bookInfoVisible = false;
         },
@@ -498,7 +562,7 @@ export default {
             }).then(id => {
                 http.get('/catering/getCaterOrderDetail', { caterOrderId: id });
             }).then(data => {
-                bus.$emit('setOrderDetail', data.data);
+                bus.$emit('setRestDetail', data.data);
                 this.setOpenData(data.data);
                 this.canlAddFood;
             });
@@ -535,6 +599,10 @@ export default {
             return util.timeFormat(date);
         },
         editor() {
+            this.bookPeopleNUm = this.openData.peopleNum;
+            if (this.isHasOrder) {
+                this.bookData = this.openData.expectStartTime;
+            }
             this.bookInfoVisible = true;
         },
         changeItem(item) {
