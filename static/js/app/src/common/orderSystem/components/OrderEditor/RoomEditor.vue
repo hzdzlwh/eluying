@@ -70,7 +70,7 @@
                                 </span>
                                 <label class="label-text">到达</label>
                                 <div class="enterDate">
-                                    <DatePicker v-model='item.room.startDate' @change='()=>handleRoomChange(item, index,"startDate")' :clearable='false' :picker-options='{disabledDate:disabledStartDate(new Date())}' type="datetime" :disabled='order.orderState === 8 || order.timeRoomAuto || order.timeRoomTransform || item.state === 1' placeholder="选择日期时间" format='yyyy-MM-dd HH:mm'>
+                                    <DatePicker v-model='item.room.startDate' @change='()=>handleRoomChange(item, index,"startDate")' :clearable='false' :picker-options='{disabledDate:disabledStartDate(new Date())}' type="datetime" :disabled='order.orderState === 8 || order.timeRoomAuto || order.timeRoomTransform || item.state === 1 || item.state === 8' placeholder="选择日期时间" format='yyyy-MM-dd HH:mm'>
                                     </DatePicker>
                                 </div>
                                 <span>~</span>
@@ -79,7 +79,7 @@
                                     <DatePicker v-model='item.room.endDate'
                                                 @change='()=>handleRoomChange(item, index, "endDate")'
                                                 :clearable='false'
-                                                :disabled='order.orderState === 8 || item.checkType === 1'
+                                                :disabled='order.orderState === 8 || item.checkType === 1 || item.state === 8'
                                                 :picker-options='{disabledDate:disabledEndDate(new Date(new Date(item.room.startDate).getTime() + 24 * 60 * 60 * 1000))}'
                                                 type="datetime"
                                                 placeholder="选择日期时间"
