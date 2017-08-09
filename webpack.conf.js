@@ -35,7 +35,8 @@ var webpackConf = {
                     path.join(__dirname, './static/js/app/src/customer'),
                     path.join(__dirname, './static/js/app/src/ordersManage'),
                     path.join(__dirname, './static/js/app/src/accommodation'),
-                    path.join(__dirname, './static/js/app/src/reports')
+                    path.join(__dirname, './static/js/app/src/reports'),
+                    path.join(__dirname, './static/js/app/src/restaurantMange')
                 ]
             }
         ],
@@ -87,7 +88,8 @@ var webpackConf = {
             iframe: path.join(__dirname, './static/js/lib/jquery.iframe-transport.js'),
             networkAction: path.join(__dirname, './static/js/app/src/common/networkAction.js'),
             dsy: path.join(__dirname, './static/js/app/src/common/dsy.js'),
-            angular: path.join(__dirname, './node_modules/angular/angular.min.js')
+            angular: path.join(__dirname, './node_modules/angular/angular.min.js'),
+            iscroll: path.join(__dirname, './static/js/lib/iscroll-probe.js')
         }
     }
 };
