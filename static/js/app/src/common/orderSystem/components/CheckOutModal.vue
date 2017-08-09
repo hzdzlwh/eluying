@@ -211,7 +211,7 @@ export default {
                     room => {
                         this.backroomBusinessInfo.roomOrderInfoList.map(
                             item => {
-                                if (item.roomId === room.roomId) {
+                                if (item.roomId === room.roomId && item.roomOrderId === room.roomOrderId) {
                                     if (this.tadayFeeType === 1) {
                                         room.totalPrice = Number(item.totalPrice) + Number(item.todayPrice);
                                     }
@@ -239,7 +239,7 @@ export default {
                         this.backroomBusinessInfo.roomOrderInfoList.map(
                             item => {
                                 if (item.roomId === room.roomId &&
-                                    room.selected) {
+                                    room.selected && item.roomOrderId === room.roomOrderId) {
                                     if (n === 1) {
                                         room.totalPrice = Number(item.totalPrice) + Number(item.todayPrice);
                                     }
@@ -326,7 +326,7 @@ export default {
             if (room.selected) {
                 this.backroomBusinessInfo.roomOrderInfoList.map(
                         item => {
-                            if (item.roomId === room.roomId) {
+                            if (item.roomId === room.roomId && item.roomOrderId === room.roomOrderId) {
                                 room.totalPrice = Number(item.totalPrice) + Number(item.todayPrice);
                             }
                         }
@@ -351,7 +351,7 @@ export default {
             const rooms = [];
             this.roomBusinessInfo.roomOrderInfoList.map((room, index) => {
                 this.backroomBusinessInfo.roomOrderInfoList.map(item => {
-                    if (room.selected && room.roomId === item.roomId) {
+                    if (room.selected && room.roomId === item.roomId && item.roomOrderId === room.roomOrderId) {
                         rooms.push({
                             startDate: room.checkInDate,
                             endDate: room.checkOutDate,
@@ -409,7 +409,7 @@ export default {
                         (room, index) => {
                             this.backroomBusinessInfo.roomOrderInfoList.map(
                                 item => {
-                                    if (item.roomId === room.roomId && room.selected) {
+                                    if (item.roomId === room.roomId && room.selected && item.roomOrderId === room.roomOrderId) {
                                         todayFeeMap.push({
                                             fee: room.checkType === 1 ? room.roomHoursPrice : (room.totalPrice - item.totalPrice).toFixed(2),
                                             subOrderId: item.roomOrderId
