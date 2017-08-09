@@ -3,7 +3,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="roomModals-header">
-                        <div class="header-text">大圆桌4</div>
+                        <div class="header-text">{{dish}}</div>
                             <inpuVaild :isInt='true' v-model='val' :className='"reset-keyboard-num"' />
                             </div>
                     <div class="roomModals-body">
@@ -77,6 +77,8 @@
 
         }
         .roomModals-header{
+            display: block;
+            height: auto;
             padding:15px 8px 8px;
             border-bottom:1px solid #e0e6ed;
             .header-text{
@@ -86,6 +88,7 @@
         }
         .content-item{
             border-bottom:1px solid #e0e6ed;
+            padding:0;
         }
         table{
             width: 100%;
@@ -115,7 +118,7 @@ export default {
     props: {
         visible: Boolean,
         num: Number,
-        numChange: Function
+        dish: String
     },
     data() {
         return {

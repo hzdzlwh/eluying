@@ -17,12 +17,12 @@ const store = new Vuex.Store({
     state: {
         restId: 0,
         date: dateFormat(new Date()),
-        leftType: 3,
+        leftType: 2,
         // 0:今日营业额，1:空桌选中，2:订单详情，4:加菜点菜
         board: {
             id: 1122,
             boardName: '大圆桌',
-            boardId: '3'
+            boardId: ''
         },
         selectDish: [{ id: 123, boardName: '大圆桌', boardId: '2' }, { id: 123, boardName: '大圆桌', boardId: '3' }],
         // openData: {
@@ -42,7 +42,7 @@ const store = new Vuex.Store({
                 }
             ], 'boardInfoStatus': 1, 'boardState': 2, 'canCancelSaleOrder': false, 'cancelAble': true, 'caterOrderId': 82277, 'changeBoard': false, 'channelDiscount': 74151, 'colseBoardTime': '测试内容6j36', 'creationTime': '2017-08-09 03:31', 'customerName': '测试内容3j6x', 'customerPhone': '测试内容y660', 'customerType': 0, 'discount': 70867, 'discountChannel': 80888, 'discountRelatedId': 47872, 'discountRelatedName': '测试内容6b42', 'dishCount': 41686, 'editAble': false, 'expectStartTime': '测试内容0y5g', 'hasPrinter': false, 'hasRole': true, 'infoStatus': 1, 'isCombinationOrder': false, 'itemsMap': [
                 {
-                    'bookNum': 73288, 'creationTime': '测试内容9j85', 'dishId': 67121, 'dishName': '测试内容1', 'dishType': 0, 'isDiscount': 80244, 'isSend': false, 'operatorName': '测试内容174e', 'originPrice': 53437, 'price': 76435, 'remark': '测试内容fy1c', 'serviceId': 48870, 'serviceState': 0, 'subDishList': [
+                    'bookNum': 73288, 'creationTime': '测试内容9j85', 'dishId': 67121, 'dishName': '测试内容1', 'dishType': 0, 'isDiscount': 80244, 'isSend': true, 'operatorName': '测试内容174e', 'originPrice': 53437, 'price': 76435, 'remark': '测试内容fy1c', 'serviceId': 48870, 'serviceState': 0, 'subDishList': [
                         {
                             'bookNum': 30437, 'dishId': 24056, 'dishName': '测试内容8888', 'price': 78155, 'serviceState': 0
                         }
