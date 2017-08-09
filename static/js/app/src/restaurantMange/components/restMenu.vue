@@ -2,7 +2,7 @@
  * @Author: lwh
  * @Date:   2017-08-03 15:13:42
  * @Last Modified by:   lwh
- * @Last Modified time: 2017-08-09 15:28:58
+ * @Last Modified time: 2017-08-09 15:40:01
  */
 
  <template>
@@ -71,13 +71,13 @@ export default {
                             price: 40,
                             num: 1
                         },
-                        {   
+                        {
                             id: 4,
                             name: '干锅土豆',
                             price: 10,
                             num: 1
                         },
-                        {   
+                        {
                             id: 5,
                             name: '大盘鸡',
                             price: 80,

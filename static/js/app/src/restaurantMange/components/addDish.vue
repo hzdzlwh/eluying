@@ -2,7 +2,7 @@
  * @Author: lwh
  * @Date:   2017-08-09 14:19:31
  * @Last Modified by:   lwh
- * @Last Modified time: 2017-08-09 15:13:19
+ * @Last Modified time: 2017-08-09 15:38:58
  */
 
 <template>
@@ -45,7 +45,7 @@ export default {
         return {
             dishName: '',
             dishPrice: undefined
-        }
+        };
     },
     methods: {
         hideModal() {
