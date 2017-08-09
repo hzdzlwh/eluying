@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-31 13:58:30
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-08-08 09:56:48
+* @Last Modified time: 2017-08-09 11:26:02
 * @email: 783384903@qq.com
 */
 
@@ -45,7 +45,7 @@
             padding:15px;
             background:#ffffff;
             box-shadow:0 4px 4px 0 rgba(154,162,167,0.19);
-            height:122px;
+            height:140px;
         }
         .rest-taday-tip{
                 font-size:12px;

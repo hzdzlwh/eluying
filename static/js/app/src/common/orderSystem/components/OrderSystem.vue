@@ -101,7 +101,7 @@
         },
         created() {
             bus.$on('changeBack', this.changeBack);
-            bus.$on('setOrderDetail', this.setOrderDetail);
+            bus.$on('setRestDetail', this.setRestDetail);
             bus.$on('back', this.back);
             bus.$on('onClose', this.hideDetail);
             bus.$on('onShowDetail', this.showOrderDetail);
@@ -119,7 +119,7 @@
         },
         beforeDestroy: function() {
             bus.$off('changeBack', this.changeBack);
-            bus.$off('setOrderDetail', this.setOrderDetail);
+            bus.$off('setRestDetail', this.setRestDetail);
             bus.$off('back', this.back);
             bus.$off('onClose', this.hideDetail);
             bus.$off('onShowDetail', this.showOrderDetail);
@@ -145,7 +145,7 @@
             back() {
                 this.bacnHandel.shift()();
             },
-            setOrderDetail(orderDetail) {
+            setRestDetail(orderDetail) {
                 this[types.SET_ORDER_DETAIL]({ orderDetail });
             },
             handleOrderNumClick(ev) {
