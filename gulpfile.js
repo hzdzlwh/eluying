@@ -50,9 +50,9 @@ gulp.task('file-include', function() {
         .pipe(gulp.dest('./'));
 });
 
-gulp.task('clean', function () {
+gulp.task('clean', function() {
     gulp.src(['./build', './.sass-cache', './rev'])
-        .pipe(clean({force: true}));
+        .pipe(clean({ force: true }));
 });
 
 // hash缓存和移动文件

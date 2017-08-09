@@ -5,6 +5,8 @@ import Router from 'vue-router';
 import auth from '../common/auth';
 import NoAuth from './components/no-auth.vue';
 import book from './views/book/index.vue';
+import destine from './views/book/destine.vue';
+import estimate from './views/book/estimate.vue';
 import order from './views/order/index.vue';
 import orderList from './views/orderList/index.vue';
 const hasAuth = auth.checkModule(auth.VIP_ID);
@@ -21,9 +23,26 @@ export const routes = [
         path: '/book',
         component: book,
         meta: {
-            name: '预订沽清',
-            invisible: true
-        }
+            name: '预订沽清'
+            // invisible: true
+        },
+        redirect: '/book/destine',
+        children: [
+            {
+                path: '/book/destine',
+                component: destine,
+                meta: {
+                    name: '菜品预定列表'
+                }
+            },
+            {
+                path: '/book/estimate',
+                component: estimate,
+                meta: {
+                    name: '菜品沽清列表'
+                }
+            }
+        ]
     },
     {
         path: '/order',

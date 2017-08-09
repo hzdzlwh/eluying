@@ -33,6 +33,7 @@ module.exports = {
         'restaurant/restaurant': './static/js/app/src/business/restaurant/restaurant/index.js',
         'restaurant/table': './static/js/app/src/business/restaurant/table',
         'restaurant/dishes': './static/js/app/src/business/restaurant/dishes',
+        'restaurant/other': './static/js/app/src/business/restaurant/other/main.js',
         'codesite/operation': './static/js/app/src/codesite/operation/operation.js',
         'linesite/operation': './static/js/app/src/linesite/operation/operation.js',
         'salesite/detail': './static/js/app/src/salesite/detail/detail.js',

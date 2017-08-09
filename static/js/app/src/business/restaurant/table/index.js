@@ -13,7 +13,7 @@ require("validation");
 var auth = require('../../../common/auth');
 import init from '../../../common/init';
 init({
-    id: auth.BUSINESS_ID,
+    id: auth.BUSINESS_ID
 });
 $(function() {
     restaurantMenu.render();
@@ -180,7 +180,7 @@ $(function() {
                 let url = `${host}?campId=${campId}&uid=${uid}&terminal=5&version=12&timestamp=${(new Date()).valueOf()}&sign=${util.getSign()}&restId=${restId}`;
                 return url;
             }
-        },
+        }
     });
     
     var boardDialog = new Vue({
@@ -300,7 +300,7 @@ $(function() {
                 $('#confirmResetDialog').modal('show');
                 $('#resetDialog').modal('hide');
             }
-        },
+        }
 
     });
 

@@ -7,18 +7,22 @@
 */
 
 <template>
-    
+    <div>
+        <leftMenu></leftMenu>
+        <router-view></router-view>
+    </div>
 </template>
 <style>
     
 </style>
 <script>
+    import leftMenu from '../../components/leftMenu.vue';
     export default {
         props: {
         },
         data() {
             return {
-            }
+            };
         },
         conputed: {
         },
@@ -27,10 +31,9 @@
         watch: {
         },
         components: {
+            leftMenu
         },
-        create() {
-            
+        created() {
         }
-
-    }
+    };
 </script>

@@ -189,7 +189,6 @@ export const getRestType = {
                 .then(res => {
                     if (res.code === 1) {
                         const restList = res.data.list;
-                        this.restTypeOther = restList;
                         restList.forEach(rest => {
                             rest.id = rest.restId;
                             rest.name = rest.restName;
@@ -229,7 +228,7 @@ export const getDishType = {
             if (this.restType.split('~')[1]) {
                 obj.restId = this.restType.split('~')[1];
             }
-            http.get('/dish/getDishTypes', obj)
+            http.post('/dish/getDishTypes', obj)
                 .then(res => {
                     if (res.code === 1) {
                         const dishType = res.data.list;
