@@ -2,7 +2,7 @@
 * @Author: lwh
 * @Date:   2017-08-08 10:53:27
 * @Last Modified by:   Tplant
-* @Last Modified time: 2017-08-08 15:31:03
+* @Last Modified time: 2017-08-08 16:31:21
 */
 
 var tableList = [
@@ -83,11 +83,79 @@ var tableList = [
         caterOrderId: 12,
         caterOrderList: [],
         duration: '1:20',
-        hasScan: true,
+        hasScan: false,
         isHasOrder: true,
         kindId: 4,
         kindName: '圆桌',
-        orderState: 0,
+        orderState: 2,
+        seriaNum: 4,
+        time: '12:00'
+    },
+    {
+        areaId: 1,
+        areaName: 'A区',
+        boardId: 4,
+        boardName: '',
+        boardState: 0,
+        caterOrderId: 12,
+        caterOrderList: [],
+        duration: '1:20',
+        hasScan: false,
+        isHasOrder: true,
+        kindId: 4,
+        kindName: '圆桌',
+        orderState: null,
+        seriaNum: 4,
+        time: '12:00'
+    },
+    {
+        areaId: 1,
+        areaName: 'A区',
+        boardId: 4,
+        boardName: '',
+        boardState: 0,
+        caterOrderId: 12,
+        caterOrderList: [],
+        duration: '1:20',
+        hasScan: false,
+        isHasOrder: true,
+        kindId: 4,
+        kindName: '圆桌',
+        orderState: null,
+        seriaNum: 4,
+        time: '12:00'
+    },
+    {
+        areaId: 1,
+        areaName: 'A区',
+        boardId: 4,
+        boardName: '',
+        boardState: 0,
+        caterOrderId: 12,
+        caterOrderList: [],
+        duration: '1:20',
+        hasScan: false,
+        isHasOrder: true,
+        kindId: 4,
+        kindName: '圆桌',
+        orderState: null,
+        seriaNum: 4,
+        time: '12:00'
+    },
+    {
+        areaId: 1,
+        areaName: 'A区',
+        boardId: 4,
+        boardName: '',
+        boardState: 0,
+        caterOrderId: 12,
+        caterOrderList: [],
+        duration: '1:20',
+        hasScan: false,
+        isHasOrder: true,
+        kindId: 4,
+        kindName: '圆桌',
+        orderState: null,
         seriaNum: 4,
         time: '12:00'
     },
