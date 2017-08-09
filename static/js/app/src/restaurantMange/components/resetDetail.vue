@@ -22,7 +22,7 @@
                 </div>
                 <div class="rest-restDetail-right">
                     <div class="restDetail-title-tip">{{!isHasOrder ? '用餐时长' :'用餐时间' }}</div>
-                    <div class="restDetail-title-data" v-if='isHasOrder'>{{openData.creationTime}}</div>
+                    <div class="restDetail-title-data" v-if='isHasOrder'><DatePicker :value='new Date(openData.creationTime)'  @input='changeBookTime' clearable=false type="datetime" placeholder="选择日期时间" size='small' editable = false :clearable = false format='yyyy-MM-dd HH:mm'/></div>
                     <div class="restDetail-title-data" v-if='!isHasOrder'>{{openData.timer}}</div>
                 </div>
             </div>
@@ -60,7 +60,7 @@
                 <tbody>
                 <template v-for='item in openData.itemsMap' v-if='restDate.data.itemsMap && leftType !== 4 && openData.itemsMap'>
                     <tr @click='changeItem(item); dishClick(item)' > <td><div><span class="rest-restDetail-dishname" :class='{"rest-item-del" : item.serviceState === 1}'> <span  :class='getTriangle(item)'></span><span >{{item.dishName}}</span></span><span class="rest-item-send" v-if='item.serviceState === 2'>送</span></div></td><td><div :class='{"rest-item-del" : item.serviceState === 1}'>x{{item.bookNum}}</div></td><td :class='{"rest-item-del" : item.serviceState === 1}'>{{item.price}}</td></tr>
-                    <tr v-for='sub in item.subDishList' @click='dishClick(item)' v-if='item.select' :class='{"rest-item-del" : sub.serviceState === 1}'>
+                    <tr v-for='sub in item.subDishList' @click='dishClick(sub)' v-if='item.select' :class='{"rest-item-del" : sub.serviceState === 1}'>
                         <td class="rest-restDetail-trchild">{{sub.dishName}}</td><td><div>x{{sub.bookNum}}</div></td><td></td>
                     </tr>
                 </template> 
@@ -131,8 +131,8 @@
             <div>下单时间：{{dishChange.creationTime}}</div>
         </div>
             <div class="resetChange-foot-btn">
-                <div class="resetMange-btn-base " v-if='dishChange.serviceState === 1'>退菜</div>
-                <div class="resetMange-btn-base " v-if='dishChange.isSend'>赠送</div>
+                <div class="resetMange-btn-base " v-if='dishChange.serviceState === 0' @click='dishModalChange(0)'>退菜</div>
+                <div class="resetMange-btn-base " v-if='dishChange.isSend' @click='dishModalChange(1)'>赠送</div>
             </div>
             <div class="">
                 <div>
@@ -143,13 +143,27 @@
                 </div>
             </div>
         </div>
-        <bookInfo :visible='bookInfoVisible' :num='bookPeopleNUm' :data='bookData' @hideModal='hidebookInfo' :type='isHasOrder' @changeBook='changeBook'></bookInfo>
+        <dishModal :visible='dishModalVisible' :type='dishModalType' :data='dishChange' @hideModal='hideDishModal' @dishChange='dishChangeSub'></dishModal>
+<!--         <bookInfo :visible='bookInfoVisible' :num='bookPeopleNUm' :data='bookData' @hideModal='hidebookInfo' :type='isHasOrder' @changeBook='changeBook'></bookInfo> -->
+<keyBoard :visible ='bookInfoVisible' @close='hidebookInfo' :num ='openData.peopleNum' :dish='openData.boardDetailResps[0].boardName + openData.boardDetailResps[0].boardId' @numChange='changeBookNum'></keyBoard>
     </div>
 </template>
 <style lang='scss'>
     @mixin flex-just-between {
         display: flex;
         justify-content: space-between;
+    }
+    .restDetail-title-data{
+        .el-input--small{
+            width: auto!important;
+        }
+        i{
+            display: none;
+        }
+        input{
+            border: none;
+            padding-right: 0!important;
+        }
     }
     .reset-restDetail-resetChange{
         padding:15px 15px 5px;
@@ -410,6 +424,10 @@ import count from '../../common/components/counter.vue';
 import util from 'util';
 import bus from '../../common/eventBus.js';
 import bookInfo from './changeBookInfo.vue';
+import dishModal from './dishModal.vue';
+import { DatePicker } from 'element-ui';
+import keyBoard from '../../common/components/inputKeyboard.vue'
+import changeRemark from './changeRemark.vue'
 export default {
     props: {
     },
@@ -426,6 +444,10 @@ export default {
             bookPeopleNUm: 0,
             bookData: '',
             dishChange: undefined,
+            dishModalVisible: false,
+            dishModalType: 0,
+            // 0退，1换
+            changeRemarkVisible: false,
             restDate: {
                 'code': 61058, 'data':
                 {
@@ -483,11 +505,42 @@ export default {
             'canlFood',
             'setOpenData'
         ]),
+        changeRemarkHide(){
+            this.changeRemarkVisible = false
+        },
+        changeRemark(val){
+            http.get('/order/modifyCaterOrderRemark',{caterOrderId:this.openData.caterOrderId,remark:val}).then(res => {
+                this.$emit('refresh');
+            })
+        },
+        hideDishModal() {
+            this.dishModalVisible = false
+        },
+        dishChangeSub(val){
+            const dishes = [];
+            dishes.push({dishId: this.dishChange.dishId,oprNum:value});
+            http.get('/dish/dishOpr',{caterOrderId: this.openData.caterOrderId
+                ,dishes:JSON.stringify(dishes),
+                oprType: this.dishModalType ? 4 : 2
+            }).then(res => {
+                this.$emit('refresh');
+            })
+        },
+        dishModalChange(type){
+            this.dishModalVisible = true;
+            this.dishModalType = type;
+        },
         dishClick(dish){
             if (dish.serviceState === 1) {
                 return;
             }
             this.dishChange = dish;
+        },
+        changeBookTime(value){
+            this.changeBook({orderTime:util.dateFormatLong(value) })
+        },
+        changeBookNum(value){
+            this.changeBook({peopleNum: value})
         },
         changeBook(parm) {
             let parms = parm;
@@ -667,7 +720,10 @@ export default {
     components: {
         inputVaild,
         count,
-        bookInfo
+        bookInfo,
+        dishModal,
+        keyBoard,
+        DatePicker
     },
     created() {
         if (!this.openData.isHasOrder) {
