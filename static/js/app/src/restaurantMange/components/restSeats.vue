@@ -2,7 +2,7 @@
  * @Author: lwh
  * @Date:   2017-08-02 16:04:29
  * @Last Modified by:   Tplant
- * @Last Modified time: 2017-08-08 17:40:38
+ * @Last Modified time: 2017-08-09 21:04:34
  */
 
  <template>
@@ -15,11 +15,11 @@
                 <div v-for="area in areas" @click="toggleArea(area)" :class="{selected: area.selected}">{{area.name}}</div>
             </div>
             <div class="state-select">
-                <customer-radio name="area" value="a" v-model="selectState">全部座位</customer-radio>
-                <customer-radio name="area" value="b" v-model="selectState">使用中</customer-radio>
-                <customer-radio name="area" value="c" v-model="selectState">空闲</customer-radio>
-                <customer-radio name="area" value="d" v-model="selectState">开台未点菜</customer-radio>
-                <customer-radio name="area" value="e" v-model="selectState">已预订</customer-radio>
+                <customer-radio name="area" value="-1" v-model="selectState" checked>全部座位</customer-radio>
+                <customer-radio name="area" value="2" v-model="selectState">使用中</customer-radio>
+                <customer-radio name="area" value="0" v-model="selectState">空闲</customer-radio>
+                <customer-radio name="area" value="4" v-model="selectState">开台未点菜</customer-radio>
+                <customer-radio name="area" value="1" v-model="selectState">已预订</customer-radio>
             </div>
             <div class="order-menu">
                 <div class="order" @click="reserve">预订</div>
@@ -42,15 +42,20 @@
                     <div class="reserve-time" v-if="board.orderState === 0">预{{board.time}}</div>
                     <div class="order-list" v-if="board.caterOrderList.length">
                         <div class="rest-arrow-up"></div>
-                        <div class="seat-name"><span>桌位1</span><span>空闲</span></div>
-                        <div class="order-info" v-for="i in 2" @click.prevent="getSeatOrder($event)">
+                        <div class="seat-name"><span>{{`${board.kindName}${board.kindId}`}}</span></div>
+                        <div class="order-info" v-for="o in board.caterOrderList" @click.prevent="getSeatOrder($event)">
                             <div class="order-list-item">
-                                <div><span>人数: 2</span><span style="margin-left: 32px;">用餐时间: 2017-07-18 17:00</span></div>
-                                <div class="seat-state yellow">已预订</div>
+                                <div>
+                                    <span>人数: {{o.peopleNum}}</span>
+                                    <span style="margin-left: 32px;" v-if="o.state === 0">用餐时间: {{o.diningTime}}</span>
+                                    <span style="margin-left: 32px;" v-else>用餐时长: {{o.duration}}</span>
+                                </div>
+                                <div class="seat-state yellow" v-if="o.state === 0">已预订</div>
+                                <div class="seat-state blue" v-else>就餐中</div>
                             </div>
                             <div class="order-list-item">
-                                <div>张三 11111111111<span style="margin-left: 8px;">会员</span></div>
-                                <div>前台下单</div>
+                                <div>{{`${o.name}(${o.phone})`}}<span style="margin-left: 8px;">{{o.origin}}</span></div>
+                                <div>{{o.caterOrderOrigin}}</div>
                             </div>
                         </div>
                     </div>
@@ -70,15 +75,14 @@ import { mapState, mapMutations } from 'vuex';
 import customerRadio from './customerRadio.vue';
 import DateSelect from '../../accommodation/components/DateSelect';
 import contextmenu from '../../common/components/contextmenu';
-import { tableList } from '../mock/tableData.js';
 export default {
     data() {
         return {
             defaultStrDate: this.date,
-            selectState: 'a',
+            selectState: '-1',
             areas: [
                 {
-                    id: 0,
+                    id: -1,
                     name: '全部区域',
                     selected: true
                 }
@@ -136,10 +140,25 @@ export default {
             this[types.SET_LEFT_TYPE]({ leftType: 4 });
         },
         getSeatList() {
-            http.get('/board/list', { date: this.date, restId: this.restId }).then(res => {
+            const param = { date: this.date, restId: this.restId };
+            if (!(this.areas.find(area => {
+                return area.selected && area.id === -1;
+            }))) {
+                param.areaId = [];
+                this.areas.forEach(area => {
+                    if (area.selected) {
+                        param.areaId.push(area.id);
+                    }
+                });
+                param.areaId = JSON.stringify(param.areaId);
+            };
+            if (this.selectState !== '-1') {
+                param.state = Number(this.selectState);
+            }
+            http.get('/board/list', param).then(res => {
                 if (res.code === 1) {
-                    const mockData = tableList;
-                    mockData.map(item => {
+                    this.tableList = [];
+                    res.data.list.map(item => {
                         const areaHasOrNot = this.areas.find(area => {
                             return area.id === item.areaId;
                         });
