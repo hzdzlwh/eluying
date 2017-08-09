@@ -44,40 +44,25 @@
                             </span>
                         </div>
                     </div>
+                            <div class="rest-restDetail-constain" style="width:300px">
+            <table class="rest-restDetail-table">
+                <thead>
+                    <tr><td width="150px">菜品名称</td><td width="45px">数量</td><td width='80px'>金额</td></tr>
+                </thead>
+                <tbody>
+                <template v-for='it in item.itemsMap'>
+                    <tr @click='changeItem(it); dishClick(it)' > <td><div><span class="rest-restDetail-dishname" :class='{"rest-item-del" : it.serviceState === 1}'> <span  :class='getTriangle(it)'></span><span >{{it.dishName}}</span></span><span class="rest-item-send" v-if='it.serviceState === 2'>送</span></div></td><td><div :class='{"rest-item-del" : it.serviceState === 1}'>x{{it.bookNum}}</div></td><td :class='{"rest-item-del" : it.serviceState === 1}'>{{it.price}}</td></tr>
+                    <tr v-for='sub in it.subDishList' @click='dishClick(sub)' v-if='it.select' :class='{"rest-item-del" : sub.serviceState === 1}'>
+                        <td class="rest-restDetail-trchild">{{sub.dishName}}</td><td><div>x{{sub.bookNum}}</div></td><td></td>
+                    </tr>
+                </template> 
+                </tbody>
+            </table>
+        </div>
                 </div>
             </div>
         </div>
-        <div class="content-item" v-if="order.caterOrderId">
-            <p class="content-item-title"><span>菜单详情</span></p>
-            <div class="items">
-                <div class="cateOrder-item" v-for="item in order.itemsMap">
-                    <p class="cateOrder-operation-info">
-                        <span>{{ item.operatorDate.slice(11, 16) }}</span>
-                        <span>{{ item.operatorName }}</span>
-                    </p>
-                    <div class="cateOrder-dishes-container">
-                        <div class="cateOrder-dish food-sub-item" v-for="dish in item.dishItemResp">
-                            <p class="dish-name-container">
-                                <span :class="{'item-indent': dish.dishId !== null && dish.dishId !== 0 }"
-                                      class="dish-name">
-                                    {{dish.categoryName}}
-                                </span>
-                                <span class="cateTag" v-if='dish.serviceType && dish.serviceType !== 3' :style='{"background": REST_STATUS[dish.serviceType].color}'>{{REST_STATUS[dish.serviceType].short}}</span>
-                                <span class="dish-discount-icon"
-                                      v-if="dish.discountable === 1 && !(dish.dishId > 0)">折</span>
-                            </p>
-                            <span class="dish-numAndPrice">
-                                <span>x{{dish.bookNum}}</span>
-                                <span>¥{{(dish.price * dish.bookNum).toFixed(2)}}</span>
-                            </span>
-                        </div>
-                    </div>
-                    <div class="cateOrder-item-remark" v-if='item.remark'>
-                        菜品备注：{{item.remark}}
-                    </div>
-                </div>
-            </div>
-        </div>
+
     </div>
 </template>
 <style lang="scss">
@@ -192,7 +177,7 @@
             order: Object
         },
         data() {
-            return { REST_STATUS };
+            return { REST_STATUS, dishChange: undefined };
         },
         computed: {
             foodItems() {
@@ -208,13 +193,7 @@
                     obj.foodPrice = this.order.totalPrice;
                     obj.originTotalPrice = this.order.originTotalPrice;
                     obj.showDiscount = this.order.showDiscount;
-                    obj.itemsMap = this.order.itemsMap.forEach(function(element) {
-                        element.dishItemResp.forEach(function(el) {
-                            if (el.serviceType === 1 || el.serviceType === 2 || el.serviceType === 4) {
-                                el.price = -el.price;
-                            }
-                        });
-                    });
+                    obj.itemsMap = this.order.itemsMap;
                     foodItems[0] = obj;
                 } else {
                     foodItems = this.order.foodItems;
@@ -224,6 +203,32 @@
             }
         },
         methods: {
+            getTriangle(item) {
+                if (!item.subDishList || !item.subDishList.length) {
+                    return '';
+                }
+                if (item.select) {
+                    return 'triangle-down';
+                } else {
+                    return 'triangle-right';
+                }
+            },
+            dishClick(dish) {
+                if (dish.serviceState === 1) {
+                    return;
+                }
+                this.dishChange = dish;
+            },
+            changeItem(item) {
+                if (!item.subDishList || !item.subDishList.length) {
+                    return;
+                }
+                if (item.select === undefined) {
+                    this.$set(item, 'select', true);
+                } else {
+                    item.select = !item.select;
+                }
+            },
             getOrderState(food, prop) {
                 if (food.foodState === undefined || !ORDER_STATE_TEXT[ORDER_TYPE.CATERING][food.foodState]) {
                     return '';

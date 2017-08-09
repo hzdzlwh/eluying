@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-08-01 14:45:58
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-08-09 14:37:39
+* @Last Modified time: 2017-08-09 19:30:04
 * @email: 783384903@qq.com
 */
 
@@ -22,7 +22,7 @@
                 </div>
                 <div class="rest-restDetail-right">
                     <div class="restDetail-title-tip">{{!isHasOrder ? '用餐时长' :'用餐时间' }}</div>
-                    <div class="restDetail-title-data" v-if='isHasOrder'>{{openData.creationTime}}</div>
+                    <div class="restDetail-title-data" v-if='isHasOrder'><DatePicker :value='new Date(openData.creationTime)'  @input='changeBookTime' clearable=false type="datetime" placeholder="选择日期时间" size='small' editable = false :clearable = false format='yyyy-MM-dd HH:mm'/></div>
                     <div class="restDetail-title-data" v-if='!isHasOrder'>{{openData.timer}}</div>
                 </div>
             </div>
@@ -60,7 +60,7 @@
                 <tbody>
                 <template v-for='item in openData.itemsMap' v-if='restDate.data.itemsMap && leftType !== 4 && openData.itemsMap'>
                     <tr @click='changeItem(item); dishClick(item)' > <td><div><span class="rest-restDetail-dishname" :class='{"rest-item-del" : item.serviceState === 1}'> <span  :class='getTriangle(item)'></span><span >{{item.dishName}}</span></span><span class="rest-item-send" v-if='item.serviceState === 2'>送</span></div></td><td><div :class='{"rest-item-del" : item.serviceState === 1}'>x{{item.bookNum}}</div></td><td :class='{"rest-item-del" : item.serviceState === 1}'>{{item.price}}</td></tr>
-                    <tr v-for='sub in item.subDishList' @click='dishClick(item)' v-if='item.select' :class='{"rest-item-del" : sub.serviceState === 1}'>
+                    <tr v-for='sub in item.subDishList' @click='dishClick(sub)' v-if='item.select' :class='{"rest-item-del" : sub.serviceState === 1}'>
                         <td class="rest-restDetail-trchild">{{sub.dishName}}</td><td><div>x{{sub.bookNum}}</div></td><td></td>
                     </tr>
                 </template> 
@@ -131,8 +131,8 @@
             <div>下单时间：{{dishChange.creationTime}}</div>
         </div>
             <div class="resetChange-foot-btn">
-                <div class="resetMange-btn-base " v-if='dishChange.serviceState === 1'>退菜</div>
-                <div class="resetMange-btn-base " v-if='dishChange.isSend'>赠送</div>
+                <div class="resetMange-btn-base " v-if='dishChange.serviceState === 0' @click='dishModalChange(0)'>退菜</div>
+                <div class="resetMange-btn-base " v-if='dishChange.isSend' @click='dishModalChange(1)'>赠送</div>
             </div>
             <div class="">
                 <div>
@@ -143,261 +143,13 @@
                 </div>
             </div>
         </div>
-        <bookInfo :visible='bookInfoVisible' :num='bookPeopleNUm' :data='bookData' @hideModal='hidebookInfo' :type='isHasOrder' @changeBook='changeBook'></bookInfo>
+        <dishModal :visible='dishModalVisible' :type='dishModalType' :data='dishChange' @hideModal='hideDishModal' @dishChange='dishChangeSub'></dishModal>
+<!--         <bookInfo :visible='bookInfoVisible' :num='bookPeopleNUm' :data='bookData' @hideModal='hidebookInfo' :type='isHasOrder' @changeBook='changeBook'></bookInfo> -->
+<keyBoard :visible ='bookInfoVisible' @close='hidebookInfo' :num ='openData.peopleNum' :dish='openData.boardDetailResps[0].boardName + openData.boardDetailResps[0].boardId' @numChange='changeBookNum'></keyBoard>
     </div>
 </template>
 <style lang='scss'>
-    @mixin flex-just-between {
-        display: flex;
-        justify-content: space-between;
-    }
-    .reset-restDetail-resetChange{
-        padding:15px 15px 5px;
-        font-size: 12px;
-            color: #99a9bf;
-            .reset-resetChange-detail{
-                padding: 0 15px ;
-                box-shadow: 0 4px 4px 0 rgba(154, 162, 167, 0.19);
-                margin: 0 -15px;
-                &>div{
-                    margin-bottom: 10px;
-                }
-                .reset-resetChange-remark{
-                    color: #82beff;
-                    margin-left: 10px;
-                    cursor: pointer;
-                }
-
-            }
-
-        .resetChange-foot-btn{
-            text-align: right;
-        }
-    }
-    .resetMange-btn-base {
-        border-radius:4px;
-        width:70px;
-        text-align: center;
-        height:32px;
-        line-height: 32px;
-        font-size:14px;
-        color:#99a9bf;
-        border:1px solid #99a9bf;
-        display: inline-block;
-        margin-top: 10px;
-        cursor: pointer;
-    }
-    .resetMange-btn-lager{
-        width: 140px;
-    }
-    .resetMange-btn-promise{
-        border-color: #178ce6;
-        background:#178ce6;
-        color: #fff;
-    }
-    .restDetail-foot-check{
-        .restDetail-check-list{
-            padding-left: 20px;
-        }
-        .restDetail-check-item{
-            @include flex-just-between;
-        }
-    }
-    .rest-restDetail-foot{
-        background:#ffffff;
-        box-shadow:0 -4px 4px 0 rgba(154,162,167,0.19);
-        width:318px;
-        border-bottom-right-radius: 8px;
-        border-bottom-left-radius: 8px;
-        .resetmange-click-list{
-            padding: 0 8px 8px;
-            display: flex;
-            justify-content: space-between;
-            flex-direction: row;
-            flex-wrap: wrap;
-        }
-        .rest-foot-count{
-            @include flex-just-between;
-            border-bottom: 1px dashed #99a9bf;
-            .rest-restDetail-dishcount{
-                .rest-restDetail-tag{
-                    background:#ff9326;
-                    border-radius:4px;
-                    height:16px;
-                    color: #fff;
-                    font-size: 14px;
-                    line-height: 16px;
-                    height: 16px;
-                }
-            }
-        }
-    }
-    .rest-item-del{
-        text-decoration: line-through;
-    }
-    .rest-item-send{
-        font-size:14px;
-        color:#178ce6;
-    }
-    .triangle-down {
-        width: 0;
-        height: 0;
-        border-left: 6px solid transparent;
-        border-right: 6px solid transparent;
-        border-top: 8px solid #8e8e8e;
-        display: inline-block;
-        margin-right: 5px;
-    }
-    .triangle-right {
-        width: 0;
-        height: 0;
-        border-bottom: 6px solid transparent;
-        border-left: 8px solid #8e8e8e;
-        border-top: 6px solid transparent;
-        display: inline-block;
-        margin-right: 5px;
-    }
-    .rest-restDetail-constain{
-        padding: 10px 20px;
-        height: 400px;
-        overflow-y: scroll;
-    }
-
-    .restDetail-title-tip{
-        font-size:12px;
-        color:#8492a6;
-    }
-    .restDetail-title-display{
-        @include flex-just-between
-        .restDetail-title-dish{
-        font-size:24px;
-        color:#475669;
-        line-height:24px;
-        font-weight: bold;
-        }
-        .rest-taday-tag{
-            margin-top: 0;
-        }
-        .restDetail-type-tag{
-            font-size: 14px;
-            padding: 4px;
-            color: #fff;
-            border-radius: 4px;
-            background-color: #ffba75;
-            font-weight: 200;
-            line-height: 24px;
-            height: 24px;
-            vertical-align: text-bottom;
-            cursor: pointer;
-        }
-    }
-    .rest-restDetail-left{
-        width: 100px;
-        border-right: 1px dashed #99a9bf;
-        display: inline-block;
-        img{
-            cursor: pointer;
-        }
-    }
-    .rest-restDetail-right{
-        padding-left: 20px;
-        display: inline-block;
-    }
-    .restDetail-title-data{
-        font-size:18px;
-        color:#475669;
-    }
-    .rest-restDetail-other{
-        text-align: right;
-        font-size:12px;
-        color:#c0ccda;
-        cursor: pointer;
-        & > span{
-            transform: scaleY(0.7) scaleX(1.7) rotate(90deg);
-            display: inline-block;
-        }
-    }
-    .rest-restDetail-transform{
-         transition: max-height 0.6s;
-        overflow: hidden;
-        position: absolute;
-        width: 318px;
-    }
-    .rest-restDetail-otherDetail{
-       
-            padding: 15px;
-    background-color: #fff;
-    box-shadow: 0 4px 4px 0 rgba(154,162,167,0.19);
-font-size:12px;
-color:#475669;
-& > div {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 8px;
-    .rest-restDetail-span{
-        width: 80px;
-        display: inline-block;
-    }
-}
-    }
-    .rest-restDetail-constain{
-        .rest-text-title{
-            font-size: 12px;
-            color: #99a9bf;
-            padding: 10px 0;
-        }
-        .rest-restDetail-table{
-            thead{
-                font-size:12px;
-                color:#99a9bf;
-                border-bottom: 1px dashed #99a9bf;
-            }
-            tr{
-                cursor: pointer;
-                td:nth-child(1){
-                    text-align: left;
-                }
-                td:nth-child(2){
-                    text-align: center;
-                }
-                td:nth-child(3){
-                    text-align: right;
-                }
-            }
-            .rest-restDetail-dishname{
-                display: inline-block;
-                white-space: nowrap;
-                overflow: hidden;
-                /* overflow-x: hidden; */
-                text-overflow: ellipsis;
-                max-width: 130px;
-                vertical-align: bottom;
-            }
-            tbody {
-                font-size:14px;
-                color:#8492a6;
-                .rest-restDetail-trchild{
-                    padding-left:25px;
-                }
-                tr{
-                    padding:15px 0;
-                    height: 48px;
-                    border-bottom: 1px dashed #99a9bf;
-
-                }
-                td:nth-child(1){
-                    font-size:16px;
-                    color:#475669;
-                }
-                td:nth-child(2){
-                    & > div{
-                        border-left:1px dashed #99a9bf;
-                        border-right:1px dashed #99a9bf;
-                    }
-                }
-            }
-        }
-    }
+    
 
 </style>
 <script>
@@ -410,6 +162,10 @@ import count from '../../common/components/counter.vue';
 import util from 'util';
 import bus from '../../common/eventBus.js';
 import bookInfo from './changeBookInfo.vue';
+import dishModal from './dishModal.vue';
+import { DatePicker } from 'element-ui';
+import keyBoard from '../../common/components/inputKeyboard.vue'
+import changeRemark from './changeRemark.vue'
 export default {
     props: {
     },
@@ -426,6 +182,10 @@ export default {
             bookPeopleNUm: 0,
             bookData: '',
             dishChange: undefined,
+            dishModalVisible: false,
+            dishModalType: 0,
+            // 0退，1换
+            changeRemarkVisible: false,
             restDate: {
                 'code': 61058, 'data':
                 {
@@ -483,11 +243,42 @@ export default {
             'canlFood',
             'setOpenData'
         ]),
+        changeRemarkHide(){
+            this.changeRemarkVisible = false
+        },
+        changeRemark(val){
+            http.get('/order/modifyCaterOrderRemark',{caterOrderId:this.openData.caterOrderId,remark:val}).then(res => {
+                this.$emit('refresh');
+            })
+        },
+        hideDishModal() {
+            this.dishModalVisible = false
+        },
+        dishChangeSub(val){
+            const dishes = [];
+            dishes.push({dishId: this.dishChange.dishId,oprNum:value});
+            http.get('/dish/dishOpr',{caterOrderId: this.openData.caterOrderId
+                ,dishes:JSON.stringify(dishes),
+                oprType: this.dishModalType ? 4 : 2
+            }).then(res => {
+                this.$emit('refresh');
+            })
+        },
+        dishModalChange(type){
+            this.dishModalVisible = true;
+            this.dishModalType = type;
+        },
         dishClick(dish){
             if (dish.serviceState === 1) {
                 return;
             }
             this.dishChange = dish;
+        },
+        changeBookTime(value){
+            this.changeBook({orderTime:util.dateFormatLong(value) })
+        },
+        changeBookNum(value){
+            this.changeBook({peopleNum: value})
         },
         changeBook(parm) {
             let parms = parm;
@@ -667,7 +458,10 @@ export default {
     components: {
         inputVaild,
         count,
-        bookInfo
+        bookInfo,
+        dishModal,
+        keyBoard,
+        DatePicker
     },
     created() {
         if (!this.openData.isHasOrder) {

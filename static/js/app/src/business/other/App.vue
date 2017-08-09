@@ -91,7 +91,7 @@
 <script>
     import outerContainer from './components/outerContainer';
     import innerContainer from './components/innerContainer';
-    import switchbtn from '../../common/components/switch.vue';;
+    import switchbtn from '../../common/components/switch.vue';
     import btn from './components/button';
     import http from '../../common/http';
     import modal from '../../common/modal';
@@ -114,7 +114,7 @@
                 intervalNightView: true,
                 processMethod: 0,
                 accurate: 0,
-                selfHouse:  null,
+                selfHouse: null,
                 freeHouse: null,
                 discountLists: [],
                 processMethods: ['不处理', '四舍五入', '元后抹零'],

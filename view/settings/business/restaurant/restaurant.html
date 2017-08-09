@@ -42,7 +42,7 @@
                         <td><span class="code-btn back-{{restaurant.isOpenCaterScan === 1 ? 'open':'close'}}" @click="toggleStatus(restaurant)"></span></td>
                         <td class="rest-announcement" :class="[restaurant.isOpenCaterScan === 1 ? 'bkWord':'gyWord']" :title="restaurant.caterScanAnnouncement">{{restaurant.caterScanAnnouncement}}</td>
                         <td>
-                            <span v-on:click="openSettingDialog(restaurant)">其他设置</span>/<span v-on:click="openEditDialog(restaurant)">修改</span>/<span v-on:click="openDeleteDialog(restaurant.restId)">删除</span>
+                            <!--<span v-on:click="openSettingDialog(restaurant)">其他设置</span>--><a :href="`/view/settings/business/restaurant/other.html?restId=${restaurant.restId}`">其他设置</a>/<span v-on:click="openEditDialog(restaurant)">修改</span>/<span v-on:click="openDeleteDialog(restaurant.restId)">删除</span>
                         </td>
                     </tr>
                     </tbody>

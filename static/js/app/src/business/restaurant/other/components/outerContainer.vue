@@ -10,11 +10,12 @@
 </template>
 
 <script>
+    
     export default {
         props: ['title'],
         components: {
         }
-    };
+    }
 </script>
 
 <style lang="scss" rel="stylesheet/scss">

@@ -6,7 +6,6 @@
             </div>
             <div class="export" style="float:right;margin-left:20px;margin-top:-20px;">
                 <dd-dropdown text="导出明细" trigger="click" style="width:100px;">
-                    <!-- <dd-dropdown-item><span><a :href="exportUrl(1)">导出PDF</a></span></dd-dropdown-item> -->
                     <dd-dropdown-item><span><a :href="exportUrl(0)">导出Excel</a></span></dd-dropdown-item>
                 </dd-dropdown>
             </div>
@@ -59,87 +58,87 @@
                 col: [
                     {
                         title: '餐厅名称',
-                        dataIndex: 'restName',
+                        dataIndex: 'restaurantName',
                         width: 100
                     },
                     {
                         title: '订单号',
-                        dataIndex: 'orderNum',
+                        dataIndex: 'orderNo',
                         width: 160
                     },
                     {
                         title: '用餐时间',
-                        dataIndex: '',
+                        dataIndex: 'caterTime',
                         width: 100
                     },
                     {
                         title: '桌号',
-                        dataIndex: 'boardName',
+                        dataIndex: 'tableNo',
                         width: 80
                     },
                     {
                         title: '人数',
-                        dataIndex: '',
+                        dataIndex: 'peopleNum',
                         width: 60
                     },
                     {
                         title: '订单状态',
-                        dataIndex: '',
+                        dataIndex: 'statusString',
                         width: 60
                     },
                     {
                         title: '总金额',
-                        dataIndex: '',
+                        dataIndex: 'originTotalPrice',
                         width: 60
                     },
                     {
                         title: '折扣金额',
-                        dataIndex: '',
+                        dataIndex: 'vipDiscount',
                         width: 60
                     },
                     {
                         title: '全单优惠',
-                        dataIndex: '',
+                        dataIndex: 'discount',
                         width: 60
                     },
                     {
                         title: '零头处理',
-                        dataIndex: '',
+                        dataIndex: 'odd',
                         width: 60
                     },
                     {
                         title: '应收金额',
-                        dataIndex: '',
+                        dataIndex: 'totalPrice',
                         width: 60
                     },
                     {
                         title: '违约金',
-                        dataIndex: '',
+                        dataIndex: 'penalty',
                         width: 60
                     },
                     {
                         title: '实收金额',
-                        dataIndex: '',
+                        dataIndex: 'payment',
                         width: 60
                     },
                     {
                         title: '收款明细',
-                        dataIndex: 'dishType',
+                        dataIndex: 'channelPrice',
                         width: 100
                     },
                     {
                         title: '收银员',
-                        dataIndex: 'dishName',
+                        dataIndex: 'cashier',
                         width: 100
                     },
                     {
                         title: '操作人',
-                        dataIndex: 'operatorName',
+                        dataIndex: 'operator',
                         width: 100
                     },
                     {
-                        title: '操作时间',
-                        dataIndex: 'operationDate',
+                        title: '创建时间',
+                        dataIndex: 'creationTime',
                         width: 120
                     }
                 ]
@@ -152,7 +151,7 @@
                         next(vm => {
                             const collectList = res.data.list;
                             for (let i = 0; i < collectList.length; i ++) {
-                                if (collectList[i] === 1) {
+                                if (collectList[i] === 310) {
                                     vm.collectNum = 1;
                                     vm.collectName = '已收藏';
                                 }
@@ -187,12 +186,12 @@
         methods: {
             collectUrl(num) {
                 if (num === 0) {
-                    http.get('/stat/addToCollect', { statValue: 1 }).then(res => {
+                    http.get('/stat/addToCollect', { statValue: 310 }).then(res => {
                         this.collectNum = 1;
                         this.collectName = '已收藏';
                     });
                 } else if (num === 1) {
-                    http.get('/stat/removeFromCollection', { statValue: 1 }).then(res => {
+                    http.get('/stat/removeFromCollection', { statValue: 310 }).then(res => {
                         this.collectNum = 0;
                         this.collectName = '加入收藏';
                         let removeIndex = null;
@@ -219,14 +218,7 @@
                     pageNo: this.pageNo,
                     restId: this.restType.split('~')[1],
                     startDate: this.date.startDate,
-                    endDate: this.date.endDate,
-                    showPackageDish: 0
-                };
-                if (this.name !== '全部菜品分类') {
-                    obj.dishType = this.name;
-                };
-                if (this.operatorId !== 'ALL') {
-                    obj.operatorId = this.operatorId;
+                    toDate: this.date.endDate
                 };
                 // 后台要求如果为空就不传
                 for (const ob in obj) {
@@ -236,10 +228,10 @@
                 };
                 const paramsObj = {
                     exportType: type,
-                    reportType: 1,
+                    reportType: 310,
                     params: JSON.stringify(obj)
                 };
-                const host = http.getUrl('/stat/exportReport');
+                const host = http.getUrl('/stat/getDailyCaterOrderReport');
                 const pa = http.getDataWithToken(paramsObj);
                 pa.params = JSON.parse(pa.params);
                 const params = http.paramsToString(pa);
@@ -250,8 +242,7 @@
                     pageNo: this.pageNo,
                     restId: this.restType.split('~')[1],
                     startDate: this.date.startDate,
-                    endDate: this.date.endDate,
-                    showPackageDish: 0
+                    toDate: this.date.endDate
                 };
                 // 后台要求如果为空就不传
                 for (const ob in obj) {
@@ -259,13 +250,13 @@
                         delete obj[ob];
                     }
                 };
-                http.post('/stat/getDishSendDetail', obj).then(res => {
+                http.get('/stat/getDailyCaterOrderReport', obj).then(res => {
                     if (res.code === 1) {
                         this.vips = res.data.list || [];
                         this.orderNum = res.data.count;
                         this.receiptNum = res.data.count;
                         this.receiptFree = res.data.totalPrice;
-                        this.pages = Math.ceil(res.data.count / 30);
+                        this.pages = Math.ceil(res.data.total / 30);
                     }
                 });
             }

@@ -6,7 +6,6 @@
             </div>
             <div class="export" style="float:right;margin-left:20px;margin-top:-20px;">
                 <dd-dropdown text="导出明细" trigger="click" style="width:100px;">
-                    <!-- <dd-dropdown-item><span><a :href="exportUrl(1)">导出PDF</a></span></dd-dropdown-item> -->
                     <dd-dropdown-item><span><a :href="exportUrl(0)">导出Excel</a></span></dd-dropdown-item>
                 </dd-dropdown>
             </div>
@@ -25,9 +24,6 @@
             </div>
         </div>
         <dd-table :columns="col" :data-source="vips" :bordered="true" style="margin:20px 0 10px;"></dd-table>
-        <div class="foot footfix">
-            <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo" style="float:right;margin-top:20px;"/>
-        </div>
     </div>
 </template>
 <style lang='scss' scoped>
@@ -36,11 +32,9 @@
     import { DdTable, DdPagination, DdDropdown, DdDropdownItem, DdSelect, DdOption, DdGroupOption } from 'dd-vue-component';
     import http from 'http';
     import { mapState } from 'vuex';
-    import { getRestType } from '../mixin/selectType';
     import { collect } from '../mixin/collect';
-    import pagination from '../mixin/pagination';
     export default {
-        mixins: [getRestType, collect, pagination],
+        mixins: [collect],
         props: {
             startDate: String,
             endDate: String
@@ -48,55 +42,57 @@
         data() {
             return {
                 vips: [],
+                restTypeAll: [],
+                restType: undefined,
                 col: [
                     {
                         title: '餐厅名称',
-                        dataIndex: 'restName',
+                        dataIndex: 'restaurantName',
                         width: 100
                     },
                     {
                         title: '营业日期',
-                        dataIndex: 'orderNum',
+                        dataIndex: 'date',
                         width: 160
                     },
                     {
                         title: '总金额',
-                        dataIndex: '',
+                        dataIndex: 'originTotalPrice',
                         width: 60
                     },
                     {
                         title: '折扣金额',
-                        dataIndex: '',
+                        dataIndex: 'vipDiscount',
                         width: 60
                     },
                     {
                         title: '全单优惠',
-                        dataIndex: '',
+                        dataIndex: 'discount',
                         width: 60
                     },
                     {
                         title: '零头处理',
-                        dataIndex: '',
+                        dataIndex: 'odd',
                         width: 60
                     },
                     {
                         title: '应收金额',
-                        dataIndex: '',
+                        dataIndex: 'totalPrice',
                         width: 60
                     },
                     {
                         title: '实收金额',
-                        dataIndex: '',
+                        dataIndex: 'payment',
                         width: 60
                     },
                     {
                         title: '收款明细',
-                        dataIndex: 'dishType',
+                        dataIndex: 'channelPrice',
                         width: 100
                     },
                     {
                         title: '收银员',
-                        dataIndex: 'dishName',
+                        dataIndex: 'cashier',
                         width: 100
                     }
                 ]
@@ -109,7 +105,7 @@
                         next(vm => {
                             const collectList = res.data.list;
                             for (let i = 0; i < collectList.length; i ++) {
-                                if (collectList[i] === 2) {
+                                if (collectList[i] === 311) {
                                     vm.collectNum = 1;
                                     vm.collectName = '已收藏';
                                 }
@@ -119,7 +115,6 @@
                 });
         },
         created() {
-            this.getData();
             this.getRestType();
             this.collectStat();
         },
@@ -136,6 +131,10 @@
             date() {
                 this.pageNo = 1;
                 this.getData();
+            },
+            restType() {
+                this.pageNo = 1;
+                this.getData();
             }
         },
         computed: {
@@ -144,12 +143,12 @@
         methods: {
             collectUrl(num) {
                 if (num === 0) {
-                    http.get('/stat/addToCollect', { statValue: 2 }).then(res => {
+                    http.get('/stat/addToCollect', { statValue: 311 }).then(res => {
                         this.collectNum = 1;
                         this.collectName = '已收藏';
                     });
                 } else if (num === 1) {
-                    http.get('/stat/removeFromCollection', { statValue: 2 }).then(res => {
+                    http.get('/stat/removeFromCollection', { statValue: 311 }).then(res => {
                         this.collectNum = 0;
                         this.collectName = '加入收藏';
                         let removeIndex = null;
@@ -174,15 +173,9 @@
             exportUrl(type) {
                 const obj = {
                     pageNo: this.pageNo,
-                    restId: this.restType.split('~')[1],
+                    restId: this.restType,
                     startDate: this.date.startDate,
-                    endDate: this.date.endDate
-                };
-                if (this.name !== '全部菜品分类') {
-                    obj.dishType = this.name;
-                };
-                if (this.operatorId !== 'ALL') {
-                    obj.operatorId = this.operatorId;
+                    toDate: this.date.endDate
                 };
                 // 后台要求如果为空就不传
                 for (const ob in obj) {
@@ -192,10 +185,10 @@
                 };
                 const paramsObj = {
                     exportType: type,
-                    reportType: 2,
+                    reportType: 311,
                     params: JSON.stringify(obj)
                 };
-                const host = http.getUrl('/stat/exportReport');
+                const host = http.getUrl('/stat/getDailyCaterPaySum');
                 const pa = http.getDataWithToken(paramsObj);
                 pa.params = JSON.parse(pa.params);
                 const params = http.paramsToString(pa);
@@ -204,10 +197,9 @@
             getData() {
                 const obj = {
                     pageNo: this.pageNo,
-                    restId: this.restType.split('~')[1],
+                    restId: this.restType,
                     startDate: this.date.startDate,
-                    endDate: this.date.endDate,
-                    showPackageDish: 0
+                    toDate: this.date.endDate
                 };
                 // 后台要求如果为空就不传
                 for (const ob in obj) {
@@ -215,12 +207,26 @@
                         delete obj[ob];
                     }
                 };
-                http.post('/stat/getDishSendDetail', obj).then(res => {
+                http.get('/stat/getDailyCaterPaySum', obj).then(res => {
                     if (res.code === 1) {
                         this.vips = res.data.list || [];
-                        this.pages = Math.ceil(res.data.count / 30);
                     }
                 });
+            },
+            getRestType() {
+                http.get('/restaurant/listSimple')
+                    .then(res => {
+                        if (res.code === 1) {
+                            const restList = res.data.list;
+                            restList.forEach(rest => {
+                                rest.id = rest.restId;
+                                rest.name = rest.restName;
+                                rest.restType = rest.restId;
+                                this.restTypeAll.push(rest);
+                                this.restType = this.restTypeAll[0].restType;
+                            });
+                        }
+                    });
             }
         }
     };

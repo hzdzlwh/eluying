@@ -13,11 +13,11 @@
 
 <script>
     export default {
-        props: ['title', 'toggleView'],
+        props: ['title','toggleView'],
         data() {
             return {
                 switchView: true
-            };
+            }
         },
         methods: {
             toggle() {
@@ -29,7 +29,7 @@
                 this.toggle();
             }
         }
-    };
+    }
 </script>
 
 <style lang="scss" rel="stylesheet/scss">

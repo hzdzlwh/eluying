@@ -59,7 +59,6 @@
                 this.collectList = list;
             },
             getcollect(id) {
-                console.log(this.collectLinkList[id]);
                 return this.collectLinkList[id];
             }
         },
