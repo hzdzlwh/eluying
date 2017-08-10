@@ -47,6 +47,7 @@
 import inputKeyboard from '../../common/components/inputKeyboard.vue';
 import http from '../../common/http.js';
 import { mapState, mapMutations } from 'vuex';
+import restBus from '../event.js';
 export default {
     props: {
         resetDate: Object,
@@ -92,7 +93,7 @@ export default {
                     data.boardDetailResps = this.selectDish;
                     this.setOpenData({ openData: res.data });
                     this.setLeftType({ leftType: 2 });
-                    this.$emit('refeshView');
+                    restBus.$emit('refeshView');
                 });
             });
         },

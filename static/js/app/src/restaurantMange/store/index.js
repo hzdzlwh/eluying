@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-31 10:52:58
 * @Last Modified by:   Tplant
-* @Last Modified time: 2017-08-10 11:13:17
+* @Last Modified time: 2017-08-10 16:58:27
 * @email: 783384903@qq.com
 */
 
@@ -10,6 +10,7 @@
 import types from './types';
 import Vuex from 'vuex';
 import Vue from 'vue';
+import http from '../../common/http';
 import { dateFormat } from '../../common/util';
 
 Vue.use(Vuex);
@@ -105,9 +106,25 @@ const store = new Vuex.Store({
         },
         [types.DELETE_SELECT_DISH](state, { dish }) {
             state.selectDish.splice(state.selectDish.indexOf(dish), 1);
+        },
+        [types.SET_CATER_ORDER_DETAIL](state, { caterDetail }) {
+            state.openData = caterDetail;
         }
     },
     actions: {
+        [types.GET_CATER_ORDER_DETAIL]({ commit }, { caterOrderId }) {
+            return new Promise((resolve, reject) => {
+                http.get('/catering/getCaterOrderDetail', { caterOrderId })
+                    .then((res) => {
+                        if (res.code === 1) {
+                            commit(types.SET_CATER_ORDER_DETAIL, { caterDetail: res.data });
+                            resolve(res);
+                        } else {
+                            reject(res);
+                        }
+                    });
+            });
+        }
     }
 });
 export default store;

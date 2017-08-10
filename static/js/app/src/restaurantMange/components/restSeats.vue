@@ -2,7 +2,7 @@
  * @Author: lwh
  * @Date:   2017-08-02 16:04:29
  * @Last Modified by:   Tplant
- * @Last Modified time: 2017-08-10 11:11:49
+ * @Last Modified time: 2017-08-10 18:32:18
  */
 
  <template>
@@ -32,26 +32,25 @@
                 <div v-for="(board, index) in area.boardList" class="seat" :class="{leisure: board.boardState === 0,
                     using: board.boardState === 1 && board.caterOrderId,
                     'open-table': board.boardState === 1 && !board.caterOrderId,
-                    'select-table': board.selected}" @click="getSeatOrder($event, board)" @contextmenu.prevent="$refs.ctxMenu.open($event, {data: 1})">
+                    'select-table': board.selected}" @click="getSeatOrder($event, board, 'currentOrder')" @contextmenu.prevent="$refs.ctxMenu.open($event, {data: 1})">
                     <div class="state-twoCode" :class="{'state-twoCode-right': board.orderState !== 2 && board.orderState !== 4 }">
                         <div class="state" :class="{'state-pending': board.orderState === 4 }" v-if="board.orderState === 2 || board.orderState === 4">{{orderState[board.orderState]}}</div>
                         <div class="two-dimensionalcode" v-if="board.hasScan"></div>
                     </div>
-                    <div class="seat-num">{{`${board.kindName}${board.kindId}`}}</div>
-                    <div class="eating-time" v-if="board.orderState === 1">{{board.duration.split(':')[0]}}小时{{board.duration.split(':')[1]}}分钟</div>
+                    <div class="seat-num">{{board.boardName}}</div>
+                    <div class="eating-time" v-if="board.orderState === 1">{{board.duration}}</div>
                     <div class="reserve-time" v-if="board.time">预{{board.time}}</div>
                     <div class="order-list" v-if="board.caterOrderList.length">
                         <div class="rest-arrow-up"></div>
                         <div class="seat-name"><span>{{`${board.kindName}${board.kindId}`}}</span></div>
-                        <div class="order-info" v-for="o in board.caterOrderList" @click.prevent="getSeatOrder($event)">
+                        <div class="order-info" v-for="o in board.caterOrderList" @click.prevent="getSeatOrder($event, o, 'otherOrder')">
                             <div class="order-list-item">
                                 <div>
                                     <span>人数: {{o.peopleNum}}</span>
                                     <span style="margin-left: 32px;" v-if="o.state === 0">用餐时间: {{o.diningTime}}</span>
                                     <span style="margin-left: 32px;" v-else>用餐时长: {{o.duration}}</span>
                                 </div>
-                                <div class="seat-state yellow" v-if="o.state === 0">已预订</div>
-                                <div class="seat-state blue" v-else>就餐中</div>
+                                <div class="seat-state yellow" :class="{blue:o.state === 1}">{{FOOD_STATE[o.state]}}</div>
                             </div>
                             <div class="order-list-item">
                                 <div>{{`${o.name}(${o.phone})`}}<span style="margin-left: 8px;">{{o.origin}}</span></div>
@@ -71,10 +70,12 @@
 <script>
 import types from '../store/types';
 import http from '../../common/http';
-import { mapState, mapMutations } from 'vuex';
+import restBus from '../event.js';
+import { mapState, mapMutations, mapActions } from 'vuex';
 import customerRadio from './customerRadio.vue';
 import DateSelect from '../../accommodation/components/DateSelect';
 import contextmenu from '../../common/components/contextmenu';
+import { FOOD_STATE } from '../../ordersManage/constant.js';
 export default {
     data() {
         return {
@@ -88,11 +89,13 @@ export default {
                 }
             ],
             tableList: [],
-            orderState: ['预订', '使用中', '已结账', '', '待处理']
+            orderState: ['预订', '使用中', '已结账', '', '待处理'],
+            FOOD_STATE
         };
     },
     created() {
         this.getSeatList();
+        restBus.$on('refeshView', this.getSeatList);
     },
     computed: {
         ...mapState([
@@ -106,23 +109,40 @@ export default {
             types.SET_DATE,
             types.SET_LEFT_TYPE,
             types.SET_SELECT_DISH,
-            types.DELETE_SELECT_DISH
+            types.DELETE_SELECT_DISH,
+            types.SET_CATER_ORDER_DETAIL
+        ]),
+        ...mapActions([
+            types.GET_CATER_ORDER_DETAIL
         ]),
         handleDateChange(date) {
             this.defaultStrDate = date;
         },
-        getSeatOrder(event, board) {
+        getSeatOrder(event, board, whichOrder) {
             event.cancelBubble = true;
-            if (board.boardState === 0) {
-                this.$set(board, 'selected', !(board.selected));
-                if (board.selected) {
-                    this[types.SET_SELECT_DISH]({ dish: board });
-                    this[types.SET_LEFT_TYPE]({ leftType: 1 });
-                } else {
-                    this[types.DELETE_SELECT_DISH]({ dish: board });
-                    if (this.selectDish.length === 0) {
-                        this[types.SET_LEFT_TYPE]({ leftType: 0 });
+            if (whichOrder === 'currentOrder') {
+                if (board.boardState === 0) {                                                   // 空桌
+                    this.$set(board, 'selected', !(board.selected));
+                    if (board.selected) {
+                        this[types.SET_SELECT_DISH]({ dish: board });
+                        this[types.SET_LEFT_TYPE]({ leftType: 1 });
+                    } else {
+                        this[types.DELETE_SELECT_DISH]({ dish: board });
+                        if (this.selectDish.length === 0) {
+                            this[types.SET_LEFT_TYPE]({ leftType: 0 });
+                        }
                     }
+                } else if (board.boardState === 1 && board.caterOrderId) {                      // 使用中的桌子
+                    this.getCaterOrderDetail(board.caterOrderId);
+                } else if (board.boardState === 1 && !board.caterOrderId) {                      // 开台未点菜的桌子
+                    this.getOpenBoardRecords(board.boardId);
+                }
+            }
+            if (whichOrder === 'otherOrder') {
+                if (board.state === 0 || board.state === 1) {      // 预订和使用中的桌子
+                    this.getCaterOrderDetail(board.caterOrderId);
+                } else if (board.state === 7) {                     // 开台未点菜的桌子
+                    this.getOpenBoardRecords(board.boardId);
                 }
             }
         },
@@ -186,6 +206,20 @@ export default {
                     });
                 }
             });
+        },
+        getCaterOrderDetail(caterOrderId) {
+            http.get('/catering/getCaterOrderDetail', { caterOrderId }).then(res => {
+                if (res.code === 1) {
+                    this[types.SET_CATER_ORDER_DETAIL]({ caterDetail: res.data });
+                }
+            });
+        },
+        getOpenBoardRecords(boardId) {
+            http.get('board/getOpenBoardRecords', { boardId }).then(res => {
+                if (res.code === 1) {
+                    this[types.SET_CATER_ORDER_DETAIL]({ caterDetail: res.data });
+                }
+            });
         }
     },
     watch: {
@@ -206,6 +240,9 @@ export default {
         customerRadio,
         DateSelect,
         contextmenu
+    },
+    beforeDestroy() {
+        restBus.$off('refeshView', this.getSeatList);
     }
 };
 </script>

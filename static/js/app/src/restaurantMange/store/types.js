@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-31 11:05:38
 * @Last Modified by:   Tplant
-* @Last Modified time: 2017-08-08 17:06:40
+* @Last Modified time: 2017-08-10 15:08:34
 * @email: 783384903@qq.com
 */
 
@@ -16,5 +16,7 @@ export default {
     'CANL_FOOD': 'canlFood',
     'CHANGE_FOOD': 'changeFood',
     'SET_SELECT_DISH': 'setSelectDish',
-    'DELETE_SELECT_DISH': 'deleteSelectDish'
+    'DELETE_SELECT_DISH': 'deleteSelectDish',
+    'SET_CATER_ORDER_DETAIL': 'setCaterOrderDetail',
+    'GET_CATER_ORDER_DETAIL': 'getCaterOrderDetail'
 };

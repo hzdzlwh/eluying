@@ -2,7 +2,7 @@
  * @Author: lwh
  * @Date:   2017-08-07 11:16:56
  * @Last Modified by:   lwh
- * @Last Modified time: 2017-08-09 18:05:25
+ * @Last Modified time: 2017-08-10 20:23:20
  */
 
 <template>
@@ -17,16 +17,28 @@
                     <div class="item">
                         <span>客户姓名：</span>
                         <div style="width:200px;">
-                            <input type="text" class="dd-input" style="width:200px;">
+                            <input type="text" class="dd-input" style="width:200px;" @input="changeVipList('name')">
                         </div>
                         <span class="relevance-order" @click="showRelevanceOrder">关联订单</span>
                     </div>
-                    <div><span style="display:inline-block;width:70px;text-align:right;">手机号：</span><input type="number" class="dd-input" style="width:200px;"></div>
+                    <div><span style="display:inline-block;width:70px;text-align:right;">手机号：</span><input type="number" class="dd-input" style="width:200px;" v-model="phone" @input="changeVipList('phone')"></div>
                     <div class="item">
                         <span>客户来源：</span>
                         <div style="width:200px;">
-                            <dd-select v-model="customerSource" >
-                                <dd-option :key="item.id" v-for="item in customerSources" :value="item.id" :label="item.name"></dd-option>
+                            <dd-select v-model="userOriginType">
+                                <dd-option :key="origin" v-for="origin in userSelfOrigins" :value="origin" :label="origin.name">
+                                    <span :title="origin.name">{{origin.name}}</span>
+                                </dd-option>
+                                <dd-group-option v-for="item in userGroupOrigins" :label="item.label" :key="item" v-if="item.origins.length > 0">
+                                    <dd-option v-for="origin in item.origins" :key="origin" :value="origin" :label="origin.id > 0 ? origin.name : `企业(${origin.name})`">
+                                            <div class="user-group-origin">
+                                                <span class="user-group-company" :title="origin.name">
+                                                    {{ origin.name }}
+                                                </span>
+                                                <span class="user-group-img" v-if="!origin.type" :title="origin.info"></span>
+                                            </div>
+                                    </dd-option>
+                                </dd-group-option>
                             </dd-select>
                         </div>
                     </div>
@@ -68,8 +80,9 @@
 </template>
 
 <script>
-import { DdSelect, DdOption } from 'dd-vue-component';
+import { DdSelect, DdOption, DdGroupOption } from 'dd-vue-component';
 import { DatePicker } from 'element-ui';
+import http from '../../common/http.js';
 export default {
     props: {
         visible: {
@@ -82,6 +95,10 @@ export default {
             customerSource: 1,
             vipCard: 1,
             date: new Date((new Date().valueOf() + 1800000)),
+            userOriginType: undefined,
+            userSelfOrigins: [],
+            userGroupOrigins: [],
+            phone: '',
             saler: 1,
             customerSources: [
                 {
@@ -115,6 +132,9 @@ export default {
             ]
         };
     },
+    created() {
+        this.getChannels();
+    },
     methods: {
         hideModal() {
             this.$emit('hideModal');
@@ -122,6 +142,57 @@ export default {
         showRelevanceOrder() {
             this.hideModal();
             this.$emit('showRelevaneOrder');
+        },
+        getChannels() {
+            http.get('/user/getChannels', {
+                type: 2,
+                isAll: true
+            })
+                .then((res) => {
+                    const originsList = res.data.list;
+                    const otherOrigins = [];
+                    this.userGroupOrigins.push({
+                        label: '企业',
+                        origins: []
+                    });
+                    this.userGroupOrigins.push({
+                        label: '其他',
+                        origins: []
+                    });
+                    originsList.forEach(origin => {
+                        if (origin.id === -1 || origin.id === -4) {
+                            this.userSelfOrigins.push(origin);
+                            if (origin.id === -1) this.userOriginType = origin;
+                        }
+
+                        if (origin.id === -5) {
+                            origin.companyList.forEach(company => {
+                                const companyName = `企业名称:${company.companyName}(${company.companyType ? '可挂帐' : '不可挂帐'})`;
+                                const number = `企业编号:${company.contractNum || ''}`;
+                                const name = `联系人:${company.contactName || ''}`;
+                                const phone = `联系人电话:${company.contactPhone || ''}`;
+                                company.name = company.companyName;
+                                company.companyId = company.id;
+                                company.id = origin.id;
+                                company.info = `${companyName}\n${number}\n${name}\n${phone}`;
+                            });
+                            this.userGroupOrigins[0].origins = origin.companyList;
+                        }
+
+                        if (origin.id > 0) {
+                            origin.info = origin.name;
+                            otherOrigins.push(origin);
+                        }
+                    });
+                    this.userGroupOrigins[1].origins = otherOrigins;
+                });
+        },
+        getVipDiscount(type) {
+            http.get('/vipUser/getVipDiscount', { }).then(res => {
+            });
+        },
+        changeVipList(num) {
+            this.getVipDiscount(this.phone);
         }
     },
     watch: {
@@ -136,7 +207,8 @@ export default {
     components: {
         DdSelect,
         DdOption,
-        DatePicker
+        DatePicker,
+        DdGroupOption
     }
 };
 </script>

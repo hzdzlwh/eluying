@@ -161,6 +161,7 @@ import inputVaild from '../../common/components/inputVaild.vue';
 import count from '../../common/components/counter.vue';
 import util from 'util';
 import bus from '../../common/eventBus.js';
+import restBus from '../event.js';
 import bookInfo from './changeBookInfo.vue';
 import dishModal from './dishModal.vue';
 import { DatePicker } from 'element-ui';
@@ -249,7 +250,7 @@ export default {
         },
         changeRemark(val) {
             http.get('/order/modifyCaterOrderRemark', { caterOrderId: this.openData.caterOrderId, remark: val }).then(res => {
-                this.$emit('refeshView');
+                restBus.$emit('refeshView');
             });
         },
         hideDishModal() {
@@ -262,7 +263,7 @@ export default {
                 dishes: JSON.stringify(dishes),
                 oprType: this.dishModalType ? 4 : 2
             }).then(res => {
-                this.$emit('refeshView');
+                restBus.$emit('refeshView');
             });
         },
         dishModalChange(type) {
@@ -291,7 +292,7 @@ export default {
             }
             parms = Object.assign(parms, parm);
             http.get('/catering/modifyPeopleNum', parms).then(res => {
-                this.$emit('refeshView');
+                restBus.$emit('refeshView');
             });
         },
         hidebookInfo() {
