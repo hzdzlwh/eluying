@@ -1,8 +1,8 @@
 /*
 * @Author: lxj
 * @Date:   2017-07-31 10:52:58
-* @Last Modified by:   Tplant
-* @Last Modified time: 2017-08-09 15:32:34
+* @Last Modified by:   lxj
+* @Last Modified time: 2017-08-10 10:59:18
 * @email: 783384903@qq.com
 */
 
@@ -17,7 +17,7 @@ const store = new Vuex.Store({
     state: {
         restId: 0,
         date: dateFormat(new Date()),
-        leftType: 2,
+        leftType: 0,
         // 0:今日营业额，1:空桌选中，2:订单详情，4:加菜点菜
         board: {
             id: 1122,

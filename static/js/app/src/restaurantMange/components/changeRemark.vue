@@ -37,7 +37,7 @@ export default {
         data: {
             type: String,
             default: ''
-        },
+        }
     },
     data() {
         return {

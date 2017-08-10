@@ -67,14 +67,14 @@ export default {
         ]),
         selectDishText() {
             let str = '';
-                this.selectDish.forEach((el, index) => {
-                    if (index !== 0) {
-                        str +='\r\n'
-                    }
-                    str += el.boardName + el.boardId;
-                });
-                return str;
-            }
+            this.selectDish.forEach((el, index) => {
+                if (index !== 0) {
+                    str += '\r\n';
+                }
+                str += el.boardName + el.boardId;
+            });
+            return str;
+        }
     },
     methods: {
         ...mapMutations([
@@ -83,15 +83,15 @@ export default {
         ]),
         numChange(val) {
             const boardIds = [];
-            this.selectDish.forEach(el =>{
+            this.selectDish.forEach(el => {
                 boardIds.push(el.id);
             });
             // http.get('/board/openBoard', { boardIds: JSON.stringify(boardIds), peopleNum: val, restId: this.restId }).then(res => {
             //     this.setOpenData(res.data);
             //     this.setLeftType({leftType: 2});
             // });
-            this.$nextTick(()=> {
-                this.setLeftType({leftType: 2});
+            this.$nextTick(() => {
+                this.setLeftType({ leftType: 2 });
             });
         },
         getNum(val) {
