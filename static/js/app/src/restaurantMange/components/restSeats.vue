@@ -2,7 +2,7 @@
  * @Author: lwh
  * @Date:   2017-08-02 16:04:29
  * @Last Modified by:   Tplant
- * @Last Modified time: 2017-08-09 21:04:34
+ * @Last Modified time: 2017-08-10 10:51:13
  */
 
  <template>
@@ -30,8 +30,8 @@
             <h3>{{area.areaName}}</h3>
             <div class="seats-container">
                 <div v-for="(board, index) in area.boardList" class="seat" :class="{leisure: board.boardState === 0,
-                    using: board.boardState === 1,
-                    'open-table': !board.isHasOrder,
+                    using: board.boardState === 1 && board.caterOrderId,
+                    'open-table': board.boardState === 1 && !board.caterOrderId,
                     'select-table': board.selected}" @click="getSeatOrder($event, board)" @contextmenu.prevent="$refs.ctxMenu.open($event, {data: 1})">
                     <div class="state-twoCode" :class="{'state-twoCode-right': board.orderState !== 2 && board.orderState !== 4 }">
                         <div class="state" :class="{'state-pending': board.orderState === 4 }" v-if="board.orderState === 2 || board.orderState === 4">{{orderState[board.orderState]}}</div>
@@ -39,7 +39,7 @@
                     </div>
                     <div class="seat-num">{{`${board.kindName}${board.kindId}`}}</div>
                     <div class="eating-time" v-if="board.orderState === 1">{{board.duration.split(':')[0]}}小时{{board.duration.split(':')[1]}}分钟</div>
-                    <div class="reserve-time" v-if="board.orderState === 0">预{{board.time}}</div>
+                    <div class="reserve-time" v-if="board.time">预{{board.time}}</div>
                     <div class="order-list" v-if="board.caterOrderList.length">
                         <div class="rest-arrow-up"></div>
                         <div class="seat-name"><span>{{`${board.kindName}${board.kindId}`}}</span></div>
@@ -144,13 +144,13 @@ export default {
             if (!(this.areas.find(area => {
                 return area.selected && area.id === -1;
             }))) {
-                param.areaId = [];
+                param.areaIds = [];
                 this.areas.forEach(area => {
                     if (area.selected) {
-                        param.areaId.push(area.id);
+                        param.areaIds.push(area.id);
                     }
                 });
-                param.areaId = JSON.stringify(param.areaId);
+                param.areaIds = JSON.stringify(param.areaIds);
             };
             if (this.selectState !== '-1') {
                 param.state = Number(this.selectState);
@@ -190,6 +190,9 @@ export default {
             this.getSeatList();
         },
         restId(newValue) {
+            this.getSeatList();
+        },
+        date(newValue) {
             this.getSeatList();
         }
     },
