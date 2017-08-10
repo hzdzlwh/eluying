@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-08-08 18:22:37
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-08-09 11:00:20
+* @Last Modified time: 2017-08-10 09:27:37
 * @email: 783384903@qq.com
 */
 
@@ -57,7 +57,7 @@ export default {
         };
     },
     methods: {
-        onNumChange(type, index, num ){
+        onNumChange(type, index, num) {
             this.Num = num;
         },
         hideModal() {
