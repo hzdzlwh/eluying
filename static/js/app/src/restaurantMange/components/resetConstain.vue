@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-08-01 14:28:15
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-08-08 14:15:20
+* @Last Modified time: 2017-08-10 11:14:18
 * @email: 783384903@qq.com
 */
 
@@ -86,12 +86,15 @@ export default {
             this.selectDish.forEach(el => {
                 boardIds.push(el.id);
             });
-            // http.get('/board/openBoard', { boardIds: JSON.stringify(boardIds), peopleNum: val, restId: this.restId }).then(res => {
-            //     this.setOpenData(res.data);
-            //     this.setLeftType({leftType: 2});
-            // });
-            this.$nextTick(() => {
+            http.get('/board/openBoard', { boardIds: JSON.stringify(boardIds), peopleNum: val, restId: this.restId }).then(res => {
+                this.setOpenData(res.data);
                 this.setLeftType({ leftType: 2 });
+            });
+            this.$nextTick(() => {
+                http.get('/board/openBoard', { boardIds: JSON.stringify(boardIds), peopleNum: val, restId: this.restId }).then(res => {
+                    this.setOpenData(res.data);
+                    this.setLeftType({ leftType: 2 });
+                });
             });
         },
         getNum(val) {
