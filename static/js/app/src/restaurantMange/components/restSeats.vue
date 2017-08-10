@@ -2,7 +2,7 @@
  * @Author: lwh
  * @Date:   2017-08-02 16:04:29
  * @Last Modified by:   Tplant
- * @Last Modified time: 2017-08-10 11:03:09
+ * @Last Modified time: 2017-08-10 11:11:49
  */
 
  <template>
@@ -97,7 +97,8 @@ export default {
     computed: {
         ...mapState([
             'date',
-            'restId'
+            'restId',
+            'selectDish'
         ])
     },
     methods: {
@@ -116,8 +117,12 @@ export default {
                 this.$set(board, 'selected', !(board.selected));
                 if (board.selected) {
                     this[types.SET_SELECT_DISH]({ dish: board });
+                    this[types.SET_LEFT_TYPE]({ leftType: 1 });
                 } else {
                     this[types.DELETE_SELECT_DISH]({ dish: board });
+                    if (this.selectDish.length === 0) {
+                        this[types.SET_LEFT_TYPE]({ leftType: 0 });
+                    }
                 }
             }
         },
