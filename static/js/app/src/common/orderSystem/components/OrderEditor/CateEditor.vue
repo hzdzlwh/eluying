@@ -6,7 +6,7 @@
                     <span class="increase-icon"></span>添加房间
             </span></p>
             <div class="items">
-                <div class="item" v-for="item in foodItems">
+                <div class="item" v-for="item in foodItems" v-if='foodItems.length'>
                     <div class="food-item">
                         <span class="food-icon"></span>
                         <div class="item-content">
@@ -19,15 +19,15 @@
                             </div>
                             <div class="item-desks">
                                 <label class="label-text">桌号</label>
-                                <span>{{ getDesks(item) }}</span>
+                                <span>{{ getDesks(item) || '无' }}</span>
                             </div>
                             <div class="item-count">
                                 <label class="label-text">就餐人数</label>
-                                <span>{{item.peopleNum}}</span>
+                                <inputVaild :min=1 :max=2000 v-model='item.peopleNum' ></inputVaild>
                             </div>
                             <div class="item-date">
                                 <label class="label-text">用餐时间</label>
-                                <span>{{item.date.slice(0, 16)}}</span>
+                                <DatePicker v-model='item.date' type="datetime" placeholder="选择日期时间" format='yyyy-MM-dd HH:mm'></DatePicker>
                             </div>
                             <div class="item-price">
                                 <label class="label-text">小计</label>
@@ -48,7 +48,7 @@
                 </div>
             </div>
         </div>
-        <div class="content-item" v-if="order.caterOrderId ">
+       <!--  <div class="content-item" v-if="order.caterOrderId ">
             <p class="content-item-title"><span>菜单详情</span></p>
             <div class="items">
                 <div class="cateOrder-item" v-for="item in order.itemsMap">
@@ -75,7 +75,7 @@
                 </div>
             </div>
         </div>
-        <span v-show="false">{{getTotalPrice()}}</span>
+        <span v-show="false">{{getTotalPrice()}}</span> -->
     </div>
 </template>
 <style lang="scss" type="text/css" rel="stylesheet/scss">
@@ -168,17 +168,25 @@
     }
 </style>
 <script>
-    import { mapState } from 'vuex';
+    import { mapState, mapGetters } from 'vuex';
     import bus from '../../../eventBus';
+    import inputVaild from '../../../components/inputVaild.vue';
+    import { DatePicker } from 'element-ui';
     export default{
         props: {
             vipDiscountDetail: {
                 type: Object,
                 default: function() { return {}; }
             }
+            // order: {
+            //     type: Object,
+            //     default: function() { return {}; }
+            // }
         },
         data() {
-            return {};
+            return {
+                foodItems: undefined
+            };
         },
         created() {
             bus.$on('submitOrder', this.changeFood);
@@ -187,29 +195,65 @@
             bus.$off('submitOrder', this.changeFood);
         },
         computed: {
-            ...mapState({ order: state => state.orderSystem.orderDetail }),
-            foodItems() {
+            order() {
+                const order = Object.assign({}, this.$store.getters.catOrder);
                 let foodItems = [];
-                if (this.order.caterOrderId) {
+                if (order.caterOrderId) {
                     const obj = {};
-                    obj.restName = this.order.restName;
-                    obj.boardDetailResps = this.order.boardDetailResps.map(board => {
+                    obj.restName = order.restName;
+                    obj.boardDetailResps = order.boardDetailResps.map(board => {
                         return board.boardName;
                     });
-                    obj.peopleNum = this.order.peopleNum;
-                    obj.date = this.order.expectStartTime;
-                    obj.foodPrice = this.order.totalPrice;
-                    obj.originTotalPrice = this.order.originTotalPrice;
-                    obj.showDiscount = this.order.showDiscount;
+                    obj.peopleNum = order.peopleNum;
+                    obj.date = order.expectStartTime;
+                    obj.foodPrice = order.totalPrice;
+                    obj.originTotalPrice = order.originTotalPrice;
+                    obj.showDiscount = order.showDiscount;
                     foodItems[0] = obj;
                 } else {
                     foodItems = this.order.foodItems;
                 }
-
-                return foodItems;
+                this.foodItems = foodItems;
+                return this.$store.getters.catOrder;
+            }
+            // ...mapGetters({ order: 'catOrder' }),
+            // FoodOrder() {
+                // let foodItems = [];
+                // if (this.order.caterOrderId) {
+                //     const obj = {};
+                //     obj.restName = this.order.restName;
+                //     obj.boardDetailResps = this.order.boardDetailResps.map(board => {
+                //         return board.boardName;
+                //     });
+                //     obj.peopleNum = this.order.peopleNum;
+                //     obj.date = this.order.expectStartTime;
+                //     obj.foodPrice = this.order.totalPrice;
+                //     obj.originTotalPrice = this.order.originTotalPrice;
+                //     obj.showDiscount = this.order.showDiscount;
+                //     foodItems[0] = obj;
+                // } else {
+                //     foodItems = this.order.foodItems;
+                // }
+                // this.foodItems = foodItems;
+            //     // return foodItems;
+            // }
+        },
+        watch: {
+            order: {
+                deep: true,
+                handler: function (val) {
+                    this.foodItems = val;
+                }
             }
         },
+        components: {
+            inputVaild,
+            DatePicker
+        },
         methods: {
+            addRest() {
+
+            },
             getRoomOrFoodState(type, state) {
                 switch (state) {
                     case 0:
@@ -242,7 +286,7 @@
                 }
             },
             changeFood() {
-                this.$emit('change');
+                this.$emit('change', foodItems);
             }
         }
     };

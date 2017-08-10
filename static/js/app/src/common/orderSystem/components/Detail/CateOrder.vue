@@ -23,6 +23,10 @@
                                 <label class="label-text">就餐人数</label>
                                 <span>{{item.peopleNum}}</span>
                             </div>
+                            <div class="item-count">
+                                <label class="label-text">整单优惠</label>
+                                <span>¥{{item.discount || 0}}</span>
+                            </div>
                             <div class="item-date">
                                 <label class="label-text">用餐时间</label>
                                 <span>{{item.date.slice(0, 16)}}</span>
@@ -50,8 +54,8 @@
         </div>
          <div class="content-item" v-if='this.order.type === ORDER_TYPE.CATERING'>
             <p class="content-item-title"><span>餐饮信息</span></p>
-            <div class="items">
-             <div class="rest-restDetail-constain" style="width:300px">
+            <div class="items" style="display:flex;">
+             <div class="rest-restDetail-constain" style="width:300px;margin-right:30px;">
             <table class="rest-restDetail-table">
                 <thead>
                     <tr><td width="150px">菜品名称</td><td width="45px">数量</td><td width='80px'>金额</td></tr>
@@ -66,17 +70,25 @@
                 </tbody>
             </table>
         </div>
-        <div style="width:400px">
-            <div>菜品备注：不要辣修改</div>
-            <div>点菜员：邱立</div>
-            <div>下单时间：2017-07-13 14:21</div>
-            <div></div>
+        <div  class="reset-dish-btn" v-if='dishChange'>
+            <div>菜品备注：{{dishChange.remark || '无'}} <span style="color: #82beff;margin-left: 10px;cursor: pointer;">修改</span></div>
+            <div>点菜员：{{dishChange.operatorName}}</div>
+            <div>下单时间：{{dishChange.operationTime}}</div>
+            <div style="    position: absolute;
+    bottom: 0;"><div class="dd-btn dd-btn-primary order-btn" style="margin-right:20px;">退菜</div><div class="dd-btn dd-btn-primary order-btn">赠送</div></div>
         </div>
             </div>
             </div>
     </div>
 </template>
 <style lang="scss">
+.reset-dish-btn{
+    width:400px;position: relative;
+    margin-right:20px;
+    &>div{
+        margin-bottom:20px;
+    }
+}
     .cateTag{
             font-size: 10px;
     color: #ffffff;

@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-08-01 14:45:58
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-08-10 14:05:44
+* @Last Modified time: 2017-08-10 16:49:12
 * @email: 783384903@qq.com
 */
 
@@ -126,7 +126,7 @@
         </div>
         <div class="rest-restDetail-foot reset-restDetail-resetChange" v-if='dishChange'>
         <div class='reset-resetChange-detail'>
-             <div>菜品备注：{{dishChange.remark}} <span class="reset-resetChange-remark">修改</span></div>
+             <div>菜品备注：{{dishChange.remark}} <span class="reset-resetChange-remark" @click='changeRemarkModal'>修改</span></div>
             <div>点菜员：{{dishChange.operatorName}}</div>
             <div>下单时间：{{dishChange.creationTime}}</div>
         </div>
@@ -143,6 +143,7 @@
                 </div>
             </div>
         </div>
+        <changeRemark :visible='changeRemarkVisible':data='dishChange.remark' @changeRemark='changeRemark'></changeRemark>
         <dishModal :visible='dishModalVisible' :type='dishModalType' :data='dishChange' @hideModal='hideDishModal' @dishChange='dishChangeSub'></dishModal>
 <!--         <bookInfo :visible='bookInfoVisible' :num='bookPeopleNUm' :data='bookData' @hideModal='hidebookInfo' :type='isHasOrder' @changeBook='changeBook'></bookInfo> -->
 <keyBoard :visible ='bookInfoVisible' @close='hidebookInfo' :num ='openData.peopleNum' :dish='openData.boardDetailResps[0].boardName + openData.boardDetailResps[0].boardId' @numChange='changeBookNum'></keyBoard>
@@ -244,6 +245,9 @@ export default {
             'canlFood',
             'setOpenData'
         ]),
+        changeRemarkModal() {
+            this.changeRemarkVisible = true;
+        },
         changeRemarkHide() {
             this.changeRemarkVisible = false;
         },
@@ -462,7 +466,8 @@ export default {
         bookInfo,
         dishModal,
         keyBoard,
-        DatePicker
+        DatePicker,
+        changeRemark
     },
     created() {
         if (!this.openData.isHasOrder) {

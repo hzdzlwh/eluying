@@ -63,7 +63,8 @@
             },
             showCateOrderComponent() {
                 const combineShow = this.order.foodItems && this.order.foodItems.length > 0;
-                const singleShow = this.order.itemsMap && this.order.itemsMap.length > 0;
+                // const singleShow = this.order.itemsMap && this.order.itemsMap.length > 0;
+                const singleShow = this.order.caterOrderId;
                 return combineShow || singleShow;
             }
         },
