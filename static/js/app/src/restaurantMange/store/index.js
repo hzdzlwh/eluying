@@ -1,8 +1,8 @@
 /*
 * @Author: lxj
 * @Date:   2017-07-31 10:52:58
-* @Last Modified by:   lxj
-* @Last Modified time: 2017-08-10 10:59:18
+* @Last Modified by:   Tplant
+* @Last Modified time: 2017-08-10 11:13:17
 * @email: 783384903@qq.com
 */
 
@@ -24,7 +24,7 @@ const store = new Vuex.Store({
             boardName: '大圆桌',
             boardId: ''
         },
-        selectDish: [{ id: 123, boardName: '大圆桌', boardId: '2' }, { id: 123, boardName: '大圆桌', boardId: '3' }],
+        selectDish: [],
         // openData: {
         //     list: [1, 2, 3, 4],
         //     boardDetailResps: [{ id: 123, boardName: '大圆桌', boardId: '2' }, { id: 123, boardName: '大圆桌', boardId: '3' }],
