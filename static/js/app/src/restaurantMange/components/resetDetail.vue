@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-08-01 14:45:58
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-08-10 11:01:00
+* @Last Modified time: 2017-08-10 14:05:44
 * @email: 783384903@qq.com
 */
 
@@ -249,7 +249,7 @@ export default {
         },
         changeRemark(val) {
             http.get('/order/modifyCaterOrderRemark', { caterOrderId: this.openData.caterOrderId, remark: val }).then(res => {
-                this.$emit('refresh');
+                this.$emit('refeshView');
             });
         },
         hideDishModal() {
@@ -262,7 +262,7 @@ export default {
                 dishes: JSON.stringify(dishes),
                 oprType: this.dishModalType ? 4 : 2
             }).then(res => {
-                this.$emit('refresh');
+                this.$emit('refeshView');
             });
         },
         dishModalChange(type) {
@@ -284,14 +284,14 @@ export default {
         changeBook(parm) {
             let parms = parm;
             if (this.openData.list) {
-                parms.boardLogIds = this.openData.list;
+                parms.boardLogIds = JSON.stringify(this.openData.list);
             }
             if (this.openData.caterOrderId) {
                 parms.caterOrderId = this.openData.caterOrderId;
             }
             parms = Object.assign(parms, parm);
             http.get('/catering/modifyPeopleNum', parms).then(res => {
-                this.$emit('refresh');
+                this.$emit('refeshView');
             });
         },
         hidebookInfo() {
@@ -313,7 +313,7 @@ export default {
             const parms = {
             };
             if (this.openData.boardDetailResps.length) {
-                parms.boardId = this.openData.boardDetailResps[0].id;
+                parms.boardId = this.openData.boardDetailResps[0].boardId;
             } else {
                 if (this.openData.list) {
                     parms.boardLogIds = JSON.stringify(this.openData.list);
@@ -336,7 +336,7 @@ export default {
             if (this.openData.boardDetailResps.length) {
                 const boardList = [];
                 this.openData.boardDetailResps.forEach(el => {
-                    boardList.push(el.id);
+                    boardList.push(el.boardId);
                 });
                 parms.boardList = JSON.stringify(boardList);
             } else {

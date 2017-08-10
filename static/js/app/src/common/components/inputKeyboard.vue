@@ -147,11 +147,10 @@ export default {
         },
         close() {
             this.$emit('close');
-
         },
         submit() {
             this.close();
-            this.$emit('numChange', this.num);
+            this.$emit('numChange', this.val);
         }
     },
     watch: {
