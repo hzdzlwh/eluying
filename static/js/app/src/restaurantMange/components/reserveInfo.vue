@@ -2,7 +2,7 @@
  * @Author: lwh
  * @Date:   2017-08-07 11:16:56
  * @Last Modified by:   lwh
- * @Last Modified time: 2017-08-08 10:01:13
+ * @Last Modified time: 2017-08-09 18:05:25
  */
 
 <template>
@@ -14,9 +14,11 @@
                     <button type="button" class="close" @click="hideModal"><span>&times;</span></button>
                 </div>
                 <div class="modal-body">
-                    <div>
+                    <div class="item">
                         <span>客户姓名：</span>
-                        <input type="text" class="dd-input" style="width:200px;">
+                        <div style="width:200px;">
+                            <input type="text" class="dd-input" style="width:200px;">
+                        </div>
                         <span class="relevance-order" @click="showRelevanceOrder">关联订单</span>
                     </div>
                     <div><span style="display:inline-block;width:70px;text-align:right;">手机号：</span><input type="number" class="dd-input" style="width:200px;"></div>
@@ -38,8 +40,8 @@
                     </div>
                     <div><span>就餐人数：</span><input type="number" max="1000" class="dd-input" style="width:200px;"></div>
                     <div class="item">
-                        <span>用餐时间：</span>
-                        <div class="roomModals-body">
+                        <span style="display:inline-block;width:70px;text-align:right;">用餐时间：</span>
+                        <div>
                             <DatePicker v-model='date' @change='' :clearable='false' type="datetime" placeholder="选择日期时间" format='yyyy-MM-dd HH:mm'></DatePicker>
                         </div>
                     </div>
@@ -139,7 +141,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
     .modal-content{
         padding-top: 0;
         padding-bottom: 10px;
@@ -164,5 +166,8 @@ export default {
         .order-remark{
             display: flex;
         }
+    }
+    .el-input__inner{
+        height: 24px !important;
     }
 </style>
