@@ -17,14 +17,14 @@
                             </div>
                             <div class="item-desks">
                                 <label class="label-text">桌号</label>
-                                <span>{{ getDesks(item) }}</span>
+                                <span>{{ getDesks(item) || '未选择' }}</span>
                             </div>
                             <div class="item-count">
-                                <label class="label-text">人数</label>
+                                <label class="label-text">就餐人数</label>
                                 <span>{{item.peopleNum}}</span>
                             </div>
                             <div class="item-date">
-                                <label class="label-text">时间</label>
+                                <label class="label-text">用餐时间</label>
                                 <span>{{item.date.slice(0, 16)}}</span>
                             </div>
                             <div class="item-price">
@@ -44,13 +44,20 @@
                             </span>
                         </div>
                     </div>
-                            <div class="rest-restDetail-constain" style="width:300px">
+                           
+                </div>
+            </div>
+        </div>
+         <div class="content-item" v-if='this.order.type === ORDER_TYPE.CATERING'>
+            <p class="content-item-title"><span>餐饮信息</span></p>
+            <div class="items">
+             <div class="rest-restDetail-constain" style="width:300px">
             <table class="rest-restDetail-table">
                 <thead>
                     <tr><td width="150px">菜品名称</td><td width="45px">数量</td><td width='80px'>金额</td></tr>
                 </thead>
                 <tbody>
-                <template v-for='it in item.itemsMap'>
+                <template v-for='it in foodItems[0].itemsMap'>
                     <tr @click='changeItem(it); dishClick(it)' > <td><div><span class="rest-restDetail-dishname" :class='{"rest-item-del" : it.serviceState === 1}'> <span  :class='getTriangle(it)'></span><span >{{it.dishName}}</span></span><span class="rest-item-send" v-if='it.serviceState === 2'>送</span></div></td><td><div :class='{"rest-item-del" : it.serviceState === 1}'>x{{it.bookNum}}</div></td><td :class='{"rest-item-del" : it.serviceState === 1}'>{{it.price}}</td></tr>
                     <tr v-for='sub in it.subDishList' @click='dishClick(sub)' v-if='it.select' :class='{"rest-item-del" : sub.serviceState === 1}'>
                         <td class="rest-restDetail-trchild">{{sub.dishName}}</td><td><div>x{{sub.bookNum}}</div></td><td></td>
@@ -59,10 +66,14 @@
                 </tbody>
             </table>
         </div>
-                </div>
-            </div>
+        <div style="width:400px">
+            <div>菜品备注：不要辣修改</div>
+            <div>点菜员：邱立</div>
+            <div>下单时间：2017-07-13 14:21</div>
+            <div></div>
         </div>
-
+            </div>
+            </div>
     </div>
 </template>
 <style lang="scss">
@@ -177,7 +188,7 @@
             order: Object
         },
         data() {
-            return { REST_STATUS, dishChange: undefined };
+            return { REST_STATUS, ORDER_TYPE, dishChange: undefined };
         },
         computed: {
             foodItems() {

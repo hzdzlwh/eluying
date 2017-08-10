@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-08-01 14:45:58
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-08-09 19:30:04
+* @Last Modified time: 2017-08-10 11:01:00
 * @email: 783384903@qq.com
 */
 
@@ -164,8 +164,8 @@ import bus from '../../common/eventBus.js';
 import bookInfo from './changeBookInfo.vue';
 import dishModal from './dishModal.vue';
 import { DatePicker } from 'element-ui';
-import keyBoard from '../../common/components/inputKeyboard.vue'
-import changeRemark from './changeRemark.vue'
+import keyBoard from '../../common/components/inputKeyboard.vue';
+import changeRemark from './changeRemark.vue';
 export default {
     props: {
     },
@@ -231,7 +231,8 @@ export default {
             return str;
         },
         isHasOrder() {
-            if (this.openData.isHasOrder || this.openData.caterOrderId) {return true;
+            if (this.openData.isHasOrder || this.openData.caterOrderId) {
+                return true;
             }
             return false;
         }
@@ -243,42 +244,42 @@ export default {
             'canlFood',
             'setOpenData'
         ]),
-        changeRemarkHide(){
-            this.changeRemarkVisible = false
+        changeRemarkHide() {
+            this.changeRemarkVisible = false;
         },
-        changeRemark(val){
-            http.get('/order/modifyCaterOrderRemark',{caterOrderId:this.openData.caterOrderId,remark:val}).then(res => {
+        changeRemark(val) {
+            http.get('/order/modifyCaterOrderRemark', { caterOrderId: this.openData.caterOrderId, remark: val }).then(res => {
                 this.$emit('refresh');
-            })
+            });
         },
         hideDishModal() {
-            this.dishModalVisible = false
+            this.dishModalVisible = false;
         },
-        dishChangeSub(val){
+        dishChangeSub(val) {
             const dishes = [];
-            dishes.push({dishId: this.dishChange.dishId,oprNum:value});
-            http.get('/dish/dishOpr',{caterOrderId: this.openData.caterOrderId
-                ,dishes:JSON.stringify(dishes),
+            dishes.push({ dishId: this.dishChange.dishId, oprNum: val, serviceId: this.dishChange.serviceId });
+            http.get('/dish/dishOpr', { caterOrderId: this.openData.caterOrderId,
+                dishes: JSON.stringify(dishes),
                 oprType: this.dishModalType ? 4 : 2
             }).then(res => {
                 this.$emit('refresh');
-            })
+            });
         },
-        dishModalChange(type){
+        dishModalChange(type) {
             this.dishModalVisible = true;
             this.dishModalType = type;
         },
-        dishClick(dish){
+        dishClick(dish) {
             if (dish.serviceState === 1) {
                 return;
             }
             this.dishChange = dish;
         },
-        changeBookTime(value){
-            this.changeBook({orderTime:util.dateFormatLong(value) })
+        changeBookTime(value) {
+            this.changeBook({ orderTime: util.dateFormatLong(value) });
         },
-        changeBookNum(value){
-            this.changeBook({peopleNum: value})
+        changeBookNum(value) {
+            this.changeBook({ peopleNum: value });
         },
         changeBook(parm) {
             let parms = parm;

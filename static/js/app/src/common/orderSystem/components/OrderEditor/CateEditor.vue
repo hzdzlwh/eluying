@@ -1,7 +1,10 @@
 <template>
     <div>
         <div class="content-item">
-            <p class="content-item-title"><span>餐饮信息</span></p>
+            <p class="content-item-title"><span>餐饮信息</span>
+            <span class="increase-container" @click="addRest" >
+                    <span class="increase-icon"></span>添加房间
+            </span></p>
             <div class="items">
                 <div class="item" v-for="item in foodItems">
                     <div class="food-item">
@@ -19,11 +22,11 @@
                                 <span>{{ getDesks(item) }}</span>
                             </div>
                             <div class="item-count">
-                                <label class="label-text">人数</label>
+                                <label class="label-text">就餐人数</label>
                                 <span>{{item.peopleNum}}</span>
                             </div>
                             <div class="item-date">
-                                <label class="label-text">时间</label>
+                                <label class="label-text">用餐时间</label>
                                 <span>{{item.date.slice(0, 16)}}</span>
                             </div>
                             <div class="item-price">
@@ -45,7 +48,7 @@
                 </div>
             </div>
         </div>
-        <div class="content-item" v-if="order.caterOrderId">
+        <div class="content-item" v-if="order.caterOrderId ">
             <p class="content-item-title"><span>菜单详情</span></p>
             <div class="items">
                 <div class="cateOrder-item" v-for="item in order.itemsMap">
