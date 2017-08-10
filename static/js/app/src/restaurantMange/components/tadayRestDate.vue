@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-31 13:58:30
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-08-09 11:26:02
+* @Last Modified time: 2017-08-10 11:08:49
 * @email: 783384903@qq.com
 */
 
@@ -212,7 +212,7 @@ export default {
         this.fetchDate();
     },
     mounted() {
-        window.restinter = window.setInterval(this.fetchDate, 5000);
+        window.restinter = window.setInterval(this.fetchDate, 1000 * 60);
     },
     beforeDestroy() {
         window.clearInterval(window.restinter);
