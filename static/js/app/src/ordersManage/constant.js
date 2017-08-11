@@ -26,7 +26,7 @@ export const REST_STATUS = {
 };
 export const ID_CARD_TYPE = ['身份证', '军官证', '通行证', '护照', '其他'];
 export const SEX_TYPE = ['男', '女', '-'];
-export const FOOD_STATE = ['已预订', '就餐中', '已结束', '已取消'];
+export const FOOD_STATE = ['已预订', '就餐中', '已结束', '已取消', '', '', '', '已开台'];
 
 export const ORDER_STATUS_ICON = {
     '-1': { text: '待付款', borderColor: '#ffffff #ffba75', backgroundColor: '#ffba75' },
