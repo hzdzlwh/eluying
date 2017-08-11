@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-08-01 14:45:58
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-08-10 16:49:12
+* @Last Modified time: 2017-08-11 16:40:48
 * @email: 783384903@qq.com
 */
 
@@ -57,16 +57,18 @@
                 <thead>
                     <tr><td width="150px">菜品名称</td><td width="45px">数量</td><td width='80px'>金额</td></tr>
                 </thead>
+                </table>
+                <table>
                 <tbody>
                 <template v-for='item in openData.itemsMap' v-if='restDate.data.itemsMap && leftType !== 4 && openData.itemsMap'>
-                    <tr @click='changeItem(item); dishClick(item)' > <td><div><span class="rest-restDetail-dishname" :class='{"rest-item-del" : item.serviceState === 1}'> <span  :class='getTriangle(item)'></span><span >{{item.dishName}}</span></span><span class="rest-item-send" v-if='item.serviceState === 2'>送</span></div></td><td><div :class='{"rest-item-del" : item.serviceState === 1}'>x{{item.bookNum}}</div></td><td :class='{"rest-item-del" : item.serviceState === 1}'>{{item.price}}</td></tr>
+                    <tr @click='changeItem(item); dishClick(item)' > <td width="150px"><div><span class="rest-restDetail-dishname" :class='{"rest-item-del" : item.serviceState === 1}'> <span  :class='getTriangle(item)'></span><span >{{item.dishName}}</span></span><span class="rest-item-send" v-if='item.serviceState === 2'>送</span></div></td><td width="45px"><div :class='{"rest-item-del" : item.serviceState === 1}'>x{{item.bookNum}}</div></td><td :class='{"rest-item-del" : item.serviceState === 1}' width='80px'>{{item.price}}</td></tr>
                     <tr v-for='sub in item.subDishList' @click='dishClick(sub)' v-if='item.select' :class='{"rest-item-del" : sub.serviceState === 1}'>
-                        <td class="rest-restDetail-trchild">{{sub.dishName}}</td><td><div>x{{sub.bookNum}}</div></td><td></td>
+                        <td class="rest-restDetail-trchild" width="150px">{{sub.dishName}}</td><td width='80px'><div>x{{sub.bookNum}}</div></td><td width='80px'></td>
                     </tr>
                 </template> 
                 <template v-if='leftType === 4'>
                     <tr v-for='(item,index) in addFood'>
-                        <td class="rest-restDetail-trchild">{{item.name}}</td><td><div style='width:100px;'><count :del=true :min = -1 :num='item.num' :onNumChange='onNumChange' :id='item.id'></count></div></td><td>{{item.price * item.num }}</td>
+                        <td class="rest-restDetail-trchild" width="150px">{{item.name}}</td><td width="45px"><div style='width:100px;'><count :del=true :min = -1 :num='item.num' :onNumChange='onNumChange' :id='item.id'></count></div></td><td width='80px'>{{item.price * item.num }}</td>
                     </tr>
                 </template>
                 </tbody>
