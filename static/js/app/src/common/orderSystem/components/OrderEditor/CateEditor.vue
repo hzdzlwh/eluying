@@ -11,13 +11,17 @@
                         <span class="food-icon"></span>
                         <div class="item-content">
                             <div class="item-name">
-                                <span class="item-name">{{item.restName}}</span>
+                                <span class="item-name" v-if='checkState !== "book"'>{{item.restName}}</span>
+                                <dd-select v-model='item.resetId' placeholder="请选择餐厅" v-if='checkState === "book"'>
+                                    <dd-option v-for="reset in resets" :value="reset.restId" :key="reset.restId" :label="reset.restName">
+                                    </dd-option>
+                                </dd-select>
                                 <span class="food-state-icon" v-if="!order.caterOrderId"
                                       :style="{background: getRoomOrFoodState(0, item.foodState).backgroundColor}">
                                     {{getRoomOrFoodState(0, item.foodState).text}}
                                 </span>
                             </div>
-                            <div class="item-desks">
+                            <div class="item-desks" v-if='checkState !== "book"'>
                                 <label class="label-text">桌号</label>
                                 <span>{{ getDesks(item) || '无' }}</span>
                             </div>
@@ -38,13 +42,12 @@
                                       :class="!order.caterOrderId ? 'cursor' : ''">
                                 </span>
                             </div>
-<!--                             <span class="discount-info" v-if="item.showDiscount" style="top: 14px">
+                            <span class="discount-info" v-if="item.showDiscount" style="top: 14px">
                                 <span>原价<span class="origin-price">¥{{ item.originTotalPrice }}</span></span>
                                 <span class="discount-num">
                                     {{ item.showDiscount }}
                                 </span>
-                            </span> -->
-                                                    <span class="more-discount" :id="'js-more-restdiscount-' + index">
+                                <span class="more-discount" :id="'js-more-restdiscount-' + index">
                                 <span class="more-discount-handle" @click="handleMoreDiscountClick(index, $event)">
                                     <span>更多折扣</span>
                         <span class="more-discount-icon"></span>
@@ -61,12 +64,20 @@
                         </dd-select>
                         </span>
                         </span>
+                            </span>
+                                                    
                         </div>
                     </div>
-                    <div class="food-item">
+                    <div class="food-item" style="padding-left: 40px;">
                                                     <div class="item-date">
                                 <label class="label-text">整单优惠</label>
                                 <inputVaild  v-model='item.discount'></inputVaild>
+                            </div>
+                    </div>
+                    <div class="food-item" style="padding-left: 40px;">
+                                                    <div class="item-date">
+                                <label class="label-text">点菜</label>
+                                
                             </div>
                     </div>
                 </div>
@@ -117,7 +128,9 @@
         justify-content: space-between;
         align-items: center;
     }
-
+    .food-item{
+        margin-bottom:10px;
+    }
     .cateOrder-dishes-container {
         padding-top: 7px;
         padding-right: 40%;
@@ -220,12 +233,14 @@
         },
         data() {
             return {
-                foodItems: undefined,
-                discountPlans: []
+                foodItems: [],
+                discountPlans: [],
+                resets: []
             };
         },
         created() {
             this.getQuickDiscounts();
+            this.getRestList();
             bus.$on('submitOrder', this.changeFood);
         },
         beforeDestroy() {
@@ -248,7 +263,7 @@
                     obj.showDiscount = order.showDiscount;
                     foodItems[0] = obj;
                 } else {
-                    foodItems = this.order.foodItems;
+                    foodItems = order.foodItems ? order.foodItems : [];
                 }
                 this.foodItems = foodItems;
                 return this.$store.getters.catOrder;
@@ -287,7 +302,7 @@
                 if (!oldOrigin) {
                     return false;
                 }
-                if (this.foodItems.length > 0) {
+                if (this.foodItems.length > 0 && origin) {
                         // 切成其他的渠道，要把会员和企业的折扣设为不使用
                     if (origin.id !== -4 || origin.id !== -5) {
                         this.foodItems.map(r => {
@@ -342,7 +357,7 @@
                 }
 
                 if (newVal.vipDetail.vipId !== oldVal.vipDetail.vipId) {
-                    this.modifyFood(this.rooms);
+                    this.modifyFood(this.foodItems);
                 }
             }
         },
@@ -354,8 +369,32 @@
             DdGroupOption
         },
         methods: {
+            getRestList() {
+                http.get('/restaurant/listSimple').then(res => {
+                    this.resets = res.data.list;
+                });
+            },
             addRest() {
-
+                this.foodItems.push({
+                    //     obj.restName = order.restName;
+                    // obj.boardDetailResps = order.boardDetailResps.map(board => {
+                    //     return board.boardName;
+                    // });
+                    // obj.peopleNum = order.peopleNum;
+                    // obj.date = order.expectStartTime;
+                    // obj.foodPrice = order.totalPrice;
+                    // obj.originTotalPrice = order.originTotalPrice;
+                    // obj.showDiscount = order.showDiscount;
+                    // foodItems[0] = obj;
+                    restId: 0,
+                    peopleNum: 1,
+                    date: new Date(),
+                    foodPrice: 0,
+                    originTotalPrice: 0,
+                    showDiscount: '',
+                    itemsMap: [],
+                    moreDiscount: undefined
+                })
             },
             modifyFood(food) {
                 if (food.length === 0) {
@@ -494,12 +533,12 @@
             handleVipCardChange(id, forceChange) {
                 // 切换了会员卡后房间更多折扣的处理逻辑，没有折扣选择不使用
                 if (this.checkState !== 'editOrder') {
-                    this.rooms.map(r => {
+                    this.foodItems.map(r => {
                         r.moreDiscount = id;
                     });
                 }
                 if (Number(this.vipCardInfo.discount) === 10 && (this.checkState !== 'editOrder')) {
-                    this.rooms.map(r => {
+                    this.foodItems.map(r => {
                         r.moreDiscount = 0;
                     });
                 }
