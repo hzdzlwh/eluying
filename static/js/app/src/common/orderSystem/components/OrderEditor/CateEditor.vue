@@ -2,11 +2,11 @@
     <div>
         <div class="content-item">
             <p class="content-item-title"><span>餐饮信息</span>
-            <span class="increase-container" @click="addRest" >
-                    <span class="increase-icon"></span>添加房间
+            <span class="increase-container" @click="addRest"  v-if='checkState =="book"'>
+                    <span class="increase-icon"></span>添加餐饮
             </span></p>
             <div class="items">
-                <div class="item" v-for="item in foodItems" v-if='foodItems.length'>
+                <div class="item" v-for="(item, index) in foodItems" v-if='foodItems.length'>
                     <div class="food-item">
                         <span class="food-icon"></span>
                         <div class="item-content">
@@ -23,12 +23,13 @@
                             </div>
                             <div class="item-count">
                                 <label class="label-text">就餐人数</label>
-                                <inputVaild :min=1 :max=2000 v-model='item.peopleNum' ></inputVaild>
+                                <inputVaild :min=1 :max=2000 v-model='item.peopleNum' :isInt=true ></inputVaild>
                             </div>
                             <div class="item-date">
                                 <label class="label-text">用餐时间</label>
                                 <DatePicker v-model='item.date' type="datetime" placeholder="选择日期时间" format='yyyy-MM-dd HH:mm'></DatePicker>
                             </div>
+
                             <div class="item-price">
                                 <label class="label-text">小计</label>
                                 <span>¥{{item.foodPrice}}</span>
@@ -37,13 +38,36 @@
                                       :class="!order.caterOrderId ? 'cursor' : ''">
                                 </span>
                             </div>
-                            <span class="discount-info" v-if="item.showDiscount" style="top: 14px">
+<!--                             <span class="discount-info" v-if="item.showDiscount" style="top: 14px">
                                 <span>原价<span class="origin-price">¥{{ item.originTotalPrice }}</span></span>
                                 <span class="discount-num">
                                     {{ item.showDiscount }}
                                 </span>
-                            </span>
+                            </span> -->
+                                                    <span class="more-discount" :id="'js-more-restdiscount-' + index">
+                                <span class="more-discount-handle" @click="handleMoreDiscountClick(index, $event)">
+                                    <span>更多折扣</span>
+                        <span class="more-discount-icon"></span>
+                        </span>
+                        <span class="more-discount-select">
+                                    <dd-select v-model="item.moreDiscount" @input="moreDiscountChange(item)">
+                                        <dd-option :value="0" label="不使用">
+                                        </dd-option>
+                                        <dd-group-option v-for="item in discountPlans" :label="item.label" :key="item" v-if="item.discounts && item.discounts.length > 0">
+                                            <dd-option v-for="discount in item.discounts" :key="discount" :value="discount.id" :label="discount.name + ' ' + discount.discount + '折'">
+                                                <span :title="discount.serialNum">{{discount.name + ' ' + discount.discount + '折'}}</span>
+                        </dd-option>
+                        </dd-group-option>
+                        </dd-select>
+                        </span>
+                        </span>
                         </div>
+                    </div>
+                    <div class="food-item">
+                                                    <div class="item-date">
+                                <label class="label-text">整单优惠</label>
+                                <inputVaild  v-model='item.discount'></inputVaild>
+                            </div>
                     </div>
                 </div>
             </div>
@@ -172,12 +196,23 @@
     import bus from '../../../eventBus';
     import inputVaild from '../../../components/inputVaild.vue';
     import { DatePicker } from 'element-ui';
+    import http from '../../../http.js';
+    import {
+        DdSelect,
+        DdOption,
+        DdGroupOption
+    } from 'dd-vue-component';
     export default{
         props: {
-            vipDiscountDetail: {
+            vipDiscountDetail: Object,
+            userOriginType: Object,
+            vipId: Number,
+            vipCardId: Number,
+            vipCardInfo: {
                 type: Object,
-                default: function() { return {}; }
-            }
+                default: {}
+            },
+            checkState: String
             // order: {
             //     type: Object,
             //     default: function() { return {}; }
@@ -185,10 +220,12 @@
         },
         data() {
             return {
-                foodItems: undefined
+                foodItems: undefined,
+                discountPlans: []
             };
         },
         created() {
+            this.getQuickDiscounts();
             bus.$on('submitOrder', this.changeFood);
         },
         beforeDestroy() {
@@ -241,18 +278,242 @@
         watch: {
             order: {
                 deep: true,
-                handler: function (val) {
+                handler: function(val) {
                     this.foodItems = val;
+                }
+            },
+            userOriginType(origin, oldOrigin) {
+                // 如果之前的渠道是undefined，代表初始化
+                if (!oldOrigin) {
+                    return false;
+                }
+                if (this.foodItems.length > 0) {
+                        // 切成其他的渠道，要把会员和企业的折扣设为不使用
+                    if (origin.id !== -4 || origin.id !== -5) {
+                        this.foodItems.map(r => {
+                            if (r.channelDiscount < 0) {
+                                r.channelDiscount = 0;
+                            }
+                        });
+                    }
+                    // 更改渠道
+                    this.modifyFood(this.foodItems);
+                }
+            },
+            vipCardInfo(vipCardInfo, oldVipCardInfo) {
+                if (!this.userOriginType ||
+                        JSON.stringify(vipCardInfo) === JSON.stringify(oldVipCardInfo) ||
+                        this.userOriginType.id > 0) {
+                    return;
+                }
+                const discounts = vipCardInfo.discount && vipCardInfo.discount < 10 ? [{
+                    id: this.userOriginType.id,
+                    name: vipCardInfo.name,
+                    serialNum: vipCardInfo.serialNum,
+                    discount: vipCardInfo.discount
+                }] : [];
+                this.$set(this.discountPlans, 1, {
+                    label: vipCardInfo.tag,
+                    discounts: discounts
+                });
+                this.handleVipCardChange(this.userOriginType.id, oldVipCardInfo.name !== undefined);
+            },
+            vipCardId(id, oldId) {
+                    // 会员折扣id为-4
+                if (!this.userOriginType) {
+                    return;
+                }
+                const discounts = this.vipCardInfo.discount && this.vipCardInfo.discount < 10 ? [{
+                    id: this.userOriginType.id,
+                    name: this.vipCardInfo.name,
+                    serialNum: this.vipCardInfo.serialNum,
+                    discount: this.vipCardInfo.discount
+                }] : [];
+                this.$set(this.discountPlans, 1, {
+                    label: this.vipCardInfo.tag,
+                    discounts: discounts
+                });
+                const changeId = id === 0 ? 0 : this.userOriginType.id;
+                this.handleVipCardChange(changeId, oldId !== undefined && oldId !== 0);
+            },
+            vipDiscountDetail(newVal, oldVal) {
+                if (!newVal.vipDetail || !oldVal.vipDetail) {
+                    return false;
+                }
+
+                if (newVal.vipDetail.vipId !== oldVal.vipDetail.vipId) {
+                    this.modifyFood(this.rooms);
                 }
             }
         },
         components: {
             inputVaild,
-            DatePicker
+            DatePicker,
+            DdSelect,
+            DdOption,
+            DdGroupOption
         },
         methods: {
             addRest() {
 
+            },
+            modifyFood(food) {
+                if (food.length === 0) {
+                    return false;
+                }
+
+                // 会员-1，企业-2,会员卡-4
+                let discountChannel;
+                let discountRelatedId; // eslint-disable-line
+                if (this.userOriginType && this.userOriginType.id === -5) {
+                    discountRelatedId = this.userOriginType.companyId;
+                    discountChannel = 2;
+                } else if (this.userOriginType && (this.userOriginType.id === -4 || this.userOriginType.id === -3)) {
+                    // 会员渠道分为会员等级和会员卡
+                    if (!this.vipId || this.vipCardId === undefined) {
+                        return false;
+                    }
+
+                    if (this.vipCardId > 0) {
+                        discountRelatedId = this.vipCardId;
+                        discountChannel = 4;
+                    }
+
+                    if (this.vipCardId === 0) {
+                        discountRelatedId = null;
+                        discountChannel = null;
+                    }
+
+                    if (this.vipCardId < 0) {
+                        discountRelatedId = this.vipId;
+                        discountChannel = 1;
+                    }
+                }
+
+                // food.map(room => {
+                //     if (room.moreDiscount > 0) {
+                //         room.quickDiscountId = room.moreDiscount;
+                //     } else {
+                //         room.quickDiscountId = '';
+                //     }
+                // });
+
+                const params = {
+                    discountChannel: discountChannel,
+                    discountRelatedId: discountRelatedId,
+                    orderId: this.order.orderId,
+                    rooms: JSON.stringify(food.map(room => {
+                        return {
+                            roomOrderId: room.roomOrderId,
+                            roomId: room.roomType || null,
+                            useDiscount: !!room.moreDiscount,
+                        };
+                    })),
+                };
+                http.get('/room/getRoomStatusAndPriceList', params)
+                    .then(res => {
+                        // 嘻嘻
+                        res.data.list.map((item, index) => {
+                            const currentRoom = rooms[index];
+                            if (res.data.timestamp <= (currentRoom.timestamp || 0)) {
+                                return;
+                            }
+                            currentRoom.datePriceList = item.datePriceList.map(i => {
+                                return {
+                                    ...i,
+                                    showInput: false
+                                };
+                            });
+                            currentRoom.showTip = !item.available ? 1 : (!item.isOpenTime ? 2 : 0);
+                            // currentRoom.showTip = !item.isOpenTime;
+                            currentRoom.price = item.totalFee;
+                            // 每日房价分配比例
+                            currentRoom.priceScale = item.datePriceList.map(i => {
+                                return item.totalFee === 0 ? 1 / item.datePriceList.length : i.dateFee / item.totalFee;
+                            });
+                            currentRoom.showDiscount = item.showDiscount;
+                            currentRoom.priceModified = false;
+                            currentRoom.originPrice = item.originTotalFee;
+                            currentRoom.timestamp = res.data.timestamp;
+                            if (this.checkState !== 'book' && this.checkState !== 'finish') {
+                                if (item.hasHourRoom) {
+                                    if (!currentRoom.checkTypes.some(el => {
+                                        return el.id === 1;
+                                    })) {
+                                        currentRoom.checkTypes.push({
+                                            id: 1,
+                                            name: '钟点房'
+                                        });
+                                    }
+                                } else {
+                                    currentRoom.checkTypes.forEach(function(el, index) {
+                                        if (el.id === 1) {
+                                            currentRoom.checkTypes.splice(index, 1);
+                                        }
+                                    });
+                                    if (currentRoom.checkType === 1) {
+                                        currentRoom.checkType = 0;
+                                    }
+                                }
+                            }
+
+                            if ((currentRoom.checkType === 1 && (type === 'room' || type === 'roomType') && !currentRoom.timeAmount) || (type === 'room' && currentRoom.checkType === 1)) {
+                                currentRoom.unitLength = Number(item.unitLength);
+                                currentRoom.maxLength = Number(item.maxLength);
+                                currentRoom.startLength = Number(item.startLength);
+                                if (currentRoom.state !== 8) {
+                                    this.$set(currentRoom, 'timeAmount', Number(item.startLength));
+                                }
+                                // currentRoom.price = item.totalFee;
+                            }
+                            if (currentRoom.checkType === 1) {
+                                currentRoom.room.endDate = new Date(currentRoom.room.startDate.getTime() + 1000 * 60 * 60 * (currentRoom.timeAmount || currentRoom.checkInLength || item.startLength));
+                            }
+                        });
+                    });
+            },
+            getQuickDiscounts() {
+                http.get('/quickDiscount/getList', {
+                    nodeId: 0,
+                    nodeType: 0
+                })
+                    .then(res => {
+                        this.discountPlans = [];
+                        this.discountPlans.push({
+                            label: '快捷折扣',
+                            discounts: res.data.list.map(item => {
+                                return {
+                                    id: item.id,
+                                    name: item.description,
+                                    discount: item.discount
+                                };
+                            })
+                        });
+                    });
+            },
+            handleVipCardChange(id, forceChange) {
+                // 切换了会员卡后房间更多折扣的处理逻辑，没有折扣选择不使用
+                if (this.checkState !== 'editOrder') {
+                    this.rooms.map(r => {
+                        r.moreDiscount = id;
+                    });
+                }
+                if (Number(this.vipCardInfo.discount) === 10 && (this.checkState !== 'editOrder')) {
+                    this.rooms.map(r => {
+                        r.moreDiscount = 0;
+                    });
+                }
+                if (this.foodItems.length > 0) {
+                    // 更改渠道
+                    this.modifyFood(this.foodItems);
+                }
+            },
+            handleMoreDiscountClick(index, ev) {
+                ev.stopPropagation();
+                document.querySelector(`#js-more-restdiscount-${index} .dd-select-input`).click();
+            },
+            moreDiscountChange(room) {
+                this.modifyFood([room]);
             },
             getRoomOrFoodState(type, state) {
                 switch (state) {
@@ -286,7 +547,7 @@
                 }
             },
             changeFood() {
-                this.$emit('change', foodItems);
+                this.$emit('change', this.foodItems);
             }
         }
     };
