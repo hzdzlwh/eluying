@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-31 10:52:58
 * @Last Modified by:   Tplant
-* @Last Modified time: 2017-08-10 16:58:27
+* @Last Modified time: 2017-08-11 14:08:46
 * @email: 783384903@qq.com
 */
 
@@ -62,7 +62,7 @@ const store = new Vuex.Store({
                 }
             ], 'peopleNum': 66541, 'quickDescription': '测试内容i3y3', 'quickDiscountId': 82750, 'relationStatus': 12018, 'remark': '测试内容3iam', 'reserveName': '测试内容2n81', 'resettleAble': false, 'restId': 31210, 'restName': '测试内容s9sl', 'salerId': 48816, 'salerString': '测试内容47tk', 'scan': 85426, 'showDiscount': '测试内容f2g2', 'showPrint': false, 'totalPrice': 10464, 'type': 0, 'vipDiscount': 25671, 'vipId': 18617, 'vipLevel': '测试内容42gy'
         },
-        addFood: [{ id: 1, name: '西湖醋鱼', num: 0, price: 20 }, { id: 2, name: '可乐', num: 0, price: 30 }]
+        addFood: []
     },
     mutations: {
         [types.CANL_FOOD](state) {

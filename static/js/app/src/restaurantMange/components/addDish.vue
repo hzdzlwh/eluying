@@ -2,7 +2,7 @@
  * @Author: lwh
  * @Date:   2017-08-09 14:19:31
  * @Last Modified by:   lwh
- * @Last Modified time: 2017-08-09 15:38:58
+ * @Last Modified time: 2017-08-11 14:39:09
  */
 
 <template>
@@ -50,8 +50,12 @@ export default {
     methods: {
         hideModal() {
             this.$emit('hideModal');
+            this.dishPrice = undefined;
+            this.dishName = '';
         },
         addDish() {
+            this.$emit('addDish', { dishName: this.dishName, dishPrice: this.dishPrice, customerDish: true });
+            this.hideModal();
         }
     },
     watch: {
