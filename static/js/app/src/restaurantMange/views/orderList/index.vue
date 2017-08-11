@@ -18,11 +18,11 @@
             </div>
         </div>
         <div class="detail-content-filter">
-            <div>用餐时间</div>
-            <div style="margin-left:5px;">
-                <dd-datepicker placeholder="开始时间" v-model="startTime" :disabled-date="disableStartDate"/>
+            <div style="float:left;margin-right:20px;line-height:24px;">用餐时间</div>
+            <div style="float:left;">
+                <dd-datepicker placeholder="开始时间" v-model="startTime" :disabled-date="disableStartDate" style="width:150px;" />
                 <span style="color:#999;font-size:14px;">～</span>
-                <dd-datepicker placeholder="结束时间" v-model="endTime" :disabled-date="disableEndDate" />
+                <dd-datepicker placeholder="结束时间" v-model="endTime" :disabled-date="disableEndDate" style="width:150px;" />
             </div>
             <div class="add-button fr">
                 <div class="dd-dropdown">
@@ -57,17 +57,17 @@
                     </dd-group-option>
                 </dd-select>
             </div>
-            <div style="margin-right:20px;width: 120px;" class="fr" >
+            <div style="width: 120px;" class="fr" >
                 <dd-select v-model="channelPerson" >
                     <dd-option :key="item.id" v-for="item in channelPersonAll" :value="item.id" :label="item.name"></dd-option>
                 </dd-select>
             </div>
-            <div style="margin-right:20px;width: 120px;" class="fr" >
-            <dd-select v-model="channelType" >
-                <dd-option :key="item.id" v-for="item in channelTypeAll" :value="item.id" :label="item.name"></dd-option>
-            </dd-select>
-        </div>
-            <div style="margin-right:20px;width: 120px;" class="fr">
+            <div style="width: 120px;" class="fr" >
+                <dd-select v-model="channelType" >
+                    <dd-option :key="item.id" v-for="item in channelTypeAll" :value="item.id" :label="item.name"></dd-option>
+                </dd-select>
+            </div>
+            <div style="width: 120px;" class="fr" v-if="tag === -1">
                 <dd-select v-model="state" >
                     <dd-option :key="item.id" v-for="item in stateList" :value="item.id" :label="item.name"></dd-option>
                 </dd-select>
@@ -85,20 +85,9 @@
         <handlePoint v-if="handlePointShow" :caterOrderId="caterOrderId" v-on:closeHandlePoint="closeHandlePoint" v-on:openAutomaticPoint="openAutomaticPoint"></handlePoint>
     </div>
 </template>
-<style>
-    .detail-content-filter {
-        overflow-y: auto;
-        max-height: 120px;
-    }
-    #roomsOrderTable .dd-table tbody tr {
-        cursor: pointer;
-    }
-</style>
 <style lang="scss" scoped>
-
     .foot small{
         color:#999;
-
     }
     .footfix{
         position: fixed;
@@ -113,26 +102,25 @@
     }
     .select-component-container{
         width:120px;
-        margin-right:20px;
     }
     .detail-content-filter {
         margin-top: 20px;
         margin-bottom: 20px;
-        position: relative;
+        /*position: relative;*/
         z-index: 1;
-    }
-    .detail-content-filter .fr {
-        float:right
+        .fr {
+            float:right;
+            margin-left:10px;
+        }
+        &::after {
+            content: '';
+            display: block;
+            clear: both;
+        }
     }
     .restaurant-head-nav .active {
         background-color: #178ce6;
         color: #ffffff;
-    }
-    .detail-content-filter > div {
-        display: inline-block;
-    }
-    .detail-content-filter .dd-datepicker {
-        width:150px;
     }
     .restaurant-head-nav {
         border-right: none;
@@ -141,6 +129,7 @@
     .restaurant-head-nav li {
         border-right: 1px solid #178ce6;
         cursor: pointer;
+        padding: 0 3px;
     }
 
     .foot {
@@ -240,38 +229,38 @@
             return {
                 tagList: [
                     {
-                        id: 0,
+                        id: -1,
                         name: '全部'
                     },
                     {
-                        id: 1,
-                        name: '即将入住'
+                        id: 4,
+                        name: '待处理订单'
                     },
                     {
-                        id: 2,
-                        name: '即将退房'
+                        id: 0,
+                        name: '预订订单'
                     },
                     {
-                        id: 3,
-                        name: '今日新办'
+                        id: 10,
+                        name: '未结订单'
                     }
                 ],
-                tag: 0,
+                tag: -1,
                 stateList: [
                     {
                         id: -1,
                         name: '全部订单状态'
                     },
                     {
-                        id: 0,
+                        id: 4,
                         name: '待处理'
                     },
                     {
-                        id: 1,
+                        id: 5,
                         name: '已拒绝'
                     },
                     {
-                        id: 4,
+                        id: 3,
                         name: '已取消 '
                     }
                 ],
