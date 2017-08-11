@@ -23,28 +23,6 @@ Vue.prototype.$isNull = function(text) {
 
 $(function() {
     restaurantMenu.render();
-    // const restId = Number(location.search.split('=')[1]);
-    // const main = new Vue({
-    //     el: '.restaurant-container',
-    //     data: {
-    //         restName: undefined,
-    //         restId: restId
-    //     },
-    //     created: function() {
-    //         this.getRestaurants();
-    //     },
-    //     methods: {
-    //         getRestaurants: function() {
-    //             http.get('/catering/getRestaurantList', {})
-    //                 .then(result => {
-    //                     this.restName = result.data.list.filter(function(el) {
-    //                         return el.restId === restId;
-    //                     })[0].restName;
-    //                 });
-    //         }
-    //     }
-    //
-    // });
 });
 const app = new Vue({
     ...App

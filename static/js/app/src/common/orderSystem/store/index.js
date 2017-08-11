@@ -27,7 +27,11 @@ const orderSystemModule = {
             show: false
         }
     },
-
+    getters: {
+        catOrder: state => {
+            return state.orderDetail;
+        }
+    },
     mutations: {
         [types.SET_ROOMTIP](state, { roomTipStatus }) {
             if (state.roomTipStatus.tips !== roomTipStatus.tips) {

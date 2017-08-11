@@ -63,7 +63,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        z-index: 1070;
+        z-index: 1200;
     }
 </style>
 <style lang="scss" scoped>

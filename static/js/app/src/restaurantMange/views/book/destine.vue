@@ -3,14 +3,14 @@
         <div class="restaurant-book-container">
             <div class="restaurant-destine-select">
                 <span>营业日期</span>
-                <dd-datepicker :disabledDate="disabledDate" v-model="date"></dd-datepicker>
+                <dd-datepicker :disabledDate="disabledDate" v-model="date" class="destine-datepicker"></dd-datepicker>
                 <div class="restaurant-destine-dish" >
                     <dd-select v-model="dishType" >
                         <dd-option :key="item.id" v-for="item in dishTypeAll" :value="item.dishType" :label="item.name"></dd-option>
                     </dd-select>
                 </div>
             </div>
-            <dd-table :columns="col" :data-source="vips" :bordered="true" style="margin:20px 0 10px;"></dd-table>
+            <dd-table :columns="col" :data-source="vips" :bordered="true" class="destine-table"></dd-table>
         </div>
     </div>
 </template>
@@ -19,80 +19,119 @@
         padding-top: 80px;
         padding-left: 200px;
     }
+    .restaurant-destine-select::after {
+        content: '';
+        clear: both;
+        display: block;
+    }
 </style>
 <style lang="scss" scoped>
     .restaurant-book-container {
         width: 600px;
     }
     .restaurant-destine-select {
-
+        span {
+            float: left;
+            margin-right:20px;
+            line-height: 24px;
+        }
+        .destine-datepicker {
+            float: left;
+            width: 140px;
+        }
+        .restaurant-destine-dish {
+            float: right;
+            width: 140px;
+        }
+    }
+    .destine-table {
+        margin: 20px 0 10px;
     }
 </style>
 <script>
     import http from 'http';
     import util from 'util';
+    import { getDishType } from '../mixin/dishType.js';
     import { mapState } from 'vuex';
     import { DdDatepicker, DdTable, DdSelect, DdOption } from 'dd-vue-component';
     export default {
+        mixins: [getDishType],
         data() {
             return {
                 date: '',
                 vips: [],
-                dishTypeAll: [{
-                    id: -1,
-                    name: '全部菜品',
-                    dishType: '-1~'
-                }],
-                dishType: '-1~',
                 col: [
                     {
-                        name: '菜品分类',
-                        dataIndex: '',
+                        title: '菜品分类',
+                        dataIndex: 'type',
                         width: 80
                     },
                     {
-                        name: '菜品名称',
-                        dataIndex: '',
+                        title: '菜品名称',
+                        dataIndex: 'name',
                         width: 80
                     },
                     {
-                        name: '预订数量',
-                        dataIndex: '',
+                        title: '预订数量',
+                        dataIndex: 'bookNum',
                         width: 60
                     }
                 ]
             };
         },
-        methods: {
-            disabledDate(date) {
-                return util.DateDiff(date, new Date()) < 1;
-            },
-            prevDate(date) {
-                const d = date.getDate();
-                return new Date(date.setDate(d - 1));
-            },
-            getDishType() {
-                http.post('/dish/getDishTypes', { restId: this.restId })
-                    .then(res => {
-                        if (res.code === 1) {
-                            const dishList = res.data.list;
-                            dishList.forEach(dish => {
-                                dish.id = dish.dishTypeId;
-                                dish.name = dish.dishType;
-                                dish.dishType = `-1~${dish.dishTypeId}`;
-                                this.dishTypeAll.push(dish);
-                            });
-                        }
-                    });
-            }
-        },
         computed: {
-            ...mapState['restId']
+            ...mapState(['restId'])
         },
         created() {
-            const prevDate = this.prevDate(new Date());
-            this.date = util.dateFormat(prevDate);
-            this.getDishType();
+            this.date = util.dateFormat(new Date());
+            if (this.restId !== 0) {
+                this.getDishType();
+            }
+        },
+        methods: {
+            disabledDate(date) {
+                return util.DateDiff(new Date(), date) < 0;
+            },
+            getData() {
+                const obj = {
+                    queryType: 3,
+                    restId: this.restId,
+                    date: this.date,
+                    dishCategoryId: this.dishType.split('~')[1]
+                };
+                // 后台要求如果为空就不传
+                for (const ob in obj) {
+                    if (obj[ob] === undefined || obj[ob] === '') {
+                        delete obj[ob];
+                    }
+                }
+                http.get('/dish/getSellClearMenu', obj).then(res => {
+                    if (res.code === 1) {
+                        const list = res.data.list;
+                        list.forEach(item => {
+                            const dish = [];
+                            dish.type = item.dishCategoryName;
+                            dish.name = item.dishes.dishName;
+                            dish.bookNum = item.dishes.reserveNum;
+                            this.vips.push(dish);
+                        });
+                    }
+                });
+            }
+        },
+        watch: {
+            date() {
+                if (this.restId !== 0) {
+                    this.getData();
+                }
+            },
+            restId() {
+                this.getData();
+                this.getDishType();
+            },
+            dishType() {
+                this.getData();
+            }
         },
         components: {
             DdDatepicker,

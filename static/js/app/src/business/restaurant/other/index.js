@@ -51,5 +51,4 @@ $(function() {
     document.addEventListener('DOMContentLoaded', () => {
         app.$mount('#app');
     });
-
 });

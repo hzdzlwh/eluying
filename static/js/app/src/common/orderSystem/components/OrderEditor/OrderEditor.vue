@@ -25,11 +25,11 @@
                                         </p>
                                     </div>
                                     <label for="name">联系人</label>
-                                    <input style="width:90px" class="dd-input" type="text" maxlength="16" placeholder="联系人姓名" id="name" autocomplete="off" :disabled="(this.checkState === 'editOrder' || this.checkState === 'checkIn') && !(order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder))" v-model="name" @input="changeVipList(1)">
+                                    <input style="width:90px" class="dd-input" type="text" maxlength="16" placeholder="联系人姓名" id="name" autocomplete="off" :disabled="(this.checkState === 'editOrder' || this.checkState === 'checkIn') && !(order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder) || (order.type === ORDER_TYPE.CATERING && !order.isCombinationOrder))" v-model="name" @input="changeVipList(1)">
                                 </div>
                                 <div class="userInfo-item userInfo-phone vip-level-container">
                                     <label for="phone">手机号</label>
-                                    <input class="dd-input" type="text" id="phone" maxlength="20" placeholder="手机号" autocomplete="off" :disabled="(this.checkState === 'editOrder' || this.checkState === 'checkIn') && !(order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder))" v-model="phone" @input="changeVipList(2)">
+                                    <input class="dd-input" type="text" id="phone" maxlength="20" placeholder="手机号" autocomplete="off" :disabled="(this.checkState === 'editOrder' || this.checkState === 'checkIn') && !(order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder) || (order.type === ORDER_TYPE.CATERING && !order.isCombinationOrder))" v-model="phone" @input="changeVipList(2)">
                                     <span v-if="vipDiscountDetail.isVip">
                                         <span class="vip-level-img"></span>
                                     <span class="vip-level-tip">{{ vipDiscountDetail.vipDetail.level }}</span>
@@ -41,7 +41,7 @@
                                 <div class="userInfo-item" style="position: relative;margin-right: 26px;">
                                     <label>客户来源</label>
                                     <div class="select-component-container">
-                                        <dd-select v-model="userOriginType" :disabled="(this.checkState === 'editOrder' || this.checkState === 'checkIn') && !(order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder))">
+                                        <dd-select v-model="userOriginType" :disabled="(this.checkState === 'editOrder' || this.checkState === 'checkIn') && !(order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder) || (order.type === ORDER_TYPE.CATERING && !order.isCombinationOrder))">
                                             <dd-option :key="origin" v-for="origin in userSelfOrigins" :value="origin" :label="origin.name">
                                                 <span :title="origin.name">{{origin.name}}</span>
                                             </dd-option>
@@ -84,7 +84,7 @@
                                 <div class="userInfo-item">
                                     <label>销售员：</label>
                                     <span  style="width: 150px">
-                                        <dd-select v-model="saleId" :disabled="(this.checkState === 'editOrder' || this.checkState === 'checkIn') && !(order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder))">
+                                        <dd-select v-model="saleId" :disabled="(this.checkState === 'editOrder' || this.checkState === 'checkIn') && !(order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder) || (order.type === ORDER_TYPE.CATERING && !order.isCombinationOrder))">
                                             <dd-option :value="-1" label="无">
                                                 无
                                             </dd-option>
@@ -118,7 +118,8 @@
                         <!-- header end -->
                         <RoomEditor v-show="(this.checkState !== 'editOrder' || (this.order.type === ORDER_TYPE.ACCOMMODATION || this.order.type === ORDER_TYPE.COMBINATION)) && this.checkState !== 'quick' && this.checkState !== 'team'" :order="order" :registerRooms="registerRooms" :categories="categories" :vipDiscountDetail="vipDiscountDetail" :checkState="checkState" :userOriginType="userOriginType" :vipId="vipId" :vipCardId="vipCardId" :vipCardInfo="vipCardInfo" @change="handleRoomChange" @whenCheckInDeleteRooms="handleWhenCheckInDeleteRooms" :orderEditorVisible="orderEditorVisible" @priceChange="handleRoomPriceChange" />
                         <RoomEditorQuick v-if="this.checkState === 'quick' || this.checkState === 'team'" :order="order" :registerRooms="registerRooms" :categories="categories" :vipDiscountDetail="vipDiscountDetail" :checkState="checkState" :userOriginType="userOriginType" :vipId="vipId" :vipCardId="vipCardId" :vipCardInfo="vipCardInfo" @change="handleRoomChange" @priceChange="handleRoomPriceChange" :ExtInDate='ExtInDate' />
-                        <CateEditor v-if="this.order.type === ORDER_TYPE.CATERING || this.checkState === 'book'" :vipDiscountDetail="vipDiscountDetail" @change="handleFoodChange" @priceChange="handleFoodPriceChange">
+                        <CateEditor :order="order" :checkState="checkState" v-if="this.order.type === ORDER_TYPE.CATERING || this.checkState === 'book'" :vipDiscountDetail="vipDiscountDetail" 
+                         :userOriginType="userOriginType" :vipId="vipId" :vipCardId="vipCardId" :vipCardInfo="vipCardInfo" @change="handleFoodChange" @priceChange="handleFoodPriceChange">
                         </CateEditor>
                         <EnterEditor :order="order" v-if="(this.checkState !== 'editOrder' && this.checkState !== 'checkIn') || (order.type === ORDER_TYPE.ENTERTAINMENT || order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder))" :vipDiscountDetail="vipDiscountDetail" @change="handleEnterChange" @priceChange="handlEnterPriceChange" />
                         <ShopEditor v-show="(this.checkState !== 'editOrder' && this.checkState !== 'checkIn') || (order.type === ORDER_TYPE.RETAIL || order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder))" :order="order" :vipDiscountDetail="vipDiscountDetail" @change="handleShopChange" @priceChange="handleShopPriceChange">

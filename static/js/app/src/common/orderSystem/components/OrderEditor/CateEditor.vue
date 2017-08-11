@@ -2,33 +2,38 @@
     <div>
         <div class="content-item">
             <p class="content-item-title"><span>餐饮信息</span>
-            <span class="increase-container" @click="addRest" >
-                    <span class="increase-icon"></span>添加房间
+            <span class="increase-container" @click="addRest"  v-if='checkState =="book"'>
+                    <span class="increase-icon"></span>添加餐饮
             </span></p>
             <div class="items">
-                <div class="item" v-for="item in foodItems">
+                <div class="item" v-for="(item, index) in foodItems" v-if='foodItems.length'>
                     <div class="food-item">
                         <span class="food-icon"></span>
                         <div class="item-content">
                             <div class="item-name">
-                                <span class="item-name">{{item.restName}}</span>
+                                <span class="item-name" v-if='checkState !== "book"'>{{item.restName}}</span>
+                                <dd-select v-model='item.resetId' placeholder="请选择餐厅" v-if='checkState === "book"'>
+                                    <dd-option v-for="reset in resets" :value="reset.restId" :key="reset.restId" :label="reset.restName">
+                                    </dd-option>
+                                </dd-select>
                                 <span class="food-state-icon" v-if="!order.caterOrderId"
                                       :style="{background: getRoomOrFoodState(0, item.foodState).backgroundColor}">
                                     {{getRoomOrFoodState(0, item.foodState).text}}
                                 </span>
                             </div>
-                            <div class="item-desks">
+                            <div class="item-desks" v-if='checkState !== "book"'>
                                 <label class="label-text">桌号</label>
-                                <span>{{ getDesks(item) }}</span>
+                                <span>{{ getDesks(item) || '无' }}</span>
                             </div>
                             <div class="item-count">
                                 <label class="label-text">就餐人数</label>
-                                <span>{{item.peopleNum}}</span>
+                                <inputVaild :min=1 :max=2000 v-model='item.peopleNum' :isInt=true ></inputVaild>
                             </div>
                             <div class="item-date">
                                 <label class="label-text">用餐时间</label>
-                                <span>{{item.date.slice(0, 16)}}</span>
+                                <DatePicker v-model='item.date' type="datetime" placeholder="选择日期时间" format='yyyy-MM-dd HH:mm'></DatePicker>
                             </div>
+
                             <div class="item-price">
                                 <label class="label-text">小计</label>
                                 <span>¥{{item.foodPrice}}</span>
@@ -42,13 +47,43 @@
                                 <span class="discount-num">
                                     {{ item.showDiscount }}
                                 </span>
+                                <span class="more-discount" :id="'js-more-restdiscount-' + index">
+                                <span class="more-discount-handle" @click="handleMoreDiscountClick(index, $event)">
+                                    <span>更多折扣</span>
+                        <span class="more-discount-icon"></span>
+                        </span>
+                        <span class="more-discount-select">
+                                    <dd-select v-model="item.moreDiscount" @input="moreDiscountChange(item)">
+                                        <dd-option :value="0" label="不使用">
+                                        </dd-option>
+                                        <dd-group-option v-for="item in discountPlans" :label="item.label" :key="item" v-if="item.discounts && item.discounts.length > 0">
+                                            <dd-option v-for="discount in item.discounts" :key="discount" :value="discount.id" :label="discount.name + ' ' + discount.discount + '折'">
+                                                <span :title="discount.serialNum">{{discount.name + ' ' + discount.discount + '折'}}</span>
+                        </dd-option>
+                        </dd-group-option>
+                        </dd-select>
+                        </span>
+                        </span>
                             </span>
+                                                    
                         </div>
+                    </div>
+                    <div class="food-item" style="padding-left: 40px;">
+                                                    <div class="item-date">
+                                <label class="label-text">整单优惠</label>
+                                <inputVaild  v-model='item.discount'></inputVaild>
+                            </div>
+                    </div>
+                    <div class="food-item" style="padding-left: 40px;">
+                                                    <div class="item-date">
+                                <label class="label-text">点菜</label>
+                                
+                            </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="content-item" v-if="order.caterOrderId ">
+       <!--  <div class="content-item" v-if="order.caterOrderId ">
             <p class="content-item-title"><span>菜单详情</span></p>
             <div class="items">
                 <div class="cateOrder-item" v-for="item in order.itemsMap">
@@ -75,7 +110,7 @@
                 </div>
             </div>
         </div>
-        <span v-show="false">{{getTotalPrice()}}</span>
+        <span v-show="false">{{getTotalPrice()}}</span> -->
     </div>
 </template>
 <style lang="scss" type="text/css" rel="stylesheet/scss">
@@ -93,7 +128,9 @@
         justify-content: space-between;
         align-items: center;
     }
-
+    .food-item{
+        margin-bottom:10px;
+    }
     .cateOrder-dishes-container {
         padding-top: 7px;
         padding-right: 40%;
@@ -168,48 +205,355 @@
     }
 </style>
 <script>
-    import { mapState } from 'vuex';
+    import { mapState, mapGetters } from 'vuex';
     import bus from '../../../eventBus';
+    import inputVaild from '../../../components/inputVaild.vue';
+    import { DatePicker } from 'element-ui';
+    import http from '../../../http.js';
+    import {
+        DdSelect,
+        DdOption,
+        DdGroupOption
+    } from 'dd-vue-component';
     export default{
         props: {
-            vipDiscountDetail: {
+            vipDiscountDetail: Object,
+            userOriginType: Object,
+            vipId: Number,
+            vipCardId: Number,
+            vipCardInfo: {
                 type: Object,
-                default: function() { return {}; }
-            }
+                default: {}
+            },
+            checkState: String
+            // order: {
+            //     type: Object,
+            //     default: function() { return {}; }
+            // }
         },
         data() {
-            return {};
+            return {
+                foodItems: [],
+                discountPlans: [],
+                resets: []
+            };
         },
         created() {
+            this.getQuickDiscounts();
+            this.getRestList();
             bus.$on('submitOrder', this.changeFood);
         },
         beforeDestroy() {
             bus.$off('submitOrder', this.changeFood);
         },
         computed: {
-            ...mapState({ order: state => state.orderSystem.orderDetail }),
-            foodItems() {
+            order() {
+                const order = Object.assign({}, this.$store.getters.catOrder);
                 let foodItems = [];
-                if (this.order.caterOrderId) {
+                if (order.caterOrderId) {
                     const obj = {};
-                    obj.restName = this.order.restName;
-                    obj.boardDetailResps = this.order.boardDetailResps.map(board => {
+                    obj.restName = order.restName;
+                    obj.boardDetailResps = order.boardDetailResps.map(board => {
                         return board.boardName;
                     });
-                    obj.peopleNum = this.order.peopleNum;
-                    obj.date = this.order.expectStartTime;
-                    obj.foodPrice = this.order.totalPrice;
-                    obj.originTotalPrice = this.order.originTotalPrice;
-                    obj.showDiscount = this.order.showDiscount;
+                    obj.peopleNum = order.peopleNum;
+                    obj.date = order.expectStartTime;
+                    obj.foodPrice = order.totalPrice;
+                    obj.originTotalPrice = order.originTotalPrice;
+                    obj.showDiscount = order.showDiscount;
                     foodItems[0] = obj;
                 } else {
-                    foodItems = this.order.foodItems;
+                    foodItems = order.foodItems ? order.foodItems : [];
+                }
+                this.foodItems = foodItems;
+                return this.$store.getters.catOrder;
+            }
+            // ...mapGetters({ order: 'catOrder' }),
+            // FoodOrder() {
+                // let foodItems = [];
+                // if (this.order.caterOrderId) {
+                //     const obj = {};
+                //     obj.restName = this.order.restName;
+                //     obj.boardDetailResps = this.order.boardDetailResps.map(board => {
+                //         return board.boardName;
+                //     });
+                //     obj.peopleNum = this.order.peopleNum;
+                //     obj.date = this.order.expectStartTime;
+                //     obj.foodPrice = this.order.totalPrice;
+                //     obj.originTotalPrice = this.order.originTotalPrice;
+                //     obj.showDiscount = this.order.showDiscount;
+                //     foodItems[0] = obj;
+                // } else {
+                //     foodItems = this.order.foodItems;
+                // }
+                // this.foodItems = foodItems;
+            //     // return foodItems;
+            // }
+        },
+        watch: {
+            order: {
+                deep: true,
+                handler: function(val) {
+                    this.foodItems = val;
+                }
+            },
+            userOriginType(origin, oldOrigin) {
+                // 如果之前的渠道是undefined，代表初始化
+                if (!oldOrigin) {
+                    return false;
+                }
+                if (this.foodItems.length > 0 && origin) {
+                        // 切成其他的渠道，要把会员和企业的折扣设为不使用
+                    if (origin.id !== -4 || origin.id !== -5) {
+                        this.foodItems.map(r => {
+                            if (r.channelDiscount < 0) {
+                                r.channelDiscount = 0;
+                            }
+                        });
+                    }
+                    // 更改渠道
+                    this.modifyFood(this.foodItems);
+                }
+            },
+            vipCardInfo(vipCardInfo, oldVipCardInfo) {
+                if (!this.userOriginType ||
+                        JSON.stringify(vipCardInfo) === JSON.stringify(oldVipCardInfo) ||
+                        this.userOriginType.id > 0) {
+                    return;
+                }
+                const discounts = vipCardInfo.discount && vipCardInfo.discount < 10 ? [{
+                    id: this.userOriginType.id,
+                    name: vipCardInfo.name,
+                    serialNum: vipCardInfo.serialNum,
+                    discount: vipCardInfo.discount
+                }] : [];
+                this.$set(this.discountPlans, 1, {
+                    label: vipCardInfo.tag,
+                    discounts: discounts
+                });
+                this.handleVipCardChange(this.userOriginType.id, oldVipCardInfo.name !== undefined);
+            },
+            vipCardId(id, oldId) {
+                    // 会员折扣id为-4
+                if (!this.userOriginType) {
+                    return;
+                }
+                const discounts = this.vipCardInfo.discount && this.vipCardInfo.discount < 10 ? [{
+                    id: this.userOriginType.id,
+                    name: this.vipCardInfo.name,
+                    serialNum: this.vipCardInfo.serialNum,
+                    discount: this.vipCardInfo.discount
+                }] : [];
+                this.$set(this.discountPlans, 1, {
+                    label: this.vipCardInfo.tag,
+                    discounts: discounts
+                });
+                const changeId = id === 0 ? 0 : this.userOriginType.id;
+                this.handleVipCardChange(changeId, oldId !== undefined && oldId !== 0);
+            },
+            vipDiscountDetail(newVal, oldVal) {
+                if (!newVal.vipDetail || !oldVal.vipDetail) {
+                    return false;
                 }
 
-                return foodItems;
+                if (newVal.vipDetail.vipId !== oldVal.vipDetail.vipId) {
+                    this.modifyFood(this.foodItems);
+                }
             }
         },
+        components: {
+            inputVaild,
+            DatePicker,
+            DdSelect,
+            DdOption,
+            DdGroupOption
+        },
         methods: {
+            getRestList() {
+                http.get('/restaurant/listSimple').then(res => {
+                    this.resets = res.data.list;
+                });
+            },
+            addRest() {
+                this.foodItems.push({
+                    //     obj.restName = order.restName;
+                    // obj.boardDetailResps = order.boardDetailResps.map(board => {
+                    //     return board.boardName;
+                    // });
+                    // obj.peopleNum = order.peopleNum;
+                    // obj.date = order.expectStartTime;
+                    // obj.foodPrice = order.totalPrice;
+                    // obj.originTotalPrice = order.originTotalPrice;
+                    // obj.showDiscount = order.showDiscount;
+                    // foodItems[0] = obj;
+                    restId: 0,
+                    peopleNum: 1,
+                    date: new Date(),
+                    foodPrice: 0,
+                    originTotalPrice: 0,
+                    showDiscount: '',
+                    itemsMap: [],
+                    moreDiscount: undefined
+                })
+            },
+            modifyFood(food) {
+                if (food.length === 0) {
+                    return false;
+                }
+
+                // 会员-1，企业-2,会员卡-4
+                let discountChannel;
+                let discountRelatedId; // eslint-disable-line
+                if (this.userOriginType && this.userOriginType.id === -5) {
+                    discountRelatedId = this.userOriginType.companyId;
+                    discountChannel = 2;
+                } else if (this.userOriginType && (this.userOriginType.id === -4 || this.userOriginType.id === -3)) {
+                    // 会员渠道分为会员等级和会员卡
+                    if (!this.vipId || this.vipCardId === undefined) {
+                        return false;
+                    }
+
+                    if (this.vipCardId > 0) {
+                        discountRelatedId = this.vipCardId;
+                        discountChannel = 4;
+                    }
+
+                    if (this.vipCardId === 0) {
+                        discountRelatedId = null;
+                        discountChannel = null;
+                    }
+
+                    if (this.vipCardId < 0) {
+                        discountRelatedId = this.vipId;
+                        discountChannel = 1;
+                    }
+                }
+
+                // food.map(room => {
+                //     if (room.moreDiscount > 0) {
+                //         room.quickDiscountId = room.moreDiscount;
+                //     } else {
+                //         room.quickDiscountId = '';
+                //     }
+                // });
+
+                const params = {
+                    discountChannel: discountChannel,
+                    discountRelatedId: discountRelatedId,
+                    orderId: this.order.orderId,
+                    rooms: JSON.stringify(food.map(room => {
+                        return {
+                            roomOrderId: room.roomOrderId,
+                            roomId: room.roomType || null,
+                            useDiscount: !!room.moreDiscount,
+                        };
+                    })),
+                };
+                http.get('/room/getRoomStatusAndPriceList', params)
+                    .then(res => {
+                        // 嘻嘻
+                        res.data.list.map((item, index) => {
+                            const currentRoom = rooms[index];
+                            if (res.data.timestamp <= (currentRoom.timestamp || 0)) {
+                                return;
+                            }
+                            currentRoom.datePriceList = item.datePriceList.map(i => {
+                                return {
+                                    ...i,
+                                    showInput: false
+                                };
+                            });
+                            currentRoom.showTip = !item.available ? 1 : (!item.isOpenTime ? 2 : 0);
+                            // currentRoom.showTip = !item.isOpenTime;
+                            currentRoom.price = item.totalFee;
+                            // 每日房价分配比例
+                            currentRoom.priceScale = item.datePriceList.map(i => {
+                                return item.totalFee === 0 ? 1 / item.datePriceList.length : i.dateFee / item.totalFee;
+                            });
+                            currentRoom.showDiscount = item.showDiscount;
+                            currentRoom.priceModified = false;
+                            currentRoom.originPrice = item.originTotalFee;
+                            currentRoom.timestamp = res.data.timestamp;
+                            if (this.checkState !== 'book' && this.checkState !== 'finish') {
+                                if (item.hasHourRoom) {
+                                    if (!currentRoom.checkTypes.some(el => {
+                                        return el.id === 1;
+                                    })) {
+                                        currentRoom.checkTypes.push({
+                                            id: 1,
+                                            name: '钟点房'
+                                        });
+                                    }
+                                } else {
+                                    currentRoom.checkTypes.forEach(function(el, index) {
+                                        if (el.id === 1) {
+                                            currentRoom.checkTypes.splice(index, 1);
+                                        }
+                                    });
+                                    if (currentRoom.checkType === 1) {
+                                        currentRoom.checkType = 0;
+                                    }
+                                }
+                            }
+
+                            if ((currentRoom.checkType === 1 && (type === 'room' || type === 'roomType') && !currentRoom.timeAmount) || (type === 'room' && currentRoom.checkType === 1)) {
+                                currentRoom.unitLength = Number(item.unitLength);
+                                currentRoom.maxLength = Number(item.maxLength);
+                                currentRoom.startLength = Number(item.startLength);
+                                if (currentRoom.state !== 8) {
+                                    this.$set(currentRoom, 'timeAmount', Number(item.startLength));
+                                }
+                                // currentRoom.price = item.totalFee;
+                            }
+                            if (currentRoom.checkType === 1) {
+                                currentRoom.room.endDate = new Date(currentRoom.room.startDate.getTime() + 1000 * 60 * 60 * (currentRoom.timeAmount || currentRoom.checkInLength || item.startLength));
+                            }
+                        });
+                    });
+            },
+            getQuickDiscounts() {
+                http.get('/quickDiscount/getList', {
+                    nodeId: 0,
+                    nodeType: 0
+                })
+                    .then(res => {
+                        this.discountPlans = [];
+                        this.discountPlans.push({
+                            label: '快捷折扣',
+                            discounts: res.data.list.map(item => {
+                                return {
+                                    id: item.id,
+                                    name: item.description,
+                                    discount: item.discount
+                                };
+                            })
+                        });
+                    });
+            },
+            handleVipCardChange(id, forceChange) {
+                // 切换了会员卡后房间更多折扣的处理逻辑，没有折扣选择不使用
+                if (this.checkState !== 'editOrder') {
+                    this.foodItems.map(r => {
+                        r.moreDiscount = id;
+                    });
+                }
+                if (Number(this.vipCardInfo.discount) === 10 && (this.checkState !== 'editOrder')) {
+                    this.foodItems.map(r => {
+                        r.moreDiscount = 0;
+                    });
+                }
+                if (this.foodItems.length > 0) {
+                    // 更改渠道
+                    this.modifyFood(this.foodItems);
+                }
+            },
+            handleMoreDiscountClick(index, ev) {
+                ev.stopPropagation();
+                document.querySelector(`#js-more-restdiscount-${index} .dd-select-input`).click();
+            },
+            moreDiscountChange(room) {
+                this.modifyFood([room]);
+            },
             getRoomOrFoodState(type, state) {
                 switch (state) {
                     case 0:
@@ -242,7 +586,7 @@
                 }
             },
             changeFood() {
-                this.$emit('change');
+                this.$emit('change', this.foodItems);
             }
         }
     };
