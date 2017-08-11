@@ -12,7 +12,7 @@
                         <div class="item-content">
                             <div class="item-name">
                                 <span class="item-name" v-if='checkState !== "book"'>{{item.restName}}</span>
-                                <dd-select v-model='item.resetId' placeholder="请选择餐厅" v-if='checkState === "book"'>
+                                <dd-select v-model='item.resetId' placeholder="请选择餐厅" @input='modifyFood([item])' v-if='checkState === "book"'>
                                     <dd-option v-for="reset in resets" :value="reset.restId" :key="reset.restId" :label="reset.restName">
                                     </dd-option>
                                 </dd-select>
@@ -23,7 +23,7 @@
                             </div>
                             <div class="item-desks" v-if='checkState !== "book"'>
                                 <label class="label-text">桌号</label>
-                                <span>{{ getDesks(item) || '无' }}</span>
+                                <span>{{ getDesks(item) || '未选择' }}</span>
                             </div>
                             <div class="item-count">
                                 <label class="label-text">就餐人数</label>
@@ -37,14 +37,10 @@
                             <div class="item-price">
                                 <label class="label-text">小计</label>
                                 <span>¥{{item.foodPrice}}</span>
-                                <span class="single-order-btn"
-                                      v-text="!order.caterOrderId ? '查看': ''"
-                                      :class="!order.caterOrderId ? 'cursor' : ''">
-                                </span>
                             </div>
-                            <span class="discount-info" v-if="item.showDiscount" style="top: 14px">
-                                <span>原价<span class="origin-price">¥{{ item.originTotalPrice }}</span></span>
-                                <span class="discount-num">
+                            <span class="discount-info"  style="top: 20px">
+                                <span v-if="item.showDiscount">原价<span class="origin-price">¥{{ item.originTotalPrice }}</span></span>
+                                <span class="discount-num" v-if="item.showDiscount">
                                     {{ item.showDiscount }}
                                 </span>
                                 <span class="more-discount" :id="'js-more-restdiscount-' + index">
@@ -65,13 +61,13 @@
                         </span>
                         </span>
                             </span>
-                                                    
+                        <span class="delete-icon" @click='deleteFoodItem(index)' v-if='!item.orderState || (item.orderState !== 3 && item.orderState !== 8)'></span>                            
                         </div>
                     </div>
                     <div class="food-item" style="padding-left: 40px;">
                                                     <div class="item-date">
-                                <label class="label-text">整单优惠</label>
-                                <inputVaild  v-model='item.discount'></inputVaild>
+                                <label class="label-text">整单优惠¥</label>
+                                <inputVaild  v-model='item.discount' @input='modifyFood([item])'></inputVaild>
                             </div>
                     </div>
                     <div class="food-item" style="padding-left: 40px;">
@@ -225,17 +221,18 @@
                 type: Object,
                 default: {}
             },
-            checkState: String
-            // order: {
-            //     type: Object,
-            //     default: function() { return {}; }
-            // }
+            checkState: String,
+            order: {
+                type: Object,
+                default: {}
+            }
         },
         data() {
             return {
                 foodItems: [],
                 discountPlans: [],
-                resets: []
+                resets: [],
+                orderType: this.order.foodItems ? 1 : 0 // 1组合订单，0子订单
             };
         },
         created() {
@@ -247,27 +244,31 @@
             bus.$off('submitOrder', this.changeFood);
         },
         computed: {
-            order() {
-                const order = Object.assign({}, this.$store.getters.catOrder);
-                let foodItems = [];
-                if (order.caterOrderId) {
-                    const obj = {};
-                    obj.restName = order.restName;
-                    obj.boardDetailResps = order.boardDetailResps.map(board => {
-                        return board.boardName;
-                    });
-                    obj.peopleNum = order.peopleNum;
-                    obj.date = order.expectStartTime;
-                    obj.foodPrice = order.totalPrice;
-                    obj.originTotalPrice = order.originTotalPrice;
-                    obj.showDiscount = order.showDiscount;
-                    foodItems[0] = obj;
-                } else {
-                    foodItems = order.foodItems ? order.foodItems : [];
-                }
-                this.foodItems = foodItems;
-                return this.$store.getters.catOrder;
-            }
+            // order() {
+            //     if (!this.$store.getters.catOrder) {
+            //         return undefined;
+            //     }
+                // const order = Object.assign({}, this.$store.getters.catOrder);
+                // let foodItems = [];
+                // if (order.caterOrderId) {
+                //     const obj = {};
+                //     obj.restName = order.restName;
+                //     obj.boardDetailResps = order.boardDetailResps.map(board => {
+                //         return board.boardName;
+                //     });
+                //     obj.peopleNum = order.peopleNum;
+                //     obj.date = order.expectStartTime;
+                //     obj.foodPrice = order.totalPrice;
+                //     obj.originTotalPrice = order.originTotalPrice;
+                //     obj.showDiscount = order.showDiscount;
+                //     foodItems[0] = obj;
+                // } else {
+                //     foodItems = order.foodItems ? order.foodItems : [];
+                // }
+                // this.foodItems = foodItems;
+            //     return this.$store.getters.catOrder;
+            // }
+
             // ...mapGetters({ order: 'catOrder' }),
             // FoodOrder() {
                 // let foodItems = [];
@@ -292,9 +293,25 @@
         },
         watch: {
             order: {
-                deep: true,
-                handler: function(val) {
-                    this.foodItems = val;
+                handler(c, o) {
+                    const order = Object.assign({}, c);
+                    let foodItems = [];
+                    if (order.caterOrderId) {
+                        const obj = {};
+                        obj.restName = order.restName;
+                        obj.boardDetailResps = order.boardDetailResps.map(board => {
+                            return board.boardName;
+                        });
+                        obj.peopleNum = order.peopleNum;
+                        obj.date = order.expectStartTime;
+                        obj.foodPrice = order.totalPrice;
+                        obj.originTotalPrice = order.originTotalPrice;
+                        obj.showDiscount = order.showDiscount;
+                        foodItems[0] = obj;
+                    } else {
+                        foodItems = order.foodItems ? order.foodItems : [];
+                    }
+                    this.foodItems = foodItems;
                 }
             },
             userOriginType(origin, oldOrigin) {
@@ -394,7 +411,7 @@
                     showDiscount: '',
                     itemsMap: [],
                     moreDiscount: undefined
-                })
+                });
             },
             modifyFood(food) {
                 if (food.length === 0) {
@@ -440,74 +457,27 @@
                 const params = {
                     discountChannel: discountChannel,
                     discountRelatedId: discountRelatedId,
-                    orderId: this.order.orderId,
-                    rooms: JSON.stringify(food.map(room => {
+                    rests: JSON.stringify(food.map(fo => {
                         return {
-                            roomOrderId: room.roomOrderId,
-                            roomId: room.roomType || null,
-                            useDiscount: !!room.moreDiscount,
-                        };
-                    })),
-                };
-                http.get('/room/getRoomStatusAndPriceList', params)
-                    .then(res => {
-                        // 嘻嘻
-                        res.data.list.map((item, index) => {
-                            const currentRoom = rooms[index];
-                            if (res.data.timestamp <= (currentRoom.timestamp || 0)) {
-                                return;
-                            }
-                            currentRoom.datePriceList = item.datePriceList.map(i => {
+                            discountPrice: fo.discount,
+                            quickDiscountId: fo.moreDiscount,
+                            restId: fo.resetId,
+                            dishes: JSON.stringify(fo.itemsMap.map(item => {
                                 return {
-                                    ...i,
-                                    showInput: false
+                                    bookNum: item.bookNum,
+                                    dishId: item.dishId,
+                                    price: item.price
                                 };
-                            });
-                            currentRoom.showTip = !item.available ? 1 : (!item.isOpenTime ? 2 : 0);
-                            // currentRoom.showTip = !item.isOpenTime;
-                            currentRoom.price = item.totalFee;
-                            // 每日房价分配比例
-                            currentRoom.priceScale = item.datePriceList.map(i => {
-                                return item.totalFee === 0 ? 1 / item.datePriceList.length : i.dateFee / item.totalFee;
-                            });
-                            currentRoom.showDiscount = item.showDiscount;
-                            currentRoom.priceModified = false;
-                            currentRoom.originPrice = item.originTotalFee;
-                            currentRoom.timestamp = res.data.timestamp;
-                            if (this.checkState !== 'book' && this.checkState !== 'finish') {
-                                if (item.hasHourRoom) {
-                                    if (!currentRoom.checkTypes.some(el => {
-                                        return el.id === 1;
-                                    })) {
-                                        currentRoom.checkTypes.push({
-                                            id: 1,
-                                            name: '钟点房'
-                                        });
-                                    }
-                                } else {
-                                    currentRoom.checkTypes.forEach(function(el, index) {
-                                        if (el.id === 1) {
-                                            currentRoom.checkTypes.splice(index, 1);
-                                        }
-                                    });
-                                    if (currentRoom.checkType === 1) {
-                                        currentRoom.checkType = 0;
-                                    }
-                                }
-                            }
-
-                            if ((currentRoom.checkType === 1 && (type === 'room' || type === 'roomType') && !currentRoom.timeAmount) || (type === 'room' && currentRoom.checkType === 1)) {
-                                currentRoom.unitLength = Number(item.unitLength);
-                                currentRoom.maxLength = Number(item.maxLength);
-                                currentRoom.startLength = Number(item.startLength);
-                                if (currentRoom.state !== 8) {
-                                    this.$set(currentRoom, 'timeAmount', Number(item.startLength));
-                                }
-                                // currentRoom.price = item.totalFee;
-                            }
-                            if (currentRoom.checkType === 1) {
-                                currentRoom.room.endDate = new Date(currentRoom.room.startDate.getTime() + 1000 * 60 * 60 * (currentRoom.timeAmount || currentRoom.checkInLength || item.startLength));
-                            }
+                            }))
+                        };
+                    }))
+                };
+                http.get(' /dish/calculateDiscountPrice', params)
+                    .then(res => {
+                        res.data.list.forEach((item, index) => {
+                            food[index].originTotalPrice = item.oriTotalPrice;
+                            food[index].showDiscount = item.showDiscount;
+                            food[index].foodPrice = item.totalPrice;
                         });
                     });
             },
@@ -577,6 +547,9 @@
                 }
 
                 return desksStr;
+            },
+            deleteFoodItem(index) {
+                this.foodItems.splice(index, 1);
             },
             getTotalPrice() {
                 if (this.foodItems && this.foodItems.length > 0) {

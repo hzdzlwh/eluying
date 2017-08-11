@@ -124,7 +124,6 @@
     .rest-restDetail-constain{
         padding: 10px 20px;
         height: 400px;
-        overflow-y: scroll;
     }
 
     .restDetail-title-tip{
@@ -211,10 +210,18 @@ color:#475669;
             padding: 10px 0;
         }
         .rest-restDetail-table{
+            colgroup{
+                col{
+                    width:300px;
+                }
+            }
             thead{
                 font-size:12px;
                 color:#99a9bf;
                 border-bottom: 1px dashed #99a9bf;
+                table-layout:fixed;
+                display: table;
+                width: calc( 100% - 1em );
             }
             tr{
                 cursor: pointer;
@@ -240,13 +247,19 @@ color:#475669;
             tbody {
                 font-size:14px;
                 color:#8492a6;
+                overflow-y:scroll;  
+                height:350px;
+                display:block;
                 .rest-restDetail-trchild{
                     padding-left:25px;
                 }
                 tr{
                     padding:15px 0;
                     height: 48px;
+                    width:100%;
+                    display:table;
                     border-bottom: 1px dashed #99a9bf;
+                    table-layout:fixed;  
 
                 }
                 td:nth-child(1){
