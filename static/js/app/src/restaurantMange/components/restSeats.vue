@@ -2,7 +2,7 @@
  * @Author: lwh
  * @Date:   2017-08-02 16:04:29
  * @Last Modified by:   Tplant
- * @Last Modified time: 2017-08-10 18:32:18
+ * @Last Modified time: 2017-08-11 17:48:58
  */
 
  <template>
@@ -134,6 +134,7 @@ export default {
                     }
                 } else if (board.boardState === 1 && board.caterOrderId) {                      // 使用中的桌子
                     this.getCaterOrderDetail(board.caterOrderId);
+                    this[types.SET_LEFT_TYPE]({ leftType: 2 });
                 } else if (board.boardState === 1 && !board.caterOrderId) {                      // 开台未点菜的桌子
                     this.getOpenBoardRecords(board.boardId);
                 }

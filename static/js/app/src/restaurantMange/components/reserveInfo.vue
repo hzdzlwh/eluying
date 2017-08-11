@@ -2,7 +2,7 @@
  * @Author: lwh
  * @Date:   2017-08-07 11:16:56
  * @Last Modified by:   lwh
- * @Last Modified time: 2017-08-11 15:02:10
+ * @Last Modified time: 2017-08-11 17:54:30
  */
 
 <template>
@@ -261,7 +261,7 @@ export default {
                                 name: res.data.vipDetail.level,
                                 id: -1,
                                 discountList: res.data.vipDetail.discountList,
-                                vipId: res.data.vipDetail.id
+                                vipId: res.data.vipDetail.vipId
                             }]
                         });
                         const cards = res.data.cards.map(card => {
@@ -325,13 +325,31 @@ export default {
             params.boardList = JSON.stringify([]);
             params.customerName = this.name;
             params.customerPhone = this.phone;
+            params.origin = this.userOriginType.name;
             params.originId = this.userOriginType.id;
-            params.discountRelatedId = this.vipCardId;
+            if (this.userOriginType.id === -4 || this.userOriginType.id === -5) {     // 会员和企业
+                if (this.userOriginType.id === -5) {
+                    params.discountChannel = 2;
+                    params.discountRelatedId = this.userOriginType.companyId;
+                }
+                if (this.userOriginType.id === -4) {
+                    if (this.vipCardId === -1) {   // 使用会员等级
+                        params.discountChannel = 1;
+                        params.discountRelatedId = this.vipCardId;
+                    } else if (this.vipCardId > 0) {    // 使用会员卡
+                        params.discountChannel = 4;
+                        params.discountRelatedId = this.vipCardId;
+                    }
+                }
+            }
             params.peopleNum = this.eatNum;
-            params.reserveTime = this.date;
-            params.salerId = this.saleId;
+            params.reserveTime = JSON.stringify(this.date);
+            if (this.saleId !== -1) {
+                params.salerId = this.saleId;
+            }
             params.remark = this.remark;
             params.restId = this.restId;
+            params.operationType = 0;
             http.get('/catering/addOrder', params).then(res => {
                 console.log(res);
             });
