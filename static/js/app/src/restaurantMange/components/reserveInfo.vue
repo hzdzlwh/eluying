@@ -2,7 +2,7 @@
  * @Author: lwh
  * @Date:   2017-08-07 11:16:56
  * @Last Modified by:   lwh
- * @Last Modified time: 2017-08-11 14:59:54
+ * @Last Modified time: 2017-08-11 15:02:10
  */
 
 <template>
@@ -332,7 +332,7 @@ export default {
             params.salerId = this.saleId;
             params.remark = this.remark;
             params.restId = this.restId;
-            http.get('catering/addOrder', params).then(res => {
+            http.get('/catering/addOrder', params).then(res => {
                 console.log(res);
             });
         }
