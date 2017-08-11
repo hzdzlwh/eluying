@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-08-01 14:45:58
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-08-11 16:40:48
+* @Last Modified time: 2017-08-11 18:07:05
 * @email: 783384903@qq.com
 */
 
@@ -255,7 +255,7 @@ export default {
             this.changeRemarkVisible = false;
         },
         changeRemark(val) {
-            http.get('/order/modifyCaterOrderRemark', { caterOrderId: this.openData.caterOrderId, remark: val }).then(res => {
+            http.get('/catering/modifyDishRemark', { caterOrderId: this.openData.caterOrderId, remark: val, serviceId: this.dishChange.serviceId}).then(res => {
                 restBus.$emit('refeshView');
             });
         },

@@ -75,13 +75,14 @@ border-radius:4px;padding:15px;">
             </table>
         </div>
         <div  class="reset-dish-btn" v-if='dishChange'>
-            <div style="color:#475669">菜品备注：{{dishChange.remark || '无'}} <span style="color: #82beff;margin-left: 10px;cursor: pointer;">修改</span></div>
+            <div style="color:#475669">菜品备注：{{dishChange.remark || '无'}} <span style="color: #82beff;margin-left: 10px;cursor: pointer;" @click='changeRemarkModal'>修改</span></div>
             <div>&#12288;点菜员：{{dishChange.operatorName || '无'}}</div>
             <div>下单时间：{{dishChange.operationTime}}</div>
             <div><div class="resetMange-btn-base" style="margin-right:20px;" @click='dishSendOrBack(0)'>退菜</div><div class="resetMange-btn-base" @click='dishSendOrBack(0)'>赠送</div></div>
         </div>
             </div>
             </div>
+            <changeRemark :visible='changeRemarkVisible':data='dishChange.remark' @changeRemark='changeRemark'></changeRemark>
     </div>
 </template>
 <style lang="scss">
@@ -205,15 +206,20 @@ padding:16px;
         REST_STATUS
     } from '../../../../ordersManage/constant';
     import {
-        mapActions,
+        mapActions
     } from 'vuex';
     import http from '../../../http';
+    import changeRemark from '../../../../restaurantMange/components/changeRemark.vue';
     export default{
         props: {
             order: Object
         },
         data() {
-            return { REST_STATUS, ORDER_TYPE, dishChange: undefined };
+            return {
+                REST_STATUS, ORDER_TYPE,
+                dishChange: undefined,
+                changeRemarkVisible: false
+            };
         },
         computed: {
             foodItems() {
@@ -238,10 +244,27 @@ padding:16px;
                 return foodItems;
             }
         },
+        components: {
+            changeRemark
+        },
         methods: {
             ...mapActions([
                 types.GET_CATER_ORDER_DETAIL
-                ]),
+            ]),
+            changeRemarkModal() {
+                this.changeRemarkVisible = true;
+            },
+            changeRemarkHide() {
+                this.changeRemarkVisible = false;
+            },
+            changeRemark(val) {
+                http.get('/catering/modifyDishRemark', { caterOrderId: this.foodItems[0].caterOrderId, remark: val, serviceId: this.dishChange.serviceId }).then(res => {
+                    this.refesh();
+                });
+            },
+            refesh() {
+                this[types.GET_CATER_ORDER_DETAIL]({ orderId: this.foodItems[0].caterOrderId });
+            },
             dishSendOrBack(flag) {
                 const params = {
                     caterOrderId: this.foodItems[0].caterOrderId,
@@ -253,8 +276,8 @@ padding:16px;
                     params.oprType = 2;
                 }
                 http.get('/dish/dishOpr', params).then(() => {
-                     this[types.GET_CATER_ORDER_DETAIL]({orderId: this.foodItems[0].caterOrderId});
-                })
+                    this.refesh();
+                });
             },
             getTriangle(item) {
                 if (!item.subDishList || !item.subDishList.length) {
