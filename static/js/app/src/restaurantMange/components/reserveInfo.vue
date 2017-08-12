@@ -2,7 +2,7 @@
  * @Author: lwh
  * @Date:   2017-08-07 11:16:56
  * @Last Modified by:   lwh
- * @Last Modified time: 2017-08-11 17:54:30
+ * @Last Modified time: 2017-08-12 10:52:17
  */
 
 <template>
@@ -105,6 +105,7 @@ import { DdSelect, DdOption, DdGroupOption } from 'dd-vue-component';
 import Clickoutside from 'dd-vue-component/src/utils/clickoutside';
 import { DatePicker } from 'element-ui';
 import http from '../../common/http.js';
+import util from '../../common/util.js';
 import { mapState } from 'vuex';
 export default {
     directives: {
@@ -149,6 +150,7 @@ export default {
     methods: {
         hideModal() {
             this.$emit('hideModal');
+            this.refreshData();
         },
         showRelevanceOrder() {
             this.hideModal();
@@ -343,7 +345,7 @@ export default {
                 }
             }
             params.peopleNum = this.eatNum;
-            params.reserveTime = JSON.stringify(this.date);
+            params.reserveTime = util.dateFormatLong(new Date(this.date)).substring(0, 16);
             if (this.saleId !== -1) {
                 params.salerId = this.saleId;
             }
@@ -351,8 +353,19 @@ export default {
             params.restId = this.restId;
             params.operationType = 0;
             http.get('/catering/addOrder', params).then(res => {
-                console.log(res);
+                if (res.code === 1) {
+                    this.hideModal();
+                }
             });
+        },
+        refreshData() {
+            this.name = '';
+            this.phone = '';
+            this.userOriginType = undefined;
+            this.remark = '';
+            this.vipDiscountDetail = {};
+            this.eatNum = undefined;
+            this.saleId = -1;
         }
     },
     watch: {
