@@ -110,8 +110,7 @@ export default {
         restSeats,
         reserveInfoModal,
         relevanceOrderModal,
-        changeSeatModal,
-        test
+        changeSeatModal
     },
     created() {
 
