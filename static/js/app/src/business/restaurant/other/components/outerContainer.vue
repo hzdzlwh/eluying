@@ -10,16 +10,16 @@
 </template>
 
 <script>
-    
     export default {
         props: ['title'],
         components: {
         }
-    }
+    };
 </script>
 
 <style lang="scss" rel="stylesheet/scss">
     .outer-container{
+        margin: 20px 0;
         width: 506px;
         border-top: 4px solid #178ce6;
         box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
@@ -29,7 +29,7 @@
             padding-left: 20px;
             background: #f0f0f0;
             h4{
-                height: 49;
+                height: 49px;
                 line-height: 49px;
             }
         }

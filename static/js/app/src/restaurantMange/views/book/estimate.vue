@@ -53,9 +53,7 @@
             <div class="book-edit-dish" v-if="editBookDish">
 
             </div>
-            <div class="book-add-dish" v-if="addBookDish">
-
-            </div>
+            <bookAddDish v-if="addBookDish"></bookAddDish>
         </div>
     </div>
 </template>
@@ -84,6 +82,7 @@
     import { mapState } from 'vuex';
     import { getDishType } from '../mixin/dishType.js';
     import { DdSelect, DdOption, DdTable } from 'dd-vue-component';
+    import bookAddDish from '../../components/bookAddDish.vue';
     import http from 'http';
     export default {
         mixins: [getDishType],
@@ -110,7 +109,12 @@
                         sorter: true
                     },
                     {
-                        title: '操作'
+                        title: '操作',
+                        render: (h, row) =>
+                            <span>
+                                <span>编辑</span>
+                                <span>删除</span>
+                            </span>
                     }
                 ]
             };
@@ -122,7 +126,8 @@
             getData() {
                 const obj = {
                     restId: this.restId,
-                    queryType: 2
+                    queryType: 2,
+                    dishCategoryId: this.dishType.split('~')[1]
                 };
                 http.get('/dish/getSellClearMenu', obj).then(res => {
                     if (res.code === 1) {
@@ -201,7 +206,8 @@
         components: {
             DdSelect,
             DdOption,
-            DdTable
+            DdTable,
+            bookAddDish
         }
     };
 </script>

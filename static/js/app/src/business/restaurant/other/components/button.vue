@@ -14,7 +14,7 @@
                 this.$emit('cancel');
             }
         }
-    }
+    };
 </script>
 
 <style lang="scss" rel="stylesheet/scss">
