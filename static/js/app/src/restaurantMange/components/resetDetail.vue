@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-08-01 14:45:58
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-08-14 17:24:54
+* @Last Modified time: 2017-08-14 17:50:37
 * @email: 783384903@qq.com
 */
 
@@ -55,7 +55,7 @@
         <div class="rest-restDetail-constain">
             <table class="rest-restDetail-table">
                 <thead>
-                    <tr><td width="150px">菜品名称</td><td width="45px">数量</td><td width='80px'>金额</td></tr>
+                    <tr><td :width='leftType === 4 ? "100px" : "150px"'>菜品名称</td><td width="45px">数量</td><td width='80px'>金额</td></tr>
                 </thead>
                 </table>
                 <table class="rest-restDetail-table">
@@ -68,7 +68,7 @@
                 </template> 
                 <template v-if='leftType === 4'>
                     <tr v-for='(item,index) in addFood'>
-                        <td class="rest-restDetail-trchild" width="150px">{{item.dishName}}</td><td width="45px"><div style='width:100px;'><count :del=true :min = -1 :num='item.num' :onNumChange='onNumChange' :id='item.dishId'></count></div></td><td width='80px'>{{item.dishPrice * item.num }}</td>
+                        <td class="rest-restDetail-trchild" :width='leftType === 4 ? "100px" : "150px"'>{{item.dishName}}</td><td width="45px"><div style='width:70px;'><count :del=true :min = -1 :num='item.num' :onNumChange='onNumChange' :id='item.dishId'></count></div></td><td width='80px'>{{item.dishPrice * item.num }}</td>
                     </tr>
                 </template>
                 </tbody>
@@ -118,11 +118,11 @@
             <div class="resetMange-btn-base resetMange-btn-promise" @click='addNewFood' v-if='this.leftType !== 4 && ((isHasOrder && (openData.orderState !== 2 || openData.orderState !== 3 || openData.orderState !== 5 )) || !isHasOrder)'>{{openData.itemsMap && openData.itemsMap.length ? '加' : '点'}}菜</div>
             <div class="resetMange-btn-base " @click='openBoard' v-if='this.leftType !== 4 && ((isHasOrder && (openData.orderState !== 2 || openData.orderState !== 3 || openData.orderState !== 5 )) || !isHasOrder)'>换桌</div>
             <div class="resetMange-btn-base " @click='closeBoard' v-if='this.leftType !== 4 && ((!isHasOrder && !openData.itemsMap) || openData.orderState === 2 && openData.boardDetailResps)'>撤台</div>
-            <div class="resetMange-btn-base " v-if='isHasOrder && this.leftType === 4 ' @click='reject'>拒绝</div>
+            <div class="resetMange-btn-base " v-if='isHasOrder && this.leftType !== 4 && openData.orderState === 4' @click='reject'>拒绝</div>
             <div class="resetMange-btn-base resetMange-btn-lager" v-if='this.leftType === 4' @click='submitAddFood'>下单</div>
             <div class="resetMange-btn-base resetMange-btn-lager" v-if='this.leftType === 4' @click='canlAddFood'>取消</div>
             <div class="resetMange-btn-base " v-if='isHasOrder && openData.orderState === 0' @click='canOrder'>取消订单</div>
-            <div class="resetMange-btn-base " v-if='isHasOrder && this.leftType !== 4 && (openData.orderState === 1 || openData.orderState === 0 || openData.orderState === 2 || openData.orderState === 8)' @click='print'>打印</div>
+            <div class="resetMange-btn-base " v-if='isHasOrder && this.leftType !== 4 && (openData.orderState === 1 || openData.orderState === 0 || openData.orderState === 2 || openData.orderState === 8)' @click='printRest'>打印</div>
             <div class="resetMange-btn-base " v-if='isHasOrder && this.leftType !== 4 && (openData.orderState === 1 || openData.orderState === 0 || openData.orderState === 8)' @click="showCashier('collect')">收银</div>
             <div class="resetMange-btn-base " v-if='isHasOrder && this.leftType !== 4 && openData.orderState === 1' @click='showCashier("orderDetail")'>结算</div>
 
@@ -151,7 +151,7 @@
                 </div>
             </div>
         </div>
-        <changeRemark :visible='changeRemarkVisible':data='dishChange ? dishChange.remark : undefined' @changeRemark='changeRemark'></changeRemark>
+        <changeRemark :visible='changeRemarkVisible':data='dishChange ? dishChange.remark : undefined' @changeRemark='changeRemark' @hideModal='changeRemarkHide'></changeRemark>
         <dishModal :visible='dishModalVisible' :type='dishModalType' :data='dishChange' @hideModal='hideDishModal' @dishChange='dishChangeSub'></dishModal>
 <!--         <bookInfo :visible='bookInfoVisible' :num='bookPeopleNUm' :data='bookData' @hideModal='hidebookInfo' :type='isHasOrder' @changeBook='changeBook'></bookInfo> -->
 <keyBoard :visible ='bookInfoVisible' @close='hidebookInfo' :num ='openData.peopleNum' :dish='openData.boardDetailResps[0].boardName + openData.boardDetailResps[0].boardId' v-if='openData' @numChange='changeBookNum'></keyBoard>
@@ -233,6 +233,9 @@ export default {
             'canlFood',
             'setOpenData'
         ]),
+        printRest() {
+
+        },
         showCashier(type) {
             bus.$emit('showCashier', { type: type });
         },
@@ -264,7 +267,7 @@ export default {
         },
         dishChangeSub(val) {
             const dishes = [];
-            dishes.push({ dishId: this.dishChange.dishId, oprNum: val, serviceId: this.dishChange.serviceId });
+            dishes.push({ dishId: this.dishChange.dishId, bookNum: val, serviceId: this.dishChange.serviceId });
             http.get('/dish/dishOpr', { caterOrderId: this.openData.caterOrderId,
                 dishes: JSON.stringify(dishes),
                 oprType: this.dishModalType ? 4 : 2
@@ -275,6 +278,7 @@ export default {
         dishModalChange(type) {
             this.dishModalVisible = true;
             this.dishModalType = type;
+            restBus.$emit('refeshView');
         },
         dishClick(dish) {
             if (dish.serviceState === 1 && (this.openData.orderState === 1 || (this.openData.orderState === 2 && this.openData.itemsMap.length && this.openData.itemsMap) || this.openData.orderState === 4 || this.openData.orderState === 8)) {

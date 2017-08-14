@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-08-08 18:22:37
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-08-10 09:27:37
+* @Last Modified time: 2017-08-14 17:47:48
 * @email: 783384903@qq.com
 */
 
@@ -16,8 +16,8 @@
                     <button type="button" class="close" @click="hideModal"><span>&times;</span></button>
                 </div>
                 <div class="modal-body" >
-                    <div>{{data.dishName}}可退菜数量：{{data.bookNum}}</div>
-                    <div><span>退菜数量：</span>
+                    <div>{{data.dishName}}可{{type ? '赠送' :'退菜' }}数量：{{data.bookNum}}</div>
+                    <div><span>{{type ? '赠送' :'退菜' }}数量：</span>
                     <count :min = 0 :num='Num' :max='data.bookNum' :onNumChange='onNumChange' :id='1'></count>
                     </div>
                 </div>
@@ -54,6 +54,7 @@ export default {
     data() {
         return {
             Num: 1
+            // 就是不小心写成大写了，然后改的地方太多了=-=就不该了
         };
     },
     methods: {
@@ -65,7 +66,7 @@ export default {
             this.$emit('hideModal');
         },
         changeBook() {
-            this.$emit('dishChange', this.num);
+            this.$emit('dishChange', this.Num);
             this.hideModal();
         }
     },
