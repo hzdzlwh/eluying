@@ -2,7 +2,7 @@
  * @Author: lwh
  * @Date:   2017-08-12 13:01:30
  * @Last Modified by:   lwh
- * @Last Modified time: 2017-08-12 17:24:31
+ * @Last Modified time: 2017-08-14 09:39:12
  */
 
 <template>
@@ -59,7 +59,6 @@
 </template>
 
 <script>
-import scroll from './scroll';
 import http from '../../common/http';
 import { mapState } from 'vuex';
 import IScroll from 'iscroll';
