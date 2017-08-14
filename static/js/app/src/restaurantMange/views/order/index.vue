@@ -15,7 +15,7 @@
             <div v-if="leftType === 4">
                 <rest-menu></rest-menu>
             </div>
-            
+            <button @click="showChangeSeatModal">changeSeat</button>
         </div>
         <div class="rest-order-right">
             <taday v-if='leftType === 0'></taday>
@@ -25,7 +25,7 @@
         <reserve-info-modal :visible="reserveInfoVisible" @hideModal="hideModal" @showRelevaneOrder="showRelevanceOrder"></reserve-info-modal>
         <relevance-order-modal :visible="relevanceOrderVisible" @hideModal="hideModal"></relevance-order-modal>
         <change-seat-modal :visible="changeSeatVisible" @hideModal="hideModal"></change-seat-modal>
-        
+        <test :visible="testVisible"></test>
     </div>
 </template>
 <style lang="scss" scoped>
@@ -56,6 +56,7 @@ import resetdetail from '../../components/resetDetail.vue';
 import reserveInfoModal from '../../components/reserveInfo';
 import relevanceOrderModal from '../../components/relevanceOrder';
 import changeSeatModal from '../../components/changeSeat';
+import test from '../../components/testScroll';
 export default {
     props: {
 
@@ -110,7 +111,8 @@ export default {
         restSeats,
         reserveInfoModal,
         relevanceOrderModal,
-        changeSeatModal
+        changeSeatModal,
+        test
     },
     created() {
 
