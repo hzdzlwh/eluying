@@ -118,7 +118,7 @@
                         <!-- header end -->
                         <RoomEditor v-show="(this.checkState !== 'editOrder' || (this.order.type === ORDER_TYPE.ACCOMMODATION || this.order.type === ORDER_TYPE.COMBINATION)) && this.checkState !== 'quick' && this.checkState !== 'team'" :order="order" :registerRooms="registerRooms" :categories="categories" :vipDiscountDetail="vipDiscountDetail" :checkState="checkState" :userOriginType="userOriginType" :vipId="vipId" :vipCardId="vipCardId" :vipCardInfo="vipCardInfo" @change="handleRoomChange" @whenCheckInDeleteRooms="handleWhenCheckInDeleteRooms" :orderEditorVisible="orderEditorVisible" @priceChange="handleRoomPriceChange" />
                         <RoomEditorQuick v-if="this.checkState === 'quick' || this.checkState === 'team'" :order="order" :registerRooms="registerRooms" :categories="categories" :vipDiscountDetail="vipDiscountDetail" :checkState="checkState" :userOriginType="userOriginType" :vipId="vipId" :vipCardId="vipCardId" :vipCardInfo="vipCardInfo" @change="handleRoomChange" @priceChange="handleRoomPriceChange" :ExtInDate='ExtInDate' />
-                        <CateEditor :order="order" :checkState="checkState" v-if="this.order.type === ORDER_TYPE.CATERING || this.checkState === 'book'" :vipDiscountDetail="vipDiscountDetail" 
+                        <CateEditor :order="order" :checkState="checkState" v-if="this.order.type === ORDER_TYPE.CATERING || this.checkState === 'book' || this.order.type === ORDER_TYPE.COMBINATION" :vipDiscountDetail="vipDiscountDetail" 
                          :userOriginType="userOriginType" :vipId="vipId" :vipCardId="vipCardId" :vipCardInfo="vipCardInfo" @change="handleFoodChange" @priceChange="handleFoodPriceChange">
                         </CateEditor>
                         <EnterEditor :order="order" v-if="(this.checkState !== 'editOrder' && this.checkState !== 'checkIn') || (order.type === ORDER_TYPE.ENTERTAINMENT || order.type === ORDER_TYPE.COMBINATION || (order.type === ORDER_TYPE.ACCOMMODATION && !order.isCombinationOrder))" :vipDiscountDetail="vipDiscountDetail" @change="handleEnterChange" @priceChange="handlEnterPriceChange" />
@@ -1106,8 +1106,8 @@ export default {
         },
         getSubmitFood() {
             return this.foodItems.map(item => {
-                return {
-                    dateTime: util.dateFormatLong(item.date),
+                const parm = {
+                    dateTime: util.dateFormatLong(new Date(item.date)),
                     discount: item.discount,
                     dishItems: JSON.stringify(item.itemsMap),
                     peopleNum: item.peopleNum,
@@ -1115,6 +1115,10 @@ export default {
                     restId: item.resetId,
                     remark: item.remark || ''
                 };
+                if (item.caterOrderId) {
+                    parm.caterOrderId = item.caterOrderId;
+                }
+                return parm;
             });
         },
         getSubmitEnterItems() {
@@ -1259,7 +1263,7 @@ export default {
             this.getSubmitGoods();
             const rooms = this.getSubmitRooms();
             const playItems = this.getSubmitEnterItems();
-
+            const foodItem = this.getSubmitFood();
             const params = {
                 name: this.name,
                 phone: this.phone,
@@ -1268,6 +1272,7 @@ export default {
                 playItems: JSON.stringify(playItems),
                 items: JSON.stringify(this.newGoodItems),
                 goods: JSON.stringify(this.previousGoods),
+                foodItems: JSON.stringify(this.foodItems),
                 payments: JSON.stringify([]),
                 orderId: this.order.orderId,
                 whenCheckIn: this.checkState === 'checkIn',

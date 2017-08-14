@@ -223,16 +223,35 @@ color:#475669;
                 display: table;
                 width: calc( 100% - 1em );
             }
+            tbody {
+                .reset-tr-click{
+                    background-color:#e1effa;
+                }
+                tr{
+                    border-bottom: 1px dashed black;
+                }
+            }
             tr{
                 cursor: pointer;
                 td:nth-child(1){
                     text-align: left;
+                    div{
+                        font-size:16px;
+                        color:#475669;
+                        text-align: left;
+                    }
                 }
                 td:nth-child(2){
                     text-align: center;
+                    div{
+                        text-align: center;
+                    }
                 }
                 td:nth-child(3){
                     text-align: right;
+                    div{
+                        text-align: right;
+                    }
                 }
             }
             .rest-restDetail-dishname{

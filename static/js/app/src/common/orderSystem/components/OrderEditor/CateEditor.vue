@@ -38,7 +38,7 @@
                                 <label class="label-text">小计</label>
                                 <span>¥{{item.foodPrice}}</span>
                             </div>
-                            <span class="discount-info"  style="top: 20px">
+                            <span class="discount-info"  style="top: 25px">
                                 <span v-if="item.showDiscount">原价<span class="origin-price">¥{{ item.originTotalPrice }}</span></span>
                                 <span class="discount-num" v-if="item.showDiscount">
                                     {{ item.showDiscount }}
@@ -105,8 +105,8 @@
                     </div>
                 </div>
             </div>
-        </div>
-        <span v-show="false">{{getTotalPrice()}}</span> -->
+        </div> -->
+        <span v-show="false">{{getTotalPrice()}}</span>
     </div>
 </template>
 <style lang="scss" type="text/css" rel="stylesheet/scss">
@@ -201,7 +201,7 @@
     }
 </style>
 <script>
-    import { mapState, mapGetters } from 'vuex';
+    // import { mapState, mapGetters } from 'vuex';
     import bus from '../../../eventBus';
     import inputVaild from '../../../components/inputVaild.vue';
     import { DatePicker } from 'element-ui';
@@ -238,81 +238,19 @@
         created() {
             this.getQuickDiscounts();
             this.getRestList();
+            this.foodItems = this.getFoodItem();
             bus.$on('submitOrder', this.changeFood);
         },
         beforeDestroy() {
             bus.$off('submitOrder', this.changeFood);
         },
-        computed: {
-            // order() {
-            //     if (!this.$store.getters.catOrder) {
-            //         return undefined;
-            //     }
-                // const order = Object.assign({}, this.$store.getters.catOrder);
-                // let foodItems = [];
-                // if (order.caterOrderId) {
-                //     const obj = {};
-                //     obj.restName = order.restName;
-                //     obj.boardDetailResps = order.boardDetailResps.map(board => {
-                //         return board.boardName;
-                //     });
-                //     obj.peopleNum = order.peopleNum;
-                //     obj.date = order.expectStartTime;
-                //     obj.foodPrice = order.totalPrice;
-                //     obj.originTotalPrice = order.originTotalPrice;
-                //     obj.showDiscount = order.showDiscount;
-                //     foodItems[0] = obj;
-                // } else {
-                //     foodItems = order.foodItems ? order.foodItems : [];
-                // }
-                // this.foodItems = foodItems;
-            //     return this.$store.getters.catOrder;
-            // }
-
-            // ...mapGetters({ order: 'catOrder' }),
-            // FoodOrder() {
-                // let foodItems = [];
-                // if (this.order.caterOrderId) {
-                //     const obj = {};
-                //     obj.restName = this.order.restName;
-                //     obj.boardDetailResps = this.order.boardDetailResps.map(board => {
-                //         return board.boardName;
-                //     });
-                //     obj.peopleNum = this.order.peopleNum;
-                //     obj.date = this.order.expectStartTime;
-                //     obj.foodPrice = this.order.totalPrice;
-                //     obj.originTotalPrice = this.order.originTotalPrice;
-                //     obj.showDiscount = this.order.showDiscount;
-                //     foodItems[0] = obj;
-                // } else {
-                //     foodItems = this.order.foodItems;
-                // }
-                // this.foodItems = foodItems;
-            //     // return foodItems;
-            // }
-        },
         watch: {
             order: {
                 handler(c, o) {
-                    const order = Object.assign({}, c);
-                    let foodItems = [];
-                    if (order.caterOrderId) {
-                        const obj = {};
-                        obj.restName = order.restName;
-                        obj.boardDetailResps = order.boardDetailResps.map(board => {
-                            return board.boardName;
-                        });
-                        obj.peopleNum = order.peopleNum;
-                        obj.date = order.expectStartTime;
-                        obj.foodPrice = order.totalPrice;
-                        obj.originTotalPrice = order.originTotalPrice;
-                        obj.showDiscount = order.showDiscount;
-                        foodItems[0] = obj;
-                    } else {
-                        foodItems = order.foodItems ? order.foodItems : [];
-                    }
-                    this.foodItems = foodItems;
-                }
+                    this.foodItems = this.getFoodItem();
+                    this.orderType = this.order.foodItems ? 1 : 0;
+                },
+                deep: true
             },
             userOriginType(origin, oldOrigin) {
                 // 如果之前的渠道是undefined，代表初始化
@@ -386,6 +324,26 @@
             DdGroupOption
         },
         methods: {
+            getFoodItem() {
+                const order = Object.assign({}, this.order);
+                let foodItems = [];
+                if (order.caterOrderId) {
+                    const obj = {};
+                    obj.restName = order.restName;
+                    obj.boardDetailResps = order.boardDetailResps.map(board => {
+                        return board.boardName;
+                    });
+                    obj.peopleNum = order.peopleNum;
+                    obj.date = order.expectStartTime;
+                    obj.foodPrice = order.totalPrice;
+                    obj.originTotalPrice = order.originTotalPrice;
+                    obj.showDiscount = order.showDiscount;
+                    foodItems[0] = obj;
+                } else {
+                    foodItems = order.foodItems ? order.foodItems : [];
+                }
+               return foodItems;
+            },
             getRestList() {
                 http.get('/restaurant/listSimple').then(res => {
                     this.resets = res.data.list;
@@ -458,18 +416,21 @@
                     discountChannel: discountChannel,
                     discountRelatedId: discountRelatedId,
                     rests: JSON.stringify(food.map(fo => {
-                        return {
+                        const parm = {
                             discountPrice: fo.discount,
                             quickDiscountId: fo.moreDiscount,
-                            restId: fo.resetId,
-                            dishes: JSON.stringify(fo.itemsMap.map(item => {
+                            restId: fo.resetId
+                        };
+                        if (fo.dishes) {
+                            parm.dishes = JSON.stringify(fo.itemsMap.map(item => {
                                 return {
                                     bookNum: item.bookNum,
                                     dishId: item.dishId,
                                     price: item.price
                                 };
-                            }))
-                        };
+                            }));
+                        }
+                        return parm;
                     }))
                 };
                 http.get(' /dish/calculateDiscountPrice', params)
