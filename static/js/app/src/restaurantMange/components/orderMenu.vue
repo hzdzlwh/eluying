@@ -2,7 +2,7 @@
  * @Author: lwh
  * @Date:   2017-08-14 13:41:42
  * @Last Modified by:   lwh
- * @Last Modified time: 2017-08-14 18:57:11
+ * @Last Modified time: 2017-08-14 20:28:33
  */
 
 <template>
@@ -107,7 +107,7 @@ export default{
             scrollY: 0,
             heightList: [],
             foodClassify: [],
-            listShow: false,
+            fold: true,
             selectFood: []
         };
     },
@@ -123,6 +123,14 @@ export default{
                     return i;
                 }
             }
+        },
+        listShow() {
+            if (!this.selectFood.length) {
+                this.fold = true;
+                return false;
+            }
+            const show = !this.fold;
+            return show;
         }
     },
     methods: {
@@ -177,7 +185,7 @@ export default{
             if (!this.selectFood.length) {
                 return;
             }
-            this.listShow = !this.listShow;
+            this.fold = !this.fold;
         }
     },
     watch: {
@@ -392,18 +400,16 @@ export default{
                             }
                             .menuCart-list{
                                 position: absolute;
-                                top: 0;
+                                bottom: 50px;
                                 width: 318px;
-                                height: 345px;
                                 z-index: 9;
                                 text-align: left;
                                 background: #fafafa;
-                                transform: translate3d(0, -100%, 0);
+                                height: 345px;
                                 &.fold-enter-active, &.fold-leave-active{
-                                    transition: all 0.5s;
+                                    transition: height 0.5s;
                                 }
                                 &.fold-enter, &.fold-leave-active{
-                                    transform: translate3d(0, 0, 0);
                                     height: 0;
                                 }
                             }
