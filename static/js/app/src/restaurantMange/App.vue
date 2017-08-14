@@ -69,6 +69,7 @@
                     text-overflow: ellipsis;
             }
             .restmange-menu-containe{
+                cursor:pointer;
                 background:#ffffff;
                 border:1px solid #d3dce6;
                 box-shadow:0 2px 4px 0 rgba(0,0,0,0.12), 0 0 6px 0 rgba(0,0,0,0.04);

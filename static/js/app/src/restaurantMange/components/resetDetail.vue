@@ -2,12 +2,12 @@
 * @Author: lxj
 * @Date:   2017-08-01 14:45:58
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-08-14 10:56:11
+* @Last Modified time: 2017-08-14 17:24:54
 * @email: 783384903@qq.com
 */
 
 <template>
-    <div class="rest-taday-contain" style="height:auto">
+    <div class="rest-taday-contain" style="height:auto" v-if='openData'>
         <div class="rest-taday-count">
             <div class="restDetail-title-tip">桌号</div>
             <div class="restDetail-title-display">
@@ -22,7 +22,7 @@
                 </div>
                 <div class="rest-restDetail-right">
                     <div class="restDetail-title-tip">{{!isHasOrder ? '用餐时长' :'用餐时间' }}</div>
-                    <div class="restDetail-title-data" v-if='isHasOrder'><DatePicker :value='new Date(openData.creationTime)'  @input='changeBookTime' clearable=false type="datetime" placeholder="选择日期时间" size='small' editable = false :clearable = false format='yyyy-MM-dd HH:mm'/></div>
+                    <div class="restDetail-title-data" v-if='isHasOrder'><DatePicker :value='new Date(openData.creationTime)'  @input='changeBookTime' clearable=false type="datetime" placeholder="选择日期时间" size='small' :editable = false :clearable = false format='yyyy-MM-dd HH:mm'/></div>
                     <div class="restDetail-title-data" v-if='!isHasOrder'>{{openData.timer}}</div>
                 </div>
             </div>
@@ -58,11 +58,11 @@
                     <tr><td width="150px">菜品名称</td><td width="45px">数量</td><td width='80px'>金额</td></tr>
                 </thead>
                 </table>
-                <table>
-                <tbody>
-                <template v-for='item in openData.itemsMap' v-if='restDate.data.itemsMap && leftType !== 4 && openData.itemsMap'>
-                    <tr @click='changeItem(item); dishClick(item)' > <td width="150px"><div><span class="rest-restDetail-dishname" :class='{"rest-item-del" : item.serviceState === 1}'> <span  :class='getTriangle(item)'></span><span >{{item.dishName}}</span></span><span class="rest-item-send" v-if='item.serviceState === 2'>送</span></div></td><td width="45px"><div :class='{"rest-item-del" : item.serviceState === 1}'>x{{item.bookNum}}</div></td><td :class='{"rest-item-del" : item.serviceState === 1}' width='80px'>{{item.price}}</td></tr>
-                    <tr v-for='sub in item.subDishList' @click='dishClick(sub)' v-if='item.select' :class='{"rest-item-del" : sub.serviceState === 1}'>
+                <table class="rest-restDetail-table">
+                <tbody >
+                <template v-for='item in openData.itemsMap' v-if=' leftType !== 4 && openData.itemsMap' >
+                    <tr @click='changeItem(item); dishClick(item)' :class="{'reset-tr-click' : item.click}"> <td width="150px"><div><span class="rest-restDetail-dishname" :class='{"rest-item-del" : item.serviceState === 1}'> <span  :class='getTriangle(item)'></span><span >{{item.dishName}}</span></span><span class="rest-item-send" v-if='item.serviceState === 2'>送</span></div></td><td width="45px"><div :class='{"rest-item-del" : item.serviceState === 1}'>x{{item.bookNum}}</div></td><td :class='{"rest-item-del" : item.serviceState === 1}' width='80px'>{{item.price}}</td></tr>
+                    <tr v-for='sub in item.subDishList' @click='dishClick(sub)' v-if='item.select' :class='{"rest-item-del" : sub.serviceState === 1,"reset-tr-click" : item.click}' >
                         <td class="rest-restDetail-trchild" width="150px">{{sub.dishName}}</td><td width='80px'><div>x{{sub.bookNum}}</div></td><td width='80px'></td>
                     </tr>
                 </template> 
@@ -105,9 +105,9 @@
                                                 : '实退金额'}}</span> <span>¥{{Math.abs(
                                                 findTypePrice(openData.payments, 14))}}</span></div>
                 <div class="restDetail-check-list" v-show='paied'>
-                    <div class="restDetail-check-item" v-if='openData.payments.some(pay => pay.type === 19)'><span>{{dateFormat(openData.payments.find(pay => pay.type === 19).creationTime)}} {{openData.payments.find(pay => pay.type === 19).payChannel}}抵扣</span> <span>￥findTypePrice(openData.payments, 19)</span></div>
-                    <div class="restDetail-check-item" v-if='openData.payments.some(pay => pay.type === 20)'><span>{{dateFormat(openData.payments.find(pay => pay.type === 20).creationTime)}}会员余额</span> <span>￥findTypePrice(openData.payments, 20)</span></div>
-                    <div class="restDetail-check-item" v-if='openData.payments.some(pay => pay.type === 18)'><span>{{dateFormat(openData.payments.find(pay => pay.type === 18).creationTime)}} 常规</span> <span>￥findTypePrice(openData.payments, 18)</span></div>
+                    <div class="restDetail-check-item" v-if='openData.payments.some(pay => pay.type === 19)'><span>{{dateFormat(openData.payments.find(pay => pay.type === 19).creationTime)}} {{openData.payments.find(pay => pay.type === 19).payChannel}}抵扣</span> <span>￥{{findTypePrice(openData.payments, 19)}}</span></div>
+                    <div class="restDetail-check-item" v-if='openData.payments.some(pay => pay.type === 20)'><span>{{dateFormat(openData.payments.find(pay => pay.type === 20).creationTime)}} 会员余额</span> <span>￥{{findTypePrice(openData.payments, 20)}}</span></div>
+                    <div class="restDetail-check-item" v-if='openData.payments.some(pay => pay.type === 18)'><span>{{dateFormat(openData.payments.find(pay => pay.type === 18).creationTime)}} 常规</span> <span>￥{{findTypePrice(openData.payments, 18)}}</span></div>
                 </div>
                  <div class="restDetail-check-item" v-if='findTypePrice(openData.payments, 4) != 0'><span><span></span>违约金</span> <span>findTypePrice(openData.payments, 4)</span></div>
                  <div class="restDetail-check-item"><span><span></span>还需收款</span> <span class="order-price-num red" :class="{green : !Number(findTypePrice(openData.payments, 15))}">{{findTypePrice(openData.payments, 15)}}</span></div>
@@ -115,15 +115,21 @@
 
         </div>
         <div class="resetmange-click-list">
-            <div class="resetMange-btn-base resetMange-btn-promise" @click='addNewFood' v-if='this.leftType !== 4'>{{openData.itemsMap && openData.itemsMap.length ? '加' : '点'}}菜</div>
-            <div class="resetMange-btn-base " @click='openBoard' v-if='this.leftType !== 4'>换桌</div>
-            <div class="resetMange-btn-base " @click='closeBoard' v-if='this.leftType !== 4'>撤台</div>
+            <div class="resetMange-btn-base resetMange-btn-promise" @click='addNewFood' v-if='this.leftType !== 4 && ((isHasOrder && (openData.orderState !== 2 || openData.orderState !== 3 || openData.orderState !== 5 )) || !isHasOrder)'>{{openData.itemsMap && openData.itemsMap.length ? '加' : '点'}}菜</div>
+            <div class="resetMange-btn-base " @click='openBoard' v-if='this.leftType !== 4 && ((isHasOrder && (openData.orderState !== 2 || openData.orderState !== 3 || openData.orderState !== 5 )) || !isHasOrder)'>换桌</div>
+            <div class="resetMange-btn-base " @click='closeBoard' v-if='this.leftType !== 4 && ((!isHasOrder && !openData.itemsMap) || openData.orderState === 2 && openData.boardDetailResps)'>撤台</div>
+            <div class="resetMange-btn-base " v-if='isHasOrder && this.leftType === 4 ' @click='reject'>拒绝</div>
             <div class="resetMange-btn-base resetMange-btn-lager" v-if='this.leftType === 4' @click='submitAddFood'>下单</div>
             <div class="resetMange-btn-base resetMange-btn-lager" v-if='this.leftType === 4' @click='canlAddFood'>取消</div>
-            <div class="resetMange-btn-base " v-if='isHasOrder && this.leftType !== 4' @click='canOrder'>取消订单</div>
-            <div class="resetMange-btn-base " v-if='isHasOrder && this.leftType !== 4'>打印</div>
-            <div class="resetMange-btn-base " v-if='isHasOrder && this.leftType !== 4' @click='crash'>收银</div>
-            <div class="resetMange-btn-base resetMange-btn-promise resetMange-btn-lager" v-if='isHasOrder && this.leftType !== 4' @click='openBoardAndCook'>开台并入厨</div>
+            <div class="resetMange-btn-base " v-if='isHasOrder && openData.orderState === 0' @click='canOrder'>取消订单</div>
+            <div class="resetMange-btn-base " v-if='isHasOrder && this.leftType !== 4 && (openData.orderState === 1 || openData.orderState === 0 || openData.orderState === 2 || openData.orderState === 8)' @click='print'>打印</div>
+            <div class="resetMange-btn-base " v-if='isHasOrder && this.leftType !== 4 && (openData.orderState === 1 || openData.orderState === 0 || openData.orderState === 8)' @click="showCashier('collect')">收银</div>
+            <div class="resetMange-btn-base " v-if='isHasOrder && this.leftType !== 4 && openData.orderState === 1' @click='showCashier("orderDetail")'>结算</div>
+
+            <div class="resetMange-btn-base " v-if='isHasOrder && this.leftType !== 4 && openData.orderState === 8' @click="reGetMoney">重新结账</div>
+            <div class="resetMange-btn-base " v-if='isHasOrder && this.leftType !== 4 && openData.resettleAble' @click="resetOrder">反结账</div>
+            <div class="resetMange-btn-base resetMange-btn-promise resetMange-btn-lager" v-if='!isHasOrder && openData.itemsMap && openData.itemsMap.length && this.leftType !== 4' @click='openBoardAndCook'>开台并入厨</div>
+            <div class="resetMange-btn-base resetMange-btn-promise resetMange-btn-lager" v-if='!isHasOrder && openData.orderState === 4 && this.leftType !== 4' @click='agreeAndCook'>同意并入厨</div>
         </div>
         </div>
         <div class="rest-restDetail-foot reset-restDetail-resetChange" v-if='dishChange'>
@@ -148,7 +154,7 @@
         <changeRemark :visible='changeRemarkVisible':data='dishChange ? dishChange.remark : undefined' @changeRemark='changeRemark'></changeRemark>
         <dishModal :visible='dishModalVisible' :type='dishModalType' :data='dishChange' @hideModal='hideDishModal' @dishChange='dishChangeSub'></dishModal>
 <!--         <bookInfo :visible='bookInfoVisible' :num='bookPeopleNUm' :data='bookData' @hideModal='hidebookInfo' :type='isHasOrder' @changeBook='changeBook'></bookInfo> -->
-<keyBoard :visible ='bookInfoVisible' @close='hidebookInfo' :num ='openData.peopleNum' :dish='openData.boardDetailResps[0].boardName + openData.boardDetailResps[0].boardId' @numChange='changeBookNum'></keyBoard>
+<keyBoard :visible ='bookInfoVisible' @close='hidebookInfo' :num ='openData.peopleNum' :dish='openData.boardDetailResps[0].boardName + openData.boardDetailResps[0].boardId' v-if='openData' @numChange='changeBookNum'></keyBoard>
     </div>
 </template>
 <style lang='scss'>
@@ -190,7 +196,8 @@ export default {
             dishModalType: 0,
             // 0退，1换
             changeRemarkVisible: false,
-            restDate: undefined
+            restDate: undefined,
+            backDish: undefined
         };
     },
     computed: {
@@ -213,7 +220,7 @@ export default {
             return str;
         },
         isHasOrder() {
-            if (this.openData.isHasOrder || this.openData.caterOrderId) {
+            if (this.openData && (this.openData.isHasOrder || this.openData.caterOrderId)) {
                 return true;
             }
             return false;
@@ -226,6 +233,21 @@ export default {
             'canlFood',
             'setOpenData'
         ]),
+        showCashier(type) {
+            bus.$emit('showCashier', { type: type });
+        },
+        reGetMoney() {
+            bus.$emit('showCashier', { type: 'resetOrder' });
+        },
+        resetOrder() {
+            http.get('/order/resettle', { orderId: this.openData.caterOrderId, type: 0 }).then(res => {
+                restBus.$emit('refeshView');
+            });
+        },
+        reject() {
+            http.get('/order/confirmOrder', { caterOrderId: this.openData.caterOrderId, type: 0
+            }).then(res => restBus.$emit('refeshView'));
+        },
         changeRemarkModal() {
             this.changeRemarkVisible = true;
         },
@@ -255,8 +277,22 @@ export default {
             this.dishModalType = type;
         },
         dishClick(dish) {
-            if (dish.serviceState === 1) {
+            if (dish.serviceState === 1 && (this.openData.orderState === 1 || (this.openData.orderState === 2 && this.openData.itemsMap.length && this.openData.itemsMap) || this.openData.orderState === 4 || this.openData.orderState === 8)) {
                 return;
+            }
+            const dishClick = !dish.click;
+            this.$set(dish, 'click', dishClick);
+            if (this.backDish && dish.serviceId === this.backDish.serviceId && !dishClick) {
+                this.dishChange = undefined;
+                this.backDish = undefined;
+                return;
+            }
+            if (this.backDish && this.backDish.click) {
+                this.backDish.click = false;
+                this.backDish = dish;
+            }
+            if (!this.backDish) {
+                this.backDish = dish;
             }
             this.dishChange = dish;
         },
@@ -286,7 +322,10 @@ export default {
             bus.$emit('changeBoard', { data: this.openData });
         },
         openBoardAndCook() {
-            http.get('/board/openBoardAndCook', { restId: this.restId, caterOrderId: this.openData.caterOrderId }).then;
+            http.get('/board/openBoardAndCook', { restId: this.restId, caterOrderId: this.openData.caterOrderId }).then(res => restBus.$emit('refeshView'));
+        },
+        agreeAndCook() {
+            http.get('/order/confirmOrder', { caterOrderId: this.openData.caterOrderId, type: 1 }).then(res => restBus.$emit('refeshView'));
         },
         crash() {
             bus.$emit('showCashier', { type: 'orderDetail' });
@@ -313,6 +352,7 @@ export default {
             parms.restId = this.restId;
             http.get('/board/closeBoard', parms).then(res => {
                 this.setLeftType({ leftType: 0 });
+                restBus.$emit('refeshView');
             });
         },
         submitAddFood() {
@@ -450,8 +490,8 @@ export default {
         DatePicker,
         changeRemark
     },
-    created() {
-        if (!this.openData.isHasOrder) {
+    mounted() {
+        if (this.openData && !this.openData.isHasOrder) {
             this.timer();
             window.inter = window.setInterval(this.timer, 1000 * 60);
         }

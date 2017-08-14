@@ -14,7 +14,7 @@
             </ul>
             <div class="search">
                 <input type="text" class="dd-input" id='search' placeholder="搜索订单号/桌号/客户姓名/手机号" @keyup.enter="search" ref="searchInput">
-                <img class="search-icon" @click="search" src="//static.dingdandao.com/vipSearch.png">
+                <img class="search-icon" @click="search" src="//static.dingdandao.com/vipSearch.png" style="cursor:pointer;">
             </div>
         </div>
         <div class="detail-content-filter">

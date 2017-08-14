@@ -79,7 +79,7 @@
                         <div class="content-item">
                             <div class="content-item-title" style="justify-content: flex-start">
                                 <span style="margin-right: 4px">收银信息</span>
-                                <div class="info-icon">
+                                <div class="info-icon" v-if='type !== ORDER_TYPE.CATERING'>
                                     <div class="info-content" style="right: 0;transform: translateX(100%)">
                                         <p class="info-title">收银信息</p>
                                         <p class="money-item">
@@ -150,6 +150,56 @@
                                         </p>
                                     </div>
                                 </div>
+                                <div class="info-icon" v-if='type === ORDER_TYPE.CATERING'>
+                                    <div class="info-content" style="right: 0;transform: translateX(100%)">
+                                        <p class="info-title">收银信息</p>
+                                        <p class="money-item">
+                                            <span class="money-type">应收金额</span>
+                                            <span class="money-num">¥{{findTypePrice(order.payments, 13)}}</span>
+                                        </p>
+                                        <p class="money-item item-indent money-sub-item">
+                                            <span class="money-type">总金额</span>
+                                            <span class="money-num">¥{{findTypePrice(order.payments, 10)}}</span>
+                                        </p>
+                                        <p class="money-item item-indent money-sub-item" v-if="findTypePrice(order.payments, 17) != 0">
+                                            <span class="money-type">零头处理</span>
+                                            <span class="money-num">
+                                                ¥{{findTypePrice(order.payments, 17) > 0 ? '-' : ''}}{{Math.abs(findTypePrice(order.payments, 17))}}
+                                            </span>
+                                        </p>
+                                        <p class="money-item item-indent money-sub-item"
+                                           v-if="findTypePrice(order.payments, 5) > 0">
+                                            <span class="money-type">折扣金额</span>
+                                            <span class="money-num">¥-{{Math.abs(
+                                                findTypePrice(order.payments, 5))}}</span>
+                                        </p>
+                                        <p class="money-item item-indent money-sub-item"
+                                           v-if="order.discount > 0">
+                                            <span class="money-type">整单优惠</span>
+                                            <span class="money-num">¥-{{Math.abs(order.discount)}}</span>
+                                        </p>
+                                  
+                                        <p class="money-item money-type-border"
+                                           v-if="findTypePrice(order.payments, 4) > 0">
+                                            <span class="money-type">违约金</span>
+                                            <span class="money-num">¥{{findTypePrice(order.payments, 4)}}</span>
+                                        </p>
+                                        <p class="money-item money-type-border">
+                                            <span class="money-type">实收金额</span>
+                                            <span class="money-num">¥{{
+                                                findTypePrice(order.payments, 14)}}</span>
+                                        </p>
+                                        <p class="money-item money-type-border">
+                                            <span class="money-type">还需收款</span>
+                                            <span class="money-num">¥{{
+                                                findTypePrice(order.payments, 15)}}</span>
+                                        </p>
+                                       <!--  <p class="money-item money-type-border">
+                                            <span class="money-type">需退押金</span>
+                                            <span class="money-num">¥{{findTypePrice(order.payments, 16)}}</span>
+                                        </p> -->
+                                    </div>
+                                </div>
                                 <span style="color: #178ce6; cursor: pointer; font-weight: normal;margin-left: 16px" @click="openCashDetail">收银明细</span>
                             </div>
                             <div class="footer-price">
@@ -173,7 +223,7 @@
                                     </span>
                                 </span> -->
                             </div>
-                            <div class="footer-price" style="color:#999;">
+                            <div class="footer-price" style="color:#999;" v-if='type !== ORDER_TYPE.CATERING'>
                                  <span class="order-price-text" v-if='order.payments.some(pay => pay.type === 19)'>
                                     {{order.payments.find(pay => pay.type === 19).payChannel}}抵扣:
                                     <span >
@@ -190,6 +240,26 @@
                                     常规收款已收:
                                     <span >
                                     ¥{{findTypePrice(order.payments, 18)}}
+                                    </span>
+                                </span>
+                            </div>
+                            <div class="footer-price" style="color:#999;" v-if='type === ORDER_TYPE.CATERING'>
+                                 <span class="order-price-text" v-if='order.payments.some(pay => pay.type === 14)'>
+                                    应收金额:
+                                    <span >
+                                    ¥{{findTypePrice(order.payments, 13)}}
+                                    </span>
+                                </span>
+                                <span class="order-price-text" v-if='order.payments.some(pay => pay.type === 4)'>
+                                    违约金:
+                                    <span >
+                                    ¥{{findTypePrice(order.payments, 4)}}
+                                    </span>
+                                </span>
+                                 <span class="order-price-text" v-if='order.payments.some(pay => pay.type === 14)'>
+                                    实收金额:
+                                    <span >
+                                    ¥{{findTypePrice(order.payments, 14)}}
                                     </span>
                                 </span>
                             </div>
@@ -1249,6 +1319,14 @@
                             {
                                 name: '撤台时间',
                                 date: this.order.colseBoardTime
+                            },
+                            {
+                                name: '结账时间',
+                                date: this.order.finishTime
+                            },
+                            {
+                                name: '取消时间',
+                                date: this.order.cancelTime
                             }
                         ];
                     case ORDER_TYPE.COMBINATION:
@@ -1307,12 +1385,15 @@
             },
             reject() {
                 const callBack = function() {
-                    http.get('/catering/cancelDishes', { caterOrderId: this.order.caterOrderId }).then(res => $('#orderDetail').one('hidden.bs.modal', () => { bus.$emit('editOrder', 'editOrder', this.order); }));
+                    // http.get('/catering/cancelDishes', { caterOrderId: this.order.caterOrderId }).then(res => $('#orderDetail').one('hidden.bs.modal', () => { bus.$emit('editOrder', 'editOrder', this.order); }));
+                    http.get('/order/confirmOrder', { caterOrderId: this.order.caterOrderId, type: 0
+                    }).then(res => $('#orderDetail').one('hidden.bs.modal', () => { bus.$emit('editOrder', 'editOrder', this.order); }));
                 };
                 modal.confirm({ title: '提示', message: '确定拒绝该扫码订单吗？' }, callBack);
             },
             agree() {
-                // http.get('/catering/cancelDishes',{caterOrderId,this.order.caterOrderId}).then(res => $('#orderDetail').one('hidden.bs.modal', () => { bus.$emit('editOrder', 'editOrder', this.order); });)
+                http.get('/order/confirmOrder', { caterOrderId: this.order.caterOrderId, type: 1
+                }).then(res => $('#orderDetail').one('hidden.bs.modal', () => { bus.$emit('editOrder', 'editOrder', this.order); }));
             },
             addDish() {
 
