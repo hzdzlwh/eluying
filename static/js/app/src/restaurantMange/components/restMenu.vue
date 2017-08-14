@@ -2,7 +2,7 @@
  * @Author: lwh
  * @Date:   2017-08-03 15:13:42
  * @Last Modified by:   lwh
- * @Last Modified time: 2017-08-14 10:03:55
+ * @Last Modified time: 2017-08-14 13:33:33
  */
 
  <template>
@@ -303,7 +303,7 @@ export default {
                                             color:#178ce6;
                                             border:1px solid #178ce6;
                                             text-align:center;
-                                            line-height:16px;
+                                            line-height:13px;
                                             cursor:pointer;
                                         }
                                     }

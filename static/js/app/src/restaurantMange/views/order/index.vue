@@ -25,6 +25,7 @@
         <reserve-info-modal :visible="reserveInfoVisible" @hideModal="hideModal" @showRelevaneOrder="showRelevanceOrder"></reserve-info-modal>
         <relevance-order-modal :visible="relevanceOrderVisible" @hideModal="hideModal"></relevance-order-modal>
         <change-seat-modal :visible="changeSeatVisible" @hideModal="hideModal"></change-seat-modal>
+        <order-menu-modal :visible="orderMenuVisible" @hideModal="hideModal"></order-menu-modal>
     </div>
 </template>
 <style lang="scss" scoped>
@@ -55,6 +56,7 @@ import resetdetail from '../../components/resetDetail.vue';
 import reserveInfoModal from '../../components/reserveInfo';
 import relevanceOrderModal from '../../components/relevanceOrder';
 import changeSeatModal from '../../components/changeSeat';
+import orderMenuModal from '../../components/orderMenu';
 export default {
     props: {
 
@@ -110,7 +112,8 @@ export default {
         restSeats,
         reserveInfoModal,
         relevanceOrderModal,
-        changeSeatModal
+        changeSeatModal,
+        orderMenuModal
     },
     created() {
     }

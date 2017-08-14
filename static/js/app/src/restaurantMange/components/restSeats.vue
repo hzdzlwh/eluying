@@ -2,7 +2,7 @@
  * @Author: lwh
  * @Date:   2017-08-02 16:04:29
  * @Last Modified by:   Tplant
- * @Last Modified time: 2017-08-14 11:12:52
+ * @Last Modified time: 2017-08-14 13:26:59
  */
 
  <template>
@@ -137,6 +137,7 @@ export default {
                     this[types.SET_LEFT_TYPE]({ leftType: 2 });
                 } else if (board.boardState === 1 && !board.caterOrderId) {                      // 开台未点菜
                     this.getOpenBoardRecords(board.boardId);
+                    this[types.SET_LEFT_TYPE]({ leftType: 2 });
                 }
             }
             if (whichOrder === 'otherOrder') {

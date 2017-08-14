@@ -2,7 +2,7 @@
  * @Author: lwh
  * @Date:   2017-08-12 13:01:30
  * @Last Modified by:   lwh
- * @Last Modified time: 2017-08-14 09:39:12
+ * @Last Modified time: 2017-08-14 15:42:19
  */
 
 <template>
@@ -34,7 +34,7 @@
                                         <div v-for="item in area.boardList" class="seat" :class="{'leisure': item.boardState === 0,
                                             'using': item.boardState === 1 && item.caterOrderId,
                                             'open-table': item.boardState === 1 && !item.caterOrderId,
-                                            'select-table': item.selected}">
+                                            'select-table': item.selected}" @click="selectSeat">
                                             <div class="state-twoCode" :class="{'state-twoCode-right': item.orderState !== 2 && item.orderState !== 4 }">
                                                 <div class="state" :class="{'state-pending': item.orderState === 4 }" v-if="item.orderState === 2 || item.orderState === 4">{{orderState[item.orderState]}}</div>
                                                 <div class="two-dimensionalcode" v-if="item.hasScan"></div>
@@ -50,8 +50,18 @@
                     </div>
                 </div>
                 <div class="modal-foot">
-                    <button class="dd-btn dd-btn-ghost" @click="hideModal">取消</button>
-                    <button class="dd-btn dd-btn-primary" @click="">确定</button>
+                    <div>
+                        <div class="seats-num">已选择3个桌位</div>
+                        <div>
+                            <span>桌位1</span>
+                            <span>桌位1</span>
+                            <span>桌位1</span>
+                        </div>
+                    </div>
+                    <div>
+                        <button class="dd-btn dd-btn-ghost" @click="hideModal">取消</button>
+                        <button class="dd-btn dd-btn-primary" @click="changeSeat">确定</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -116,6 +126,10 @@ export default {
                 this.heightList.push(height);
             });
         },
+        changeSeat() {
+        },
+        selectSeat() {
+        },
         getSeatList() {
             return new Promise((resolve, reject) => {
                 http.get('/board/list', { date: this.date, restId: this.restId, isChange: true }).then(res => {
@@ -152,8 +166,13 @@ export default {
     },
     watch: {
         visible(newValue) {
+            var _this = this;
             if (newValue) {
                 $('#changeSeat').modal('show');
+                $('#changeSeat').on('shown.bs.modal', function() {
+                    _this.initScroll();
+                    _this.calculateHeight();
+                });
             } else {
                 $('#changeSeat').modal('hide');
             }
@@ -161,8 +180,8 @@ export default {
         restId(newValue) {
             this.getSeatList().then(() => {
                 this.$nextTick(() => {
-                    this.initScroll();
-                    this.calculateHeight();
+                    // this.initScroll();
+                    // this.calculateHeight();
                 });
             });
         }
@@ -203,6 +222,9 @@ export default {
                                     line-height: 43px;
                                     text-align: center;
                                     border-bottom: 1px dashed #99a9bf;
+                                    &.active{
+                                        color: #178ce6;
+                                    }
                                 }
                             }
                         }
@@ -253,6 +275,8 @@ export default {
                                             border-radius: 8px;
                                             margin: 4px;
                                             box-shadow: 0 0 2px 0 rgba(0,0,0,0.3);
+                                            position: relative;
+                                            cursor: pointer;
                                             &:nth-child(6n+1){
                                                 margin-left: 0;
                                             }
@@ -268,11 +292,81 @@ export default {
                                             &.open-table{
                                                 background: #ffe6c6;
                                             }
+                                            .state-twoCode{
+                                                display: flex;
+                                                justify-content: space-between;
+                                                padding: 6px 6px 0 0;
+                                                position: absolute;
+                                                width: 100%;
+                                                &.state-twoCode-right{
+                                                    justify-content: flex-end;
+                                                }
+                                                .two-dimensionalcode{
+                                                    width: 16px;
+                                                    height: 16px;
+                                                    background: url('../../../../../image/two-dimensionalcode.png');
+                                                }
+                                                .state{
+                                                    width: 50px;
+                                                    height: 16px;
+                                                    line-height: 16px;
+                                                    border-radius: 0 8px 8px 0;
+                                                    background: #178ce6;
+                                                    font-size: 12px;
+                                                    padding-left: 8px;
+                                                    color: #fff;
+                                                    position: relative;
+                                                    &.state-pending{
+                                                        background: #f24949;
+                                                    }
+                                                }
+                                            }
+                                            .seat-num{
+                                                position: absolute;
+                                                top: 29px;
+                                                width: 100%;
+                                                text-align: center;
+                                                font-size: 14px;
+                                                color: #333333;
+                                                opacity: 0.87;
+                                            }
+                                            .eating-time{
+                                                font-size: 12px;
+                                                color: #999999;
+                                                text-align: center;
+                                                opacity: 0.87;
+                                                position: absolute;
+                                                top: 47px;
+                                                width: 100%;
+                                            }
+                                            .reserve-time{
+                                                width: 58px;
+                                                height: 16px;
+                                                font-size: 12px;
+                                                color: #fff;
+                                                background: #ffba75;
+                                                text-align: center;
+                                                margin-left: 15px;
+                                                border-radius: 8px;
+                                                position: absolute;
+                                                top: 66px;
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
+                    }
+                }
+                .modal-foot{
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 9px 20px 12px;
+                    text-align: left;
+                    .seats-num{
+                        color: #999;
+                        font-size: 12px;
                     }
                 }
             }
