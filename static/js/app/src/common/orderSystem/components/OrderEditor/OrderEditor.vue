@@ -1107,7 +1107,7 @@ export default {
         getSubmitFood() {
             return this.foodItems.map(item => {
                 return {
-                    dateTime: util.dateFormat(item.date),
+                    dateTime: util.dateFormatLong(item.date),
                     discount: item.discount,
                     dishItems: JSON.stringify(item.itemsMap),
                     peopleNum: item.peopleNum,
