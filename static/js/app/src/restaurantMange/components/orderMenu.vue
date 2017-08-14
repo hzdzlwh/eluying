@@ -2,7 +2,7 @@
  * @Author: lwh
  * @Date:   2017-08-14 13:41:42
  * @Last Modified by:   lwh
- * @Last Modified time: 2017-08-14 17:25:32
+ * @Last Modified time: 2017-08-14 18:57:11
  */
 
 <template>
@@ -59,7 +59,7 @@
                     </div>
                     <div class="menu-cart">
                         <div class="cart">
-                            <div class="cart-icon"></div>
+                            <div class="cart-icon" @click="toggleList"></div>
                             <div class="cart-total">
                                 <div>共3项</div>
                                 <div>合计:￥3000</div>
@@ -72,8 +72,8 @@
                                     </div>
                                     <div class="list-content" ref="listContent">
                                         <ul>
-                                            <li>
-                                                
+                                            <li v-for="food in selectFood">
+                                                <span>{{food.dishName}}</span>
                                             </li>
                                         </ul>
                                     </div>
@@ -153,7 +153,7 @@ export default{
                 return el.dishId === food.dishId;
             });
             if (isHasFood) {
-                isHasFood.num ++;
+                isHasFood.num += 1;
             } else {
                 const cacheFood = { ...food };
                 cacheFood.num = 1;
@@ -172,6 +172,12 @@ export default{
         },
         hideModal() {
             this.$emit('hideModal');
+        },
+        toggleList() {
+            if (!this.selectFood.length) {
+                return;
+            }
+            this.listShow = !this.listShow;
         }
     },
     watch: {
@@ -371,6 +377,7 @@ export default{
                         .cart{
                             display: flex;
                             align-items: center;
+                            position: relative;
                             .cart-icon{
                                 width: 32px;
                                 height: 36px;
@@ -381,6 +388,23 @@ export default{
                             .cart-total{
                                 > div{
                                     text-align: left;
+                                }
+                            }
+                            .menuCart-list{
+                                position: absolute;
+                                top: 0;
+                                width: 318px;
+                                height: 345px;
+                                z-index: 9;
+                                text-align: left;
+                                background: #fafafa;
+                                transform: translate3d(0, -100%, 0);
+                                &.fold-enter-active, &.fold-leave-active{
+                                    transition: all 0.5s;
+                                }
+                                &.fold-enter, &.fold-leave-active{
+                                    transform: translate3d(0, 0, 0);
+                                    height: 0;
                                 }
                             }
                         }
