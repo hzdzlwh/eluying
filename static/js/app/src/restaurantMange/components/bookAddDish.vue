@@ -14,12 +14,64 @@
                     </div>
                 </div>
                 <div class="book-dish-search">
-                    <input type="text" v-model="inputValue" placeholder="搜索菜品名称/拼音首字母">
-                    <div class="book-search-icon"></div>
+                    <input type="text" v-model="inputValue" placeholder="搜索菜品名称/拼音首字母" @keyup.enter="search">
+                    <div class="book-search-icon" @click="search"></div>
                 </div>
             </div>
             <div class="book-table-box">
-                <dd-table :columns="col" :data-source="vips" :bordered="true" class="estimate-table"></dd-table>
+                <table class="dd-table orders-manage-table">
+                    <thead>
+                    <tr>
+                        <th style="padding-left: 42px; width: 214px">菜品分类</th>
+                        <th style="width: 120px">菜品名称</th>
+                        <th>预订数量</th>
+                        <th>库存数量</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="noOrders-tr" v-show="vips.length === 0">
+                        <td colspan="10">
+                            <div class="noOrders-container">
+                                <img src="//static.dingdandao.com/ordersManage_noOrders.png" alt="">
+                                <p v-text="searchContent !== '' ? '没有搜索到符合条件的菜品...' : '没有菜品信息'"></p>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr :key="item.orderId"
+                        v-for="(item, index) in vips"
+                        v-if="vips.length > 0"
+                        :class="['orders-tr', index % 2 === 1 ? 'orders-tr-even' : 'orders-tr-odd']"
+                    >
+                        <td style="padding-left: 42px; position: relative;">
+                            <div class="dd-arrowRight-orderNum dd-orderArrow" v-if="false && !!item.subOrderList && item.subOrderList.length > 1 && !item.showSub"></div>
+                            <div class="dd-arrowDown-orderNum dd-orderArrow" v-if="false && !!item.subOrderList && item.subOrderList.length > 1 && item.showSub"></div>
+                            {{ item.orderNum }}
+                        </td>
+                        <td style="font-size: 0">
+                            <span class="order-state order-state-red" v-if="getOrderType(item).indexOf(3) !== -1">住</span>
+                            <span class="order-state order-state-yellow" v-if="getOrderType(item).indexOf(0) !== -1">餐</span>
+                            <span class="order-state order-state-blue" v-if="getOrderType(item).indexOf(1) !== -1">娱</span>
+                            <span class="order-state order-state-green" v-if="getOrderType(item).indexOf(2) !== -1">商</span>
+                        </td>
+                        <td v-text="item.orderTotalPrice"></td>
+                        <td v-text="item.payAmount"></td>
+                        <td v-text="item.payChannels" :title="item.payChannels"></td>
+                        <td v-text="item.customerName === '单日客' ? '--' : item.customerName"></td>
+                        <td v-text="item.customerPhone || '--'"></td>
+                        <td v-text="item.origin"></td>
+                        <td v-text="item.date"></td>
+                        <td v-text="getOrderStatusText(item)"></td>
+                        <td v-text="!!item.operators && item.operators.length > 0
+                                    ? item.operators.join('、') : '--'"
+                            :title="!!item.operators && item.operators.length > 0
+                                    ? `${item.operators.join('、')}共${item.operators.length}人`
+                                    : '没有收银员'">
+                        </td>
+                        <td v-text="item.operator"></td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -43,6 +95,7 @@
                 height: 14px;
                 vertical-align: middle;
                 float: right;
+                cursor: pointer;
             }
         }
         .book-dish-container {
@@ -75,7 +128,8 @@
                         right: 0;
                         width: 24px;
                         height: 24px;
-                        background: url('/static/image/bg_banner.png') center center no-repeat;
+                        cursor: pointer;
+                        background: url('//static.dingdandao.com/vipSearch.png') center center no-repeat;
                     }
                     &:hover {
                         border: 1px solid #178ce6;
@@ -102,34 +156,7 @@
         data() {
             return {
                 inputValue: '',
-                vips: [],
-                col: [
-                    {
-                        title: '菜品分类',
-                        dataIndex: '',
-                        width: 100
-                    },
-                    {
-                        title: '菜品名称',
-                        dataIndex: '',
-                        width: 100
-                    },
-                    {
-                        title: '预订数量',
-                        dataIndex: '',
-                        width: 80
-                    },
-                    {
-                        title: '库存数量',
-                        dataIndex: '',
-                        width: 80
-                    },
-                    {
-                        title: '操作',
-                        render: (h, row) =>
-                            <div>设置</div>
-                    }
-                ]
+                vips: []
             };
         },
         created() {
@@ -144,7 +171,8 @@
                 const obj = {
                     queryType: 2,
                     restId: this.restId,
-                    dishCategoryId: this.dishType.split('~')[1]
+                    dishCategoryId: this.dishType.split('~')[1],
+                    keyWord: this.inputValue
                 };
                 // 后台要求如果为空就不传
                 for (const ob in obj) {
@@ -164,6 +192,17 @@
                         });
                     }
                 });
+            },
+            search() {
+                this.dishType = '-1~';
+                this.getData();
+            },
+            opperateBookDish() {
+            }
+        },
+        watch: {
+            dishType() {
+                this.getData();
             }
         },
         components: {
