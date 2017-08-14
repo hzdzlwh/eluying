@@ -41,6 +41,23 @@
                         </div>
                     </inner-container>
                 </outer-container>
+                <outer-container :title="sellClearSetting">
+                    <inner-container :title="sellClearDish" :toggleView="shortSellView">
+                        <div slot="show">
+                            <label><input type="checkbox" v-model="checked" disabled>为预定订单保留菜品数量</label>
+                            <p class="label-bottom-p">
+                                勾选之后，点菜界面显示的菜品剩余数量=实际库存-预订数量
+                            </p>
+                        </div>
+                        <div slot="edit" style="padding-bottom: 20px;">
+                            <label><input type="checkbox" v-model="checked">为预定订单保留菜品数量</label>
+                            <p class="label-bottom-p">
+                                勾选之后，点菜界面显示的菜品剩余数量=实际库存-预订数量
+                            </p>
+                            <btn style="padding-left:20px;" @save="saveSellClear" @cancel="shortSellView = !shortSellView"></btn>
+                        </div>
+                    </inner-container>
+                </outer-container>
             </div>
         </div>
     </div>
@@ -52,18 +69,19 @@
     import btn from './components/button';
     import http from '../../../common/http';
     import modal from '../../../common/modal';
-
+    const restId = location.search.split('=')[1];
     export default {
         data() {
             return {
-                restId: undefined,
                 restName: undefined,
                 disconuntAndChange: '折扣及零头处理',
                 sellClearSetting: '沽清设置',
+                sellClearDish: '菜品沽清',
                 shortcutDiscount: '快捷折扣',
                 changeProcess: '零头处理',
                 shortcutView: true,
                 changeView: true,
+                shortSellView: true,
                 processMethod: 0,
                 accurate: 0,
                 freeHouse: null,
@@ -72,7 +90,8 @@
                 processMethodsValue: null,
                 accurateArray: ['角', '元', '十元'],
                 accurateValue: null,
-                newDiscounts: []
+                newDiscounts: [],
+                checked: false
             };
         },
         components: {
@@ -81,9 +100,18 @@
             btn
         },
         created() {
+            this.getRestaurants();
             this.getDiscountLists();
         },
         methods: {
+            getRestaurants: function() {
+                http.get('/catering/getRestaurantList', {})
+                    .then(result => {
+                        this.restName = result.data.list.filter(function(el) {
+                            return el.restId == restId;
+                        })[0].restName;
+                    });
+            },
             addDiscount() {
                 this.newDiscounts.push({
                     description: '',
@@ -100,8 +128,8 @@
             saveShortcutDiscount() {
                 const list = this.discountLists.filter(i => i.deleted).concat(this.newDiscounts);
                 http.post('/quickDiscount/discountAndOddSettingEdit', {
-                    nodeId: 0,
-                    nodeType: 0,
+                    nodeId: restId,
+                    nodeType: 1,
                     quickDiscountList: JSON.stringify(list)
                 }).then(res => {
                     this.shortcutView = !this.shortcutView;
@@ -111,8 +139,8 @@
             },
             saveChangeProcess() {
                 http.post('/quickDiscount/discountAndOddSettingEdit', {
-                    nodeId: 0,
-                    nodeType: 0,
+                    nodeId: restId,
+                    nodeType: 1,
                     oddType: this.processMethod,
                     unit: this.accurate
                 }).then(res => {
@@ -120,8 +148,16 @@
                     this.getDiscountLists();
                 });
             },
+            saveSellClear() {
+                http.get('/catering/setReservePreOrderDish', {
+                    restId: restId,
+                    reserve: this.checked ? 1 : 0
+                }).then(res => {
+                    this.shortSellView = !this.shortSellView;
+                });
+            },
             getDiscountLists() {
-                http.get('/quickDiscount/getList', { nodeId: 0, nodeType: 0 }).then((res) => {
+                http.post('/quickDiscount/getList', { nodeId: restId, nodeType: 1 }).then((res) => {
                     if (res.code === 1) {
                         this.discountLists = res.data.list;
                         this.processMethodsValue = res.data.oddSetting.oddType;
@@ -152,5 +188,20 @@
         .add-discount{
             padding: 0 20px;
         }
+    }
+    label {
+        height: 40px;
+        line-height:40px;
+        padding: 0 24px;
+        input {
+            vertical-align: text-bottom;
+        }
+    }
+    .label-bottom-p {
+        line-height: 60px;
+        margin: -35px 0 20px;
+        font-size: 12px;
+        color: rgb(135,135,135);
+        padding: 0 40px;
     }
 </style>

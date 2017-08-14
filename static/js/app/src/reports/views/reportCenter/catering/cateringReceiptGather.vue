@@ -66,7 +66,7 @@
                         width: 60
                     },
                     {
-                        title: '全单优惠',
+                        title: '整单优惠',
                         dataIndex: 'discount',
                         width: 60
                     },

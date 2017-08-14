@@ -97,7 +97,7 @@
                         width: 60
                     },
                     {
-                        title: '全单优惠',
+                        title: '整单优惠',
                         dataIndex: 'discount',
                         width: 60
                     },
@@ -252,10 +252,10 @@
                 };
                 http.get('/stat/getDailyCaterOrderReport', obj).then(res => {
                     if (res.code === 1) {
-                        this.vips = res.data.list || [];
-                        this.orderNum = res.data.count;
-                        this.receiptNum = res.data.count;
-                        this.receiptFree = res.data.totalPrice;
+                        this.vips = res.data.entityList || [];
+                        this.orderNum = res.data.total;
+                        this.receiptNum = res.data.totalPrice;
+                        this.receiptFree = res.data.payment;
                         this.pages = Math.ceil(res.data.total / 30);
                     }
                 });

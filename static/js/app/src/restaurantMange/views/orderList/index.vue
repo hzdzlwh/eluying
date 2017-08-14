@@ -13,7 +13,7 @@
                 <li v-for='item in tagList' :class='item.id === tag ? "active":""' @click='changeTag(item.id)'>{{item.name}}</li>
             </ul>
             <div class="search">
-                <input type="text" class="dd-input" id='search' placeholder="房号/客户姓名/入住人/手机号/订单号" @keyup.enter="search" ref="searchInput">
+                <input type="text" class="dd-input" id='search' placeholder="搜索订单号/桌号/客户姓名/手机号" @keyup.enter="search" ref="searchInput">
                 <img class="search-icon" @click="search" src="//static.dingdandao.com/vipSearch.png">
             </div>
         </div>
@@ -26,12 +26,12 @@
             </div>
             <div class="add-button fr">
                 <div class="dd-dropdown">
-                    <DdDropdown text="导出明细" trigger="click">
+                    <DdDropdown text="导出明细" trigger="click" style="z-index:12;">
                         <dd-dropdown-item>
-                            <span><a :href="outPutText(2)" download>导出PDF</a></span>
+                            <span><a :href="outPutText(1)" download>导出PDF</a></span>
                         </dd-dropdown-item>
                         <dd-dropdown-item>
-                            <span><a :href="outPutText(1)" download>导出Excel</a></span>
+                            <span><a :href="outPutText(0)" download>导出Excel</a></span>
                         </dd-dropdown-item>
                     </DdDropdown>
                 </div>
@@ -59,7 +59,7 @@
             </div>
             <div style="width: 120px;" class="fr" >
                 <dd-select v-model="channelPerson" >
-                    <dd-option :key="item.id" v-for="item in channelPersonAll" :value="item.id" :label="item.name"></dd-option>
+                    <dd-option :key="item.id" v-for="item in channelPersonAll" :value="item.channelPerson" :label="item.name"></dd-option>
                 </dd-select>
             </div>
             <div style="width: 120px;" class="fr" >
@@ -284,10 +284,11 @@
                 channelPersonAll: [
                     {
                         id: -1,
-                        name: '全部收银员'
+                        name: '全部收银员',
+                        channelPerson: '-1~'
                     }
                 ],
-                channelPerson: -1,
+                channelPerson: '-1~',
                 vips: [],
                 pages: 0,
                 total: 0,
@@ -318,17 +319,18 @@
                     },
                     {
                         title: '用餐时间',
-                        dataIndex: 'caterTime'
+                        dataIndex: 'caterTime',
+                        width: 120
                     },
                     {
                         title: '应收金额',
                         dataIndex: 'totalPrice',
-                        width: 120
+                        width: 80
                     },
                     {
                         title: '实收金额',
                         dataIndex: 'payment',
-                        width: 120
+                        width: 80
                     },
                     {
                         title: '收银方式',
@@ -373,6 +375,7 @@
             this.getData();
             this.fetchData();
             this.getChannelType();
+            this.getChannelPerson();
             eventbus.$on('refreshView', this.fetchData);
         },
         mounted() {
@@ -461,21 +464,30 @@
                         }
                     });
             },
-            fetchData(keyword) {
+            fetchData() {
                 const obj = {
                     discountRelatedId: this.userOriginType.split('~')[1] !== '-5' ? undefined : this.userOriginType.split('~')[0],
                     toDate: this.endTime,
-                    pageNum: this.pageNo,
+                    pageNo: this.pageNo,
                     originId: this.userOriginType.split('~')[1],
                     startDate: this.startTime,
-                    status: this.state === -1 ? undefined : this.state,
-                    cashierId: this.channelPerson === -1 ? undefined : this.channelPerson,
-                    payChannel: this.channelType === -1 ? undefined : this.channelType,
-                    tag: this.tag
+                    payChannel: this.channelType === -1 ? undefined : this.channelType
                 };
-                if (keyword) {
-                    obj.keyword = this.searchPattern;
+                if (this.tag === -1) {
+                    if (this.state === -1) {
+                        obj.status = JSON.stringify([3, 4, 5]);
+                    } else if (this.state !== -1) {
+                        obj.status = JSON.stringify([this.state]);
+                    }
+                } else if (this.tag !== -1 && this.tag !== 10) {
+                    obj.status = JSON.stringify([this.tag]);
+                } else if (this.tag === 10) {
+                    obj.status = JSON.stringify([1, 8]);
                 }
+                if (this.searchPattern) {
+                    obj.searchText = this.searchPattern;
+                }
+                obj.cashierId = this.channelPerson.split('~')[1];
                 // 后台要求如果为空就不传
                 for (const ob in obj) {
                     if (obj[ob] === undefined || obj[ob] === '') {
@@ -484,22 +496,12 @@
                 }
                 http.get('/stat/getCaterOrderStat', obj).then(res => {
                     if (res.code === 1) {
-                        this.vips = res.data.list;
-                        this.totalMany = res.data.orderTotalPrice;
-                        this.count = res.data.orderAmount;
+                        this.vips = res.data.entityList;
+                        this.total = res.data.total;
+                        this.totalPrice = res.data.totalPrice;
+                        this.payment = res.data.payment;
                         this.pages = Math.ceil(res.data.total / 30);
-                        // if (keyword) {
-                        //     this.originId = -2;
-                        //     this.endTime = undefined;
-                        //     this.pageNo = 1;
-                        //     this.searchPattern = undefined;
-                        //     this.startTime = undefined;
-                        //     this.state = -1;
-                        //     this.timeType = 1;
-                        //     $("#search").val('');
-                        // }
                     }
-                    this.flag = true;
                 });
             },
             disableEndDate(date) {
@@ -521,20 +523,26 @@
             outPutText(num) {
                 const paramsObj = {
                     discountRelatedId: this.userOriginType.split('~')[1] !== '-5' ? undefined : this.userOriginType.split('~')[0],
-                    endDate: this.endTime,
+                    toDate: this.endTime,
                     pageNo: this.pageNo,
-                    keyword: this.searchPattern,
                     originId: this.userOriginType.split('~')[1],
                     startDate: this.startTime,
-                    state: this.state === -1 ? undefined : this.state,
-                    tag: this.tag,
-                    timeType: this.timeType
+                    payChannel: this.channelType === -1 ? undefined : this.channelType
                 };
-                if (this.searchPattern) {
-                    paramsObj.keyword = this.searchPattern;
+                paramsObj.cashierId = this.channelPerson.split('~')[1];
+                if (this.tag === -1) {
+                    if (this.state === -1) {
+                        paramsObj.status = [3, 4, 5];
+                    } else if (this.state !== -1) {
+                        paramsObj.status = [this.state];
+                    }
+                } else if (this.tag !== -1 && this.tag !== 10) {
+                    paramsObj.status = [this.tag];
+                } else if (this.tag === 10) {
+                    paramsObj.status = [1, 8];
                 }
-                if (this.checkType !== -1) {
-                    paramsObj.checkType = this.checkType;
+                if (this.seachPattern) {
+                    paramsObj.searchText = this.searchPattern;
                 }
                 // 后台要求如果为空就不传
                 for (const ob in paramsObj) {
@@ -542,31 +550,57 @@
                         delete paramsObj[ob];
                     }
                 }
-                paramsObj.type = num;
-                const host = http.getUrl('/order/exportAccOrderPc');
-                const pa = http.getDataWithToken(paramsObj);
-                // pa.map = JSON.parse(pa.map);
+                const obj = {
+                    exportType: num,
+                    reportType: 309,
+                    params: JSON.stringify(paramsObj)
+                };
+                const host = http.getUrl('/stat/exportReport');
+                const pa = http.getDataWithToken(obj);
+                pa.params = JSON.parse(pa.params);
                 const params = http.paramsToString(pa);
                 return `${host}?${params}`;
             },
             search() {
                 this.searchPattern = this.$refs.searchInput.value;
-                this.flag = false;
-                this.tag = 0;
-                this.discountRelatedId = undefined;
+                this.tag = -1;
+                this.state = -1;
+                this.channelType = -1;
                 this.endTime = '';
                 this.pageNo = 1;
-                this.originId = undefined;
                 this.startTime = '';
                 this.state = -1;
-                this.timeType = 1;
+                this.channelPerson = '-1~';
                 this.userOriginType = '-2~';
-                this.fetchData(this.searchPattern);
+                this.fetchData();
             },
             getChannelType() {
                 http.get('/user/getChannels', { type: 1, isAll: true }).then(res => {
                     if (res.code === 1) {
                         this.channelTypeAll = [...this.channelTypeAll, ...res.data.list];
+                    }
+                });
+            },
+            getChannelPerson() {
+                const obj = {
+                    startDate: this.startTime,
+                    toDate: this.endTime,
+                    subOrderType: 0
+                };
+                for (const ob in obj) {
+                    if (obj[ob] === undefined || obj[ob] === '') {
+                        delete obj[ob];
+                    }
+                }
+                http.get('/network/getCashier', obj).then(res => {
+                    if (res.code === 1) {
+                        const cashierAll = res.data.list;
+                        cashierAll.forEach(cashier => {
+                            cashier.id = cashier.cashierId;
+                            cashier.name = cashier.cashierName;
+                            cashier.channelPerson = `-1~${cashier.cashierId}`;
+                            this.channelPersonAll.push(cashier);
+                        });
                     }
                 });
             },
