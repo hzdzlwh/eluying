@@ -331,6 +331,7 @@ export default {
             phoneValid: true,
             remark: '',
             enterItems: [],
+            foodItems: [],
             shopGoodsItems: [],
             newGoodItems: [], // 新的商超项目
             previousGoods: [], // 之前的商超项目
@@ -1103,7 +1104,19 @@ export default {
                 this.previousGoods.unshift(previousItem);
             }
         },
-
+        getSubmitFood() {
+            return this.foodItems.map(item => {
+                return {
+                    dateTime: util.dateFormatLong(item.date),
+                    discount: item.discount,
+                    dishItems: JSON.stringify(item.itemsMap),
+                    peopleNum: item.peopleNum,
+                    quickDiscountId: item.moreDiscount,
+                    restId: item.resetId,
+                    remark: item.remark || ''
+                };
+            });
+        },
         getSubmitEnterItems() {
             return this.enterItems.map(item => {
                 return {
@@ -1347,7 +1360,7 @@ export default {
             this.getSubmitGoods();
             const rooms = this.getSubmitRooms();
             const entertainmentItems = this.getSubmitEnterItems();
-
+            const foodItem = this.getSubmitFood();
             const params = {
                 name: this.name,
                 phone: this.phone,
@@ -1356,6 +1369,7 @@ export default {
                 entertainmentItems: JSON.stringify(entertainmentItems),
                 items: JSON.stringify(this.newGoodItems),
                 goods: JSON.stringify(this.previousGoods),
+                caterItems: JSON.stringify(foodItem),
                 ...this.getDiscountRelatedIdAndOrigin(),
                 salerId: this.saleId
             };
@@ -1470,8 +1484,8 @@ export default {
         handleWhenCheckInDeleteRooms(whenCheckInDeleteRooms) {
             this.whenCheckInDeleteRooms = whenCheckInDeleteRooms;
         },
-        handleFoodChange() {
-            return false;
+        handleFoodChange(food) {
+            this.foodItems = food;
         },
         handleEnterChange(enter) {
             this.enterItems = enter;

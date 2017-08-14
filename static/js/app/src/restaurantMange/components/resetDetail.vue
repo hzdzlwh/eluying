@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-08-01 14:45:58
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-08-10 16:49:12
+* @Last Modified time: 2017-08-14 10:56:11
 * @email: 783384903@qq.com
 */
 
@@ -57,16 +57,18 @@
                 <thead>
                     <tr><td width="150px">菜品名称</td><td width="45px">数量</td><td width='80px'>金额</td></tr>
                 </thead>
+                </table>
+                <table>
                 <tbody>
                 <template v-for='item in openData.itemsMap' v-if='restDate.data.itemsMap && leftType !== 4 && openData.itemsMap'>
-                    <tr @click='changeItem(item); dishClick(item)' > <td><div><span class="rest-restDetail-dishname" :class='{"rest-item-del" : item.serviceState === 1}'> <span  :class='getTriangle(item)'></span><span >{{item.dishName}}</span></span><span class="rest-item-send" v-if='item.serviceState === 2'>送</span></div></td><td><div :class='{"rest-item-del" : item.serviceState === 1}'>x{{item.bookNum}}</div></td><td :class='{"rest-item-del" : item.serviceState === 1}'>{{item.price}}</td></tr>
+                    <tr @click='changeItem(item); dishClick(item)' > <td width="150px"><div><span class="rest-restDetail-dishname" :class='{"rest-item-del" : item.serviceState === 1}'> <span  :class='getTriangle(item)'></span><span >{{item.dishName}}</span></span><span class="rest-item-send" v-if='item.serviceState === 2'>送</span></div></td><td width="45px"><div :class='{"rest-item-del" : item.serviceState === 1}'>x{{item.bookNum}}</div></td><td :class='{"rest-item-del" : item.serviceState === 1}' width='80px'>{{item.price}}</td></tr>
                     <tr v-for='sub in item.subDishList' @click='dishClick(sub)' v-if='item.select' :class='{"rest-item-del" : sub.serviceState === 1}'>
-                        <td class="rest-restDetail-trchild">{{sub.dishName}}</td><td><div>x{{sub.bookNum}}</div></td><td></td>
+                        <td class="rest-restDetail-trchild" width="150px">{{sub.dishName}}</td><td width='80px'><div>x{{sub.bookNum}}</div></td><td width='80px'></td>
                     </tr>
                 </template> 
                 <template v-if='leftType === 4'>
                     <tr v-for='(item,index) in addFood'>
-                        <td class="rest-restDetail-trchild">{{item.name}}</td><td><div style='width:100px;'><count :del=true :min = -1 :num='item.num' :onNumChange='onNumChange' :id='item.id'></count></div></td><td>{{item.price * item.num }}</td>
+                        <td class="rest-restDetail-trchild" width="150px">{{item.dishName}}</td><td width="45px"><div style='width:100px;'><count :del=true :min = -1 :num='item.num' :onNumChange='onNumChange' :id='item.dishId'></count></div></td><td width='80px'>{{item.dishPrice * item.num }}</td>
                     </tr>
                 </template>
                 </tbody>
@@ -143,7 +145,7 @@
                 </div>
             </div>
         </div>
-        <changeRemark :visible='changeRemarkVisible':data='dishChange.remark' @changeRemark='changeRemark'></changeRemark>
+        <changeRemark :visible='changeRemarkVisible':data='dishChange ? dishChange.remark : undefined' @changeRemark='changeRemark'></changeRemark>
         <dishModal :visible='dishModalVisible' :type='dishModalType' :data='dishChange' @hideModal='hideDishModal' @dishChange='dishChangeSub'></dishModal>
 <!--         <bookInfo :visible='bookInfoVisible' :num='bookPeopleNUm' :data='bookData' @hideModal='hidebookInfo' :type='isHasOrder' @changeBook='changeBook'></bookInfo> -->
 <keyBoard :visible ='bookInfoVisible' @close='hidebookInfo' :num ='openData.peopleNum' :dish='openData.boardDetailResps[0].boardName + openData.boardDetailResps[0].boardId' @numChange='changeBookNum'></keyBoard>
@@ -188,29 +190,7 @@ export default {
             dishModalType: 0,
             // 0退，1换
             changeRemarkVisible: false,
-            restDate: {
-                'code': 61058, 'data':
-                {
-                    'boardDetailResps': [
-                        {
-                            'boardId': 86250, 'boardName': '测试内容u2fj'
-                        }
-                    ], 'boardInfoStatus': 60315, 'boardState': 15170, 'canCancelSaleOrder': true, 'cancelAble': false, 'caterOrderId': 82081, 'changeBoard': false, 'channelDiscount': 75345, 'colseBoardTime': '测试内容76o1', 'creationTime': '测试内容98xi', 'customerName': '测试内容o8su', 'customerPhone': '测试内容9b4v', 'customerType': 46771, 'discount': 34406, 'discountChannel': 72281, 'discountRelatedId': 10840, 'discountRelatedName': '测试内容rh4n', 'editAble': false, 'expectStartTime': '测试内容1173', 'hasPrinter': true, 'hasRole': true, 'infoStatus': 53553, 'isCombinationOrder': false, 'isExistComplimentary': 13066, 'isExistDish': 83004, 'isExistPackage': 71415, 'itemsMap': [
-                        {
-                            'bookNum': 12266, 'creationTime': '测试内容7ih9', 'dishId': 65546, 'dishName': '测试内容161y', 'dishType': 15172, 'isSend': false, 'operatorName': '测试内容k432', 'price': 57527, 'remark': '测试内容4fm6', 'serviceState': 1, 'subDishList': [
-                                {
-                                    'bookNum': 45563, 'dishId': 15876, 'dishName': '测试内容4285', 'price': 74613, 'serviceState': 1
-                                }
-                            ]
-                        }
-                    ], 'needPrint': true, 'onePass': false, 'operationId': 18753, 'operatorDate': '测试内容c4ic', 'operatorName': '测试内容a2g4', 'orderId': 88550, 'orderNum': '测试内容6e11', 'orderState': 48013, 'orderTime': '测试内容1991', 'orderType': 57332, 'origin': '测试内容i91i', 'originId': 33462, 'originType': 46332, 'payments': [
-                        {
-                            'creationTime': 35243, 'fee': 33384, 'payChannel': '测试内容p4c2', 'payId': 27773, 'state': 74325, 'type': 57076
-                        }
-                    ], 'peopleNum': 52357, 'quickDescription': '测试内容81e5', 'quickDiscountId': 30240, 'relationStatus': 33666, 'remark': '测试内容41de', 'reserveName': '测试内容3615', 'resettleAble': false, 'restId': 81015, 'restName': '测试内容4ioh', 'salerId': 42716, 'salerString': '测试内容dqm8', 'scan': 74276, 'showDiscount': '测试内容a61c', 'showPrint': true, 'totalPrice': 21370, 'type': 87814, 'vipDiscount': 74287, 'vipId': 45370, 'vipLevel': '测试内容s12s'
-                },
-                'msg': '测试内容mz33'
-            }
+            restDate: undefined
         };
     },
     computed: {
@@ -253,7 +233,7 @@ export default {
             this.changeRemarkVisible = false;
         },
         changeRemark(val) {
-            http.get('/order/modifyCaterOrderRemark', { caterOrderId: this.openData.caterOrderId, remark: val }).then(res => {
+            http.get('/catering/modifyDishRemark', { caterOrderId: this.openData.caterOrderId, remark: val, serviceId: this.dishChange.serviceId }).then(res => {
                 restBus.$emit('refeshView');
             });
         },

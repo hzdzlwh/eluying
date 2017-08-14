@@ -2,7 +2,7 @@
  * @Author: lwh
  * @Date:   2017-08-03 15:13:42
  * @Last Modified by:   lwh
- * @Last Modified time: 2017-08-09 15:40:01
+ * @Last Modified time: 2017-08-14 10:03:55
  */
 
  <template>
@@ -17,7 +17,7 @@
                     <div class="scroller">
                         <h3>菜品分类</h3>
                         <ul>
-                            <li v-for="(item, index) in foodClassify" :class="{ 'active': currentIndex === index }" @click="setMenu(index, $event)"><span :class="{'tow-line': item.twoLine}">{{item.name}}</span></li>
+                            <li v-for="(item, index) in foodClassify" :class="{ 'active': currentIndex === index }" @click="setMenu(index, $event)"><span :class="{'tow-line': item.twoLine}">{{item.dishCategoryName}}</span></li>
                         </ul>
                     </div>
                 </div>
@@ -26,12 +26,16 @@
                 <div class="food-container" ref="menu" id="menu">
                     <div class="scroller">
                         <div v-for="item in foodClassify" class="food-list" ref="foodList">
-                            <h4 ref="foodListHeader">{{item.name}}</h4>
+                            <h4 ref="foodListHeader">{{item.dishCategoryName}}</h4>
                             <div class="food-wrapper">
-                                <div v-for="food in item.foods" class="food" @click="orderMenu(food)">
-                                    <div class="name">{{food.name}}</div>
-                                    <div class="price" v-if="food.name !== '新增自定义菜'">￥{{food.price}}</div>
-                                    <div class="price add-dish" v-else><span class="add" @click="newDish">+</span></div>
+                                <div v-for="food in item.dishes" class="food" @click="orderMenu(food)">
+                                    <div class="name">{{food.dishName}}</div>
+                                    <div class="price">￥{{food.dishPrice}}</div>
+                                    <div class="inventory" :class="{no:!food.inventoryNum}" v-if="!food.customerDish"><span v-if="food.inventoryNum">剩{{food.inventoryNum}}</span><span v-else>售完</span></div>
+                                </div>
+                                <div class="food" v-if="item.dishCategoryId === -2">
+                                    <div class="name">自定义菜品</div>
+                                    <div class="price add-dish"><span class="add" @click="newDish">+</span></div>
                                 </div>
                             </div>
                         </div>
@@ -39,7 +43,7 @@
                 </div>
             </div>
         </div>
-        <add-dish-modal :visible="addDishVisible" @hideModal="hideModal"></add-dish-modal>
+        <add-dish-modal :visible="addDishVisible" @hideModal="hideModal" @addDish="addDish"></add-dish-modal>
      </div>
  </template>
 
@@ -55,213 +59,15 @@ export default {
             heightList: [],
             scrollY: 0,
             addDishVisible: false,
-            foodClassify: [
-                {
-                    name: '套餐',
-                    foods: [
-                        {
-                            id: 3,
-                            name: '红烧肉',
-                            price: 50,
-                            num: 1
-                        },
-                        {
-                            id: 6,
-                            name: '番茄炒蛋',
-                            price: 40,
-                            num: 1
-                        },
-                        {
-                            id: 4,
-                            name: '干锅土豆',
-                            price: 10,
-                            num: 1
-                        },
-                        {
-                            id: 5,
-                            name: '大盘鸡',
-                            price: 80,
-                            num: 1
-                        },
-                        {
-                            name: '酸菜鱼',
-                            price: 50
-                        },
-                        {
-                            name: '清蒸鱼',
-                            price: 40
-                        },
-                        {
-                            name: '干锅花菜',
-                            price: 10
-                        },
-                        {
-                            name: '烤鸭',
-                            price: 20
-                        }
-                    ]
-                },
-                {
-                    name: '热菜',
-                    foods: [
-                        {
-                            name: '红烧肉',
-                            price: 50
-                        },
-                        {
-                            name: '番茄炒蛋',
-                            price: 40
-                        },
-                        {
-                            name: '干锅土豆',
-                            price: 10
-                        },
-                        {
-                            name: '大盘鸡',
-                            price: 80
-                        },
-                        {
-                            name: '酸菜鱼',
-                            price: 50
-                        },
-                        {
-                            name: '清蒸鱼',
-                            price: 40
-                        },
-                        {
-                            name: '干锅花菜',
-                            price: 10
-                        },
-                        {
-                            name: '烤鸭',
-                            price: 20
-                        },
-                        {
-                            name: '酸菜鱼',
-                            price: 50
-                        },
-                        {
-                            name: '清蒸鱼',
-                            price: 40
-                        },
-                        {
-                            name: '干锅花菜',
-                            price: 10
-                        },
-                        {
-                            name: '烤鸭',
-                            price: 20
-                        },
-                        {
-                            name: '酸菜鱼',
-                            price: 50
-                        },
-                        {
-                            name: '清蒸鱼',
-                            price: 40
-                        },
-                        {
-                            name: '干锅花菜',
-                            price: 10
-                        },
-                        {
-                            name: '烤鸭',
-                            price: 20
-                        }
-                    ]
-                },
-                {
-                    name: '冷菜',
-                    foods: [
-                        {
-                            name: '红烧肉',
-                            price: 50
-                        },
-                        {
-                            name: '番茄炒蛋',
-                            price: 40
-                        },
-                        {
-                            name: '干锅土豆',
-                            price: 10
-                        },
-                        {
-                            name: '大盘鸡',
-                            price: 80
-                        },
-                        {
-                            name: '酸菜鱼',
-                            price: 50
-                        },
-                        {
-                            name: '清蒸鱼',
-                            price: 40
-                        },
-                        {
-                            name: '干锅花菜',
-                            price: 10
-                        },
-                        {
-                            name: '烤鸭',
-                            price: 20
-                        }
-                    ]
-                },
-                {
-                    name: '酒水',
-                    foods: [
-                        {
-                            name: '红烧肉',
-                            price: 50
-                        },
-                        {
-                            name: '番茄炒蛋',
-                            price: 40
-                        },
-                        {
-                            name: '干锅土豆',
-                            price: 10
-                        },
-                        {
-                            name: '大盘鸡',
-                            price: 80
-                        },
-                        {
-                            name: '酸菜鱼',
-                            price: 50
-                        },
-                        {
-                            name: '清蒸鱼',
-                            price: 40
-                        },
-                        {
-                            name: '干锅花菜',
-                            price: 10
-                        },
-                        {
-                            name: '烤鸭',
-                            price: 20
-                        }
-                    ]
-                },
-                {
-                    name: '自定义菜',
-                    twoLine: true,
-                    foods: [
-                        {
-                            name: '新增自定义菜',
-                            price: ''
-                        }
-                    ]
-                }
-            ]
+            foodClassify: []
         };
     },
     created() {
-        this.getMenu();
-        this.$nextTick(() => {
-            this.initScroll();
-            this.calculateHeight();
+        this.getMenu().then(() => {
+            this.$nextTick(() => {
+                this.initScroll();
+                this.calculateHeight();
+            });
         });
     },
     computed: {
@@ -311,11 +117,20 @@ export default {
             this[types.ADD_FOOD]({ food: food });
         },
         getMenu() {
-            http.get('/catering/getMenu', { restId: this.restId }).then(res => {
+            return new Promise((resolve, reject) => {
+                http.get('/catering/getMenu', { restId: this.restId }).then(res => {
+                    if (res.code === 1) {
+                        this.foodClassify = res.data.list;
+                        resolve();
+                    }
+                });
             });
         },
         newDish() {
             this.addDishVisible = true;
+        },
+        addDish(dish) {
+            this.foodClassify[this.foodClassify.length - 1].dishes.push(dish);
         },
         hideModal() {
             this.addDishVisible = false;
@@ -463,6 +278,7 @@ export default {
                                 box-shadow: 0 0 2px 0 rgba(0,0,0,0.3);
                                 border-radius: 8px;
                                 cursor: pointer;
+                                position: relative;
                                 &:nth-child(5n){
                                     margin-right: 0px;
                                 }
@@ -491,7 +307,22 @@ export default {
                                             cursor:pointer;
                                         }
                                     }
-                                    
+                                }
+                                .inventory{
+                                    position: absolute;
+                                    top: 50px;
+                                    right: 0;
+                                    height: 16px;
+                                    width: 40px;
+                                    line-height: 16px;
+                                    padding: 0 7px;
+                                    border-radius: 8px 0 0 8px;
+                                    background: #ffac59;
+                                    color: #fff;
+                                    font-size: 12px;
+                                    &.no{
+                                        background: #f24949;
+                                    }
                                 }
                             }
                         }

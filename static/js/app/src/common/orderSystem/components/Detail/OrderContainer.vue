@@ -251,6 +251,14 @@
                                 </span>
                                 <div class="dd-btn dd-btn-primary order-btn" @click="reGetMoney"
                                      v-if="orderState === 8">重新结账</div>
+                                <div class="dd-btn dd-btn-primary order-btn" 
+                                     v-if="type === ORDER_TYPE.CATERING && orderState === 1" @click='addDish'>加菜</div>
+                                <div class="dd-btn dd-btn-primary order-btn" 
+                                     v-if="type === ORDER_TYPE.CATERING && orderState === 1" @click='changeBoard'>换桌</div>
+                                <div class="dd-btn dd-btn-primary order-btn" 
+                                     v-if="type === ORDER_TYPE.CATERING && orderState === 4" @click='reject'>拒绝</div>
+                                <div class="dd-btn dd-btn-primary order-btn" 
+                                     v-if="type === ORDER_TYPE.CATERING && orderState === 4" @click='agree'>同意并入厨</div>
                                 <div class="dd-btn dd-btn-primary order-btn" @click="showCashier('collect')"
                                      v-if="(type === ORDER_TYPE.COMBINATION && ( orderState === 2 || orderState === 3 ||orderState === 8 )) || (type === ORDER_TYPE.ACCOMMODATION && (orderState === 0 || orderState === 1 || orderState === 8))">
                                     收银
@@ -1296,6 +1304,18 @@
             hideModal() {
                 bus.$emit('onClose');
                 // this[type.SET_ORDER_DETAIL]({ orderDetail: {}});
+            },
+            reject() {
+                const callBack = function() {
+                    http.get('/catering/cancelDishes', { caterOrderId: this.order.caterOrderId }).then(res => $('#orderDetail').one('hidden.bs.modal', () => { bus.$emit('editOrder', 'editOrder', this.order); }));
+                };
+                modal.confirm({ title: '提示', message: '确定拒绝该扫码订单吗？' }, callBack);
+            },
+            agree() {
+                // http.get('/catering/cancelDishes',{caterOrderId,this.order.caterOrderId}).then(res => $('#orderDetail').one('hidden.bs.modal', () => { bus.$emit('editOrder', 'editOrder', this.order); });)
+            },
+            addDish() {
+
             },
             /**
              * 计算各种类型的收费金额

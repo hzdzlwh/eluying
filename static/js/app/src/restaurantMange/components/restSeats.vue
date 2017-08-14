@@ -2,7 +2,7 @@
  * @Author: lwh
  * @Date:   2017-08-02 16:04:29
  * @Last Modified by:   Tplant
- * @Last Modified time: 2017-08-10 18:32:18
+ * @Last Modified time: 2017-08-14 11:12:52
  */
 
  <template>
@@ -134,7 +134,8 @@ export default {
                     }
                 } else if (board.boardState === 1 && board.caterOrderId) {                      // 使用中的桌子
                     this.getCaterOrderDetail(board.caterOrderId);
-                } else if (board.boardState === 1 && !board.caterOrderId) {                      // 开台未点菜的桌子
+                    this[types.SET_LEFT_TYPE]({ leftType: 2 });
+                } else if (board.boardState === 1 && !board.caterOrderId) {                      // 开台未点菜
                     this.getOpenBoardRecords(board.boardId);
                 }
             }
@@ -217,6 +218,8 @@ export default {
         getOpenBoardRecords(boardId) {
             http.get('board/getOpenBoardRecords', { boardId }).then(res => {
                 if (res.code === 1) {
+                    res.data.boardDetailResps = res.data.openBoards;
+                    delete res.data.openBoards;
                     this[types.SET_CATER_ORDER_DETAIL]({ caterDetail: res.data });
                 }
             });
