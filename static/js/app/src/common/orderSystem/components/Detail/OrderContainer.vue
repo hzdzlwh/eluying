@@ -330,15 +330,15 @@
                                 <div class="dd-btn dd-btn-primary order-btn" 
                                      v-if="type === ORDER_TYPE.CATERING && orderState === 4" @click='agree'>同意并入厨</div>
                                 <div class="dd-btn dd-btn-primary order-btn" @click="showCashier('collect')"
-                                     v-if="(type === ORDER_TYPE.COMBINATION && ( orderState === 2 || orderState === 3 ||orderState === 8 )) || (type === ORDER_TYPE.ACCOMMODATION && (orderState === 0 || orderState === 1 || orderState === 8))">
+                                     v-if="(type === ORDER_TYPE.COMBINATION && ( orderState === 2 || orderState === 3 ||orderState === 8 )) || (type === ORDER_TYPE.ACCOMMODATION && (orderState === 0 || orderState === 1 || orderState === 8)) || (type === ORDER_TYPE.CATERING && (orderState === 0 || orderState === 1 || orderState === 8))">
                                     收银
                                 </div>
                                 <div class="dd-btn dd-btn-primary order-btn" @click="showCashier('orderDetail')"
-                                     v-if="order.isSettle === false && order.orderType === -1 && (type === ORDER_TYPE.COMBINATION)">
+                                     v-if="order.isSettle === false && (order.orderType === -1 || order.orderType === 0) && (type === ORDER_TYPE.COMBINATION || type === ORDER_TYPE.CATERING)">
                                     结算
                                 </div>
                                 <div class="dd-btn dd-btn-primary order-btn" @click="showCashier('orderDetail')"
-                                     v-if="(findTypePrice(order.payments, 15) !== 0 || findTypePrice(order.payments, 16) !== 0) && orderState !== 8 && (type !== ORDER_TYPE.ACCOMMODATION && type !== ORDER_TYPE.COMBINATION)">
+                                     v-if="(findTypePrice(order.payments, 15) !== 0 || findTypePrice(order.payments, 16) !== 0) && orderState !== 8 && (type !== ORDER_TYPE.ACCOMMODATION && type !== ORDER_TYPE.COMBINATION && type !== ORDER_TYPE.CATERING)">
                                     收银
                                     <!-- 娱乐商超 -->
                                 </div>

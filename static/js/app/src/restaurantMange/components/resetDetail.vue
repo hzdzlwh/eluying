@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-08-01 14:45:58
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-08-14 17:50:37
+* @Last Modified time: 2017-08-15 10:07:32
 * @email: 783384903@qq.com
 */
 
@@ -278,7 +278,7 @@ export default {
         dishModalChange(type) {
             this.dishModalVisible = true;
             this.dishModalType = type;
-            restBus.$emit('refeshView');
+            // restBus.$emit('refeshView');
         },
         dishClick(dish) {
             if (dish.serviceState === 1 && (this.openData.orderState === 1 || (this.openData.orderState === 2 && this.openData.itemsMap.length && this.openData.itemsMap) || this.openData.orderState === 4 || this.openData.orderState === 8)) {
