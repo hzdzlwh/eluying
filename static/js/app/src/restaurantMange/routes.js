@@ -88,12 +88,12 @@ const router = new Router({
     linkActiveClass: 'active',
     routes
 });
-router.beforeEach((to, from, next) => {
-    if (!to.meta.auth) {
-        router.push({ path: '/non-auth', query: { name: encodeURI(to.meta.name) }, params: { userId: 123 }, meta: { userid: 123 } });
-        // next({path:'/non-auth', params: {name: '132'},meta: {name: '132'} })
-    } else {
-        next();
-    }
-});
+// router.beforeEach((to, from, next) => {
+//     if (!to.meta.auth) {
+//         router.push({ path: '/non-auth', query: { name: encodeURI(to.meta.name) }, params: { userId: 123 }, meta: { userid: 123 } });
+//         // next({path:'/non-auth', params: {name: '132'},meta: {name: '132'} })
+//     } else {
+//         next();
+//     }
+// });
 exports.router = router;
