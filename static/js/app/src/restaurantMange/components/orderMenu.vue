@@ -68,12 +68,14 @@
                                 <div class="menuCart-list" v-show="listShow">
                                     <div class="list-header">
                                         <h4>已点菜</h4>
-                                        <span class="empty">清空</span>
+                                        <div class="empty" @click="clearMenuCart">清空</div>
                                     </div>
                                     <div class="list-content" ref="listContent">
-                                        <ul>
+                                        <ul class="scroller">
                                             <li v-for="food in selectFood">
-                                                <span>{{food.dishName}}</span>
+                                                <span class="food-name">{{food.dishName}}</span>
+                                                <count :del=true :min = -1 :num='food.num' :onNumChange='onNumChange' :id='food.dishId'></count>
+                                                <span class="food-price">{{food.num * food.dishPrice}}</span>
                                             </li>
                                         </ul>
                                     </div>
@@ -95,6 +97,7 @@
 import http from '../../common/http';
 import IScroll from 'iscroll';
 import { mapState } from 'vuex';
+import count from '../../common/components/counter.vue';
 export default{
     props: {
         visible: {
@@ -130,6 +133,17 @@ export default{
                 return false;
             }
             const show = !this.fold;
+            if (show) {
+                setTimeout(() => {
+                    this.$nextTick(() => {
+                        if (!this.menuCartScroll) {
+                            this.menuCartScroll = new IScroll(this.$refs.listContent, { probeType: 3, mouseWheel: true, scrollbars: false });
+                        } else {
+                            this.menuCartScroll.refresh();
+                        }
+                    });
+                }, 600);
+            }
             return show;
         }
     },
@@ -155,6 +169,20 @@ export default{
                 height += area.clientHeight;
                 this.heightList.push(height);
             });
+        },
+        onNumChange(type, index, num) {
+            this.selectFood.forEach((el, i) => {
+                if (el.dishId === index) {
+                    if (num > 0) {
+                        el.num = num;
+                    } else {
+                        this.selectFood.splice(i, 1);
+                    }
+                }
+            });
+        },
+        clearMenuCart() {
+            this.selectFood = [];
         },
         orderMenu(food) {
             const isHasFood = this.selectFood.find(el => {
@@ -204,6 +232,9 @@ export default{
         restId(newValue) {
             this.getMenuList();
         }
+    },
+    components: {
+        count
     }
 };
 </script>
@@ -406,11 +437,73 @@ export default{
                                 text-align: left;
                                 background: #fafafa;
                                 height: 345px;
+                                padding: 0 16px;
+                                .list-header{
+                                    display: flex;
+                                    justify-content: space-between;
+                                    height: 46px;
+                                    line-height: 46px;
+                                    border-bottom: 1px dashed #99a9bf;
+                                    h4{
+                                        line-height: 46px;
+                                    }
+                                    > div{
+                                        color: #178ce6;
+                                        cursor: pointer;
+                                    }
+                                }
+                                .list-content{
+                                    height: 299px;
+                                    width: 286px;
+                                    overflow: hidden;
+                                    position: absolute;
+                                    z-index: 1;
+                                    .scroller{
+                                        position: absolute;
+                                        z-index: 1;
+                                        -webkit-tap-highlight-color: rgba(0,0,0,0);
+                                        width: 100%;
+                                        -webkit-transform: translateZ(0);
+                                        -moz-transform: translateZ(0);
+                                        -ms-transform: translateZ(0);
+                                        -o-transform: translateZ(0);
+                                        transform: translateZ(0);
+                                        -webkit-touch-callout: none;
+                                        -webkit-user-select: none;
+                                        -moz-user-select: none;
+                                        -ms-user-select: none;
+                                        user-select: none;
+                                        -webkit-text-size-adjust: none;
+                                        -moz-text-size-adjust: none;
+                                        -ms-text-size-adjust: none;
+                                        -o-text-size-adjust: none;
+                                        text-size-adjust: none;
+                                    }
+                                    li{
+                                        height: 46px;
+                                        line-height: 46px;
+                                        border-bottom: 1px dashed #99a9bf;
+                                        .food-name{
+                                            display: inline-block;
+                                            width: 140px;
+                                        }
+                                        .food-price{
+                                            display: inline-block;
+                                            width: 60px;
+                                            text-align: right;
+                                        }
+                                    }
+                                    
+                                }
                                 &.fold-enter-active, &.fold-leave-active{
-                                    transition: height 0.5s;
+                                    transition: all 0.5s;
                                 }
                                 &.fold-enter, &.fold-leave-active{
                                     height: 0;
+                                    opacity: 0;
+                                    .list-content{
+                                        height: 0;
+                                    }
                                 }
                             }
                         }

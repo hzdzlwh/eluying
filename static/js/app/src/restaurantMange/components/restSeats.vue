@@ -71,6 +71,7 @@
 import types from '../store/types';
 import http from '../../common/http';
 import restBus from '../event.js';
+import bus from '../../common/eventBus';
 import { mapState, mapMutations, mapActions } from 'vuex';
 import customerRadio from './customerRadio.vue';
 import DateSelect from '../../accommodation/components/DateSelect';
@@ -213,6 +214,7 @@ export default {
             http.get('/catering/getCaterOrderDetail', { caterOrderId }).then(res => {
                 if (res.code === 1) {
                     this[types.SET_CATER_ORDER_DETAIL]({ caterDetail: res.data });
+                    bus.$emit('setRestDetail', res.data);
                 }
             });
         },
