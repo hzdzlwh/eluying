@@ -34,7 +34,7 @@
                                         <div v-for="item in area.boardList" class="seat" :class="{'leisure': item.boardState === 0,
                                             'using': item.boardState === 1 && item.caterOrderId,
                                             'open-table': item.boardState === 1 && !item.caterOrderId,
-                                            'select-table': item.selected}" @click="selectSeat">
+                                            'select-table': item.selected}" @click="selectSeat(item)">
                                             <div class="state-twoCode" :class="{'state-twoCode-right': item.orderState !== 2 && item.orderState !== 4 }">
                                                 <div class="state" :class="{'state-pending': item.orderState === 4 }" v-if="item.orderState === 2 || item.orderState === 4">{{orderState[item.orderState]}}</div>
                                                 <div class="two-dimensionalcode" v-if="item.hasScan"></div>
@@ -77,6 +77,9 @@ export default {
         visible: {
             type: Boolean,
             default: false
+        },
+        openData: {
+            type: Object
         }
     },
     data() {
@@ -128,7 +131,8 @@ export default {
         },
         changeSeat() {
         },
-        selectSeat() {
+        selectSeat(board) {
+            this.$set(board, 'selected', !(board.selected));
         },
         getSeatList() {
             return new Promise((resolve, reject) => {
@@ -184,6 +188,10 @@ export default {
                     // this.calculateHeight();
                 });
             });
+        },
+        openData(newValue) {
+            if (newValue) {
+            }
         }
     },
     components: {
@@ -291,6 +299,9 @@ export default {
                                             }
                                             &.open-table{
                                                 background: #ffe6c6;
+                                            }
+                                            &.select-table{
+                                                border: 2px solid #178ce6;
                                             }
                                             .state-twoCode{
                                                 display: flex;
