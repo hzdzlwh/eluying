@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-17 17:37:17
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-08-07 20:00:45
+* @Last Modified time: 2017-08-15 14:02:29
 * @email: 783384903@qq.com
 */
 <template>
@@ -136,7 +136,10 @@
             changeNum() {
                 window.console.log(this.value)
                 if (!this.value || this.value == 0) {
-                    this.value = 1
+                    this.value = 1;
+                }
+                if (this.value > this.max) {
+                    this.value = this.max;
                 }
                 this.value = Math.abs(parseInt(this.value));
                 if (this.orderId === -1) {

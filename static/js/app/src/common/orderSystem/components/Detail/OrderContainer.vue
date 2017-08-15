@@ -281,7 +281,9 @@
                                 <span class="order-info-text">订单号:{{order.orderNum || order.serialNum}}</span>
                                 <span class="order-info-operator"
                                       v-if="type !== ORDER_TYPE.ENTERTAINMENT"
-                                      style="margin-left: 24px">办理员工:{{order.operatorName || order.operator || order.reserveName || order.cancelStaff}}</span>
+                                      style="margin-left: 24px">
+<!-- 办理员工:{{order.operatorName || order.operator || order.reserveName || order.cancelStaff}} -->
+办理员工:{{order.operatorName || order.reserveName || order.confirmStaff || order.finifhStaff ||order.operator  || order.cancelStaff}}</span>
                             </p>
                             <p class="order-info">
                                 <template v-for="item in orderDates">
@@ -1317,8 +1319,8 @@
                                 date: this.order.operatorDate
                             },
                             {
-                                name: '撤台时间',
-                                date: this.order.colseBoardTime
+                                name: '审核时间',
+                                date: this.order.confirmTime
                             },
                             {
                                 name: '结账时间',
