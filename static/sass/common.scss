@@ -8,7 +8,10 @@
             width: auto!important;
         }
         i{
-            display: none;
+            background: url(/static/image/icon/edit.png) no-repeat;
+            background-position-y: center;
+            font-size: 0;
+            cursor:pointer;
         }
         input{
             border: none;

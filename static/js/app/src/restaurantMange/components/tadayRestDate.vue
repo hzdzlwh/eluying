@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-31 13:58:30
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-08-10 11:08:49
+* @Last Modified time: 2017-08-14 18:02:15
 * @email: 783384903@qq.com
 */
 
@@ -19,7 +19,7 @@
             新订单 
         </div>
             <div class="rest-taday-list">
-                <div class="rest-taday-item" v-for='item in DayDate.newOrders' :key='item.orderNum'>
+                <div class="rest-taday-item" v-for='item in DayDate.newOrders' :key='item.orderNum' v-if='orderNum.length'>
                 <div>
                     <div><span class="rest-taday-smallTip">{{orderWay[item.orderWay]}}</span>  <span>桌位{{item.borardList[0]}} - {{item.peopleNum}}人</span> </div>
                     <div class="rest-taday-smallTip">订单号：{{item.orderNum}}</div>
