@@ -19,61 +19,10 @@
                 </div>
             </div>
             <div class="book-table-box">
-                <table class="dd-table orders-manage-table">
-                    <thead>
-                    <tr>
-                        <th style="padding-left: 42px; width: 214px">菜品分类</th>
-                        <th style="width: 120px">菜品名称</th>
-                        <th>预订数量</th>
-                        <th>库存数量</th>
-                        <th>操作</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr class="noOrders-tr" v-show="vips.length === 0">
-                        <td colspan="10">
-                            <div class="noOrders-container">
-                                <img src="//static.dingdandao.com/ordersManage_noOrders.png" alt="">
-                                <p v-text="searchContent !== '' ? '没有搜索到符合条件的菜品...' : '没有菜品信息'"></p>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr :key="item.orderId"
-                        v-for="(item, index) in vips"
-                        v-if="vips.length > 0"
-                        :class="['orders-tr', index % 2 === 1 ? 'orders-tr-even' : 'orders-tr-odd']"
-                    >
-                        <td style="padding-left: 42px; position: relative;">
-                            <div class="dd-arrowRight-orderNum dd-orderArrow" v-if="false && !!item.subOrderList && item.subOrderList.length > 1 && !item.showSub"></div>
-                            <div class="dd-arrowDown-orderNum dd-orderArrow" v-if="false && !!item.subOrderList && item.subOrderList.length > 1 && item.showSub"></div>
-                            {{ item.orderNum }}
-                        </td>
-                        <td style="font-size: 0">
-                            <span class="order-state order-state-red" v-if="getOrderType(item).indexOf(3) !== -1">住</span>
-                            <span class="order-state order-state-yellow" v-if="getOrderType(item).indexOf(0) !== -1">餐</span>
-                            <span class="order-state order-state-blue" v-if="getOrderType(item).indexOf(1) !== -1">娱</span>
-                            <span class="order-state order-state-green" v-if="getOrderType(item).indexOf(2) !== -1">商</span>
-                        </td>
-                        <td v-text="item.orderTotalPrice"></td>
-                        <td v-text="item.payAmount"></td>
-                        <td v-text="item.payChannels" :title="item.payChannels"></td>
-                        <td v-text="item.customerName === '单日客' ? '--' : item.customerName"></td>
-                        <td v-text="item.customerPhone || '--'"></td>
-                        <td v-text="item.origin"></td>
-                        <td v-text="item.date"></td>
-                        <td v-text="getOrderStatusText(item)"></td>
-                        <td v-text="!!item.operators && item.operators.length > 0
-                                    ? item.operators.join('、') : '--'"
-                            :title="!!item.operators && item.operators.length > 0
-                                    ? `${item.operators.join('、')}共${item.operators.length}人`
-                                    : '没有收银员'">
-                        </td>
-                        <td v-text="item.operator"></td>
-                    </tr>
-                    </tbody>
-                </table>
+                <dd-table :columns="col" :data-source="vips" :bordered="true" class="estimate-table"></dd-table>
             </div>
         </div>
+        <resetBookDish v-if="resetBookDish" :info="row" v-on:resetBookDishNum="saverResetBookDish" v-on:cancerBookDishNum="closeResetBookDish"/>
     </div>
 </template>
 <style lang="scss" scoped>
@@ -139,6 +88,15 @@
             .book-table-box {
                 height: 502px;
                 overflow: scroll;
+                .book-dish-table {
+                    thead>tr {
+                        height: 24px;
+                        line-height: 24px;
+                    }
+                    th {
+
+                    }
+                }
                 ::-webkit-scrollBar {
                     width: 0;
                 }
@@ -156,7 +114,37 @@
         data() {
             return {
                 inputValue: '',
-                vips: []
+                vips: [],
+                row: {},
+                col: [
+                    {
+                        title: '菜品分类',
+                        dataIndex: 'type',
+                        width: 100
+                    },
+                    {
+                        title: '菜品名称',
+                        dataIndex: 'name',
+                        width: 100
+                    },
+                    {
+                        title: '预订数量',
+                        dataIndex: 'bookNum',
+                        width: 80
+                    },
+                    {
+                        title: '库存数量',
+                        dataIndex: 'reserveNum',
+                        width: 80
+                    },
+                    {
+                        title: '操作',
+                        width: 80,
+                        render: (h, row) =>
+                            <div style="cursor:pointer" onClick={() => this.opporateBookDish(row)}>设置</div>
+                    }
+                ],
+                resetBookDish: false
             };
         },
         created() {
@@ -169,7 +157,7 @@
             },
             getData() {
                 const obj = {
-                    queryType: 2,
+                    queryType: 1,
                     restId: this.restId,
                     dishCategoryId: this.dishType.split('~')[1],
                     keyWord: this.inputValue
@@ -183,12 +171,18 @@
                 http.get('/dish/getSellClearMenu', obj).then(res => {
                     if (res.code === 1) {
                         const list = res.data.list;
-                        list.forEach(item => {
-                            const dish = [];
-                            dish.type = item.dishCategoryName;
-                            dish.name = item.dishes.dishName;
-                            dish.bookNum = item.dishes.reserveNum;
-                            this.vips.push(dish);
+                        this.vips = [];
+                        list.forEach(dishes => {
+                            const dishList = dishes.dishes;
+                            dishList.forEach(dish => {
+                                const newDish = {};
+                                newDish.type = dishes.dishCategoryName;
+                                newDish.name = dish.dishName;
+                                newDish.bookNum = dish.reserveNum;
+                                newDish.dishId = dish.dishId;
+                                newDish.reserveNum = dish.soldOut === 1 ? '已售完' : dish.sellClearNum;
+                                this.vips.push(newDish);
+                            });
                         });
                     }
                 });
@@ -197,7 +191,39 @@
                 this.dishType = '-1~';
                 this.getData();
             },
-            opperateBookDish() {
+            opporateBookDish(row) {
+                this.resetBookDish = true;
+                this.row = row;
+            },
+            closeResetBookDish() {
+                this.resetBookDish = false;
+            },
+            saverResetBookDish(dishId, reserveNum) {
+                this.vips.forEach(item => {
+                    if (item.dishId === dishId) {
+                        item.reserveNum = reserveNum;
+                    }
+                });
+                this.resetBookDish = false;
+                this.$emit('updataEstimate', this.filterUpdata(this.vips, { dishId: dishId }));
+                console.log(this.filterUpdata(this.vips, { dishId: dishId }));
+            },
+            filterUpdata(collection, source) {
+                // collection代表被测试的对象数组，source为被测试的属性值对（or对象）。
+                // 使用Object.keys()方法获取这个对象的所有属性，并返回为一个数组。
+                const sourceKeys = Object.keys(source);
+
+                // 使用filter()方法过滤出符合条件的数组对象。
+                return collection.filter(function(obj) {
+                    // 遍历source的所有属性
+                    for (let i = 0; i < sourceKeys.length; i ++) {
+                        // 如果obj中属性不匹配，则返回false，即为不符合条件
+                        if (obj[sourceKeys[i]] !== source[sourceKeys[i]]) {
+                            return false;
+                        }
+                    }
+                    return true;
+                });
             }
         },
         watch: {
@@ -206,6 +232,7 @@
             }
         },
         components: {
+            resetBookDish,
             DdSelect,
             DdOption,
             DdTable

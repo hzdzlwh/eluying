@@ -109,12 +109,16 @@
                 http.get('/dish/getSellClearMenu', obj).then(res => {
                     if (res.code === 1) {
                         const list = res.data.list;
-                        list.forEach(item => {
-                            const dish = [];
-                            dish.type = item.dishCategoryName;
-                            dish.name = item.dishes.dishName;
-                            dish.bookNum = item.dishes.reserveNum;
-                            this.vips.push(dish);
+                        list.forEach(dishes => {
+                            const dishList = dishes.dishes;
+                            dishList.forEach(dish => {
+                                const newDish = {};
+                                newDish.type = dishes.dishCategoryName;
+                                newDish.name = dish.dishName;
+                                newDish.bookNum = dish.reserveNum;
+                                newDish.reserveNum = dish.soldOut === 1 ? '已售完' : dish.sellClearNum;
+                                this.vips.push(newDish);
+                            });
                         });
                     }
                 });

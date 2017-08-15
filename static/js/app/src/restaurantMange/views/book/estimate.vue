@@ -53,7 +53,7 @@
             <div class="book-edit-dish" v-if="editBookDish">
 
             </div>
-            <bookAddDish v-if="addBookDish"></bookAddDish>
+            <bookAddDish v-if="addBookDish" v-on:updataEstimate="updataVips" @closeAddDish="() => {this.addBookDish = false; this.bookShadow = false;}"></bookAddDish>
         </div>
     </div>
 </template>
@@ -97,7 +97,7 @@
                 col: [
                     {
                         title: '菜品分类',
-                        dataIndex: 'dishType'
+                        dataIndex: 'type'
                     },
                     {
                         title: '菜品名称',
@@ -105,15 +105,15 @@
                     },
                     {
                         title: '库存数量',
-                        dataIndex: 'reverseNum',
+                        dataIndex: 'reserveNum',
                         sorter: true
                     },
                     {
                         title: '操作',
                         render: (h, row) =>
                             <span>
-                                <span>编辑</span>
-                                <span>删除</span>
+                                <span click={() => this.editBookDish(row)}>编辑</span>
+                                <span click={() => this.delectBookDish(row)}>删除</span>
                             </span>
                     }
                 ]
@@ -129,17 +129,24 @@
                     queryType: 2,
                     dishCategoryId: this.dishType.split('~')[1]
                 };
+                for (const ob in obj) {
+                    if (obj[ob] === undefined || obj[ob] === '') {
+                        delete obj[ob];
+                    }
+                }
                 http.get('/dish/getSellClearMenu', obj).then(res => {
                     if (res.code === 1) {
                         const list = res.data.list;
-                        list.forEach(item => {
-                            const dish = [];
-                            dish.dishType = item.dishCategoryName;
-                            dish.name = item.dishes.dishName;
-                            dish.reverseNum = item.dishes.soldOut === 1 ? '已售完' : item.deshes.sellClearNum;
-                            dish.dishId = item.dishes.dishId;
-                            dish.expanded = true;
-                            this.vips.push(dish);
+                        list.forEach(dishes => {
+                            const dishList = dishes.dishes;
+                            dishList.forEach(dish => {
+                                const newDish = {};
+                                newDish.type = dishes.dishCategoryName;
+                                newDish.name = dish.dishName;
+                                newDish.bookNum = dish.reserveNum;
+                                newDish.reserveNum = dish.soldOut === 1 ? '已售完' : dish.sellClearNum;
+                                this.vips.push(newDish);
+                            });
                         });
                     }
                 });
@@ -156,7 +163,7 @@
                         }
                     };
                 }
-                this.vips.sort(compare('reverseNum', type));
+                this.vips.sort(compare('reserveNum', type));
             },
             addEstimateDish() {
                 this.bookShadow = true;
@@ -186,6 +193,13 @@
             bookCancer() {
                 this.emptyBookDishes = false;
                 this.bookShadow = false;
+            },
+            updataVips(arr) {
+                this.vips.forEach(item => {
+                    if (item.dishId === arr[0].dishId) {
+                        this.vips.$set();
+                    }
+                });
             }
         },
         created() {
