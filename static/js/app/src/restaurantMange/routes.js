@@ -13,13 +13,13 @@ const hasAuth = auth.checkModule(auth.RESTRANT);
 const hasCompanyAuth = auth.checkModule(auth.COMPANY_ID, auth.COMPANY_VIEW_ID);
 
 export const routes = [
-    {
-        path: '/',
-        redirect: '/order',
-        meta: {
-            auth: hasAuth
-        }
-    },
+    // {
+    //     path: '/',
+    //     redirect: '/order',
+    //     meta: {
+    //         auth: hasAuth
+    //     }
+    // },
     {
         path: '/book',
         component: book,
@@ -89,8 +89,8 @@ const router = new Router({
     routes
 });
 router.beforeEach((to, from, next) => {
-    if (to.meta.auth === false) {
-        router.push({ path: '/non-auth', query: { name: encodeURI(to.meta.authName) }, params: { userId: 123 }, meta: { userid: 123 } });
+    if (!to.meta.auth) {
+        router.push({ path: '/non-auth', query: { name: encodeURI(to.meta.name) }, params: { userId: 123 }, meta: { userid: 123 } });
         // next({path:'/non-auth', params: {name: '132'},meta: {name: '132'} })
     } else {
         next();
