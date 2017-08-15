@@ -114,7 +114,7 @@ $(function(){
                 modal.confirm({title: '提醒', message, okText: '确认删除'}, this.deleteETCategory);
             },
             deleteETCategory() {
-                http.post('/category/deleteOtherCategory',
+                http.post('/entertainment/deleteEnterCategory',
                     { id: this.selectedETCategory.entertainmentCategoryId,
                       entertainmentId: this.selectedETCategory.deleteId }
                 )

@@ -82,7 +82,8 @@ border-radius:4px;padding:15px;">
         </div>
             </div>
             </div>
-            <changeRemark :visible='changeRemarkVisible':text='dishChange ? dishChange.remark : ""' @changeRemark='changeRemark' @hideModal='changeRemarkHide' style='z-index:100'></changeRemark>
+            <changeRemark :visible='changeRemarkVisible':text='dishChange ? dishChange.remark : ""' @changeRemark='changeRemark' @hideModal='changeRemarkHide' ></changeRemark>
+            <dishModal :visible='dishModalVisible' :type='dishModalType' :data='dishChange' @hideModal='hideDishModal' @dishChange='dishChangeSub'></dishModal>
     </div>
 </template>
 <style lang="scss">
@@ -210,6 +211,7 @@ padding:16px;
     } from 'vuex';
     import http from '../../../http';
     import changeRemark from '../../../../restaurantMange/components/changeRemark.vue';
+    import dishModal from '../../../../restaurantMange/components/dishModal.vue';
     export default{
         props: {
             order: Object
@@ -245,7 +247,8 @@ padding:16px;
             }
         },
         components: {
-            changeRemark
+            changeRemark,
+            dishModal
         },
         methods: {
             ...mapActions([
