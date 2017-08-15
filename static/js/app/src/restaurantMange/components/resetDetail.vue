@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-08-01 14:45:58
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-08-15 11:42:07
+* @Last Modified time: 2017-08-15 17:36:53
 * @email: 783384903@qq.com
 */
 
@@ -67,8 +67,8 @@
                     </tr>
                 </template> 
                 <template v-if='leftType === 4'>
-                    <tr v-for='(item,index) in addFood'>
-                        <td class="rest-restDetail-trchild" :width='leftType === 4 ? "100px" : "150px"'>{{item.dishName}}</td><td width="45px"><div style='width:70px;'><count :del=true :min = -1 :num='item.num' :onNumChange='onNumChange' :id='item.dishId'></count></div></td><td width='80px'>{{item.dishPrice * item.num }}</td>
+                    <tr v-for='(item,index) in addFoodList'>
+                        <td class="rest-restDetail-trchild" :width='leftType === 4 ? "100px" : "150px"'>{{item.dishName}}</td><td width="45px"><div style='width:70px;'><count :del=true :min = -1 :num='item.num' :max='item.inventoryNum' @numChange='onNumChange' :id='item.dishId'></count></div></td><td width='80px'>{{(item.num * item.dishPrice).toFixed(2)}}</td>
                     </tr>
                 </template>
                 </tbody>
@@ -82,8 +82,11 @@
         <div class="rest-restDetail-foot" v-if='!dishChange'>
         <div style="padding:15px; 15px 10px;border-bottom:1px solid #e0e6ed">
         <div class="rest-foot-count">            
-        <div class="restDetail-title-tip" >
+        <div class="restDetail-title-tip" v-if='leftType !== 4'>
                 共{{(openData.itemsMap && openData.itemsMap.length) || 0}}项
+            </div>
+            <div class="restDetail-title-tip"v-if='leftType === 4' >
+                共{{(addFoodList.length) || 0}}项
             </div>
             <div class="rest-restDetail-dishcount" v-if='leftType !== 4'>
                 <span class="restDetail-title-tip">合计</span>{{openData.totalPrice || 0}}
@@ -140,7 +143,7 @@
         </div>
             <div class="resetChange-foot-btn">
                 <div class="resetMange-btn-base " v-if='dishChange.serviceState === 0' @click='dishModalChange(0)'>退菜</div>
-                <div class="resetMange-btn-base " v-if='dishChange.isSend' @click='dishModalChange(1)'>赠送</div>
+                <div class="resetMange-btn-base " v-if='dishChange.isSend && dishChange.serviceState !== 2' @click='dishModalChange(1)'>赠送</div>
             </div>
             <div class="">
                 <div>
@@ -197,7 +200,8 @@ export default {
             // 0退，1换
             changeRemarkVisible: false,
             restDate: undefined,
-            backDish: undefined
+            backDish: undefined,
+            addFoodList: []
         };
     },
     computed: {
@@ -360,6 +364,33 @@ export default {
             });
         },
         submitAddFood() {
+            if (this.openData.caterOrderId && this.openData.itemsMap.length) {
+                const addFoodDishList = this.addFoodList.map(el => {
+                    return {
+                        bookNum: el.num,
+                        dishId: el.dishId,
+                        dishName: el.dishName,
+                        price: el.dishPrice,
+                        remark: this.remark
+                    };
+                });
+                const addFoodParms = {
+                    caterOrderId: this.openData.caterOrderId,
+                    dishes: JSON.stringify(addFoodDishList),
+                    oprType: 3,
+                    totalPrice: this.addFoodTotal()
+                };
+                http.get('/dish/dishOpr', addFoodParms).then(res => {
+                    return http.get('/catering/getCaterOrderDetail', { caterOrderId: this.openData.caterOrderId });
+                }
+                ).then(data => {
+                // this.setLeftType({ leftType: 2 });
+                    bus.$emit('setRestDetail', data.data);
+                    this.setOpenData({ openData: data.data });
+                    this.canlAddFood();
+                });
+                return;
+            }
             const parms = {
             };
             if (this.openData.boardDetailResps.length) {
@@ -377,15 +408,18 @@ export default {
             parms.restId = this.restId;
             if (!this.isHasOrder) {
                 parms.operationType = 1;
+            } else {
+                parms.operationType = 4;
             }
             http.get('/catering/addOrder', parms).then(res => {
                 return res.data.caterOrderId;
             }).then(id => {
-                http.get('/catering/getCaterOrderDetail', { caterOrderId: id });
+                return http.get('/catering/getCaterOrderDetail', { caterOrderId: id });
             }).then(data => {
+                // this.setLeftType({ leftType: 2 });
                 bus.$emit('setRestDetail', data.data);
-                this.setOpenData(data.data);
-                this.canlAddFood;
+                this.setOpenData({ openData: data.data });
+                this.canlAddFood();
             });
         },
         canlAddFood() {
@@ -394,12 +428,16 @@ export default {
             this.setLeftType({ leftType: 2 });
         },
         addFoodTotal() {
-            if (!this.addFood || !this.addFood.length) {
+            if (!this.addFoodList || !this.addFoodList.length) {
                 return 0;
             }
-            const price = this.addFood.reduce((pre, cur) => {
-                return pre + Number(cur.price * cur.num.toFixed(2));
-            }, Number(this.addFood[0].price * this.addFood[0].num.toFixed(2)));
+            let price = 0;
+            this.addFoodList.forEach(el => {
+                price += Number((el.dishPrice * el.num).toFixed(2));
+            });
+            // const price = this.addFood.reduce((pre, cur) => {
+            //     return pre + Number(cur.price * cur.num.toFixed(2));
+            // }, Number(this.addFood[0].price * this.addFood[0].num.toFixed(2)));
             return price.toFixed(2);
         },
         findTypePrice(arr, type) {
@@ -471,8 +509,21 @@ export default {
             const full = '00000' + str;
             return full.slice(full.length - fill, full.length);
         },
+        getTotalPrice(item) {
+            return (item.num * item.dishPrice).toFixed(2);
+        },
         onNumChange(type, index, num) {
-            this.changeFood({ food: { id: index, num: num } });
+            // this.changeFood({ food: { dishId: index, num: num } });
+            this.addFoodList.forEach((el, ind) => {
+                if (el.dishId === index) {
+                    if (num > 0) {
+                        el.num = num;
+                    } else {
+                        this.addFood.splice(ind, 1);
+                        this.addFoodList.splice(ind, 1);
+                    }
+                }
+            });
         }
     },
     watch: {
@@ -482,6 +533,22 @@ export default {
                 window.inter = window.setInterval(this.timer, 1000 * 60);
             } else {
                 window.clearInterval(window.inter);
+            }
+        },
+        addFood(val) {
+            val.forEach(el => {
+                if (!this.addFoodList.some(list => {
+                    return list.dishId === el.dishId;
+                })) {
+                    this.addFoodList.push(Object.assign({}, el));
+                }
+            });
+            // this.addFoodList = val;
+        },
+        openData(val) {
+            if (this.openData && !this.openData.isHasOrder) {
+                this.timer();
+                window.inter = window.setInterval(this.timer, 1000 * 60);
             }
         }
     },

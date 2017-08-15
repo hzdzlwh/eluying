@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-08-08 18:22:37
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-08-14 17:47:48
+* @Last Modified time: 2017-08-15 13:57:35
 * @email: 783384903@qq.com
 */
 
@@ -92,6 +92,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.modal-dialog {
+    width:500px;
+}
     .modal-content{
         padding: 0;
         width: 500px;

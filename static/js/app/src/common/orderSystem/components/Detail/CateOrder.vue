@@ -65,9 +65,9 @@ border-radius:4px;padding:15px;">
                 <table class="rest-restDetail-table">
                 <tbody>
                 <template v-for='it in foodItems[0].itemsMap'>
-                    <tr @click='changeItem(it); dishClick(it)' > 
+                    <tr @click='changeItem(it); dishClick(it)' :class="{'reset-tr-click' : it.click}"> 
                     <td width="190px"><div><span class="rest-restDetail-dishname" :class='{"rest-item-del" : it.serviceState === 1}'> <span  :class='getTriangle(it)'></span><span >{{it.dishName}}</span></span><span class="rest-item-send" v-if='it.serviceState === 2'>送</span></div></td><td width="45px"><div :class='{"rest-item-del" : it.serviceState === 1}'>x{{it.bookNum}}</div></td><td :class='{"rest-item-del" : it.serviceState === 1}' width='80px'>{{it.price}}</td></tr>
-                    <tr v-for='sub in it.subDishList' @click='dishClick(sub)' v-if='it.select' :class='{"rest-item-del" : sub.serviceState === 1}'>
+                    <tr v-for='sub in it.subDishList' @click='dishClick(sub)' v-if='it.select' :class='{"rest-item-del" : sub.serviceState === 1,"reset-tr-click" : it.click}'>
                         <td class="rest-restDetail-trchild" width="190px">{{sub.dishName}}</td><td width="45px"><div>x{{sub.bookNum}}</div></td><td width="80px"></td>
                     </tr>
                 </template> 
@@ -77,8 +77,8 @@ border-radius:4px;padding:15px;">
         <div  class="reset-dish-btn" v-if='dishChange'>
             <div style="color:#475669">菜品备注：{{dishChange.remark || '无'}} <span style="color: #82beff;margin-left: 10px;cursor: pointer;" @click='changeRemarkModal'>修改</span></div>
             <div>&#12288;点菜员：{{dishChange.operatorName || '无'}}</div>
-            <div>下单时间：{{dishChange.operationTime}}</div>
-            <div><div class="resetMange-btn-base" style="margin-right:20px;" @click='dishSendOrBack(0)'>退菜</div><div class="resetMange-btn-base" @click='dishSendOrBack(1)'>赠送</div></div>
+            <div>下单时间：{{getCreatTime(dishChange.creationTime)}}</div>
+            <div><div class="resetMange-btn-base" style="margin-right:20px;" @click='dishSendOrBack(0)' v-if='dishChange.serviceState === 0'>退菜</div><div class="resetMange-btn-base" @click='dishSendOrBack(1)' v-if='dishChange.isSend && dishChange.serviceState !== 2'>赠送</div></div>
         </div>
             </div>
             </div>
@@ -212,6 +212,7 @@ padding:16px;
     import http from '../../../http';
     import changeRemark from '../../../../restaurantMange/components/changeRemark.vue';
     import dishModal from '../../../../restaurantMange/components/dishModal.vue';
+    import util from '../../../util.js';
     export default{
         props: {
             order: Object
@@ -220,7 +221,11 @@ padding:16px;
             return {
                 REST_STATUS, ORDER_TYPE,
                 dishChange: undefined,
-                changeRemarkVisible: false
+                changeRemarkVisible: false,
+                dishModalVisible: false,
+                dishModalType: 0,
+                backDish: undefined
+                // 0退，1换
             };
         },
         computed: {
@@ -254,6 +259,9 @@ padding:16px;
             ...mapActions([
                 types.GET_CATER_ORDER_DETAIL
             ]),
+            getCreatTime(time) {
+                return util.dateFormatLong(new Date(time));
+            },
             changeRemarkModal() {
                 this.changeRemarkVisible = true;
             },
@@ -269,20 +277,38 @@ padding:16px;
             refesh() {
                 this[types.GET_CATER_ORDER_DETAIL]({ orderId: this.order.caterOrderId });
             },
-            dishSendOrBack(flag) {
-                const params = {
-                    caterOrderId: this.order.caterOrderId,
-                    dishes: JSON.stringify(this.dishChange)
-                };
-                if (flag) {
-                    params.oprType = 4;
-                } else {
-                    params.oprType = 2;
-                }
-                http.get('/dish/dishOpr', params).then(() => {
+            hideDishModal() {
+                this.dishModalVisible = false;
+            },
+            dishChangeSub(val) {
+                const dishes = [];
+                dishes.push({ dishId: this.dishChange.dishId, bookNum: val, serviceId: this.dishChange.serviceId });
+                http.get('/dish/dishOpr', { caterOrderId: this.order.caterOrderId,
+                    dishes: JSON.stringify(dishes),
+                    oprType: this.dishModalType ? 4 : 2
+                }).then(res => {
                     this.refesh();
                 });
             },
+            dishSendOrBack(type) {
+                this.dishModalVisible = true;
+                this.dishModalType = type;
+                // restBus.$emit('refeshView');
+            },
+            // dishSendOrBack(flag) {
+            //     const params = {
+            //         caterOrderId: this.order.caterOrderId,
+            //         dishes: JSON.stringify(this.dishChange)
+            //     };
+            //     if (flag) {
+            //         params.oprType = 4;
+            //     } else {
+            //         params.oprType = 2;
+            //     }
+            //     http.get('/dish/dishOpr', params).then(() => {
+            //         this.refesh();
+            //     });
+            // },
             getTriangle(item) {
                 if (!item.subDishList || !item.subDishList.length) {
                     return '';
@@ -294,11 +320,31 @@ padding:16px;
                 }
             },
             dishClick(dish) {
-                if (dish.serviceState === 1) {
+                if (dish.serviceState === 1 && (this.order.orderState === 1 || (this.order.orderState === 2 && this.order.itemsMap.length && this.order.itemsMap) || this.order.orderState === 4 || this.order.orderState === 8)) {
                     return;
+                }
+                const dishClick = !dish.click;
+                this.$set(dish, 'click', dishClick);
+                if (this.backDish && dish.serviceId === this.backDish.serviceId && !dishClick) {
+                    this.dishChange = undefined;
+                    this.backDish = undefined;
+                    return;
+                }
+                if (this.backDish && this.backDish.click) {
+                    this.backDish.click = false;
+                    this.backDish = dish;
+                }
+                if (!this.backDish) {
+                    this.backDish = dish;
                 }
                 this.dishChange = dish;
             },
+            // dishClick(dish) {
+            //     if (dish.serviceState === 1) {
+            //         return;
+            //     }
+            //     this.dishChange = dish;
+            // },
             changeItem(item) {
                 if (!item.subDishList || !item.subDishList.length) {
                     return;

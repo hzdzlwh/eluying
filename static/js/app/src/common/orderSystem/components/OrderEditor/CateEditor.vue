@@ -419,7 +419,7 @@
                         const parm = {
                             discountPrice: fo.discount,
                             quickDiscountId: fo.moreDiscount,
-                            restId: fo.resetId
+                            restId: fo.restId
                         };
                         if (fo.dishes) {
                             parm.dishes = JSON.stringify(fo.itemsMap.map(item => {
@@ -433,7 +433,7 @@
                         return parm;
                     }))
                 };
-                http.get(' /dish/calculateDiscountPrice', params)
+                http.get('/dish/calculateDiscountPrice', params)
                     .then(res => {
                         res.data.list.forEach((item, index) => {
                             food[index].originTotalPrice = item.oriTotalPrice;

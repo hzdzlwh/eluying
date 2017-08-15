@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-31 13:58:30
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-08-14 18:02:15
+* @Last Modified time: 2017-08-15 20:29:44
 * @email: 783384903@qq.com
 */
 
@@ -16,12 +16,14 @@
         </div>
        <div class="rest-taday-new">
         <div class="rest-taday-title">
-            新订单 
+            新订单 {{DayDate.newOrders.length}}
         </div>
             <div class="rest-taday-list">
-                <div class="rest-taday-item" v-for='item in DayDate.newOrders' :key='item.orderNum' v-if='orderNum.length'>
+                <div class="rest-taday-item" v-for='item in DayDate.newOrders' :key='item.orderNum' v-if='DayDate.newOrders.length'>
                 <div>
-                    <div><span class="rest-taday-smallTip">{{orderWay[item.orderWay]}}</span>  <span>桌位{{item.borardList[0]}} - {{item.peopleNum}}人</span> </div>
+                    <div><span class="rest-taday-smallTip">
+                    <!-- {{orderWay[item.orderWay]}} -->{{orderWay[item.orderWay]}}
+                    </span>  <span>桌位{{getBoard(item)[0] || "无"}}<span v-if='getBoard().length > 1' class="restDetail-type-tag" >并</span> - {{item.peopleNum}}人</span> </div>
                     <div class="rest-taday-smallTip">订单号：{{item.orderNum}}</div>
                 </div>
                 <div><span class="rest-taday-tag " :class="getState(item.foodState, 'color')">{{getState(item.foodState, 'text')}}</span></div>
@@ -175,7 +177,7 @@ export default {
             ORDER_TYPE,
             ORDER_STATE_TEXT,
             orderWay,
-            DayDate: {}
+            DayDate: { newOrders: [] }
         };
     },
     computed: mapState([
@@ -186,9 +188,20 @@ export default {
         getState(id, type) {
             return this.ORDER_STATE_TEXT[this.ORDER_TYPE.CATERING][id][type];
         },
+        getBoard(item) {
+            if (item) {
+                return item.boardList;
+            } else {
+                return [];
+            }
+        },
         fetchDate() {
             http.get('/catering/getDayTurnover', { restId: this.restId, date: this.date }, { loading: false }).then((res) => {
                 this.DayDate = res.data;
+                this.DayDate.newOrders.forEach((el, index) => {
+                    this.$set(el, 'boardList', res.data.newOrders[index].boardList.slice(0));
+                });
+                // this.$set(this.DayDate, 'newOrders', res.data.newOrders);
             });
             // window.console.log('refresh');
             // this.DayDate =
@@ -199,6 +212,13 @@ export default {
             //         }
             //     ], 'orderCount': (Math.random() * 1000).toFixed(0), 'peopleCount': (Math.random() * 1000).toFixed(0), 'priceSum': (Math.random() * 1000).toFixed(0)
             // };
+        },
+        startFetchDate() {
+            if (!this.restId) {
+                window.setTimeout(this.startFetchDate, 1000);
+            } else {
+                this.fetchDate();
+            }
         }
     },
     watch: {
@@ -209,9 +229,9 @@ export default {
     components: {
     },
     created() {
-        this.fetchDate();
     },
     mounted() {
+        this.startFetchDate();
         window.restinter = window.setInterval(this.fetchDate, 1000 * 60);
     },
     beforeDestroy() {
