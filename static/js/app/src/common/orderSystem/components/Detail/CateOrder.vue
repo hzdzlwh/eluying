@@ -82,7 +82,7 @@ border-radius:4px;padding:15px;">
         </div>
             </div>
             </div>
-            <changeRemark :visible='changeRemarkVisible':data='dishChange ? dishChange.remark : ""' @changeRemark='changeRemark' @hideModal='changeRemarkHide' style='z-index:100'></changeRemark>
+            <changeRemark :visible='changeRemarkVisible':text='dishChange ? dishChange.remark : ""' @changeRemark='changeRemark' @hideModal='changeRemarkHide' style='z-index:100'></changeRemark>
     </div>
 </template>
 <style lang="scss">

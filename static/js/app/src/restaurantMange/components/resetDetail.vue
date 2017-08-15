@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-08-01 14:45:58
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-08-15 10:07:32
+* @Last Modified time: 2017-08-15 11:42:07
 * @email: 783384903@qq.com
 */
 
@@ -151,7 +151,7 @@
                 </div>
             </div>
         </div>
-        <changeRemark :visible='changeRemarkVisible':data='dishChange ? dishChange.remark : undefined' @changeRemark='changeRemark' @hideModal='changeRemarkHide'></changeRemark>
+        <changeRemark :visible='changeRemarkVisible':text='dishChange ? dishChange.remark : undefined' @changeRemark='changeRemark' @hideModal='changeRemarkHide'></changeRemark>
         <dishModal :visible='dishModalVisible' :type='dishModalType' :data='dishChange' @hideModal='hideDishModal' @dishChange='dishChangeSub'></dishModal>
 <!--         <bookInfo :visible='bookInfoVisible' :num='bookPeopleNUm' :data='bookData' @hideModal='hidebookInfo' :type='isHasOrder' @changeBook='changeBook'></bookInfo> -->
 <keyBoard :visible ='bookInfoVisible' @close='hidebookInfo' :num ='openData.peopleNum' :dish='openData.boardDetailResps[0].boardName + openData.boardDetailResps[0].boardId' v-if='openData' @numChange='changeBookNum'></keyBoard>

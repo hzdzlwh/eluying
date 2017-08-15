@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-08-08 18:22:37
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-08-15 10:25:32
+* @Last Modified time: 2017-08-15 11:42:40
 * @email: 783384903@qq.com
 */
 
@@ -34,7 +34,7 @@ export default {
             type: Boolean,
             default: false
         },
-        data: {
+        text: {
             type: String,
             default: ''
         }
@@ -62,7 +62,7 @@ export default {
                 $('#changeRemark').modal('hide');
             }
         },
-        data(val) {
+        text(val) {
             this.Str = val;
         }
     },
