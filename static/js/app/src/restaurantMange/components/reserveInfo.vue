@@ -26,15 +26,16 @@
                     <div class="item">
                         <span>客户姓名：</span>
                         <div style="width:200px;">
-                            <input type="text" class="dd-input" style="width:200px;" v-model="name" @input="changeVipList(1)">
+                            <input type="text" class="dd-input" style="width:200px;" v-model="name" @input="changeVipList(1)" :disabled="!!relevanceOrder">
                         </div>
-                        <span class="relevance-order" @click="showRelevanceOrder">关联订单</span>
+                        <span class="relevance-order" @click="cancelConnect" v-if="!!relevanceOrder">取消关联</span>
+                        <span class="relevance-order" @click="showRelevanceOrder" v-else>关联订单</span>
                     </div>
-                    <div><span style="display:inline-block;width:70px;text-align:right;">手机号：</span><input type="number" class="dd-input" style="width:200px;" v-model="phone" @input="changeVipList(2)"></div>
+                    <div><span style="display:inline-block;width:70px;text-align:right;">手机号：</span><input type="number" class="dd-input" style="width:200px;" v-model="phone" @input="changeVipList(2)" :disabled="!!relevanceOrder"></div>
                     <div class="item">
                         <span>客户来源：</span>
                         <div style="width:200px;">
-                            <dd-select v-model="userOriginType">
+                            <dd-select v-model="userOriginType" :disabled="!!relevanceOrder">
                                 <dd-option :key="origin" v-for="origin in userSelfOrigins" :value="origin" :label="origin.name">
                                     <span :title="origin.name">{{origin.name}}</span>
                                 </dd-option>
@@ -54,7 +55,7 @@
                     <div class="item" v-show="showVipCardSelect">
                         <span style="display:inline-block;width:70px;text-align:right;">会员卡：</span>
                         <div style="width:200px;">
-                            <dd-select v-model="vipCardId">
+                            <dd-select v-model="vipCardId" :disabled="!!relevanceOrder">
                                 <dd-option :value="0" label="不使用">
                                     不使用
                                 </dd-option>
@@ -76,7 +77,7 @@
                     <div class="item">
                         <span style="display:inline-block;width:70px;text-align:right;">销售员：</span>
                         <div style="width:200px;">
-                            <dd-select v-model="saleId">
+                            <dd-select v-model="saleId" :disabled="!!relevanceOrder">
                                 <dd-option :value="-1" label="无">
                                     无
                                 </dd-option>
@@ -115,6 +116,10 @@ export default {
         visible: {
             type: Boolean,
             default: false
+        },
+        relevanceOrder: {
+            type: Object,
+            default: null
         }
     },
     data() {
@@ -366,6 +371,9 @@ export default {
             this.vipDiscountDetail = {};
             this.eatNum = undefined;
             this.saleId = -1;
+        },
+        cancelConnect() {
+            this.$emit('cancelConnect');
         }
     },
     watch: {
@@ -397,6 +405,24 @@ export default {
             if (originType !== -5 && originType !== -4) {
                 // this.vipCardId = 0;
                 this.vipDiscountDetail = {};
+            }
+        },
+        relevanceOrder(newValue) {
+            if (newValue) {
+                this.name = newValue.customerName;
+                this.phone = newValue.customerPhone;
+                this.changeVipList(-2);
+                if (newValue.originId === -5) {
+                    this.userOriginType = this.getOrigin(newValue.originId, newValue.discountRelatedId);
+                } else {
+                    this.userOriginType = this.getOrigin(newValue.originId);
+                }
+                this.saleId = newValue.salerId;
+            } else {
+                this.name = '';
+                this.phone = '';
+                this.userOriginType = this.getOrigin(-1);
+                this.saleId = -1;
             }
         }
     },

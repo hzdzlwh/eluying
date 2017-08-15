@@ -34,7 +34,7 @@
                                     <td :title="o.roomNums"><div class="autocut">{{o.roomNums}}</div></td>
                                     <td :title="o.itemDescription"><div class="autocut">{{o.itemDescription}}</div></td>
                                     <td>{{ORDER_STATUS[o.orderState].long}}</td>
-                                    <td @click="connect">确认关联</td>
+                                    <td @click="connect(o)">确认关联</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -87,7 +87,9 @@ export default {
         this.getOrderList();
     },
     methods: {
-        connect() {
+        connect(orderDetail) {
+            this.$emit('sendRelevanceOrder', orderDetail);
+            this.hideModal();
         },
         search() {
             this.pageNo = 1;

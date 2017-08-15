@@ -15,15 +15,14 @@
             <div v-if="leftType === 4">
                 <rest-menu></rest-menu>
             </div>
-            <button @click="showOrderMenuModal">changeSeat</button>
         </div>
         <div class="rest-order-right">
             <taday v-if='leftType === 0'></taday>
             <resetContain v-if='leftType === 1'></resetContain>
             <resetdetail v-if='leftType === 2 || leftType === 3 || leftType === 4'></resetdetail>
         </div>
-        <reserve-info-modal :visible="reserveInfoVisible" @hideModal="hideModal" @showRelevaneOrder="showRelevanceOrder"></reserve-info-modal>
-        <relevance-order-modal :visible="relevanceOrderVisible" @hideModal="hideModal"></relevance-order-modal>
+        <reserve-info-modal :visible="reserveInfoVisible" :relevanceOrder="relevanceOrderDetail" @hideModal="hideModal" @showRelevaneOrder="showRelevanceOrder" @cancelConnect="cancelConnect"></reserve-info-modal>
+        <relevance-order-modal :visible="relevanceOrderVisible" @hideModal="hideModal" @sendRelevanceOrder="getRelevanceOrderDetail"></relevance-order-modal>
         <change-seat-modal :visible="changeSeatVisible" @hideModal="hideModal"></change-seat-modal>
         <order-menu-modal :visible="orderMenuVisible" @hideModal="hideModal"></order-menu-modal>
     </div>
@@ -57,6 +56,7 @@ import reserveInfoModal from '../../components/reserveInfo';
 import relevanceOrderModal from '../../components/relevanceOrder';
 import changeSeatModal from '../../components/changeSeat';
 import orderMenuModal from '../../components/orderMenu';
+import restBus from '../../event.js';
 export default {
     props: {
 
@@ -68,7 +68,8 @@ export default {
             reserveInfoVisible: false,
             relevanceOrderVisible: false,
             changeSeatVisible: false,
-            orderMenuVisible: false
+            orderMenuVisible: false,
+            relevanceOrderDetail: undefined
         };
     },
     computed: mapState([
@@ -101,6 +102,27 @@ export default {
         },
         showOrderMenuModal() {
             this.orderMenuVisible = true;
+        },
+        getRelevanceOrderDetail(orderDetail) {
+            this.relevanceOrderDetail = orderDetail;
+        },
+        cancelConnect() {
+            this.relevanceOrderDetail = undefined;
+        },
+        changeBoard() {
+            this.showChangeSeatModal();
+        }
+    },
+    watch: {
+        relevanceOrderDetail(newValue) {
+            if (newValue) {
+                this.changeReserveInfoVisible();
+            }
+        },
+        reserveInfoVisible(newValue) {
+            if (!newValue) {
+                this.relevanceOrderDetail = undefined;
+            }
         }
     },
     components: {
@@ -116,6 +138,7 @@ export default {
         orderMenuModal
     },
     created() {
+        restBus.$on('changeBoard', this.changeBoard)
     }
 };
 </script>
