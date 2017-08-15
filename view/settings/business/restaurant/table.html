@@ -52,7 +52,7 @@
                                     <td>{{des.kindName}}</td>
                                     <td>{{des.serialNum}}</td>
                                     <td>{{des.seatNum}}</td>
-                                    <td><img :src="des.qrCodeUrl" alt="" class="twoCode" @click="openResetDialog(des)"></td>
+                                    <td><img src="http://static.dingdandao.com/qrcode_default.png" alt="" class="twoCode" @click="openResetDialog(des)"></td>
                                     <td>
                                         <span v-on:click="openEditDialog(des)">修改</span>/<span v-on:click.stop="deleteNoConfirm(des.boardId)">删除</span>
                                     </td>

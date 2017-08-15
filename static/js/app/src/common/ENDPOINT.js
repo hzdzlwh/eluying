@@ -6,7 +6,7 @@ export default {
     getRoomCategoryListUrl: '/category/getRoomCategoryList',
     addAccommodationUrl: '/category/addAccommodation',
     pullOtherCategoryListUrl: '/category/pullOtherCategoryList',
-    deleteOtherCategoryUrl: '/category/deleteOtherCategory',
+    deleteOtherCategoryUrl: '/entertainment/deleteEnterCategory',
     subclassManageUrl: '/category/modifySubCategory',
     addOrEditExtraCategoryUrl: '/category/addOrEditOtherCategory',
     editRoomBasicUrl: '/category/modifyAccommodationBaseInfo',

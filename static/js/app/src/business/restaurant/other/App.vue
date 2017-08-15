@@ -110,7 +110,13 @@
                         this.restName = result.data.list.filter(function(el) {
                             return el.restId == restId;
                         })[0].restName;
-                    });
+                    }).then(
+                        http.get('/dish/getSellClearMenu', { restId: restId, queryType: 1 }).then(res => {
+                           if (res.code === 1) {
+                               this.checked = res.data.reservePreOrder === 1 ? true : false;
+                           }
+                        })
+                    );
             },
             addDiscount() {
                 this.newDiscounts.push({

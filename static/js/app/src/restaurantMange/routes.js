@@ -9,7 +9,7 @@ import destine from './views/book/destine.vue';
 import estimate from './views/book/estimate.vue';
 import order from './views/order/index.vue';
 import orderList from './views/orderList/index.vue';
-const hasAuth = auth.checkModule(auth.VIP_ID);
+const hasAuth = auth.checkModule(auth.RESTRANT);
 const hasCompanyAuth = auth.checkModule(auth.COMPANY_ID, auth.COMPANY_VIEW_ID);
 
 export const routes = [
@@ -17,13 +17,15 @@ export const routes = [
         path: '/',
         redirect: '/order',
         meta: {
+            auth: hasAuth
         }
     },
     {
         path: '/book',
         component: book,
         meta: {
-            name: '预订沽清'
+            name: '预订沽清',
+            auth: hasAuth
             // invisible: true
         },
         redirect: '/book/destine',
@@ -48,14 +50,16 @@ export const routes = [
         path: '/order',
         component: order,
         meta: {
-            name: '桌位点餐'
+            name: '桌位点餐',
+            auth: hasAuth
         }
     },
     {
         path: '/orderList',
         component: orderList,
         meta: {
-            name: '餐饮预订'
+            name: '餐饮预订',
+            auth: hasAuth
         }
     },
     {

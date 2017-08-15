@@ -28,7 +28,8 @@ const NO_AUTH_FOR_VIP_URL = '/view/tips/noauthforvip.html';
 const EXPIRED_URL = '/view/tips/expired.html';
 const UPGRADE_URL = '/view/tips/upgrade.html';
 const INSURANCE_ID = 1;
-
+// 餐饮
+const RESTRANT = 3;
 const camps = JSON.parse(localStorage.getItem('camps'));
 const campId = localStorage.getItem('campId');
 const switches = JSON.parse(localStorage.getItem('switches'));
@@ -190,7 +191,7 @@ exports.REPORT_ID = REPORT_ID;
 exports.INSURANCE_ID = INSURANCE_ID;
 exports.VIP_VIEW_ID = VIP_VIEW_ID;
 exports.VIP_EDIT_ID = VIP_EDIT_ID;
-
+exports.RESTRANT = RESTRANT;
 exports.COMPANY_ID = COMPANY_ID;
 exports.COMPANY_VIEW_ID = COMPANY_VIEW_ID;
 exports.COMPANY_EDIT_ID = COMPANY_EDIT_ID;

@@ -78,11 +78,12 @@ border-radius:4px;padding:15px;">
             <div style="color:#475669">菜品备注：{{dishChange.remark || '无'}} <span style="color: #82beff;margin-left: 10px;cursor: pointer;" @click='changeRemarkModal'>修改</span></div>
             <div>&#12288;点菜员：{{dishChange.operatorName || '无'}}</div>
             <div>下单时间：{{dishChange.operationTime}}</div>
-            <div><div class="resetMange-btn-base" style="margin-right:20px;" @click='dishSendOrBack(0)'>退菜</div><div class="resetMange-btn-base" @click='dishSendOrBack(0)'>赠送</div></div>
+            <div><div class="resetMange-btn-base" style="margin-right:20px;" @click='dishSendOrBack(0)'>退菜</div><div class="resetMange-btn-base" @click='dishSendOrBack(1)'>赠送</div></div>
         </div>
             </div>
             </div>
-            <changeRemark :visible='changeRemarkVisible':data='dishChange ? dishChange.remark : ""' @changeRemark='changeRemark'></changeRemark>
+            <changeRemark :visible='changeRemarkVisible':text='dishChange ? dishChange.remark : ""' @changeRemark='changeRemark' @hideModal='changeRemarkHide' ></changeRemark>
+            <dishModal :visible='dishModalVisible' :type='dishModalType' :data='dishChange' @hideModal='hideDishModal' @dishChange='dishChangeSub'></dishModal>
     </div>
 </template>
 <style lang="scss">
@@ -210,6 +211,7 @@ padding:16px;
     } from 'vuex';
     import http from '../../../http';
     import changeRemark from '../../../../restaurantMange/components/changeRemark.vue';
+    import dishModal from '../../../../restaurantMange/components/dishModal.vue';
     export default{
         props: {
             order: Object
@@ -245,7 +247,8 @@ padding:16px;
             }
         },
         components: {
-            changeRemark
+            changeRemark,
+            dishModal
         },
         methods: {
             ...mapActions([
@@ -258,16 +261,17 @@ padding:16px;
                 this.changeRemarkVisible = false;
             },
             changeRemark(val) {
-                http.get('/catering/modifyDishRemark', { caterOrderId: this.foodItems[0].caterOrderId, remark: val, serviceId: this.dishChange.serviceId }).then(res => {
+                http.get('/catering/modifyDishRemark', { caterOrderId: this.order.caterOrderId, remark: val, serviceId: this.dishChange.serviceId }).then(res => {
+                    this.dishChange.remark = val;
                     this.refesh();
                 });
             },
             refesh() {
-                this[types.GET_CATER_ORDER_DETAIL]({ orderId: this.foodItems[0].caterOrderId });
+                this[types.GET_CATER_ORDER_DETAIL]({ orderId: this.order.caterOrderId });
             },
             dishSendOrBack(flag) {
                 const params = {
-                    caterOrderId: this.foodItems[0].caterOrderId,
+                    caterOrderId: this.order.caterOrderId,
                     dishes: JSON.stringify(this.dishChange)
                 };
                 if (flag) {

@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-08-08 18:22:37
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-08-09 11:00:20
+* @Last Modified time: 2017-08-15 11:42:40
 * @email: 783384903@qq.com
 */
 
@@ -16,7 +16,7 @@
                     <button type="button" class="close" @click="hideModal"><span>&times;</span></button>
                 </div>
                 <div class="modal-body">
-                    <textarea name="remark" placeholder="请输入备注信息" maxlength="200" v-model="Str" class="dd-input"/>
+                    <textarea name="remark" placeholder="请输入备注信息" maxlength="200" rows=10 v-model="Str" class="dd-input"/>
                 </div>
                 <div class="modal-foot">
                     <button class="dd-btn dd-btn-ghost" @click="hideModal">取消</button>
@@ -34,7 +34,7 @@ export default {
             type: Boolean,
             default: false
         },
-        data: {
+        text: {
             type: String,
             default: ''
         }
@@ -62,8 +62,8 @@ export default {
                 $('#changeRemark').modal('hide');
             }
         },
-        data(val) {
-            this.data = val;
+        text(val) {
+            this.Str = val;
         }
     },
     components: {
@@ -72,6 +72,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+    .modal-dialog{
+        width:300px;
+    }
     .modal-content{
         padding: 0;
         width: 300px;
