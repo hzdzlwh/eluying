@@ -23,7 +23,7 @@
         </div>
         <reserve-info-modal :visible="reserveInfoVisible" :relevanceOrder="relevanceOrderDetail" @hideModal="hideModal" @showRelevaneOrder="showRelevanceOrder" @cancelConnect="cancelConnect"></reserve-info-modal>
         <relevance-order-modal :visible="relevanceOrderVisible" @hideModal="hideModal" @sendRelevanceOrder="getRelevanceOrderDetail"></relevance-order-modal>
-        <change-seat-modal :visible="changeSeatVisible" @hideModal="hideModal"></change-seat-modal>
+        <change-seat-modal :visible="changeSeatVisible" :openData="openData" @hideModal="hideModal"></change-seat-modal>
         <order-menu-modal :visible="orderMenuVisible" @hideModal="hideModal"></order-menu-modal>
     </div>
 </template>
@@ -48,8 +48,7 @@ import taday from '../../components/tadayRestDate.vue';
 import inputKeyboard from '../../../common/components/inputKeyboard.vue';
 import restSeats from '../../components/restSeats.vue';
 import restMenu from '../../components/restMenu';
-import { dateFormat } from '../../../common/util';
-import { mapState, mapMutations } from 'vuex';
+import { mapState } from 'vuex';
 import resetContain from '../../components/resetConstain.vue';
 import resetdetail from '../../components/resetDetail.vue';
 import reserveInfoModal from '../../components/reserveInfo';
@@ -69,7 +68,8 @@ export default {
             relevanceOrderVisible: false,
             changeSeatVisible: false,
             orderMenuVisible: false,
-            relevanceOrderDetail: undefined
+            relevanceOrderDetail: undefined,
+            openData: undefined
         };
     },
     computed: mapState([
@@ -109,7 +109,8 @@ export default {
         cancelConnect() {
             this.relevanceOrderDetail = undefined;
         },
-        changeBoard() {
+        changeBoard(openData) {
+            this.openData = openData.data;
             this.showChangeSeatModal();
         }
     },
@@ -138,7 +139,7 @@ export default {
         orderMenuModal
     },
     created() {
-        restBus.$on('changeBoard', this.changeBoard)
+        restBus.$on('changeBoard', this.changeBoard);
     }
 };
 </script>
