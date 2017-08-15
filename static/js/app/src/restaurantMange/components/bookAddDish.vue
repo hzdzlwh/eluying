@@ -25,6 +25,18 @@
         <resetBookDish v-if="resetBookDish" :info="row" v-on:resetBookDishNum="saverResetBookDish" v-on:cancerBookDishNum="closeResetBookDish"/>
     </div>
 </template>
+<style lang="scss">
+    .bookDishFontRed {
+        color: red;
+    }
+    .bookDishFontBlue {
+        color: #178ce2;
+        cursor: pointer;
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+</style>
 <style lang="scss" scoped>
     .book-add-dish {
         background:#fafafa;
@@ -87,18 +99,11 @@
             }
             .book-table-box {
                 height: 502px;
-                overflow: scroll;
-                .book-dish-table {
-                    thead>tr {
-                        height: 24px;
-                        line-height: 24px;
+                overflow: auto;
+                .estimate-table {
+                    &::-webkit-scrollBar {
+                        width: 0;
                     }
-                    th {
-
-                    }
-                }
-                ::-webkit-scrollBar {
-                    width: 0;
                 }
             }
         }
@@ -134,14 +139,17 @@
                     },
                     {
                         title: '库存数量',
-                        dataIndex: 'reserveNum',
-                        width: 80
+                        width: 80,
+                        render: (h, row) => {
+                            return <div class={row.reserveNum === '已售完' ? 'bookDishFontRed' : ''}>{row.reserveNum}</div>;
+                        }
                     },
                     {
                         title: '操作',
                         width: 80,
-                        render: (h, row) =>
-                            <div style="cursor:pointer" onClick={() => this.opporateBookDish(row)}>设置</div>
+                        render: (h, row) => {
+                            return <div class={'bookDishFontBlue'} onClick={() => this.opporateBookDish(row)}>设置</div>;
+                        }
                     }
                 ],
                 resetBookDish: false
@@ -206,7 +214,6 @@
                 });
                 this.resetBookDish = false;
                 this.$emit('updataEstimate', this.filterUpdata(this.vips, { dishId: dishId }));
-                console.log(this.filterUpdata(this.vips, { dishId: dishId }));
             },
             filterUpdata(collection, source) {
                 // collection代表被测试的对象数组，source为被测试的属性值对（or对象）。

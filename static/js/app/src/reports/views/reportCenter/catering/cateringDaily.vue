@@ -231,7 +231,7 @@
                     reportType: 310,
                     params: JSON.stringify(obj)
                 };
-                const host = http.getUrl('/stat/getDailyCaterOrderReport');
+                const host = http.getUrl('/stat/exportReport');
                 const pa = http.getDataWithToken(paramsObj);
                 pa.params = JSON.parse(pa.params);
                 const params = http.paramsToString(pa);

@@ -138,6 +138,34 @@
                 }
             }
         }
+        .book-reset-foot {
+            width: 100%;
+            height: 40px;
+            padding:0 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            .book-btn-ensure {
+                width: 48px;
+                line-height: 22px;
+                text-align:center;
+                border-radius: 2px;
+                background: #178ce6;
+                color: #fff;
+                cursor: pointer;
+            }
+            .book-btn-cancer {
+                background:#ffffff;
+                border:1px solid #cccccc;
+                border-radius:2px;
+                width:48px;
+                line-height:22px;
+                text-align:center;
+                font-size: 14px;
+                color: #ccc;
+                cursor: pointer;
+            }
+        }
     }
 </style>
 
@@ -173,21 +201,24 @@
                 }
             },
             resetBookDishNum() {
+                let obj = {};
                 if (!this.sellClearDish) {
-                    const obj = {
+                    obj = {
                         oprType: 1,
                         sellClearNum: this.reserveNum,
                         dishId: JSON.stringify([this.info.dishId])
                     };
-                    http.get('/dish/updateSellClearNum', obj).then(res => {
-                        if (res.code === 1) {
-                            this.$emit('resetBookDishNum', this.info.dishId, this.reserveNum);
-                        }
-                    });
                 } else if (this.sellClearDish) {
-                    const obj = {
+                    obj = {
+                        oprType: 2,
+                        dishId: JSON.stringify([this.info.dishId])
                     };
                 }
+                http.get('/dish/updateSellClearNum', obj).then(res => {
+                    if (res.code === 1) {
+                        this.$emit('resetBookDishNum', this.info.dishId, this.reserveNum);
+                    }
+                });
             },
             cancerBookDishNum() {
                 this.$emit('cancerBookDishNum');
