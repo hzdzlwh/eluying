@@ -323,7 +323,7 @@ export default {
             this.bookInfoVisible = false;
         },
         openBoard() {
-            bus.$emit('changeBoard', { data: this.openData });
+            restBus.$emit('changeBoard', { data: this.openData });
         },
         openBoardAndCook() {
             http.get('/board/openBoardAndCook', { restId: this.restId, caterOrderId: this.openData.caterOrderId }).then(res => restBus.$emit('refeshView'));
