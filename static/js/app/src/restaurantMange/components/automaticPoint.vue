@@ -8,46 +8,46 @@
             <div class="point-popup-container">
                 <div class="front-pointer">
                     <p class="point-title">前台打印机</p>
-                    <p v-for="pointer in frontPointers" class="point-items">
-                        <span>
-                            <label><input type="checkbox">{{pointer.pointerName}}</label>
+                    <p v-for="(pointer, index) in frontPointers" class="point-items">
+                        <span class="printer-label">
+                            <label><input type="checkbox" v-model="frontPoint[index][pointer.printerId]">{{pointer.printerName}}</label>
                         </span>
-                        <span>
+                        <span class="printer-status">
                             状态：
-                            <i v-if="pointer.status === 0">关闭</i>
-                            <i v-else-if="pointer.status === 1">可用</i>
-                            <i v-else-if="pointer.status === 2">离线</i>
-                            <i v-else-if="pointer.status === 3">缺纸</i>
+                            <span v-if="pointer.status === 0">关闭</span>
+                            <span v-else-if="pointer.status === 1">可用</span>
+                            <span v-else-if="pointer.status === 2">离线</span>
+                            <span v-else-if="pointer.status === 3">缺纸</span>
                         </span>
-                        <span>
+                        <span class="printer-log">
                             历史已打次数
-                            <i>{{pointer.pointedNum}}</i>
+                            <span>{{pointer.printedNum}}</span>
                         </span>
                     </p>
                 </div>
                 <div class="back-pointer">
                     <p class="point-title">后厨打印机</p>
-                    <p v-for="pointer in backPointers">
-                        <span>
-                            <label><input type="checkbox">{{pointer.pointerName}}</label>
+                    <p v-for="(pointer, index) in backPointers">
+                        <span class="printer-label">
+                            <label><input type="checkbox" v-model="backPoint[index][pointer.printerId]">{{pointer.printerName}}</label>
                         </span>
-                        <span>
+                        <span class="printer-status">
                             状态：
-                            <i v-if="pointer.status === 0">关闭</i>
-                            <i v-else-if="pointer.status === 1">可用</i>
-                            <i v-else-if="pointer.status === 2">离线</i>
-                            <i v-else-if="pointer.status === 3">缺纸</i>
+                            <span v-if="pointer.status === 0">关闭</span>
+                            <span v-else-if="pointer.status === 1">可用</span>
+                            <span v-else-if="pointer.status === 2">离线</span>
+                            <span v-else-if="pointer.status === 3">缺纸</span>
                         </span>
-                        <span>
+                        <span class="printer-log">
                             历史已打次数
-                            <i>{{pointer.pointedNum}}</i>
+                            <span>{{pointer.printedNum}}</span>
                         </span>
                     </p>
                 </div>
             </div>
             <div class="point-popup-footer">
-                <button class="pointer-saver" @click="saverPoint">确定</button>
-                <button class="pointer-cancer" @click="closePoint">取消</button>
+                <div class="pointer-saver" @click="saverPoint">确定</div>
+                <div class="pointer-cancer" @click="closePoint">取消</div>
             </div>
         </div>
     </div>
@@ -68,18 +68,20 @@
 </style>
 <style lang="scss" scoped>
     .restaurant-point-popup {
-        width:400px;
-        background:#fff;
-        padding: 10px 0;
+        background:#fafafa;
+        box-shadow:0 2px 4px 0 rgba(0,0,0,0.15);
+        border-radius:2px;
+        width:424px;
+        border-top: 2px solid #178ce6;
+        padding: 22px 20px;
         .point-popup-header {
-            border-bottom: 1px solid #ccc;
-            line-height: 34px;
-            font-size: 16px;
-            padding: 0 10px;
+            font-size:16px;
+            color:#178ce6;
+            line-height:16px;
             .close-point {
                 float: right;
-                width: 34px;
-                line-height:34px;
+                width: 16px;
+                line-height:16px;
                 text-align:center;
                 cursor: pointer;
                 &:hover {
@@ -89,35 +91,62 @@
             }
         }
         .point-popup-container {
-            border-bottom: 1px solid #ccc;
-            padding:5px 20px;
+            padding: 10px 0;
             .point-title {
-                font-size: 16px;
-                font-weight: bold;
-                color: #111;
+                font-size:14px;
+                color:#666666;
+                line-height:24px;
             }
             .point-items {
-                width: 100%;
-                line-height: 24px;
+                padding-left: 20px;
+                font-size:14px;
+                color:#666666;
+                height: 24px;
+                .printer-label {
+                    display: block;
+                    float: left;
+                    label {
+                        cursor: pointer;
+                        margin: 0;
+                    }
+                    input {
+                        vertical-align: text-bottom;
+                    }
+                }
+                .printer-status {
+                    display: block;
+                    float: left;
+                    margin-left: 20px;
+                }
+                .printer-log {
+                    display: block;
+                    float: left;
+                    margin-left: 20px;
+                }
             }
         }
         .point-popup-footer {
-            height: 34px;
-            button {
-                float:right;
+            height: 24px;
+            .pointer-saver, .pointer-cancer {
+                border-radius:2px;
+                width:50px;
+                float:left;
                 margin-left: 20px;
-                width:100px;
-                line-height:40px;
                 text-align:center;
-                border-radius: 5px;
+                cursor: pointer;
             }
             .pointer-saver {
-                background: blue;
+                line-height:24px;
+                background:#178ce6;
                 color: #fff;
             }
             .pointer-cancer {
-                background: #fff;
-                color: #333;
+                border:1px solid #178ce6;
+                background: #fafafa;
+                border-radius:2px;
+                line-height: 22px;
+                width:48px;
+                color: #178ce6;
             }
         }
     }
@@ -135,7 +164,9 @@
             return {
                 frontPointers: [],
                 backPointers: [],
-                printerIds: [1]
+                frontPoint: [],
+                backPoint: [],
+                printerIds: []
             };
         },
         computed: {
@@ -151,12 +182,26 @@
                 const obj = {
                     caterOrderId: this.caterOrderId,
                     restId: this.restId,
-                    operationId: this.operationId === undefined ? -1 : this.operationId
+                    operationId: this.operationId
                 };
                 http.get('/printer/listPrinter4Cater', obj).then(res => {
                     if (res.code === 1) {
-                        this.frontPointers = res.data.front;
-                        this.backPointers = res.data.back;
+                        this.frontPointers = res.data.front || [];
+                        this.frontPoint = [];
+                        this.frontPointers.forEach(item => {
+                            const print = {};
+                            print[item.printerId] = item.status === 1;
+                            this.frontPoint.push(print);
+                        });
+                        this.backPointers = res.data.back || [];
+                        this.backPoint = [];
+                        this.backPointers.forEach(item => {
+                            const print = {};
+                            print[item.printerId] = item.status === 1;
+                            this.backPoint.push(print);
+                        });
+                        console.log(this.frontPointers, this.backPointers);
+                        console.log(this.frontPoint, this.backPoint);
                     }
                 });
             },
@@ -164,7 +209,28 @@
                 this.$emit('closeAutomaticPoint');
             },
             saverPoint() {
-                this.$emit('saverPoint', this.printerIds);
+                const obj = {
+                    restId: this.restId,
+                    caterOrderId: this.caterOrderId,
+                    operationId: this.operationId
+                };
+                const printList = this.frontPoint.concat(this.backPoint);
+                console.log(printList);
+                this.printerIds = [];
+                printList.forEach(item => {
+                    console.log(item);
+                    for (var key in item) {
+                        if (item[key]) {
+                            this.printerIds.push(key);
+                        }
+                    }
+                });
+                obj.printerIds = JSON.stringify(this.printerIds);
+                http.get('/printer/print', obj).then(res => {
+                    if (res.code === 1) {
+                        this.$emit('closeAutomaticPoint');
+                    }
+                });
             }
         },
         watch: {
