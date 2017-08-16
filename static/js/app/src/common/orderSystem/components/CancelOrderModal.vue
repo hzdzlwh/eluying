@@ -111,7 +111,7 @@
                 bus.$emit('back');
             },
             hideModal() {
-                this.penalty = undefined;
+                this.penalty = 0;
                 this.subOrderPenaltys = [];
                 bus.$emit('hideCancelOrder');
             },
@@ -161,7 +161,7 @@
                     business.subOrderPenaltys = JSON.stringify(this.subOrderPenaltys);
                 }
                 if (totalPenalty) {
-                    business.payments = JSON.stringify([{ fee: totalPenalty, type: -4 }]);
+                    business.payments = JSON.stringify([{ fee: totalPenalty, type: 4 }]);
                 }
                 this.backPenalty = this.penalty;
                 this.backSubOrderPenaltys = this.subOrderPenaltys.slice(0);

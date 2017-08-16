@@ -95,16 +95,16 @@ height:23px;
                         }
                     }
                 }
+            }
+        },
+        watch: {
+            value(newVal) {
+                this.num = newVal;
             },
-            watch: {
-                value(newVal) {
+            max(newVal) {
+                if (this.num > newVal) {
                     this.num = newVal;
-                },
-                max(newVal) {
-                    if (this.num > newVal) {
-                        this.num = newVal;
-                        this.changeNum();
-                    }
+                    this.changeNum();
                 }
             }
         }
