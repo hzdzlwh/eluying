@@ -112,6 +112,7 @@
             text-align: left;
             float: left;
             cursor: pointer;
+            position: relative;
             &:hover{
                 color:#666
             }
