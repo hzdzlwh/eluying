@@ -114,7 +114,9 @@ export default {
             });
         },
         orderMenu(food) {
-            this[types.ADD_FOOD]({ food: food });
+            if (food.inventoryNum > 0) {
+                this[types.ADD_FOOD]({ food: food });
+            }
         },
         getMenu() {
             return new Promise((resolve, reject) => {
