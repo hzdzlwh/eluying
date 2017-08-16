@@ -1,8 +1,8 @@
 /*
 * @Author: lxj
 * @Date:   2017-07-31 11:05:38
-* @Last Modified by:   Tplant
-* @Last Modified time: 2017-08-10 15:08:34
+* @Last Modified by:   lxj
+* @Last Modified time: 2017-08-16 09:57:56
 * @email: 783384903@qq.com
 */
 
@@ -18,5 +18,6 @@ export default {
     'SET_SELECT_DISH': 'setSelectDish',
     'DELETE_SELECT_DISH': 'deleteSelectDish',
     'SET_CATER_ORDER_DETAIL': 'setCaterOrderDetail',
-    'GET_CATER_ORDER_DETAIL': 'getCaterOrderDetail'
+    'GET_CATER_ORDER_DETAIL': 'getCaterOrderDetail',
+    'SET_PROMESSION': 'setPromession'
 };

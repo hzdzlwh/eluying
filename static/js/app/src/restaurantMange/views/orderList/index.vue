@@ -277,7 +277,7 @@
                 channelTypeAll: [
                     {
                         id: -1,
-                        name: '全部收银方式'
+                        name: '全部收款方式'
                     }
                 ],
                 channelType: -1,
@@ -333,7 +333,7 @@
                         width: 80
                     },
                     {
-                        title: '收银方式',
+                        title: '收款方式',
                         dataIndex: 'payChannel'
                     },
                     {

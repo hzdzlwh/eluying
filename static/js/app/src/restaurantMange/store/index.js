@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-31 10:52:58
 * @Last Modified by:   lxj
-* @Last Modified time: 2017-08-15 15:37:30
+* @Last Modified time: 2017-08-16 10:13:20
 * @email: 783384903@qq.com
 */
 
@@ -33,11 +33,15 @@ const store = new Vuex.Store({
         //     isHasOrder: false
         // },
         openData: undefined,
-        addFood: []
+        addFood: [],
+        editorPromission: true
     },
     mutations: {
         [types.CANL_FOOD](state) {
             state.addFood = [];
+        },
+        [types.SET_PROMESSION](state, { flag }) {
+            state.editorPromission = flag;
         },
         [types.ADD_FOOD](state, { food }) {
             const selectFood = state.addFood.find((el, index) => {
