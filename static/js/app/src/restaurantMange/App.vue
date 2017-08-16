@@ -102,6 +102,7 @@
             top: 10px;
         }
         .restmange-link{
+            text-decoration: none;
             font-size: 16px;
             color: #999;
             margin-left: 16px;
@@ -111,6 +112,23 @@
             text-align: left;
             float: left;
             cursor: pointer;
+            position: relative;
+            &:hover{
+                color:#666
+            }
+        }
+        .active{
+            &:after{
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 50%;
+            width: 0;
+            height: 0;
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-bottom: 6px solid #323422;
+            }
         }
     }
     .restaurant-container{

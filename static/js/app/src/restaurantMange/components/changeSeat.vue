@@ -113,7 +113,7 @@ export default {
                     if (board.selected) {
                         tempArr.push(board);
                     }
-                })
+                });
             });
             return tempArr;
         }
@@ -160,7 +160,7 @@ export default {
         selectSeat(board) {
             if (this.openData.orderState === 0) {    // 预约订单 可以选所有状态桌子
                 this.$set(board, 'selected', !(board.selected));
-            } else {    //使用中、待处理...   只能选择空的和当前选择的
+            } else {    // 使用中、待处理...   只能选择空的和当前选择的
                 if (board.boardState === 0 || board.oldSelect) {
                     this.$set(board, 'selected', !(board.selected));
                 }
