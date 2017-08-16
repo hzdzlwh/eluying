@@ -13,13 +13,13 @@ const hasAuth = auth.checkModule(auth.RESTRANT);
 const hasCompanyAuth = auth.checkModule(auth.COMPANY_ID, auth.COMPANY_VIEW_ID);
 
 export const routes = [
-    // {
-    //     path: '/',
-    //     redirect: '/order',
-    //     meta: {
-    //         auth: hasAuth
-    //     }
-    // },
+    {
+        path: '/',
+        redirect: '/order',
+        meta: {
+            // auth: hasAuth
+        }
+    },
     {
         path: '/book',
         component: book,
@@ -34,6 +34,7 @@ export const routes = [
                 path: '/book/destine',
                 component: destine,
                 meta: {
+                    auth: hasAuth,
                     name: '菜品预定列表'
                 }
             },
@@ -41,6 +42,7 @@ export const routes = [
                 path: '/book/estimate',
                 component: estimate,
                 meta: {
+                    auth: hasAuth,
                     name: '菜品沽清列表'
                 }
             }
@@ -88,12 +90,12 @@ const router = new Router({
     linkActiveClass: 'active',
     routes
 });
-// router.beforeEach((to, from, next) => {
-//     if (!to.meta.auth) {
-//         router.push({ path: '/non-auth', query: { name: encodeURI(to.meta.name) }, params: { userId: 123 }, meta: { userid: 123 } });
-//         // next({path:'/non-auth', params: {name: '132'},meta: {name: '132'} })
-//     } else {
-//         next();
-//     }
-// });
+router.beforeEach((to, from, next) => {
+    if (!to.meta.auth) {
+        router.push({ path: '/non-auth', query: { name: encodeURI(to.meta.name) }, params: { userId: 123 }, meta: { userid: 123 } });
+        // next({path:'/non-auth', params: {name: '132'},meta: {name: '132'} })
+    } else {
+        next();
+    }
+});
 exports.router = router;
