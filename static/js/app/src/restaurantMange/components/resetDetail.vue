@@ -158,6 +158,7 @@
         <dishModal :visible='dishModalVisible' :type='dishModalType' :data='dishChange' @hideModal='hideDishModal' @dishChange='dishChangeSub'></dishModal>
 <!--         <bookInfo :visible='bookInfoVisible' :num='bookPeopleNUm' :data='bookData' @hideModal='hidebookInfo' :type='isHasOrder' @changeBook='changeBook'></bookInfo> -->
 <keyBoard :visible ='bookInfoVisible' @close='hidebookInfo' :num ='openData.peopleNum' :dish='openData.boardDetailResps[0].boardName + openData.boardDetailResps[0].boardId' v-if='openData' @numChange='changeBookNum'></keyBoard>
+        <handlePoint v-if="handlePoint" :caterOrderId="openData.caterOrderId" @closeHandlePoint="() => {this.handlePoint = false;}"/>
     </div>
 </template>
 <style lang='scss'>
@@ -179,6 +180,7 @@ import dishModal from './dishModal.vue';
 import { DatePicker } from 'element-ui';
 import keyBoard from '../../common/components/inputKeyboard.vue';
 import changeRemark from './changeRemark.vue';
+import handlePoint from './handlePoint.vue';
 export default {
     props: {
     },
@@ -201,7 +203,8 @@ export default {
             changeRemarkVisible: false,
             restDate: undefined,
             backDish: undefined,
-            addFoodList: []
+            addFoodList: [],
+            handlePoint: false
         };
     },
     computed: {
@@ -239,7 +242,7 @@ export default {
             'setOpenData'
         ]),
         printRest() {
-
+            this.handlePoint = true;
         },
         showCashier(type) {
             bus.$emit('showCashier', { type: type });
@@ -575,7 +578,8 @@ export default {
         dishModal,
         keyBoard,
         DatePicker,
-        changeRemark
+        changeRemark,
+        handlePoint
     },
     mounted() {
         if (this.openData && !this.openData.isHasOrder) {
