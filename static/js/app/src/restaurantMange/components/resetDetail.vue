@@ -7,7 +7,7 @@
 */
 
 <template>
-    <div class="rest-taday-contain" style="height:auto" v-if='openData'>
+    <div class="rest-taday-contain" style="height:auto" v-if='openData|| leftType === 5'>
         <div class="rest-taday-count">
             <div class="restDetail-title-tip">桌号</div>
             <div class="restDetail-title-display">

@@ -12,14 +12,14 @@
             <div v-if="leftType === 0 || leftType === 1 || leftType === 2 || leftType === 3">
                 <rest-seats @reserve="changeReserveInfoVisible"></rest-seats>
             </div>
-            <div v-if="leftType === 4">
+            <div v-if="leftType === 4 || leftType === 5">
                 <rest-menu></rest-menu>
             </div>
         </div>
         <div class="rest-order-right">
             <taday v-if='leftType === 0'></taday>
             <resetContain v-if='leftType === 1'></resetContain>
-            <resetdetail v-if='leftType === 2 || leftType === 3 || leftType === 4'></resetdetail>
+            <resetdetail v-if='leftType === 2 || leftType === 3 || leftType === 4 || leftType === 5'></resetdetail>
         </div>
         <reserve-info-modal :visible="reserveInfoVisible" :relevanceOrder="relevanceOrderDetail" @hideModal="hideModal" @showRelevaneOrder="showRelevanceOrder" @cancelConnect="cancelConnect"></reserve-info-modal>
         <relevance-order-modal :visible="relevanceOrderVisible" @hideModal="hideModal" @sendRelevanceOrder="getRelevanceOrderDetail"></relevance-order-modal>

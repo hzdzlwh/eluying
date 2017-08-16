@@ -166,7 +166,7 @@ export default {
             this.$emit('reserve');
         },
         orderDish() {
-            this[types.SET_LEFT_TYPE]({ leftType: 4 });
+            this[types.SET_LEFT_TYPE]({ leftType: 5 });
         },
         getSeatList() {
             const param = { date: this.date, restId: this.restId };
