@@ -143,7 +143,9 @@
                 }
             },
             back() {
-                this.bacnHandel.shift()();
+                if (this.bacnHandel.length) {
+                    this.bacnHandel.shift()();
+                }
             },
             setRestDetail(orderDetail) {
                 this[types.SET_ORDER_DETAIL]({ orderDetail });

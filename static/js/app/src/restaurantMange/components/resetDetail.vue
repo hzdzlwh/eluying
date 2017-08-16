@@ -124,15 +124,15 @@
             <div class="resetMange-btn-base " v-if='isHasOrder && this.leftType !== 4 && openData.orderState === 4' @click='reject'>拒绝</div>
             <div class="resetMange-btn-base resetMange-btn-lager" v-if='this.leftType === 4' @click='submitAddFood'>下单</div>
             <div class="resetMange-btn-base resetMange-btn-lager" v-if='this.leftType === 4' @click='canlAddFood'>取消</div>
-            <div class="resetMange-btn-base " v-if='isHasOrder && openData.orderState === 0' @click='canOrder'>取消订单</div>
+            <div class="resetMange-btn-base " v-if='isHasOrder && openData.orderState === 0 && this.leftType !== 4' @click='canOrder'>取消订单</div>
             <div class="resetMange-btn-base " v-if='isHasOrder && this.leftType !== 4 && (openData.orderState === 1 || openData.orderState === 0 || openData.orderState === 2 || openData.orderState === 8)' @click='printRest'>打印</div>
             <div class="resetMange-btn-base " v-if='isHasOrder && this.leftType !== 4 && (openData.orderState === 1 || openData.orderState === 0 || openData.orderState === 8)' @click="showCashier('collect')">收银</div>
             <div class="resetMange-btn-base " v-if='isHasOrder && this.leftType !== 4 && openData.orderState === 1' @click='showCashier("orderDetail")'>结算</div>
 
             <div class="resetMange-btn-base " v-if='isHasOrder && this.leftType !== 4 && openData.orderState === 8' @click="reGetMoney">重新结账</div>
             <div class="resetMange-btn-base " v-if='isHasOrder && this.leftType !== 4 && openData.resettleAble' @click="resetOrder">反结账</div>
-            <div class="resetMange-btn-base resetMange-btn-promise resetMange-btn-lager" v-if='!isHasOrder && openData.itemsMap && openData.itemsMap.length && this.leftType !== 4' @click='openBoardAndCook'>开台并入厨</div>
-            <div class="resetMange-btn-base resetMange-btn-promise resetMange-btn-lager" v-if='!isHasOrder && openData.orderState === 4 && this.leftType !== 4' @click='agreeAndCook'>同意并入厨</div>
+            <div class="resetMange-btn-base resetMange-btn-promise resetMange-btn-lager" v-if='openData.orderState === 0 && openData.itemsMap && openData.itemsMap.length && this.leftType !== 4' @click='openBoardAndCook'>开台并入厨</div>
+            <div class="resetMange-btn-base resetMange-btn-promise resetMange-btn-lager" v-if='openData.orderState === 4 && this.leftType !== 4' @click='agreeAndCook'>同意并入厨</div>
         </div>
         </div>
         <div class="rest-restDetail-foot reset-restDetail-resetChange" v-if='dishChange'>
@@ -393,7 +393,17 @@ export default {
                 return;
             }
             const parms = {
+                remark: this.remark,
+                totalPrice: this.addFoodTotal()
             };
+            const addFoodDishList = this.addFoodList.map(el => {
+                return {
+                    bookNum: el.num,
+                    dishId: el.dishId,
+                    dishName: el.dishName,
+                    price: el.dishPrice
+                };
+            });
             if (this.openData.boardDetailResps.length) {
                 const boardList = [];
                 this.openData.boardDetailResps.forEach(el => {
@@ -412,6 +422,7 @@ export default {
             } else {
                 parms.operationType = 4;
             }
+            parms.dishItems = JSON.stringify(addFoodDishList);
             http.get('/catering/addOrder', parms).then(res => {
                 return res.data.caterOrderId;
             }).then(id => {
