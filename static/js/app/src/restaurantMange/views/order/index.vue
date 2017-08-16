@@ -48,7 +48,7 @@ import taday from '../../components/tadayRestDate.vue';
 import inputKeyboard from '../../../common/components/inputKeyboard.vue';
 import restSeats from '../../components/restSeats.vue';
 import restMenu from '../../components/restMenu';
-import { mapState } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 import resetContain from '../../components/resetConstain.vue';
 import resetdetail from '../../components/resetDetail.vue';
 import reserveInfoModal from '../../components/reserveInfo';
@@ -73,9 +73,13 @@ export default {
         };
     },
     computed: mapState([
-        'leftType'
+        'leftType',
+        'restId'
     ]),
     methods: {
+        ...mapMutations([
+            'setLeftType'
+        ]),
         numChange(val) {
             this.restNum = val;
         },
@@ -124,6 +128,9 @@ export default {
             if (!newValue) {
                 this.relevanceOrderDetail = undefined;
             }
+        },
+        restId(newValue) {
+            this.setLeftType({ leftType: 0 });
         }
     },
     components: {
