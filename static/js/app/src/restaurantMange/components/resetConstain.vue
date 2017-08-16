@@ -14,7 +14,7 @@
                 <div><span class="restDetail-title-dish">{{selectDish[0].boardName}}{{selectDish[0].boardName}}</span> <span v-if='selectDish.length > 1' class="restDetail-type-tag" :title='selectDishText'>并</span></div>
                 <!-- <div><span class="rest-taday-tag " :class="getState(item.foodState, 'color')">{{getState(item.foodState, 'text')}}</span></div> -->
             </div>
-            <div class="rest-btn-head"><button class="reset-btn-base reset-btn-start" @click='getNum'>开台</button><button class="reset-btn-base reset-btn-book">预订</button></div>
+            <div class="rest-btn-head" v-show='editorPromission'><button class="reset-btn-base reset-btn-start" @click='getNum'>开台</button><button class="reset-btn-base reset-btn-book">预订</button></div>
         </div>
         <inputKeyboard :visible='keyboardVisible' :max='1000' :num='restNum' @numChange='numChange' @close='closeKeyboard'></inputKeyboard>
     </div>
@@ -64,7 +64,8 @@ export default {
         ...mapState([
             'restId',
             'board',
-            'selectDish'
+            'selectDish',
+            'editorPromission'
         ]),
         selectDishText() {
             let str = '';
