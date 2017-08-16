@@ -44,7 +44,7 @@
                                         </div>
                                         <div class="food" v-if="item.dishCategoryId === -2">
                                             <div class="name">自定义菜品</div>
-                                            <div class="price add-dish"><span class="add" @click="">+</span></div>
+                                            <div class="price add-dish"><span class="add" @click="addCustomerDish">+</span></div>
                                         </div>
                                     </div>
                                 </div>
@@ -55,14 +55,14 @@
                 <div class="modal-foot">
                     <div class="menu-remark">
                         <div>菜品备注</div>
-                        <textarea></textarea>
+                        <textarea v-model="remark"></textarea>
                     </div>
                     <div class="menu-cart">
                         <div class="cart">
                             <div class="cart-icon" @click="toggleList"></div>
                             <div class="cart-total">
-                                <div>共3项</div>
-                                <div>合计:￥3000</div>
+                                <div>共{{selectFood.length}}项</div>
+                                <div>合计:￥{{dishPriceTotal}}</div>
                             </div>
                             <transition name="fold">
                                 <div class="menuCart-list" v-show="listShow">
@@ -74,8 +74,8 @@
                                         <ul class="scroller">
                                             <li v-for="food in selectFood">
                                                 <span class="food-name">{{food.dishName}}</span>
-                                                <count :del=true :min = -1 :num='food.num' :onNumChange='onNumChange' :id='food.dishId'></count>
-                                                <span class="food-price">{{food.num * food.dishPrice}}</span>
+                                                <count :del=true :min = -1 :num='food.bookNum' :onNumChange='onNumChange' :id='food.dishId'></count>
+                                                <span class="food-price">{{food.bookNum * food.price}}</span>
                                             </li>
                                         </ul>
                                     </div>
@@ -84,25 +84,32 @@
                         </div>
                         <div>
                             <button class="dd-btn dd-btn-ghost" @click="hideModal">取消</button>
-                            <button class="dd-btn dd-btn-primary" @click="">确定</button>
+                            <button class="dd-btn dd-btn-primary" @click="sendDish">确定</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <add-dish-modal :visible="addDishVisible" @hideAddDishModal="hideAddDishModal" @addDish="addDish"></add-dish-modal>
     </div>
 </template>
 
 <script>
 import http from '../../http';
 import IScroll from 'iscroll';
-import { mapState } from 'vuex';
+import bus from '../../eventBus';
 import count from '../../components/counter.vue';
+import addDishModal from '../../../restaurantMange/components/addDish';
+import { mapActions } from 'vuex';
+import types from '../store/types';
 export default{
     props: {
         visible: {
             type: Boolean,
             default: false
+        },
+        restOrder: {
+            type: Object
         }
     },
     data() {
@@ -111,13 +118,15 @@ export default{
             heightList: [],
             foodClassify: [],
             fold: true,
-            selectFood: []
+            selectFood: [],
+            addDishVisible: false,
+            restId: undefined,
+            remark: ''
         };
     },
     created() {
     },
     computed: {
-        ...mapState(['restId']),
         currentIndex() {
             for (let i = 0; i < this.heightList.length; i ++) {
                 const preHeight = this.heightList[i];
@@ -145,9 +154,17 @@ export default{
                 }, 600);
             }
             return show;
+        },
+        dishPriceTotal() {
+            var total = 0;
+            this.selectFood.forEach(el => {
+                total += el.bookNum * el.price;
+            });
+            return total.toFixed(2);
         }
     },
     methods: {
+        ...mapActions([types.GET_CATER_ORDER_DETAIL]),
         search() {
         },
         setScroll(index) {
@@ -174,7 +191,7 @@ export default{
             this.selectFood.forEach((el, i) => {
                 if (el.dishId === index) {
                     if (num > 0) {
-                        el.num = num;
+                        el.bookNum = num;
                     } else {
                         this.selectFood.splice(i, 1);
                     }
@@ -185,15 +202,18 @@ export default{
             this.selectFood = [];
         },
         orderMenu(food) {
-            const isHasFood = this.selectFood.find(el => {
-                return el.dishId === food.dishId;
-            });
-            if (isHasFood) {
-                isHasFood.num += 1;
-            } else {
-                const cacheFood = { ...food };
-                cacheFood.num = 1;
-                this.selectFood.push(cacheFood);
+            if (food.inventoryNum > 0) {
+                const isHasFood = this.selectFood.find(el => {
+                    return el.dishId === food.dishId;
+                });
+                if (isHasFood) {
+                    isHasFood.bookNum += 1;
+                } else {
+                    const cacheFood = { ...food };
+                    cacheFood.bookNum = 1;
+                    cacheFood.price = cacheFood.dishPrice
+                    this.selectFood.push(cacheFood);
+                }
             }
         },
         getMenuList() {
@@ -207,13 +227,36 @@ export default{
             });
         },
         hideModal() {
-            this.$emit('hideModal');
+            bus.$emit('hideOrderMenu');
         },
         toggleList() {
             if (!this.selectFood.length) {
                 return;
             }
             this.fold = !this.fold;
+        },
+        addCustomerDish() {
+            this.addDishVisible = true;
+        },
+        hideAddDishModal() {
+            this.addDishVisible = false;
+        },
+        addDish(dish) {
+            this.foodClassify[this.foodClassify.length - 1].dishes.push(dish);
+        },
+        sendDish() {
+            const params = { caterOrderId: this.restOrder.caterOrderId, oprType: 3, totalPrice: this.dishPriceTotal };
+            params.dishes = [];
+            this.selectFood.forEach(el => {
+                params.dishes.push({ bookNum: el.bookNum, dishId: el.dishId, dishName: el.dishName, price: el.price, remark: this.remark });
+            });
+            params.dishes = JSON.stringify(params.dishes);
+            http.get('/dish/dishOpr', params).then(res => {
+                if (res.code === 1) {
+                    this[types.GET_CATER_ORDER_DETAIL]({ orderId: this.restOrder.caterOrderId });
+                    this.hideModal();
+                }
+            });
         }
     },
     watch: {
@@ -229,12 +272,17 @@ export default{
                 $('#orderMenu').modal('hide');
             }
         },
-        restId(newValue) {
-            this.getMenuList();
+        restOrder(newValue) {
+            if (newValue) {
+                this.restId = newValue.restId;
+                this.selectFood = newValue.itemsMap.slice(0);
+                this.getMenuList();
+            }
         }
     },
     components: {
-        count
+        count,
+        addDishModal
     }
 };
 </script>
@@ -246,6 +294,7 @@ export default{
             .modal-content{
                 border-top: 4px solid #178ce6;
                 padding: 0;
+                overflow: hidden;
                 .modal-header{
                     display: flex;
                     justify-content: space-between;

@@ -49,7 +49,7 @@ export default {
     },
     methods: {
         hideModal() {
-            this.$emit('hideModal');
+            this.$emit('hideAddDishModal');
             this.dishPrice = undefined;
             this.dishName = '';
         },

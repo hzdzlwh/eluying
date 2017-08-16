@@ -43,7 +43,7 @@
                 </div>
             </div>
         </div>
-        <add-dish-modal :visible="addDishVisible" @hideModal="hideModal" @addDish="addDish"></add-dish-modal>
+        <add-dish-modal :visible="addDishVisible" @hideAddDishModal="hideModal" @addDish="addDish"></add-dish-modal>
      </div>
  </template>
 

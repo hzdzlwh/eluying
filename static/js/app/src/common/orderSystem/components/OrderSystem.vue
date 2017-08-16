@@ -42,7 +42,7 @@
                 :params="getMoneyParams"
                 :total-price="payWithAlipay"
         ></Get-Money-With-Code>
-        <order-menu-modal></order-menu-modal>
+        <order-menu-modal :visible="orderMenuVisible" :restOrder="restOrder"></order-menu-modal>
     </div>
 </template>
 <style>
@@ -99,7 +99,9 @@
                 detailVisible: false,
                 roomCategory: [], // 订单编辑中使用
                 bacnHandel: [],
-                noBack: true
+                noBack: true,
+                orderMenuVisible: false,
+                restOrder: undefined
             };
         },
         created() {
@@ -117,6 +119,8 @@
             bus.$on('hideCancelOrder', this.hideCancelOrder);
             bus.$on('showCancelOrder', this.showCancelOrder);
             bus.$on('changeCheckState', this.changeCheckState);
+            bus.$on('showOrderMenu', this.showOrderMenu);
+            bus.$on('hideOrderMenu', this.hideOrderMenu);
             this.getRoomsList();
             document.addEventListener('click', this.handleOrderNumClick);
         },
@@ -135,6 +139,8 @@
             bus.$off('hideCancelOrder', this.hideCancelOrder);
             bus.$off('showCancelOrder', this.showCancelOrder);
             bus.$off('changeCheckState', this.changeCheckState);
+            bus.$off('showOrderMenu', this.showOrderMenu);
+            bus.$off('hideOrderMenu', this.hideOrderMenu);
             document.removeEventListener('click', this.handleOrderNumClick);
         },
         methods: {
@@ -218,6 +224,10 @@
                 this.payWithAlipay = payWithAlipay;
                 this.getMoneyShow = true;
             },
+            showOrderMenu(restOrder) {
+                this.orderMenuVisible = true;
+                this.restOrder = restOrder;
+            },
             hideGetMoney() {
                 this.getMoneyShow = false;
             },
@@ -229,6 +239,9 @@
             },
             hideOrderEditor() {
                 this.orderEditorVisible = false;
+            },
+            hideOrderMenu() {
+                this.orderMenuVisible = false;
             }
         }
     };
