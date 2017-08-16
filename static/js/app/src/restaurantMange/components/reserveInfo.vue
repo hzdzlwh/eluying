@@ -107,6 +107,7 @@ import Clickoutside from 'dd-vue-component/src/utils/clickoutside';
 import { DatePicker } from 'element-ui';
 import http from '../../common/http.js';
 import util from '../../common/util.js';
+import modal from '../../common/modal';
 import { mapState } from 'vuex';
 export default {
     directives: {
@@ -328,6 +329,18 @@ export default {
             }).then(res => this.saleList = res.data.list);
         },
         addCaterOrder() {
+            if (!this.phone) {
+                modal.warn('手机号必填！');
+                return;
+            }
+            if (!this.eatNum) {
+                modal.warn('就餐人数必填！');
+                return;
+            }
+            if (!this.date) {
+                modal.warn('用餐时间必填！');
+                return;
+            }
             const params = {};
             params.boardList = JSON.stringify([]);
             params.customerName = this.name;

@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-31 10:52:58
 * @Last Modified by:   Tplant
-* @Last Modified time: 2017-08-16 13:58:55
+* @Last Modified time: 2017-08-16 15:31:04
 * @email: 783384903@qq.com
 */
 
@@ -19,7 +19,7 @@ const store = new Vuex.Store({
         restId: 0,
         date: dateFormat(new Date()),
         leftType: 0,
-        // 0:今日营业额，1:空桌选中，2:订单详情，4:加菜点菜, 5: 无桌位点菜
+        // 0:今日营业额，1:空桌选中，2:订单详情，4:加菜点菜,
         board: undefined,
         selectDish: [],
         // openData: {
@@ -82,6 +82,9 @@ const store = new Vuex.Store({
         },
         [types.DELETE_SELECT_DISH](state, { dish }) {
             state.selectDish.splice(state.selectDish.indexOf(dish), 1);
+        },
+        [types.RESET_SELECT_DISH](state) {
+            state.selectDish = [];
         },
         [types.SET_CATER_ORDER_DETAIL](state, { caterDetail }) {
             state.openData = caterDetail;

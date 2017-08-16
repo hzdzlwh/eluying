@@ -1398,7 +1398,7 @@
                 }).then(res => $('#orderDetail').one('hidden.bs.modal', () => { bus.$emit('editOrder', 'editOrder', this.order); }));
             },
             addDish() {
-
+                
             },
             /**
              * 计算各种类型的收费金额

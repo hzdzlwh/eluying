@@ -70,6 +70,7 @@
 <script>
 import types from '../store/types';
 import http from '../../common/http';
+import util from '../../common/util.js';
 import restBus from '../event.js';
 import bus from '../../common/eventBus';
 import { mapState, mapMutations, mapActions } from 'vuex';
@@ -95,7 +96,7 @@ export default {
         };
     },
     created() {
-        this.getSeatList();
+        this.startFetchDate();
         restBus.$on('refeshView', this.getSeatList);
     },
     computed: {
@@ -111,7 +112,9 @@ export default {
             types.SET_LEFT_TYPE,
             types.SET_SELECT_DISH,
             types.DELETE_SELECT_DISH,
-            types.SET_CATER_ORDER_DETAIL
+            types.SET_CATER_ORDER_DETAIL,
+            types.SET_OPEN_DATA,
+            types.RESET_SELECT_DISH
         ]),
         ...mapActions([
             types.GET_CATER_ORDER_DETAIL
@@ -166,7 +169,20 @@ export default {
             this.$emit('reserve');
         },
         orderDish() {
-            this[types.SET_LEFT_TYPE]({ leftType: 5 });
+            this[types.SET_LEFT_TYPE]({ leftType: 4 });
+            const openData = {
+                peopleNum: 1,
+                boardDetailResps: [
+                    {
+                        boardName: '无',
+                        boardId: '',
+                        boardSerialNum: ''
+                    }
+                ],
+                orderState: 1,
+                expectStartTime: util.dateFormatLong(new Date())
+            }
+            this[types.SET_OPEN_DATA]({ openData });
         },
         getSeatList() {
             const param = { date: this.date, restId: this.restId };
@@ -226,11 +242,20 @@ export default {
                     this[types.SET_CATER_ORDER_DETAIL]({ caterDetail: res.data });
                 }
             });
+        },
+        startFetchDate() {
+            if (!this.restId) {
+                window.setTimeout(this.startFetchDate, 1000);
+            } else {
+                this.getSeatList();
+            }
         }
     },
     watch: {
         defaultStrDate(newValue) {
             this[types.SET_DATE]({ date: newValue });
+            this[types.SET_LEFT_TYPE]({ leftType: 0 });
+            this[types.RESET_SELECT_DISH]();
         },
         selectState() {
             this.getSeatList();

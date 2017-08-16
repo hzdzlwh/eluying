@@ -94,10 +94,10 @@
 </template>
 
 <script>
-import http from '../../common/http';
+import http from '../../http';
 import IScroll from 'iscroll';
 import { mapState } from 'vuex';
-import count from '../../common/components/counter.vue';
+import count from '../../components/counter.vue';
 export default{
     props: {
         visible: {
@@ -422,7 +422,7 @@ export default{
                                 height: 36px;
                                 margin-right: 16px;
                                 cursor: pointer;
-                                background: url('../../../../../image/menu-cart.png');
+                                background: url('../../../../../../image/menu-cart.png');
                             }
                             .cart-total{
                                 > div{
