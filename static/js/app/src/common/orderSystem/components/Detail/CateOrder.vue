@@ -67,7 +67,7 @@ border-radius:4px;padding:15px;">
                 <template v-for='it in foodItems[0].itemsMap'>
                     <tr @click='changeItem(it); dishClick(it)' :class="{'reset-tr-click' : it.click}"> 
                     <td width="190px"><div><span class="rest-restDetail-dishname" :class='{"rest-item-del" : it.serviceState === 1}'> <span  :class='getTriangle(it)'></span><span >{{it.dishName}}</span></span><span class="rest-item-send" v-if='it.serviceState === 2'>送</span></div></td><td width="45px"><div :class='{"rest-item-del" : it.serviceState === 1}'>x{{it.bookNum}}</div></td><td :class='{"rest-item-del" : it.serviceState === 1}' width='80px'>{{it.price}}</td></tr>
-                    <tr v-for='sub in it.subDishList' @click='dishClick(sub)' v-if='it.select' :class='{"rest-item-del" : sub.serviceState === 1,"reset-tr-click" : it.click}'>
+                    <tr v-for='sub in it.subDishList' @click='dishClick(sub)' v-if='it.select' :class='{"rest-item-del" : sub.serviceState === 1,"reset-tr-click" : sub.click}'>
                         <td class="rest-restDetail-trchild" width="190px">{{sub.dishName}}</td><td width="45px"><div>x{{sub.bookNum}}</div></td><td width="80px"></td>
                     </tr>
                 </template> 
