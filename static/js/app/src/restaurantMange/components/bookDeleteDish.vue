@@ -66,7 +66,8 @@
     import http from 'http';
     export default {
         props: {
-            info: {}
+            info: {},
+            subscript: 0
         },
         data() {
             return {
@@ -85,7 +86,7 @@
                 };
                 http.get('/dish/updateSellClearNum', obj).then(res => {
                     if (res.code === 1) {
-                        this.$emit('deleteBookDish', this.info.dishId);
+                        this.$emit('deleteBookDish', this.subscript);
                     }
                 });
             }

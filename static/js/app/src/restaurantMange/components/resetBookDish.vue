@@ -51,6 +51,7 @@
         border-radius:2px;
         width:185px;
         height:166px;
+        border-top:2px solid #178ce6;
         .sell-num-btn {
             border-radius:4px;
             width:110px;
@@ -197,7 +198,7 @@
                     this.reserveNum = '已售完';
                 } else if (type === 2) {
                     this.sellClearDish = false;
-                    this.reserveNum = this.info.reserveNum ? this.info.reserveNum : 1;
+                    this.reserveNum = (this.info.reserveNum && this.info.reserveNum !== '已售完') ? this.info.reserveNum : 1;
                 }
             },
             resetBookDishNum() {
@@ -224,7 +225,9 @@
                 this.$emit('cancerBookDishNum');
             },
             reduceDishNum() {
-                this.reserveNum -= 1;
+                if (this.reserveNum > 1) {
+                    this.reserveNum -= 1;
+                }
             },
             increaseDishNum() {
                 this.reserveNum += 1;

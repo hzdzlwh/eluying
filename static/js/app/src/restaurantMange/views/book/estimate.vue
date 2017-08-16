@@ -34,7 +34,7 @@
                     </div>
                 </div>
             </div>
-            <bookDeleteDish v-if="deleteBookDish" :info="row" @bookDeleteDishCancer="() => {this.deleteBookDish = false; this.bookShadow = false;}" @deleteBookDish="ensureDeleteBookDish"/>
+            <bookDeleteDish v-if="deleteBookDish" :info="row" :subscript="index" @bookDeleteDishCancer="() => {this.deleteBookDish = false; this.bookShadow = false;}" @deleteBookDish="ensureDeleteBookDish"/>
             <bookAddDish v-if="addBookDish" @updataEstimate="updataVips" @closeAddDish="() => {this.addBookDish = false; this.bookShadow = false;}"></bookAddDish>
         </div>
         <ResetBookDish v-if="resetBookDish" :info="row" @resetBookDishNum="saverResetBookDish" @cancerBookDishNum="() => {this.resetBookDish = false;}"/>
@@ -119,6 +119,7 @@
                 addBookDish: false,
                 resetBookDish: false,
                 row: {},
+                index: 0,
                 col: [
                     {
                         title: '菜品分类',
@@ -140,7 +141,7 @@
                         render: (h, row) =>
                             <span>
                                 <span class="bookDishFontBlue" onClick={() => this.editBookDish(row)}>编辑</span>
-                                <span class="bookDishFontBlue" style="margin-left:10px;" onClick={() => this.delectBookDish(row)}>删除</span>
+                                <span class="bookDishFontBlue" style="margin-left:10px;" onClick={() => this.delectBookDish(row, h)}>删除</span>
                             </span>
                     }
                 ]
@@ -246,12 +247,14 @@
                 });
                 this.resetBookDish = false;
             },
-            delectBookDish(row) {
+            delectBookDish(row, h) {
                 this.row = row;
+                this.index = h;
                 this.bookShadow = true;
                 this.deleteBookDish = true;
             },
-            ensureDeleteBookDish(id) {
+            ensureDeleteBookDish(index) {
+                this.vips.splice(index, 1);
                 this.deleteBookDish = false;
                 this.bookShadow = false;
             }
