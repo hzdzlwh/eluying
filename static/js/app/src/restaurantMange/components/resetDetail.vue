@@ -7,7 +7,7 @@
 */
 
 <template>
-    <div class="rest-taday-contain" style="height:auto" v-if='openData|| leftType === 5'>
+    <div class="rest-taday-contain" style="height:auto" v-if='openData'>
         <div class="rest-taday-count">
             <div class="restDetail-title-tip">桌号</div>
             <div class="restDetail-title-display">
@@ -216,13 +216,15 @@ export default {
         ]),
         selectDishText() {
             let str = '';
-            this.openData.boardDetailResps.forEach((el, index) => {
-                if (index !== 0) {
-                    str += '\r\n';
-                }
-                str += el.boardName + el.boardId;
-            });
-            return str;
+            if (this.openData.boardDetailResps.length) {
+                this.openData.boardDetailResps.forEach((el, index) => {
+                    if (index !== 0) {
+                        str += '\r\n';
+                    }
+                    str += el.boardName + el.boardId;
+                });
+                return str;
+            }
         },
         isHasOrder() {
             if (this.openData && (this.openData.isHasOrder || this.openData.caterOrderId)) {

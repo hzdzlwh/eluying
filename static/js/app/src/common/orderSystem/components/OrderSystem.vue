@@ -42,6 +42,7 @@
                 :params="getMoneyParams"
                 :total-price="payWithAlipay"
         ></Get-Money-With-Code>
+        <order-menu-modal></order-menu-modal>
     </div>
 </template>
 <style>
@@ -59,6 +60,7 @@
     // import CashierModal from './CashierModal.vue';
     import CashierModal from './newCashModal.vue';
     import GetMoneyWithCode from './GetMoneyWithCode.vue';
+    import orderMenuModal from './orderMenu.vue';
     import bus from '../../eventBus';
     import http from '../../http';
     import { mapMutations } from 'vuex';
@@ -72,7 +74,8 @@
             CheckOutModal,
             CancelOrderModal,
             CashierModal,
-            GetMoneyWithCode
+            GetMoneyWithCode,
+            orderMenuModal
         },
         data() {
             return {
