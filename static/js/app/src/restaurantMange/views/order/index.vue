@@ -12,14 +12,14 @@
             <div v-if="leftType === 0 || leftType === 1 || leftType === 2 || leftType === 3">
                 <rest-seats @reserve="changeReserveInfoVisible"></rest-seats>
             </div>
-            <div v-if="leftType === 4">
+            <div v-if="leftType === 4 || leftType === 5">
                 <rest-menu></rest-menu>
             </div>
         </div>
         <div class="rest-order-right">
             <taday v-if='leftType === 0'></taday>
             <resetContain v-if='leftType === 1'></resetContain>
-            <resetdetail v-if='leftType === 2 || leftType === 3 || leftType === 4'></resetdetail>
+            <resetdetail v-if='leftType === 2 || leftType === 3 || leftType === 4 || leftType === 5'></resetdetail>
         </div>
         <reserve-info-modal :visible="reserveInfoVisible" :relevanceOrder="relevanceOrderDetail" @hideModal="hideModal" @showRelevaneOrder="showRelevanceOrder" @cancelConnect="cancelConnect"></reserve-info-modal>
         <relevance-order-modal :visible="relevanceOrderVisible" @hideModal="hideModal" @sendRelevanceOrder="getRelevanceOrderDetail"></relevance-order-modal>
@@ -48,7 +48,7 @@ import taday from '../../components/tadayRestDate.vue';
 import inputKeyboard from '../../../common/components/inputKeyboard.vue';
 import restSeats from '../../components/restSeats.vue';
 import restMenu from '../../components/restMenu';
-import { mapState } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 import resetContain from '../../components/resetConstain.vue';
 import resetdetail from '../../components/resetDetail.vue';
 import reserveInfoModal from '../../components/reserveInfo';
@@ -73,9 +73,13 @@ export default {
         };
     },
     computed: mapState([
-        'leftType'
+        'leftType',
+        'restId'
     ]),
     methods: {
+        ...mapMutations([
+            'setLeftType'
+        ]),
         numChange(val) {
             this.restNum = val;
         },
@@ -124,6 +128,9 @@ export default {
             if (!newValue) {
                 this.relevanceOrderDetail = undefined;
             }
+        },
+        restId(newValue) {
+            this.setLeftType({ leftType: 0 });
         }
     },
     components: {

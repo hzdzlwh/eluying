@@ -7,7 +7,7 @@
 */
 
 <template>
-    <div class="rest-taday-contain" style="height:auto" v-if='openData'>
+    <div class="rest-taday-contain" style="height:auto" v-if='openData|| leftType === 5'>
         <div class="rest-taday-count">
             <div class="restDetail-title-tip">桌号</div>
             <div class="restDetail-title-display">
@@ -22,14 +22,14 @@
                 </div>
                 <div class="rest-restDetail-right">
                     <div class="restDetail-title-tip">{{!isHasOrder ? '用餐时长' :'用餐时间' }}</div>
-                    <div class="restDetail-title-data" v-if='isHasOrder'><DatePicker :value='new Date(openData.creationTime)'  @input='changeBookTime' clearable=false type="datetime" placeholder="选择日期时间" size='small' :editable = false :clearable = false format='yyyy-MM-dd HH:mm'/></div>
+                    <div class="restDetail-title-data" v-if='isHasOrder '><DatePicker :value='new Date(openData.creationTime)'  @input='changeBookTime' clearable=false type="datetime" placeholder="选择日期时间" size='small' :editable = false :clearable = false format='yyyy-MM-dd HH:mm' :disabled='!editorPromission'/></div>
                     <div class="restDetail-title-data" v-if='!isHasOrder'>{{openData.timer}}</div>
                 </div>
             </div>
             <div class="rest-restDetail-other" @click='moreShow = !moreShow' v-if='openData.state !== 2 && openData.orderState'>
                 {{openData.customerName}} {{openData.customerPhone}}查看详情 <span >>></span>
             </div>
-        </div>  <div  class="rest-restDetail-transform" :style='{maxHeight: moreShow ? "400px" : "0"}' v-if='openData.state !== 2 && openData.orderState'>
+        </div>  <div style="z-index:3"  class="rest-restDetail-transform" :style='{maxHeight: moreShow ? "400px" : "0"}' v-if='openData.state !== 2 && openData.orderState'>
                         <div class="rest-restDetail-otherDetail"  >
                     <div>
                         <div><span>客户姓名：</span><span>{{openData.customerName || '无'}}</span></div>
@@ -48,7 +48,7 @@
                     <div><span>开台时间：{{openData.operatorDate}}</span></div>
                     <div>
                         <div><span style="display: inline-block;width: 4em;text-align: right;">操作人</span>{{openData.operatorName}}</div>
-                        <div style="color:#178ce6;">编辑详情</div>
+                        <div style="color:#178ce6;" v-if='editorPromission'>编辑详情</div>
                     </div>
                 </div>
                 </div>
@@ -75,7 +75,7 @@
             </table>
             <div v-if='leftType === 4'>
             <p class="rest-text-title"><span>备注信息</span></p>
-            <textarea name="remark" placeholder="请输入备注信息" maxlength="500" v-model="remark" class="dd-input">
+            <textarea name="remark" placeholder="请输入备注信息" maxlength="500" v-model="remark" class="dd-input" style="z-index:1">
                                 </textarea>
             </div>
         </div>
@@ -117,22 +117,22 @@
             </div>
 
         </div>
-        <div class="resetmange-click-list">
+        <div class="resetmange-click-list" v-show='editorPromission'>
             <div class="resetMange-btn-base resetMange-btn-promise" @click='addNewFood' v-if='this.leftType !== 4 && ((isHasOrder && (openData.orderState !== 2 || openData.orderState !== 3 || openData.orderState !== 5 )) || !isHasOrder)'>{{openData.itemsMap && openData.itemsMap.length ? '加' : '点'}}菜</div>
             <div class="resetMange-btn-base " @click='openBoard' v-if='this.leftType !== 4 && ((isHasOrder && (openData.orderState !== 2 || openData.orderState !== 3 || openData.orderState !== 5 )) || !isHasOrder)'>换桌</div>
             <div class="resetMange-btn-base " @click='closeBoard' v-if='this.leftType !== 4 && ((!isHasOrder && !openData.itemsMap) || openData.orderState === 2 && openData.boardDetailResps)'>撤台</div>
             <div class="resetMange-btn-base " v-if='isHasOrder && this.leftType !== 4 && openData.orderState === 4' @click='reject'>拒绝</div>
             <div class="resetMange-btn-base resetMange-btn-lager" v-if='this.leftType === 4' @click='submitAddFood'>下单</div>
             <div class="resetMange-btn-base resetMange-btn-lager" v-if='this.leftType === 4' @click='canlAddFood'>取消</div>
-            <div class="resetMange-btn-base " v-if='isHasOrder && openData.orderState === 0' @click='canOrder'>取消订单</div>
+            <div class="resetMange-btn-base " v-if='isHasOrder && openData.orderState === 0 && this.leftType !== 4' @click='canOrder'>取消订单</div>
             <div class="resetMange-btn-base " v-if='isHasOrder && this.leftType !== 4 && (openData.orderState === 1 || openData.orderState === 0 || openData.orderState === 2 || openData.orderState === 8)' @click='printRest'>打印</div>
             <div class="resetMange-btn-base " v-if='isHasOrder && this.leftType !== 4 && (openData.orderState === 1 || openData.orderState === 0 || openData.orderState === 8)' @click="showCashier('collect')">收银</div>
             <div class="resetMange-btn-base " v-if='isHasOrder && this.leftType !== 4 && openData.orderState === 1' @click='showCashier("orderDetail")'>结算</div>
 
             <div class="resetMange-btn-base " v-if='isHasOrder && this.leftType !== 4 && openData.orderState === 8' @click="reGetMoney">重新结账</div>
             <div class="resetMange-btn-base " v-if='isHasOrder && this.leftType !== 4 && openData.resettleAble' @click="resetOrder">反结账</div>
-            <div class="resetMange-btn-base resetMange-btn-promise resetMange-btn-lager" v-if='!isHasOrder && openData.itemsMap && openData.itemsMap.length && this.leftType !== 4' @click='openBoardAndCook'>开台并入厨</div>
-            <div class="resetMange-btn-base resetMange-btn-promise resetMange-btn-lager" v-if='!isHasOrder && openData.orderState === 4 && this.leftType !== 4' @click='agreeAndCook'>同意并入厨</div>
+            <div class="resetMange-btn-base resetMange-btn-promise resetMange-btn-lager" v-if='openData.orderState === 0 && openData.itemsMap && openData.itemsMap.length && this.leftType !== 4' @click='openBoardAndCook'>开台并入厨</div>
+            <div class="resetMange-btn-base resetMange-btn-promise resetMange-btn-lager" v-if='openData.orderState === 4 && this.leftType !== 4' @click='agreeAndCook'>同意并入厨</div>
         </div>
         </div>
         <div class="rest-restDetail-foot reset-restDetail-resetChange" v-if='dishChange'>
@@ -141,7 +141,7 @@
             <div>点菜员：{{dishChange.operatorName}}</div>
             <div>下单时间：{{dishChange.creationTime}}</div>
         </div>
-            <div class="resetChange-foot-btn">
+            <div class="resetChange-foot-btn" v-show='editorPromission'>
                 <div class="resetMange-btn-base " v-if='dishChange.serviceState === 0' @click='dishModalChange(0)'>退菜</div>
                 <div class="resetMange-btn-base " v-if='dishChange.isSend && dishChange.serviceState !== 2' @click='dishModalChange(1)'>赠送</div>
             </div>
@@ -214,7 +214,8 @@ export default {
             'selectDish',
             'openData',
             'leftType',
-            'addFood'
+            'addFood',
+            'editorPromission'
         ]),
         selectDishText() {
             let str = '';
@@ -285,7 +286,7 @@ export default {
         dishModalChange(type) {
             this.dishModalVisible = true;
             this.dishModalType = type;
-            // restBus.$emit('refeshView');
+            restBus.$emit('refeshView');
         },
         dishClick(dish) {
             if (dish.serviceState === 1 && (this.openData.orderState === 1 || (this.openData.orderState === 2 && this.openData.itemsMap.length && this.openData.itemsMap) || this.openData.orderState === 4 || this.openData.orderState === 8)) {
@@ -395,7 +396,17 @@ export default {
                 return;
             }
             const parms = {
+                remark: this.remark,
+                totalPrice: this.addFoodTotal()
             };
+            const addFoodDishList = this.addFoodList.map(el => {
+                return {
+                    bookNum: el.num,
+                    dishId: el.dishId,
+                    dishName: el.dishName,
+                    price: el.dishPrice
+                };
+            });
             if (this.openData.boardDetailResps.length) {
                 const boardList = [];
                 this.openData.boardDetailResps.forEach(el => {
@@ -414,6 +425,7 @@ export default {
             } else {
                 parms.operationType = 4;
             }
+            parms.dishItems = JSON.stringify(addFoodDishList);
             http.get('/catering/addOrder', parms).then(res => {
                 return res.data.caterOrderId;
             }).then(id => {
@@ -428,6 +440,7 @@ export default {
         canlAddFood() {
             this.canlFood();
             this.remark = '';
+            this.addFoodList = [];
             this.setLeftType({ leftType: 2 });
         },
         addFoodTotal() {
@@ -461,6 +474,9 @@ export default {
             return util.timeFormat(date);
         },
         editor() {
+            if (!this.editorPromission) {
+                return;
+            }
             this.bookPeopleNUm = this.openData.peopleNum;
             if (this.isHasOrder) {
                 this.bookData = this.openData.expectStartTime;

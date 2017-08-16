@@ -53,9 +53,7 @@
                     <div>
                         <div class="seats-num">已选择3个桌位</div>
                         <div>
-                            <span>桌位1</span>
-                            <span>桌位1</span>
-                            <span>桌位1</span>
+                            <span v-for="board in selectedBoard">{{board.boardName}} </span>
                         </div>
                     </div>
                     <div>
@@ -72,6 +70,7 @@
 import http from '../../common/http';
 import { mapState } from 'vuex';
 import IScroll from 'iscroll';
+import restBus from '../event.js';
 export default {
     props: {
         visible: {
@@ -106,6 +105,17 @@ export default {
                     return i;
                 }
             }
+        },
+        selectedBoard() {
+            const tempArr = [];
+            this.tableList.forEach(area => {
+                area.boardList.forEach(board => {
+                    if (board.selected) {
+                        tempArr.push(board);
+                    }
+                });
+            });
+            return tempArr;
         }
     },
     methods: {
@@ -130,16 +140,49 @@ export default {
             });
         },
         changeSeat() {
+            const params = { orderId: this.openData.orderId, caterOrderId: this.openData.caterOrderId, restId: this.restId };
+            params.boardIds = [];
+            this.tableList.forEach(area => {
+                area.boardList.forEach(board => {
+                    if (board.selected) {
+                        params.boardIds.push(board.boardId);
+                    }
+                });
+            });
+            params.boardIds = JSON.stringify(params.boardIds);
+            http.get('/catering/selectBoards', params).then(res => {
+                if (res.code === 1) {
+                    this.hideModal();
+                    restBus.$emit('refeshView');
+                }
+            });
         },
         selectSeat(board) {
-            this.$set(board, 'selected', !(board.selected));
+            if (this.openData.orderState === 0) {    // 预约订单 可以选所有状态桌子
+                this.$set(board, 'selected', !(board.selected));
+            } else {    // 使用中、待处理...   只能选择空的和当前选择的
+                if (board.boardState === 0 || board.oldSelect) {
+                    this.$set(board, 'selected', !(board.selected));
+                }
+            }
         },
         getSeatList() {
             return new Promise((resolve, reject) => {
                 http.get('/board/list', { date: this.date, restId: this.restId, isChange: true }).then(res => {
                     if (res.code === 1) {
                         this.tableList = [];
-                        res.data.list.map(item => {
+                        var borarList = res.data.list;
+                        if (this.openData) {
+                            this.openData.boardDetailResps.forEach(el => {
+                                borarList.forEach(board => {
+                                    if (board.boardId === el.boardId) {
+                                        board.selected = true;
+                                        board.oldSelect = true;
+                                    }
+                                });
+                            });
+                        }
+                        borarList.map(item => {
                             const areaHasOrNot = this.areas.find(area => {
                                 return area.id === item.areaId;
                             });
@@ -170,6 +213,7 @@ export default {
     },
     watch: {
         visible(newValue) {
+            this.getSeatList();
             var _this = this;
             if (newValue) {
                 $('#changeSeat').modal('show');
@@ -191,6 +235,7 @@ export default {
         },
         openData(newValue) {
             if (newValue) {
+                this.getSeatList();
             }
         }
     },
