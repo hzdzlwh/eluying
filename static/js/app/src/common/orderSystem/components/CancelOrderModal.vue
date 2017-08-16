@@ -160,6 +160,9 @@
                     });
                     business.subOrderPenaltys = JSON.stringify(this.subOrderPenaltys);
                 }
+                if (totalPenalty) {
+                    business.payments = JSON.stringify([{ fee: totalPenalty, type: -4 }]);
+                }
                 this.backPenalty = this.penalty;
                 this.backSubOrderPenaltys = this.subOrderPenaltys.slice(0);
                 if (Number(this.need) === 0) {
