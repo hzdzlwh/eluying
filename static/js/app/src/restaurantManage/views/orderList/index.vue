@@ -396,6 +396,14 @@
         watch: {
             restId() {
                 this.pageNo = 1;
+                this.tag = -1;
+                this.state = -1;
+                this.userOriginType = '-2~';
+                this.channelType = -1;
+                this.channelPerson = '-1~';
+                this.startTime = '';
+                this.endTime = '';
+                this.$refs.searchInput.value = '';
                 this.fetchData();
             },
             userOriginType() {

@@ -142,8 +142,9 @@
                 this.startGetDish();
             },
             restId() {
-                this.getData();
+                this.date = util.dateFormat(new Date());
                 this.getDishType();
+                this.getData();
             },
             dishType() {
                 this.getData();
