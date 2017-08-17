@@ -39,7 +39,7 @@
                                 </dd-select>
                                 <div class="room-category" >
                                     <dd-select v-model="item.roomType" placeholder="请选择房间" @input="handleRoomChange(item, index)" :disabled="(item.disabled && checkState !== 'checkIn') || (!item.isCheckIn && item.checkType === 1 && checkState == 'checkIn')">
-                                        <dd-option v-for="room in item.roomList" :value="room.id" :key="room.id" :label="room.name">
+                                        <dd-option v-for="room in getRoomList(item)" :value="room.id" :key="room.id" :label="room.name">
                                         </dd-option>
                                     </dd-select>
                                 </div>
@@ -440,6 +440,20 @@ export default {
     },
     methods: {
         getHAndMs: util.getHAndMs,
+        getRoomList(item) {
+            if (!item.roomList) {
+                return [];
+            }
+            let list = item.roomList.slice(0);
+            this.rooms.forEach(el => {
+                if (el.categoryType === item.categoryType && el.roomType!== item.roomType) {
+                    list = list.filter(e => {
+                        return el.roomType !== e.id || e.id === 0;
+                    });
+                }
+            });
+            return list;
+        },
         handleVipCardChange(id, forceChange) {
                 // 切换了会员卡后房间更多折扣的处理逻辑，没有折扣选择不使用
             if ((this.checkState !== 'editOrder' && this.checkState !== 'checkIn') || forceChange) {
