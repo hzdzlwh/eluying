@@ -1223,6 +1223,7 @@
                 readOnly: true,
                 ORDER_STATUS_ICON,
                 cashDetailShow: false,
+                handlePoint: false,
                 ORDER_TYPE,
                 reseturl: {
                     '-1': 'resettleCombinedOrder',

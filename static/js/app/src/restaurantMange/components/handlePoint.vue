@@ -23,7 +23,7 @@
                 </div>
             </div>
         </div>
-        <automaticPoint v-if="automaticPoint" @closeAutomaticPoint="() => {this.automaticPoint = false;}" :caterOrderId="caterOrderId" :operationId="operationId"/>
+        <automaticPoint v-if="automaticPoint" @closeAutomaticPoint="() => {this.automaticPoint = false;}" :caterOrderId="caterOrderId" :restId="restId" :operationId="operationId"/>
     </div>
 </template>
 <style lang="scss" scoped>
@@ -33,6 +33,7 @@
         border-radius:2px;
         width:527px;
         padding: 22px 20px;
+        border-top: 2px solid #178ce6;
         .restaurant-point-header {
             font-size:16px;
             color:#178ce6;
@@ -90,11 +91,11 @@
 <script>
     import http from 'http';
     import util from 'util';
-    import { mapState } from 'vuex';
     import { DdTable } from 'dd-vue-component';
     import automaticPoint from './automaticPoint.vue';
     export default {
         props: {
+            restId: Number,
             caterOrderId: Number
         },
         data() {
@@ -128,9 +129,6 @@
                     }
                 ]
             };
-        },
-        computed: {
-            ...mapState(['restId'])
         },
         mounted() {
             if (this.restId !== 1) {

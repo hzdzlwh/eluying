@@ -158,7 +158,7 @@
         <dishModal :visible='dishModalVisible' :type='dishModalType' :data='dishChange' @hideModal='hideDishModal' @dishChange='dishChangeSub'></dishModal>
 <!--         <bookInfo :visible='bookInfoVisible' :num='bookPeopleNUm' :data='bookData' @hideModal='hidebookInfo' :type='isHasOrder' @changeBook='changeBook'></bookInfo> -->
 <keyBoard :visible ='bookInfoVisible' @close='hidebookInfo' :num ='openData.peopleNum' :dish='openData.boardDetailResps[0].boardName + openData.boardDetailResps[0].boardId' v-if='openData' @numChange='changeBookNum'></keyBoard>
-        <handlePoint v-if="handlePoint" :caterOrderId="openData.caterOrderId" @closeHandlePoint="() => {this.handlePoint = false;}"/>
+        <handlePoint v-if="handlePoint" :caterOrderId="openData.caterOrderId" :restId="restId" @closeHandlePoint="() => {this.handlePoint = false;}"/>
     </div>
 </template>
 <style lang='scss'>

@@ -20,14 +20,14 @@
                             <span v-else-if="pointer.status === 3">缺纸</span>
                         </span>
                         <span class="printer-log">
-                            历史已打次数
+                            历史已打次数：
                             <span>{{pointer.printedNum}}</span>
                         </span>
                     </p>
                 </div>
                 <div class="back-pointer">
                     <p class="point-title">后厨打印机</p>
-                    <p v-for="(pointer, index) in backPointers">
+                    <p v-for="(pointer, index) in backPointers" class="point-items">
                         <span class="printer-label">
                             <label><input type="checkbox" v-model="backPoint[index][pointer.printerId]">{{pointer.printerName}}</label>
                         </span>
@@ -39,7 +39,7 @@
                             <span v-else-if="pointer.status === 3">缺纸</span>
                         </span>
                         <span class="printer-log">
-                            历史已打次数
+                            历史已打次数：
                             <span>{{pointer.printedNum}}</span>
                         </span>
                     </p>
@@ -98,7 +98,7 @@
                 line-height:24px;
             }
             .point-items {
-                padding-left: 20px;
+                padding-left: 30px;
                 font-size:14px;
                 color:#666666;
                 height: 24px;
@@ -116,12 +116,12 @@
                 .printer-status {
                     display: block;
                     float: left;
-                    margin-left: 20px;
+                    margin-left: 24px;
                 }
                 .printer-log {
                     display: block;
                     float: left;
-                    margin-left: 20px;
+                    margin-left: 24px;
                 }
             }
         }
@@ -154,11 +154,11 @@
 
 <script>
     import http from 'http';
-    import { mapState } from 'vuex';
     export default {
         props: {
             operationId: Number,
-            caterOrderId: Number
+            caterOrderId: Number,
+            restId: Number
         },
         data() {
             return {
@@ -168,9 +168,6 @@
                 backPoint: [],
                 printerIds: []
             };
-        },
-        computed: {
-            ...mapState(['restId'])
         },
         created() {
             if (this.restId !== 0) {
