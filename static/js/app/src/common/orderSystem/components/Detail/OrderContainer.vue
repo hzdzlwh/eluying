@@ -1400,6 +1400,9 @@
             addDish() {
                 bus.$emit('showOrderMenu', this.order);
             },
+            changeBoard() {
+                bus.$emit('showChangeSeat', this.order);
+            },
             /**
              * 计算各种类型的收费金额
              * @param type

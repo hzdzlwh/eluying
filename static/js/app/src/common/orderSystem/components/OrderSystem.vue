@@ -43,6 +43,7 @@
                 :total-price="payWithAlipay"
         ></Get-Money-With-Code>
         <order-menu-modal :visible="orderMenuVisible" :restOrder="restOrder"></order-menu-modal>
+        <change-seat-modal :visible="changeSeatVisible" :restOrder="restOrder"></change-seat-modal>
     </div>
 </template>
 <style>
@@ -61,6 +62,7 @@
     import CashierModal from './newCashModal.vue';
     import GetMoneyWithCode from './GetMoneyWithCode.vue';
     import orderMenuModal from './orderMenu.vue';
+    import changeSeatModal from './changeSeat.vue';
     import bus from '../../eventBus';
     import http from '../../http';
     import { mapMutations } from 'vuex';
@@ -75,7 +77,8 @@
             CancelOrderModal,
             CashierModal,
             GetMoneyWithCode,
-            orderMenuModal
+            orderMenuModal,
+            changeSeatModal
         },
         data() {
             return {
@@ -101,7 +104,8 @@
                 bacnHandel: [],
                 noBack: true,
                 orderMenuVisible: false,
-                restOrder: undefined
+                restOrder: undefined,
+                changeSeatVisible: false
             };
         },
         created() {
@@ -121,6 +125,8 @@
             bus.$on('changeCheckState', this.changeCheckState);
             bus.$on('showOrderMenu', this.showOrderMenu);
             bus.$on('hideOrderMenu', this.hideOrderMenu);
+            bus.$on('showChangeSeat', this.showChangeSeat);
+            bus.$on('hideChangeSeat', this.hideChangeSeat);
             this.getRoomsList();
             document.addEventListener('click', this.handleOrderNumClick);
         },
@@ -141,6 +147,8 @@
             bus.$off('changeCheckState', this.changeCheckState);
             bus.$off('showOrderMenu', this.showOrderMenu);
             bus.$off('hideOrderMenu', this.hideOrderMenu);
+            bus.$off('showChangeSeat', this.showChangeSeat);
+            bus.$off('hideChangeSeat', this.hideChangeSeat);
             document.removeEventListener('click', this.handleOrderNumClick);
         },
         methods: {
@@ -228,6 +236,10 @@
                 this.orderMenuVisible = true;
                 this.restOrder = restOrder;
             },
+            showChangeSeat(restOrder) {
+                this.changeSeatVisible = true;
+                this.restOrder = restOrder;
+            },
             hideGetMoney() {
                 this.getMoneyShow = false;
             },
@@ -242,6 +254,9 @@
             },
             hideOrderMenu() {
                 this.orderMenuVisible = false;
+            },
+            hideChangeSeat() {
+                this.changeSeatVisible = false;
             }
         }
     };
