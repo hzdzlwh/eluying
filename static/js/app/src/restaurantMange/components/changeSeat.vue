@@ -51,7 +51,7 @@
                 </div>
                 <div class="modal-foot">
                     <div>
-                        <div class="seats-num">已选择3个桌位</div>
+                        <div class="seats-num">已选择{{selectedBoard.length}}个桌位</div>
                         <div>
                             <span v-for="board in selectedBoard">{{board.boardName}} </span>
                         </div>
