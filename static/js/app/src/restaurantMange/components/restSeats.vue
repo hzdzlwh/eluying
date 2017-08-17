@@ -181,7 +181,7 @@ export default {
                 ],
                 orderState: 1,
                 expectStartTime: util.dateFormatLong(new Date())
-            }
+            };
             this[types.SET_OPEN_DATA]({ openData });
         },
         getSeatList() {

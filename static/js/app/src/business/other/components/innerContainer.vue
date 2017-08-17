@@ -22,6 +22,9 @@
         methods: {
             toggle() {
                 this.switchView = !this.switchView;
+                if (this.title === '零头处理') {
+                    this.$emit('edit');
+                }
             }
         },
         watch: {

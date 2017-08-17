@@ -18,7 +18,7 @@
                     <btn style="padding-left:20px;margin-top:16px;" @save="saveShortcutDiscount" @cancel="shortcutView = !shortcutView"></btn>
                 </div>
             </inner-container>
-            <inner-container :title="changeProcess" style="margin-top: 18px;" :toggleView="changeView">
+            <inner-container :title="changeProcess" style="margin-top: 18px;" :toggleView="changeView" @edit="modifyData">
                 <div slot="show">
                     <ul>
                         <li><span>处理方式:</span><span style="margin-left:16px;">{{processMethods[processMethodsValue]}}</span></li>
@@ -240,6 +240,10 @@
                 http.get('/room/setDirectRoomAutoSelectStatus', { status: !!this.autoManageHouse }).then(res => {
 
                 });
+            },
+            modifyData() {
+                this.processMethod = this.processMethodsValue;
+                this.accurate = this.accurateValue;
             }
         }
     }
