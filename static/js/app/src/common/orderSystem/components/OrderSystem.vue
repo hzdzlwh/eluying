@@ -44,6 +44,8 @@
         ></Get-Money-With-Code>
         <order-menu-modal :visible="orderMenuVisible" :restOrder="restOrder"></order-menu-modal>
         <change-seat-modal :visible="changeSeatVisible" :restOrder="restOrder"></change-seat-modal>
+        <handlePoint v-if="handlePoint" :caterOrderId="caterOrderId" :restId="restId" @closeHandlePoint="() => {this.handlePoint = false;}"/>
+        <automaticPoint v-if="automaticPoint" @closeAutomaticPoint="() => {this.automaticPoint = false;}" :caterOrderId="caterOrderId" :restId="restId" :operationId="operationId"/>
     </div>
 </template>
 <style>
@@ -63,6 +65,8 @@
     import GetMoneyWithCode from './GetMoneyWithCode.vue';
     import orderMenuModal from './orderMenu.vue';
     import changeSeatModal from './changeSeat.vue';
+    import handlePoint from '../../../restaurantManage/components/handlePoint.vue';
+    import automaticPoint from '../../../restaurantManage/components/automaticPoint.vue';
     import bus from '../../eventBus';
     import http from '../../http';
     import { mapMutations } from 'vuex';
@@ -78,7 +82,9 @@
             CashierModal,
             GetMoneyWithCode,
             orderMenuModal,
-            changeSeatModal
+            changeSeatModal,
+            handlePoint,
+            automaticPoint
         },
         data() {
             return {
@@ -103,9 +109,14 @@
                 roomCategory: [], // 订单编辑中使用
                 bacnHandel: [],
                 noBack: true,
+                caterOrderId: Number,
+                restId: Number,
+                operationId: Number,
                 orderMenuVisible: false,
                 restOrder: undefined,
-                changeSeatVisible: false
+                changeSeatVisible: false,
+                handlePoint: false,
+                automaticPoint: false
             };
         },
         created() {
@@ -114,6 +125,8 @@
             bus.$on('back', this.back);
             bus.$on('onClose', this.hideDetail);
             bus.$on('onShowDetail', this.showOrderDetail);
+            bus.$on('onHandlePoint', this.showHandlePoint);
+            bus.$on('onAutomaticPoint', this.showAutomaticPoint);
             bus.$on('editOrder', this.editOrder);
             bus.$on('hideOrderEditor', this.hideOrderEditor);
             bus.$on('showCashier', this.showCashier);
@@ -195,6 +208,17 @@
                     this.detailVisible = true;
                 }
                 this.noBack = true;
+            },
+            showHandlePoint(order) {
+                this.caterOrderId = order.caterOrderId;
+                this.restId = order.restId;
+                this.handlePoint = true;
+            },
+            showAutomaticPoint(order) {
+                this.restId = order.restId;
+                this.caterOrderId = order.orderId;
+                this.operationId = -1;
+                this.automaticPoint = true;
             },
             hideDetail() {
                 this.detailId = undefined;

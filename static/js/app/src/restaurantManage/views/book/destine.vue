@@ -85,9 +85,7 @@
         },
         created() {
             this.date = util.dateFormat(new Date());
-            if (this.restId !== 0) {
-                this.getDishType();
-            }
+            this.startGetDish();
         },
         methods: {
             disabledDate(date) {
@@ -109,6 +107,7 @@
                 http.get('/dish/getSellClearMenu', obj).then(res => {
                     if (res.code === 1) {
                         const list = res.data.list;
+                        this.vips = [];
                         list.forEach(dishes => {
                             const dishList = dishes.dishes;
                             dishList.forEach(dish => {
@@ -122,13 +121,25 @@
                         });
                     }
                 });
+            },
+            startGetDate() {
+                if (!this.restId) {
+                    window.setTimeout(this.startGetDate, 1000);
+                } else {
+                    this.getData();
+                }
+            },
+            startGetDish() {
+                if (!this.restId) {
+                    window.setTimeout(this.startGetDish, 1000);
+                } else {
+                    this.getDishType();
+                }
             }
         },
         watch: {
             date() {
-                if (this.restId !== 0) {
-                    this.getData();
-                }
+                this.startGetDish();
             },
             restId() {
                 this.getData();

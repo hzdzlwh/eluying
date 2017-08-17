@@ -53,7 +53,7 @@ import types from '../store/types';
 import { mapState, mapMutations } from 'vuex';
 import addDishModal from './addDish';
 import IScroll from 'iscroll';
-import PySearch from '../../common/PySearch';
+import PySearch from '../../common/pySearch';
 export default {
     data() {
         return {
@@ -133,7 +133,7 @@ export default {
             });
         },
         orderMenu(food) {
-            if (food.inventoryNum > 0) {
+            if (food.inventoryNum > 0 || food.customerDish) {
                 this[types.ADD_FOOD]({ food: food });
             }
         },

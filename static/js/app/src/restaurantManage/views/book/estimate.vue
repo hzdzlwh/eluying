@@ -165,6 +165,7 @@
                 http.get('/dish/getSellClearMenu', obj).then(res => {
                     if (res.code === 1) {
                         const list = res.data.list;
+                        this.vips = [];
                         list.forEach(dishes => {
                             const dishList = dishes.dishes;
                             dishList.forEach(dish => {
@@ -257,13 +258,25 @@
                 this.vips.splice(index, 1);
                 this.deleteBookDish = false;
                 this.bookShadow = false;
+            },
+            startGetDish() {
+                if (!this.restId) {
+                    window.setTimeout(this.startGetDish, 1000);
+                } else {
+                    this.getDishType();
+                }
+            },
+            startGetData() {
+                if (!this.restId) {
+                    window.setTimeout(this.startGetData, 1000);
+                } else {
+                    this.getData();
+                }
             }
         },
         created() {
-            if (this.restId !== 0) {
-                this.getData();
-                this.getDishType();
-            }
+            this.startGetData();
+            this.startGetDish();
         },
         watch: {
             restId() {

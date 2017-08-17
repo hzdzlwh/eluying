@@ -1234,6 +1234,10 @@ export default {
                             type: params.orderType,
                             orderId: params.orderId
                         });
+                        bus.$emit('onAutomaticPoint', {
+                            orderId: params.orderId,
+                            restId: this.orderDetail.restId
+                        });
                         bus.$emit('refreshView');
                     });
             } else {

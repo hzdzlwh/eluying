@@ -23,7 +23,8 @@
                             <span class="header-tools"
                                   v-if="order.type !== ORDER_TYPE.COMBINATION && order.isCombinationOrder"
                                   @click="showCombinationOrder">查看组合订单</span>
-                            <a class="header-tools" target="_blank" :href="printUrl">打印</a>
+                            <a class="header-tools" target="_blank" :href="printUrl" v-if="order.type !== 0">打印</a>
+                            <span class="header-tools" v-if="order.type === 0" @click="showHandlePoint">打印</span>
                             <span class="header-tools"
                                   v-if="order.editAble"
                                   @click="editOrder">编辑订单</span>
@@ -1265,7 +1266,6 @@
                 if (!this.id) {
                     return this.prinurl || '';
                 }
-
                 let params = { orderId: this.id, orderType: this.type };
                 params = http.getDataWithToken(params);
                 params = http.paramsToString(params);
@@ -1436,6 +1436,14 @@
                     {
                         orderId: this.order.combinationOrderId,
                         type: ORDER_TYPE.COMBINATION
+                    });
+            },
+            showHandlePoint() {
+                console.log(this.order);
+                bus.$emit('onHandlePoint',
+                    {
+                        caterOrderId: this.order.caterOrderId,
+                        restId: this.order.restId
                     });
             },
             show() {

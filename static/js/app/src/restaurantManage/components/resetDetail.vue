@@ -370,6 +370,28 @@ export default {
             });
         },
         submitAddFood() {
+            if (!this.openData.boardDetailResps[0].boardId) {       // 无桌位下单
+                const params = {};
+                params.boardList = JSON.stringify([]);
+                params.dishItems = [];
+                if (this.addFoodList.length > 0) {
+                    this.addFoodList.forEach(food => {
+                        if (food.customerDish) {    // 自定义菜
+                            params.dishItems.push({ bookNum: food.num, dishName: food.dishName, price: food.price });
+                        } else {    // 非自定义菜
+                            params.dishItems.push({ bookNum: food.num, dishId: food.dishId, dishName: food.dishName, price: food.dishPrice });
+                        }
+                    });
+                }
+                params.dishItems = JSON.stringify(params.dishItems);
+                params.operationType = 0;
+                params.restId = this.restId;
+                http.get('/catering/addOrder', params).then(res => {
+                    if (res.code === 1) {
+                    }
+                });
+                return;
+            }
             if (this.openData.caterOrderId && this.openData.itemsMap.length) {
                 const addFoodDishList = this.addFoodList.map(el => {
                     return {
