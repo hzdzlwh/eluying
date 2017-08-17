@@ -13,7 +13,7 @@
                     <div>
                         <div class="title">点菜</div>
                         <div class="search">
-                            <input type="text" class="dd-input" placeholder="搜索菜品名称/拼音首字母" @keyup.enter="search" ref="searchInput">
+                            <input type="text" class="dd-input" placeholder="搜索菜品名称/拼音首字母" v-model="searchKey" @keyup.enter="search" ref="searchInput">
                             <img class="search-icon" @click="search" src="//static.dingdandao.com/vipSearch.png">
                         </div>
                     </div>
@@ -24,7 +24,7 @@
                         <div class="left-container" ref="leftScroll">
                             <div class="scroller">
                                 <ul>
-                                    <li v-for="(item, index) in foodClassify" @click="setScroll(index)" :class="{ 'active': currentIndex === index }">
+                                    <li v-for="(item, index) in filterDish" @click="setScroll(index)" :class="{ 'active': currentIndex === index }">
                                         <span>{{item.dishCategoryName}}</span>
                                     </li>
                                 </ul>
@@ -34,7 +34,7 @@
                     <div class="scroll-right">
                         <div class="right-container" ref="rightScroll">
                             <div class="scroller">
-                                <div v-for="item in foodClassify" class="food-list" ref="foodList">
+                                <div v-for="item in filterDish" class="food-list" ref="foodList">
                                     <h4 ref="foodListHeader">{{item.dishCategoryName}}</h4>
                                     <div class="food-wrapper">
                                         <div v-for="food in item.dishes" class="food" @click="orderMenu(food)">
@@ -102,6 +102,7 @@ import count from '../../components/counter.vue';
 import addDishModal from '../../../restaurantMange/components/addDish';
 import { mapActions } from 'vuex';
 import types from '../store/types';
+import PySearch from '../../PySearch';
 export default{
     props: {
         visible: {
@@ -121,7 +122,9 @@ export default{
             selectFood: [],
             addDishVisible: false,
             restId: undefined,
-            remark: ''
+            remark: '',
+            filterDish: [],
+            searchKey: ''
         };
     },
     created() {
@@ -166,6 +169,21 @@ export default{
     methods: {
         ...mapActions([types.GET_CATER_ORDER_DETAIL]),
         search() {
+            const filterArr = [];
+            this.foodClassify.forEach(classify => {
+                classify.dishes.forEach(dish => {
+                    if (PySearch(this.searchKey)[0] === dish.dishName || PySearch(this.searchKey)[0] === dish.spell[0]) {
+                        const tempClassify = { ...classify };
+                        tempClassify.dishes = [dish];
+                        filterArr.push(tempClassify);
+                    }
+                });
+            });
+            if (filterArr.length > 0) {
+                this.filterDish = filterArr;
+            } else {
+                this.filterDish = this.foodClassify;
+            }
         },
         setScroll(index) {
             this.rightScroll.scrollToElement(this.$refs.foodList[index], 300);
@@ -221,6 +239,12 @@ export default{
                 http.get('/catering/getMenu', { restId: this.restId }).then(res => {
                     if (res.code === 1) {
                         this.foodClassify = res.data.list;
+                        this.foodClassify.forEach(classify => {
+                            classify.dishes.forEach(dish => {
+                                dish.spell = PySearch(dish.dishName);
+                            });
+                        });
+                        this.filterDish = this.foodClassify;
                         resolve();
                     }
                 });

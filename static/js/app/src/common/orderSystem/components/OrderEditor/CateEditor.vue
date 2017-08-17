@@ -72,7 +72,7 @@
                     </div>
                     <div class="food-item" style="padding-left: 40px;">
                                                     <div class="item-date">
-                                <label class="label-text">点菜</label>
+                                <label class="label-text orderMenu" @click="orderMenu">点菜</label>
                                 
                             </div>
                     </div>
@@ -198,6 +198,10 @@
         margin-top: 10px;
         padding-top: 15px;
         border-top: 1px dotted #e6e6e6;
+    }
+    .orderMenu{
+        color: #178ce6;
+        cursor: pointer;
     }
 </style>
 <script>
@@ -521,6 +525,9 @@
             },
             changeFood() {
                 this.$emit('change', this.foodItems);
+            },
+            orderMenu() {
+                bus.$emit('showOrderMenu', this.order);
             }
         }
     };

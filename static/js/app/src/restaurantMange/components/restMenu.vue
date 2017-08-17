@@ -8,7 +8,7 @@
  <template>
      <div>
         <div class="search">
-            <input type="text" class="dd-input" placeholder="搜索菜品名称/拼音首字母" @keyup.enter="search" ref="searchInput">
+            <input type="text" class="dd-input" placeholder="搜索菜品名称/拼音首字母" v-model="searchKey" @keyup.enter="search" ref="searchInput">
             <img class="search-icon" @click="search" src="//static.dingdandao.com/vipSearch.png">
         </div>
         <div class="rest-menu">
@@ -17,7 +17,7 @@
                     <div class="scroller">
                         <h3>菜品分类</h3>
                         <ul>
-                            <li v-for="(item, index) in foodClassify" :class="{ 'active': currentIndex === index }" @click="setMenu(index, $event)"><span :class="{'tow-line': item.twoLine}">{{item.dishCategoryName}}</span></li>
+                            <li v-for="(item, index) in filterDish" :class="{ 'active': currentIndex === index }" @click="setMenu(index, $event)"><span :class="{'tow-line': item.twoLine}">{{item.dishCategoryName}}</span></li>
                         </ul>
                     </div>
                 </div>
@@ -25,7 +25,7 @@
             <div class="menu-right" ref="menuRight">
                 <div class="food-container" ref="menu" id="menu">
                     <div class="scroller">
-                        <div v-for="item in foodClassify" class="food-list" ref="foodList">
+                        <div v-for="item in filterDish" class="food-list" ref="foodList">
                             <h4 ref="foodListHeader">{{item.dishCategoryName}}</h4>
                             <div class="food-wrapper">
                                 <div v-for="food in item.dishes" class="food" @click="orderMenu(food)">
@@ -53,13 +53,17 @@ import types from '../store/types';
 import { mapState, mapMutations } from 'vuex';
 import addDishModal from './addDish';
 import IScroll from 'iscroll';
+import PySearch from '../../common/PySearch';
 export default {
     data() {
         return {
             heightList: [],
             scrollY: 0,
             addDishVisible: false,
-            foodClassify: []
+            foodClassify: [],
+            searchKey: '',
+            spellSearchKey: '',
+            filterDish: []
         };
     },
     created() {
@@ -87,6 +91,21 @@ export default {
             types.ADD_FOOD
         ]),
         search() {
+            const filterArr = [];
+            this.foodClassify.forEach(classify => {
+                classify.dishes.forEach(dish => {
+                    if (PySearch(this.searchKey)[0] === dish.dishName || PySearch(this.searchKey)[0] === dish.spell[0]) {
+                        const tempClassify = { ...classify };
+                        tempClassify.dishes = [dish];
+                        filterArr.push(tempClassify);
+                    }
+                });
+            });
+            if (filterArr.length > 0) {
+                this.filterDish = filterArr;
+            } else {
+                this.filterDish = this.foodClassify;
+            }
         },
         setMenu(index, event) {
             const foodList = this.$refs.foodList;
@@ -123,6 +142,12 @@ export default {
                 http.get('/catering/getMenu', { restId: this.restId }).then(res => {
                     if (res.code === 1) {
                         this.foodClassify = res.data.list;
+                        this.foodClassify.forEach(classify => {
+                            classify.dishes.forEach(dish => {
+                                dish.spell = PySearch(dish.dishName);
+                            });
+                        });
+                        this.filterDish = this.foodClassify;
                         resolve();
                     }
                 });

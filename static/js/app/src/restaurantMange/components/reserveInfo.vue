@@ -121,6 +121,10 @@ export default {
         relevanceOrder: {
             type: Object,
             default: null
+        },
+        selectBoard: {
+            type: Array,
+            default: undefined
         }
     },
     data() {
@@ -342,7 +346,11 @@ export default {
                 return;
             }
             const params = {};
-            params.boardList = JSON.stringify([]);
+            if (this.selectBoard && this.selectBoard.length > 0) {
+                params.boardList = JSON.stringify(this.selectBoard);
+            } else {
+                params.boardList = JSON.stringify([]);
+            }
             params.customerName = this.name;
             params.customerPhone = this.phone;
             params.origin = this.userOriginType.name;
