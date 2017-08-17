@@ -102,7 +102,7 @@ import count from '../../components/counter.vue';
 import addDishModal from '../../../restaurantManage/components/addDish';
 import { mapActions } from 'vuex';
 import types from '../store/types';
-import PySearch from '../../PySearch';
+import PySearch from '../../pySearch';
 export default{
     props: {
         visible: {
