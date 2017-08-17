@@ -39,7 +39,7 @@
                                 </dd-select>
                                 <div class="room-category" >
                                     <dd-select v-model="item.roomType" placeholder="请选择房间" @input="handleRoomChange(item, index)" :disabled="(item.disabled && checkState !== 'checkIn') || (!item.isCheckIn && item.checkType === 1 && checkState == 'checkIn')">
-                                        <dd-option v-for="room in getRoomList(item)" :value="room.id" :key="room.id" :label="room.name">
+                                        <dd-option v-for="room in item.roomList" :value="room.id" :key="room.id" :label="room.name">
                                         </dd-option>
                                     </dd-select>
                                 </div>
