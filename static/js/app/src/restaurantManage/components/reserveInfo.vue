@@ -107,6 +107,7 @@ import Clickoutside from 'dd-vue-component/src/utils/clickoutside';
 import { DatePicker } from 'element-ui';
 import http from '../../common/http.js';
 import util from '../../common/util.js';
+import restBus from '../event.js';
 import modal from '../../common/modal';
 import { mapState } from 'vuex';
 export default {
@@ -381,6 +382,8 @@ export default {
             http.get('/catering/addOrder', params).then(res => {
                 if (res.code === 1) {
                     this.hideModal();
+                    restBus.$emit('refeshView');
+
                 }
             });
         },

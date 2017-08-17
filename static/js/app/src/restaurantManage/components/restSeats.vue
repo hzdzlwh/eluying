@@ -83,13 +83,7 @@ export default {
         return {
             defaultStrDate: this.date,
             selectState: '-1',
-            areas: [
-                {
-                    id: -1,
-                    name: '全部区域',
-                    selected: true
-                }
-            ],
+            areas: [],
             tableList: [],
             orderState: ['预订', '使用中', '已结账', '', '待处理'],
             FOOD_STATE
@@ -114,7 +108,8 @@ export default {
             types.DELETE_SELECT_DISH,
             types.SET_CATER_ORDER_DETAIL,
             types.SET_OPEN_DATA,
-            types.RESET_SELECT_DISH
+            types.RESET_SELECT_DISH,
+            types.SET_ORDER_DETAIL
         ]),
         ...mapActions([
             types.GET_CATER_ORDER_DETAIL
@@ -203,6 +198,7 @@ export default {
             http.get('/board/list', param).then(res => {
                 if (res.code === 1) {
                     this.tableList = [];
+                    this.areas = [{ id: -1, name: '全部区域', selected: true }];
                     res.data.list.map(item => {
                         const areaHasOrNot = this.areas.find(area => {
                             return area.id === item.areaId;
@@ -230,6 +226,7 @@ export default {
             http.get('/catering/getCaterOrderDetail', { caterOrderId }).then(res => {
                 if (res.code === 1) {
                     this[types.SET_CATER_ORDER_DETAIL]({ caterDetail: res.data });
+                    this[types.SET_ORDER_DETAIL]({ orderDetail: res.data });
                     bus.$emit('setRestDetail', res.data);
                 }
             });
