@@ -114,12 +114,15 @@
     import resetBookDish from './resetBookDish.vue';
     import http from 'http';
     import { getDishType } from '../views/mixin/dishType.js';
+    import pySearch from '../../common/pySearch';
     export default {
         mixins: [getDishType],
         data() {
             return {
                 inputValue: '',
                 vips: [],
+                getVip: [],
+                searchVip: [],
                 row: {},
                 col: [
                     {
@@ -179,7 +182,7 @@
                 http.get('/dish/getSellClearMenu', obj).then(res => {
                     if (res.code === 1) {
                         const list = res.data.list;
-                        this.vips = [];
+                        this.getVip = [];
                         list.forEach(dishes => {
                             const dishList = dishes.dishes;
                             dishList.forEach(dish => {
@@ -188,16 +191,27 @@
                                 newDish.name = dish.dishName;
                                 newDish.bookNum = dish.reserveNum;
                                 newDish.dishId = dish.dishId;
+                                newDish.spell = pySearch(dish.dishName);
                                 newDish.reserveNum = dish.soldOut === 1 ? '已售完' : dish.sellClearNum;
-                                this.vips.push(newDish);
+                                this.getVip.push(newDish);
                             });
                         });
+                        this.vips = this.getVip;
                     }
                 });
             },
             search() {
-                this.dishType = '-1~';
-                this.getData();
+                if (this.inputValue !== '') {
+                    this.searchVip = [];
+                    this.getVip.forEach(dish => {
+                        if (pySearch(this.inputValue)[0] === dish.name || pySearch(this.inputValue)[0].toUpperCase() === dish.spell[0]) {
+                            this.searchVip.push(dish);
+                        }
+                    });
+                    this.vips = this.searchVip;
+                } else if (this.inputValue === '') {
+                    this.vips = this.getVip;
+                }
             },
             opporateBookDish(row) {
                 this.resetBookDish = true;
