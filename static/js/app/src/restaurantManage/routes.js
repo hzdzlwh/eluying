@@ -86,7 +86,7 @@ const router = new Router({
     scrollBehavior(to, from, savedPosition) {
         return savedPosition || { x: 0, y: 0 };
     },
-    base: '/view/restaurantMange/',
+    base: '/view/restaurantManage/',
     linkActiveClass: 'active',
     routes
 });

@@ -42,7 +42,7 @@ module.exports = {
         'block/room': './static/js/app/src/business/block/room.js',
         'hourly/room': './static/js/app/src/business/hourly/room.js',
         'rights/virtual': './static/js/app/src/rights/virtual/main.js',
-        'restaurantMange/restaurantMange': './static/js/app/src/restaurantMange/main.js'
+        'restaurantManage/restaurantManage': './static/js/app/src/restaurantManage/main.js'
     },
     html: ['./static/tpl/feature.html', './static/tpl/customerCase.html'],
     port: 3000,
@@ -54,6 +54,6 @@ module.exports = {
         { url: '/view/reports', path: '/view/reports/index.html' },
         { url: '/view/customer', path: '/view/customer/index.html' },
         { url: '/view/accommodation', path: '/view/accommodation/index.html' },
-        { url: '/view/restaurantMange', path: '/view/restaurantMange/index.html' }
+        { url: '/view/restaurantManage', path: '/view/restaurantManage/index.html' }
     ]
 };

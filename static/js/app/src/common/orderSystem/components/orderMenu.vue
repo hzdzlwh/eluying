@@ -99,7 +99,7 @@ import http from '../../http';
 import IScroll from 'iscroll';
 import bus from '../../eventBus';
 import count from '../../components/counter.vue';
-import addDishModal from '../../../restaurantMange/components/addDish';
+import addDishModal from '../../../restaurantManage/components/addDish';
 import { mapActions } from 'vuex';
 import types from '../store/types';
 import PySearch from '../../PySearch';

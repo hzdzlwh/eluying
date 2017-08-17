@@ -210,8 +210,8 @@ padding:16px;
         mapActions
     } from 'vuex';
     import http from '../../../http';
-    import changeRemark from '../../../../restaurantMange/components/changeRemark.vue';
-    import dishModal from '../../../../restaurantMange/components/dishModal.vue';
+    import changeRemark from '../../../../restaurantManage/components/changeRemark.vue';
+    import dishModal from '../../../../restaurantManage/components/dishModal.vue';
     import util from '../../../util.js';
     export default{
         props: {
