@@ -63,7 +63,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        z-index: 1200;
+        z-index: 2000;
     }
 </style>
 <style lang="scss" scoped>
@@ -197,8 +197,6 @@
                             print[item.printerId] = item.status === 1;
                             this.backPoint.push(print);
                         });
-                        console.log(this.frontPointers, this.backPointers);
-                        console.log(this.frontPoint, this.backPoint);
                     }
                 });
             },
@@ -212,10 +210,8 @@
                     operationId: this.operationId
                 };
                 const printList = this.frontPoint.concat(this.backPoint);
-                console.log(printList);
                 this.printerIds = [];
                 printList.forEach(item => {
-                    console.log(item);
                     for (var key in item) {
                         if (item[key]) {
                             this.printerIds.push(key);

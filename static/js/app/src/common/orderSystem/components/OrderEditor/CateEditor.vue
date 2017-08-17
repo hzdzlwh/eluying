@@ -12,7 +12,7 @@
                         <div class="item-content">
                             <div class="item-name">
                                 <span class="item-name" v-if='checkState !== "book"'>{{item.restName}}</span>
-                                <dd-select v-model='item.resetId' placeholder="请选择餐厅" @input='modifyFood([item])' v-if='checkState === "book"'>
+                                <dd-select v-model='item.restId' placeholder="请选择餐厅" @input='modifyFood([item])' v-if='checkState === "book"'>
                                     <dd-option v-for="reset in resets" :value="reset.restId" :key="reset.restId" :label="reset.restName">
                                     </dd-option>
                                 </dd-select>
@@ -72,6 +72,7 @@
                     </div>
                     <div class="food-item" style="padding-left: 40px;">
                                                     <div class="item-date">
+                                                    {{getDishesResps(item.dishesResps)}}
                                 <label class="label-text orderMenu" @click="orderMenu">点菜</label>
                                 
                             </div>
@@ -328,6 +329,21 @@
             DdGroupOption
         },
         methods: {
+            getDishesResps(item) {
+                let str = '';
+                if (!item) {
+                    return '';
+                }
+                item.forEach((el, index) => {
+                    if (index < 3) {
+                        str = str + ' ' + el.dishName + '*' + el.amount;
+                    }
+                });
+                if (item.length > 3) {
+                    str = str + '…';
+                }
+                return str;
+            },
             getFoodItem() {
                 const order = Object.assign({}, this.order);
                 let foodItems = [];
@@ -372,7 +388,8 @@
                     originTotalPrice: 0,
                     showDiscount: '',
                     itemsMap: [],
-                    moreDiscount: undefined
+                    moreDiscount: undefined,
+                    dishesResps: []
                 });
             },
             modifyFood(food) {
@@ -423,7 +440,8 @@
                         const parm = {
                             discountPrice: fo.discount,
                             quickDiscountId: fo.moreDiscount,
-                            restId: fo.restId
+                            restId: fo.restId,
+                            dishes: fo.dishesResps
                         };
                         if (fo.dishes) {
                             parm.dishes = JSON.stringify(fo.itemsMap.map(item => {
