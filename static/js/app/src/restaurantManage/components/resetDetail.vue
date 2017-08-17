@@ -370,10 +370,10 @@ export default {
             });
         },
         submitAddFood() {
-            if (!this.openData.boardDetailResps[0].boardId) {       //无桌位下单
+            if (!this.openData.boardDetailResps[0].boardId) {       // 无桌位下单
                 const params = {};
                 params.boardList = JSON.stringify([]);
-                params.dishItems = []; 
+                params.dishItems = [];
                 if (this.addFoodList.length > 0) {
                     this.addFoodList.forEach(food => {
                         if (food.customerDish) {    // 自定义菜

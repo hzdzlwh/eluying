@@ -81,6 +81,11 @@
                         width: 60
                     },
                     {
+                        title: '违约金',
+                        dataIndex: 'penalty',
+                        width: 60
+                    },
+                    {
                         title: '实收金额',
                         dataIndex: 'payment',
                         width: 60

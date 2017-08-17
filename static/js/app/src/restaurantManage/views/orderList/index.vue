@@ -73,18 +73,20 @@
                 </dd-select>
             </div>
         </div>
-        <dd-table :columns="col" :data-source="vips" style='padding-bottom:45px;' id='roomsOrderTable'></dd-table>
+        <dd-table :columns="col" :data-source="vips" style='padding-bottom:45px;' id='caterOrderTable'></dd-table>
         <div class="foot footfix">
             <span><small>共计</small> {{total}}个订单<span style="padding: 0 30px;color:#e6e6e6;font-size:15px;">|</span>
             <span> <small>应收金额</small> ¥{{totalPrice}} </span><span style="padding: 0 30px;color:#e6e6e6;font-size:15px;">|</span>
             <span> <small>实收金额</small> ¥{{payment}} </span></span>
             <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo" />
         </div>
-        <div class="dayin" @click="showPoint" style="width:50px;height:24px;background:blueviolet;cursor:pointer;">打印</div>
-        <automaticPoint v-if="automaticPointShow" :caterOrderId="caterOrderId" :operationId="operationId" v-on:closeAutomaticPoint="closeAutomaticPointer" v-on:saverPoint="saverPointer"></automaticPoint>
-        <handlePoint v-if="handlePointShow" :caterOrderId="caterOrderId" v-on:closeHandlePoint="closeHandlePoint" v-on:openAutomaticPoint="openAutomaticPoint"></handlePoint>
     </div>
 </template>
+<style>
+    #caterOrderTable .dd-table tbody tr {
+        cursor: pointer;
+    }
+</style>
 <style lang="scss" scoped>
     .foot small{
         color:#999;
@@ -218,8 +220,6 @@
         DdGroupOption
     }
         from 'dd-vue-component';
-    import automaticPoint from '../../components/automaticPoint.vue';
-    import handlePoint from '../../components/handlePoint.vue';
     import http from '../../../common/http';
     import eventbus from '../../../common/eventBus';
     import { mapState } from 'vuex';
@@ -360,6 +360,11 @@
                     {
                         title: '操作人',
                         dataIndex: 'operator'
+                    },
+                    {
+                        title: '',
+                        render: (h, row) => <span data-id = {row.subOrderType === 0 ? row.subOrderId : row.orderId} data-type = {row.subOrderType} class = "trData"></span>,
+                        width: 0
                     }
                 ],
                 automaticPointShow: false,
@@ -372,23 +377,27 @@
             ...mapState(['restId'])
         },
         created() {
-            this.getData();
+            this.startGetData();
             this.fetchData();
             this.getChannelType();
             this.getChannelPerson();
             eventbus.$on('refreshView', this.fetchData);
         },
         mounted() {
-            $('#roomsOrderTable tbody').on('click', 'tr', function(e) {
+            $('#caterOrderTable tbody').on('click', 'tr', function(e) {
                 const el = $(this).find('.trData');
                 eventbus.$emit('onShowDetail', { type: Number(el.attr('data-type')), orderId: Number(el.attr('data-id')) });
             });
         },
         beforeDestroy: function() {
             eventbus.$off('refreshView', this.fetchData);
-            $('#roomsOrderTable tbody').off('click');
+            $('#caterOrderTable tbody').off('click');
         },
         watch: {
+            restId() {
+                this.pageNo = 1;
+                this.fetchData();
+            },
             userOriginType() {
                 this.pageNo = 1;
                 this.fetchData();
@@ -471,6 +480,7 @@
                     pageNo: this.pageNo,
                     originId: this.userOriginType.split('~')[1],
                     startDate: this.startTime,
+                    restId: this.restId,
                     payChannel: this.channelType === -1 ? undefined : this.channelType
                 };
                 if (this.tag === -1) {
@@ -604,31 +614,12 @@
                     }
                 });
             },
-            closeAutomaticPointer() {
-                this.automaticPointShow = false;
-            },
-            showPoint() {
-                this.handlePointShow = true;
-            },
-            openAutomaticPoint() {
-                this.handlePointShow = false;
-                this.automaticPointShow = true;
-            },
-            saverPointer(printerIds) {
-                const obj = {
-                    restId: this.restId,
-                    caterOrderId: this.caterOrderId,
-                    operationId: this.operationId,
-                    printerIds: JSON.stringify(printerIds)
-                };
-                http.get('/printer/print', obj).then(res => {
-                    if (res.code === 1) {
-                        this.automaticPointShow = false;
-                    }
-                });
-            },
-            closeHandlePoint() {
-                this.handlePointShow = false;
+            startGetData() {
+                if (!this.restId) {
+                    window.setTimeout(this.startGetData, 1000);
+                } else {
+                    this.getData();
+                }
             }
         },
         components: {
@@ -639,9 +630,7 @@
             DdDropdownItem,
             DdOption,
             DdDatepicker,
-            DdGroupOption,
-            automaticPoint,
-            handlePoint
+            DdGroupOption
         }
     };
 </script>
