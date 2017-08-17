@@ -383,7 +383,6 @@ export default {
                 if (res.code === 1) {
                     this.hideModal();
                     restBus.$emit('refeshView');
-
                 }
             });
         },
