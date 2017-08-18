@@ -23,7 +23,7 @@
                             <btn style="padding-left:20px;margin-top:16px;" @save="saveShortcutDiscount" @cancel="shortcutView = !shortcutView"></btn>
                         </div>
                     </inner-container>
-                    <inner-container :title="changeProcess" style="margin-top: 18px;" :toggleView="changeView">
+                    <inner-container :title="changeProcess" style="margin-top: 18px;" :toggleView="changeView" @getChangeProcess="getChangeProcess">
                         <div slot="show">
                             <ul>
                                 <li><span>处理方式:</span><span style="margin-left:16px;">{{processMethods[processMethodsValue]}}</span></li>
@@ -141,6 +141,19 @@
                     this.shortcutView = !this.shortcutView;
                     this.newDiscounts = [];
                     this.getDiscountLists();
+                });
+            },
+            getChangeProcess() {
+                http.post('/quickDiscount/getList', {
+                    nodeId: restId,
+                    nodeType: 1
+                }).then(res => {
+                    if (res.code === 1) {
+                        if (res.data.oddSetting) {
+                            this.processMethod = res.data.oddSetting.oddType;
+                            this.accurate = res.data.oddSetting.unit;
+                        }
+                    }
                 });
             },
             saveChangeProcess() {

@@ -13,15 +13,18 @@
 
 <script>
     export default {
-        props: ['title','toggleView'],
+        props: ['title', 'toggleView'],
         data() {
             return {
                 switchView: true
-            }
+            };
         },
         methods: {
             toggle() {
                 this.switchView = !this.switchView;
+                if (this.title === '零头处理' && !this.switchView) {
+                    this.$emit('getChangeProcess');
+                }
             }
         },
         watch: {
@@ -29,7 +32,7 @@
                 this.toggle();
             }
         }
-    }
+    };
 </script>
 
 <style lang="scss" rel="stylesheet/scss">
