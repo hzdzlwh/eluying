@@ -56,11 +56,11 @@
 
         </div>
         <dd-table :columns="col" :data-source="vips" :bordered="true" style="margin:20px 0 10px;"></dd-table>
-        <div class="foot footfix">
+        <div class="report-center-foot">
             <div style="float:left;">
-                <p style="font-size:16px;"><small style='width:16px;'>总人次 : </small> {{personCount}}</p>
+                <span class="report-center-span">总人次 : <b>{{personCount}}</b></span>
             </div>
-            <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo" style="float:right;"/>
+            <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo"  class="report-center-pagination"/>
         </div>
     </div>
 </template>
