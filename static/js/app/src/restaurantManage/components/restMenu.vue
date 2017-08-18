@@ -31,7 +31,8 @@
                                 <div v-for="food in item.dishes" class="food" @click="orderMenu(food)">
                                     <div class="name">{{food.dishName}}</div>
                                     <div class="price">￥{{food.dishPrice}}</div>
-                                    <div class="inventory" :class="{no:!food.inventoryNum}" v-if="!food.customerDish"><span v-if="food.inventoryNum">剩{{food.inventoryNum}}</span><span v-else>售完</span></div>
+                                    <div class="inventory" :class="{no:!food.inventoryNum}" v-if="!food.customerDish && food.inventoryNum !== null"><span v-if="food.inventoryNum">剩{{food.inventoryNum}}</span><span v-if="food.inventoryNum === 0">售完</span></div>
+                                    <div class="infinite" v-if="food.inventoryNum === null"></div>
                                 </div>
                                 <div class="food" v-if="item.dishCategoryId === -2">
                                     <div class="name">自定义菜品</div>
@@ -350,6 +351,9 @@ export default {
                                     &.no{
                                         background: #f24949;
                                     }
+                                }
+                                .infinite{
+                                    background: #fff;
                                 }
                             }
                         }

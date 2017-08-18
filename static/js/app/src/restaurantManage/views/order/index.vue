@@ -21,7 +21,7 @@
             <resetContain v-if='leftType === 1' @reserve="changeReserveInfoVisible"></resetContain>
             <resetdetail v-if='leftType === 2 || leftType === 3 || leftType === 4'></resetdetail>
         </div>
-        <reserve-info-modal :visible="reserveInfoVisible" :relevanceOrder="relevanceOrderDetail" :selectBoard="selectBoard" @hideModal="hideModal" @showRelevaneOrder="showRelevanceOrder" @cancelConnect="cancelConnect"></reserve-info-modal>
+        <reserve-info-modal :visible="reserveInfoVisible" :relevanceOrder="relevanceOrderDetail" @hideModal="hideModal" @showRelevaneOrder="showRelevanceOrder" @cancelConnect="cancelConnect"></reserve-info-modal>
         <relevance-order-modal :visible="relevanceOrderVisible" @hideModal="hideModal" @sendRelevanceOrder="getRelevanceOrderDetail"></relevance-order-modal>
         <change-seat-modal :visible="changeSeatVisible" :openData="openData" @hideModal="hideModal"></change-seat-modal>
     </div>
@@ -67,8 +67,7 @@ export default {
             changeSeatVisible: false,
             orderMenuVisible: false,
             relevanceOrderDetail: undefined,
-            openData: undefined,
-            selectBoard: []
+            openData: undefined
         };
     },
     computed: mapState([
@@ -88,8 +87,7 @@ export default {
         closeKeyboard() {
             this.keyboardVisible = false;
         },
-        changeReserveInfoVisible(selectBoard) {
-            this.selectBoard = selectBoard;
+        changeReserveInfoVisible() {
             this.reserveInfoVisible = true;
         },
         hideModal() {

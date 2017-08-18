@@ -88,7 +88,8 @@ export default {
             this.selectDish.forEach(item => {
                 selectBoard.push(item.boardId);
             });
-            this.$emit('reserve', selectBoard);
+            this.$emit('reserve');
+            restBus.$emit('hasBoardReserve', selectBoard);
         },
         numChange(val) {
             const boardIds = [];

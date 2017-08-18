@@ -109,7 +109,8 @@ import http from '../../common/http.js';
 import util from '../../common/util.js';
 import restBus from '../event.js';
 import modal from '../../common/modal';
-import { mapState } from 'vuex';
+import types from '../store/types';
+import { mapState, mapMutations } from 'vuex';
 export default {
     directives: {
         Clickoutside
@@ -122,10 +123,6 @@ export default {
         relevanceOrder: {
             type: Object,
             default: null
-        },
-        selectBoard: {
-            type: Array,
-            default: undefined
         }
     },
     data() {
@@ -145,12 +142,14 @@ export default {
             saleList: [],
             saleId: -1,
             eatNum: undefined,
-            remark: ''
+            remark: '',
+            selectBoard: undefined
         };
     },
     created() {
         this.getChannels();
         this.getSaleList();
+        restBus.$on('hasBoardReserve', this.hasBoardReserve);
     },
     computed: {
         ...mapState(['restId']),
@@ -159,6 +158,11 @@ export default {
         }
     },
     methods: {
+        ...mapMutations([
+            types.SET_CATER_ORDER_DETAIL,
+            types.SET_LEFT_TYPE,
+            types.RESET_SELECT_DISH
+        ]),
         hideModal() {
             this.$emit('hideModal');
             this.refreshData();
@@ -383,6 +387,8 @@ export default {
                 if (res.code === 1) {
                     this.hideModal();
                     restBus.$emit('refeshView');
+                    this.getCaterOrderDetail(res.data.caterOrderId);
+                    this[types.RESET_SELECT_DISH]();
                 }
             });
         },
@@ -397,6 +403,17 @@ export default {
         },
         cancelConnect() {
             this.$emit('cancelConnect');
+        },
+        hasBoardReserve(selectBoard) {
+            this.selectBoard = selectBoard;
+        },
+        getCaterOrderDetail(caterOrderId) {
+            http.get('/catering/getCaterOrderDetail', { caterOrderId }).then(res => {
+                if (res.code === 1) {
+                    this[types.SET_CATER_ORDER_DETAIL]({ caterDetail: res.data });
+                    this[types.SET_LEFT_TYPE]({ leftType: 2 });
+                }
+            });
         }
     },
     watch: {
