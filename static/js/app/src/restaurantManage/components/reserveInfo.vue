@@ -143,13 +143,16 @@ export default {
             saleId: -1,
             eatNum: undefined,
             remark: '',
-            selectBoard: undefined
+            selectBoard: undefined,
+            orderInfo: undefined
         };
     },
     created() {
         this.getChannels();
         this.getSaleList();
-        restBus.$on('hasBoardReserve', this.hasBoardReserve);
+        restBus.$on('hasBoardReserve', this.hasBoardReserve);   // 有桌位预订时用于接收桌位信息
+        restBus.$on('setOrderInfo', this.setOrderInfo);   // 编辑详情时接收订单信息
+        restBus.$on('rightClickReserve', this.setRightClickReserveInfo);       // 右击预订时接收桌子信息
     },
     computed: {
         ...mapState(['restId']),
@@ -351,46 +354,87 @@ export default {
                 return;
             }
             const params = {};
-            if (this.selectBoard && this.selectBoard.length > 0) {
-                params.boardList = JSON.stringify(this.selectBoard);
-            } else {
-                params.boardList = JSON.stringify([]);
-            }
-            params.customerName = this.name;
-            params.customerPhone = this.phone;
-            params.origin = this.userOriginType.name;
-            params.originId = this.userOriginType.id;
-            if (this.userOriginType.id === -4 || this.userOriginType.id === -5) {     // 会员和企业
-                if (this.userOriginType.id === -5) {
-                    params.discountChannel = 2;
-                    params.discountRelatedId = this.userOriginType.companyId;
+            if (this.orderInfo) {   // 如果是编辑详情，因为编辑的时候和其他调用的是不同的接口并且传的不同的参数
+                params.caterOrderId = this.orderInfo.caterOrderId;
+                params.customerInfo = {
+                    customerName: this.name,
+                    customerPhone: this.phone
+                };
+                params.customerInfo = JSON.stringify(params.customerInfo);
+                params.discount = this.orderInfo.discount;
+                if (this.userOriginType.id === -4 || this.userOriginType.id === -5) {     // 会员和企业
+                    params.discountPlan = {};
+                    if (this.userOriginType.id === -5) {
+                        params.discountPlan.discountChannel = 2;
+                        params.discountPlan.discountRelatedId = this.userOriginType.companyId;
+                    }
+                    if (this.userOriginType.id === -4) {
+                        if (this.vipCardId === -1) {   // 使用会员等级
+                            params.discountPlan.discountChannel = 1;
+                            params.discountPlan.discountRelatedId = this.vipCardId;
+                        } else if (this.vipCardId > 0) {    // 使用会员卡
+                            params.discountPlan.discountChannel = 4;
+                            params.discountPlan.discountRelatedId = this.vipCardId;
+                        }
+                    }
+                    params.discountPlan = JSON.stringify(params.discountPlan);
                 }
-                if (this.userOriginType.id === -4) {
-                    if (this.vipCardId === -1) {   // 使用会员等级
-                        params.discountChannel = 1;
-                        params.discountRelatedId = this.vipCardId;
-                    } else if (this.vipCardId > 0) {    // 使用会员卡
-                        params.discountChannel = 4;
-                        params.discountRelatedId = this.vipCardId;
+                params.orderTime = this.orderInfo.expectStartTime.substring(0, 16);
+                params.origin = this.userOriginType.name;
+                params.originId = this.userOriginType.id;
+                params.peopleNum = this.eatNum;
+                params.remark = this.remark;
+                if (this.saleId !== -1) {
+                    params.salerId = this.this.saleId;
+                }
+                http.get('/catering/modifyOrder', params).then(res => {
+                    if (res.code === 1) {
+                        this.getCaterOrderDetail(this.orderInfo.caterOrderId);
+                    }
+                });
+            } else {    // 非编辑详情
+                if (this.selectBoard && this.selectBoard.length > 0) {
+                    params.boardList = JSON.stringify(this.selectBoard);
+                } else {
+                    params.boardList = JSON.stringify([]);
+                }
+                params.customerName = this.name;
+                params.customerPhone = this.phone;
+                params.origin = this.userOriginType.name;
+                params.originId = this.userOriginType.id;
+                if (this.userOriginType.id === -4 || this.userOriginType.id === -5) {     // 会员和企业
+                    if (this.userOriginType.id === -5) {
+                        params.discountChannel = 2;
+                        params.discountRelatedId = this.userOriginType.companyId;
+                    }
+                    if (this.userOriginType.id === -4) {
+                        if (this.vipCardId === -1) {   // 使用会员等级
+                            params.discountChannel = 1;
+                            params.discountRelatedId = this.vipCardId;
+                        } else if (this.vipCardId > 0) {    // 使用会员卡
+                            params.discountChannel = 4;
+                            params.discountRelatedId = this.vipCardId;
+                        }
                     }
                 }
-            }
-            params.peopleNum = this.eatNum;
-            params.reserveTime = util.dateFormatLong(new Date(this.date)).substring(0, 16);
-            if (this.saleId !== -1) {
-                params.salerId = this.saleId;
-            }
-            params.remark = this.remark;
-            params.restId = this.restId;
-            params.operationType = 0;
-            http.get('/catering/addOrder', params).then(res => {
-                if (res.code === 1) {
-                    this.hideModal();
-                    restBus.$emit('refeshView');
-                    this.getCaterOrderDetail(res.data.caterOrderId);
-                    this[types.RESET_SELECT_DISH]();
+                params.peopleNum = this.eatNum;
+                params.reserveTime = util.dateFormatLong(new Date(this.date)).substring(0, 16);
+                if (this.saleId !== -1) {
+                    params.salerId = this.saleId;
                 }
-            });
+                params.remark = this.remark;
+                params.restId = this.restId;
+                params.operationType = 0;
+                http.get('/catering/addOrder', params).then(res => {
+                    if (res.code === 1) {
+                        this.hideModal();
+                        restBus.$emit('refeshView');
+                        this.getCaterOrderDetail(res.data.caterOrderId);
+                        this[types.RESET_SELECT_DISH]();
+                    }
+                });
+            }
+            
         },
         refreshData() {
             this.name = '';
@@ -400,6 +444,8 @@ export default {
             this.vipDiscountDetail = {};
             this.eatNum = undefined;
             this.saleId = -1;
+            this.orderInfo = undefined;
+            this.selectBoard = undefined;
         },
         cancelConnect() {
             this.$emit('cancelConnect');
@@ -414,6 +460,12 @@ export default {
                     this[types.SET_LEFT_TYPE]({ leftType: 2 });
                 }
             });
+        },
+        setOrderInfo(orderInfo) {
+            this.orderInfo = orderInfo;
+        },
+        setRightClickReserveInfo(boardId) {
+            this.selectBoard = [boardId];
         }
     },
     watch: {
@@ -464,6 +516,28 @@ export default {
                 this.userOriginType = this.getOrigin(-1);
                 this.saleId = -1;
             }
+        },
+        orderInfo(newValue) {
+            if (newValue) {
+                this.name = newValue.customerName;
+                this.phone = newValue.customerPhone;
+                this.changeVipList(-2);
+                if (newValue.originId === -5) {
+                    this.userOriginType = this.getOrigin(newValue.originId, newValue.discountRelatedId);
+                } else {
+                    this.userOriginType = this.getOrigin(newValue.originId);
+                }
+                this.saleId = newValue.salerId;
+                this.eatNum = newValue.peopleNum;
+                this.remark = newValue.remark;
+            } else {
+                this.name = '';
+                this.phone = '';
+                this.userOriginType = this.getOrigin(-1);
+                this.saleId = -1;
+                this.eatNum = undefined;
+                this.remark = '';
+            }
         }
     },
     components: {
@@ -471,6 +545,11 @@ export default {
         DdOption,
         DatePicker,
         DdGroupOption
+    },
+    beforeDestroy() {
+        restBus.$off('hasBoardReserve', this.hasBoardReserve);
+        restBus.$off('setOrderInfo', this.setOrderInfo);
+        restBus.$off('rightClickReserve', this.setRightClickReserveInfo);
     }
 };
 </script>

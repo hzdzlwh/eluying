@@ -32,7 +32,7 @@
                 <div v-for="(board, index) in area.boardList" class="seat" :class="{leisure: board.boardState === 0,
                     using: board.boardState === 1 && board.caterOrderId,
                     'open-table': board.boardState === 1 && !board.caterOrderId,
-                    'select-table': board.selected}" @click="getSeatOrder($event, board, 'currentOrder')" @contextmenu.prevent="$refs.ctxMenu.open($event, {data: 1})">
+                    'select-table': board.selected}" @click="getSeatOrder($event, board, 'currentOrder')" @contextmenu.prevent="$refs.ctxMenu.open($event, board)">
                     <div class="state-twoCode" :class="{'state-twoCode-right': board.orderState !== 2 && board.orderState !== 4 }">
                         <div class="state" :class="{'state-pending': board.orderState === 4 }" v-if="board.orderState === 2 || board.orderState === 4">{{orderState[board.orderState]}}</div>
                         <div class="two-dimensionalcode" v-if="board.hasScan"></div>
@@ -86,7 +86,8 @@ export default {
             areas: [],
             tableList: [],
             orderState: ['预订', '使用中', '已结账', '', '待处理'],
-            FOOD_STATE
+            FOOD_STATE,
+            rightClickReserveBoard: undefined
         };
     },
     created() {
@@ -142,8 +143,10 @@ export default {
             if (whichOrder === 'otherOrder') {
                 if (board.state === 0 || board.state === 1) {      // 预订和使用中的桌子
                     this.getCaterOrderDetail(board.caterOrderId);
+                    this[types.SET_LEFT_TYPE]({ leftType: 2 });
                 } else if (board.state === 7) {                     // 开台未点菜的桌子
                     this.getOpenBoardRecords(board.boardId);
+                    this[types.SET_LEFT_TYPE]({ leftType: 2 });
                 }
             }
         },
@@ -152,13 +155,16 @@ export default {
             this.getSeatList();
         },
         onCtxOpen(locals) {
-            console.log(locals);
+            this.rightClickReserveBoard = locals;
         },
         resetCtxLocals() {
+            this.rightClickReserveBoard = undefined;
         },
         onCtxClose() {
         },
         addRestOrder() {
+            this.$emit('reserve');
+            restBus.$emit('rightClickReserve', this.rightClickReserveBoard.boardId);
         },
         reserve() {
             this.$emit('reserve');

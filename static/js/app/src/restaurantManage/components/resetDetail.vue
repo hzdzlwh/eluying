@@ -46,9 +46,8 @@
                     <div>订单备注：{{openData.remark || '无'}}</div>
                     <div><span><span style="display: inline-block;width: 4em;text-align: right;">订单号：</span>{{openData.orderNum}}</span></div>
                     <div><span>开台时间：{{openData.operatorDate}}</span></div>
-                    <div>
                         <div><span style="display: inline-block;width: 4em;text-align: right;">操作人：</span>{{openData.operatorName}}</div>
-                        <div style="color:#178ce6;" v-if='editorPromission'>编辑详情</div>
+                        <div style="color:#178ce6;" v-if='editorPromission' @click="editOrder">编辑详情</div>
                     </div>
                 </div>
                 </div>
@@ -574,6 +573,10 @@ export default {
                     }
                 }
             });
+        },
+        editOrder() {
+            this.$emit('editOrder');
+            restBus.$emit('setOrderInfo', this.openData);
         }
     },
     watch: {

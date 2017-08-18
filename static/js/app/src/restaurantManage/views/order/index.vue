@@ -19,7 +19,7 @@
         <div class="rest-order-right">
             <taday v-if='leftType === 0'></taday>
             <resetContain v-if='leftType === 1' @reserve="changeReserveInfoVisible"></resetContain>
-            <resetdetail v-if='leftType === 2 || leftType === 3 || leftType === 4'></resetdetail>
+            <resetdetail v-if='leftType === 2 || leftType === 3 || leftType === 4' @editOrder="editOrder"></resetdetail>
         </div>
         <reserve-info-modal :visible="reserveInfoVisible" :relevanceOrder="relevanceOrderDetail" @hideModal="hideModal" @showRelevaneOrder="showRelevanceOrder" @cancelConnect="cancelConnect"></reserve-info-modal>
         <relevance-order-modal :visible="relevanceOrderVisible" @hideModal="hideModal" @sendRelevanceOrder="getRelevanceOrderDetail"></relevance-order-modal>
@@ -114,6 +114,9 @@ export default {
         changeBoard(openData) {
             this.openData = openData.data;
             this.showChangeSeatModal();
+        },
+        editOrder() {
+            this.reserveInfoVisible = true;
         }
     },
     watch: {
