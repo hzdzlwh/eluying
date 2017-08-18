@@ -23,13 +23,13 @@
                 <div class="rest-restDetail-right">
                     <div class="restDetail-title-tip">{{(!isHasOrder || (openData.orderState === 1)) ? '用餐时长' :'用餐时间' }}</div>
                     <div class="restDetail-title-data" v-if='isHasOrder && (openData.orderState !== 1) '><DatePicker :value='new Date(openData.creationTime)'  @input='changeBookTime' clearable=false type="datetime" placeholder="选择日期时间" size='small' :editable = false :clearable = false format='yyyy-MM-dd HH:mm' :disabled='!editorPromission'/></div>
-                    <div class="restDetail-title-data" v-else>{{openData.timer}}</div>
+                    <div class="restDetail-title-data" v-if='!isHasOrder || (openData.orderState == 1)'>{{openData.timer}}</div>
                 </div>
             </div>
             <div class="rest-restDetail-other" @click='moreShow = !moreShow' v-if='openData.state !== 2 && openData.orderState'>
                 {{openData.customerName}} （{{openData.customerPhone}}）查看详情 <span >>></span>
             </div>
-        </div>  <div style="z-index:3"  class="rest-restDetail-transform" :style='{maxHeight: moreShow ? "400px" : "0"}' v-if='openData.state !== 2 && openData.orderState'>
+          <div style="z-index:3"  class="rest-restDetail-transform" :style='{maxHeight: moreShow ? "400px" : "0"}' v-if='openData.state !== 2 && openData.orderState'>
                         <div class="rest-restDetail-otherDetail"  >
                     <div>
                         <div><span>客户姓名：</span><span>{{openData.customerName || '无'}}</span></div>
@@ -37,16 +37,16 @@
                     </div>
                      <div>
                         <div><span>客户来源：</span><span>{{cateOrderWay[openData.originType]}}</span></div>
-                        <div><span>销售员：</span><span class="rest-restDetail-span">{{openData.salerString || '无'}}</span></div>
+                        <div class=''><span>销售员：</span><span class="rest-restDetail-span ellipsis" :title='openData.salerString'>{{openData.salerString || '无'}}</span></div>
                     </div>
                      <div>
                         <div><span>整单优惠：</span><span>{{openData.discount === 1 ? '无' : openData.discount}}</span></div>
-                        <div><span>折扣方案：</span><span class="rest-restDetail-span">{{openData.showDiscount || '无'}}</span></div>
+                        <div><span>折扣方案：</span><span :title='openData.showDiscount' class="rest-restDetail-span ellipsis">{{openData.showDiscount || '无'}}</span></div>
                     </div>
                     <div>订单备注：{{openData.remark || '无'}}</div>
                     <div><span><span style="display: inline-block;width: 4em;text-align: right;">订单号：</span>{{openData.orderNum}}</span></div>
                     <div><span>开台时间：{{openData.operatorDate}}</span></div>
-                        <div><span style="display: inline-block;width: 4em;text-align: right;">操作人：</span>{{openData.operatorName}}</div>
+                        <div><div><span style="display: inline-block;width: 4em;text-align: right;">操作人：</span>{{openData.operatorName}}</div></div>
                         <div style="color:#178ce6;" v-if='editorPromission' @click="editOrder">编辑详情</div>
                     </div>
                 </div>

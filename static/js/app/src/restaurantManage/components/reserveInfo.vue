@@ -434,7 +434,6 @@ export default {
                     }
                 });
             }
-            
         },
         refreshData() {
             this.name = '';

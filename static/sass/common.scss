@@ -188,6 +188,7 @@
         overflow: hidden;
         position: absolute;
         width: 318px;
+        left:0;
     }
     .rest-restDetail-otherDetail{
        
@@ -203,6 +204,7 @@ color:#475669;
     .rest-restDetail-span{
         width: 80px;
         display: inline-block;
+        vertical-align:bottom;
     }
 }
     }

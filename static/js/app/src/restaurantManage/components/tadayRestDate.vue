@@ -41,6 +41,7 @@
             width:318px;
             height:605px;
             margin-top: 20px;
+            position:relative;
         .rest-taday-count{
             border-top-right-radius: 8px;
             border-top-left-radius: 8px;
