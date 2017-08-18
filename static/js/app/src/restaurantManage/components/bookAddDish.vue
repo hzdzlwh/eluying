@@ -249,7 +249,7 @@
         },
         watch: {
             dishType() {
-                this.getData();
+                this.startGetData();
             }
         },
         components: {

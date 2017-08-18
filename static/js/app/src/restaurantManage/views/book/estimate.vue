@@ -113,6 +113,7 @@
         data() {
             return {
                 vips: [],
+                newVip: {},
                 bookShadow: false,
                 emptyBookDishes: false,
                 deleteBookDish: false,
@@ -228,10 +229,14 @@
             },
             updataVips(arr) {
                 this.vips.forEach(item => {
+                    this.newVip = {};
                     if (item.dishId === arr[0].dishId) {
-                        this.vips.$set();
+                        item.reserveNum = arr[0].reserveNum;
+                    } else {
+                        this.newVip = arr[0];
                     }
                 });
+                this.vips.push(this.newVip);
             },
             editBookDish(row) {
                 this.resetBookDish = true;
@@ -280,11 +285,11 @@
         },
         watch: {
             restId() {
-                this.getData();
+                this.startGetData();
                 this.getDishType();
             },
             dishType() {
-                this.getData();
+                this.startGetData();
             }
         },
         components: {

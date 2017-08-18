@@ -3,7 +3,8 @@
  */
 var restaurantMenu = {
     render: function(option) {
-        var query = location.search;
+        var reg = /\?*/g;
+        var query = location.search.replace(reg,"");
         var menu = (option && option.menuActive) || location.pathname.split("/")[5].split(".")[0];
         var html = '<div class="leftMenu-back"><a href="/view/settings/business/restaurant/restaurant.html"><div>《 返回</div><div>餐厅列表</div></a></div>'
             + '<li><a id="dishesMenu" href="/view/settings/business/restaurant/dishes.html?' + query +'">菜品</a></li>'
