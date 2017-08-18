@@ -168,6 +168,7 @@ export default {
         },
         reserve() {
             this.$emit('reserve');
+            restBus.$emit('reserveType', 'noBoard');
         },
         orderDish() {
             this[types.SET_LEFT_TYPE]({ leftType: 4 });

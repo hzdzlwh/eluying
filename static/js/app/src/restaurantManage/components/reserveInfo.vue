@@ -144,7 +144,8 @@ export default {
             eatNum: undefined,
             remark: '',
             selectBoard: undefined,
-            orderInfo: undefined
+            orderInfo: undefined,
+            reserveType: ''
         };
     },
     created() {
@@ -153,6 +154,7 @@ export default {
         restBus.$on('hasBoardReserve', this.hasBoardReserve);   // 有桌位预订时用于接收桌位信息
         restBus.$on('setOrderInfo', this.setOrderInfo);   // 编辑详情时接收订单信息
         restBus.$on('rightClickReserve', this.setRightClickReserveInfo);       // 右击预订时接收桌子信息
+        restBus.$on('reserveType', this.setReserveType);
     },
     computed: {
         ...mapState(['restId']),
@@ -354,7 +356,7 @@ export default {
                 return;
             }
             const params = {};
-            if (this.orderInfo) {   // 如果是编辑详情，因为编辑的时候和其他调用的是不同的接口并且传的不同的参数
+            if (this.reserveType === 'editOrder') {   // 如果是编辑详情，因为编辑的时候和其他调用的是不同的接口并且传的不同的参数
                 params.caterOrderId = this.orderInfo.caterOrderId;
                 params.customerInfo = {
                     customerName: this.name,
@@ -393,7 +395,7 @@ export default {
                     }
                 });
             } else {    // 非编辑详情
-                if (this.selectBoard && this.selectBoard.length > 0) {
+                if (this.reserveType !== 'noBoard') {
                     params.boardList = JSON.stringify(this.selectBoard);
                 } else {
                     params.boardList = JSON.stringify([]);
@@ -434,7 +436,6 @@ export default {
                     }
                 });
             }
-            
         },
         refreshData() {
             this.name = '';
@@ -445,13 +446,13 @@ export default {
             this.eatNum = undefined;
             this.saleId = -1;
             this.orderInfo = undefined;
-            this.selectBoard = undefined;
         },
         cancelConnect() {
             this.$emit('cancelConnect');
         },
         hasBoardReserve(selectBoard) {
             this.selectBoard = selectBoard;
+            this.reserveType = 'hasBoard';
         },
         getCaterOrderDetail(caterOrderId) {
             http.get('/catering/getCaterOrderDetail', { caterOrderId }).then(res => {
@@ -463,9 +464,14 @@ export default {
         },
         setOrderInfo(orderInfo) {
             this.orderInfo = orderInfo;
+            this.reserveType = 'editOrder';
         },
         setRightClickReserveInfo(boardId) {
             this.selectBoard = [boardId];
+            this.reserveType = 'rightClickBoard';
+        },
+        setReserveType(type) {
+            this.reserveType = type;
         }
     },
     watch: {
@@ -550,6 +556,7 @@ export default {
         restBus.$off('hasBoardReserve', this.hasBoardReserve);
         restBus.$off('setOrderInfo', this.setOrderInfo);
         restBus.$off('rightClickReserve', this.setRightClickReserveInfo);
+        restBus.$off('reserveType', this.setReserveType);
     }
 };
 </script>
