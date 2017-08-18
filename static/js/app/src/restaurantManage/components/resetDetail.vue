@@ -144,7 +144,7 @@
         <div class='reset-resetChange-detail'>
              <div>菜品备注：{{dishChange.remark}} <span class="reset-resetChange-remark" @click='changeRemarkModal'>修改</span></div>
             <div>点菜员：{{dishChange.operatorName}}</div>
-            <div>下单时间：{{dishChange.creationTime}}</div>
+            <div>下单时间：{{util.dateFormatLong(dishChange.creationTime)}}</div>
         </div>
             <div class="resetChange-foot-btn" v-show='editorPromission'>
                 <div class="resetMange-btn-base " v-if='dishChange.serviceState === 0' @click='dishModalChange(0)'>退菜</div>
