@@ -1112,7 +1112,7 @@ export default {
                     dishItems: JSON.stringify(item.itemsMap),
                     peopleNum: item.peopleNum,
                     quickDiscountId: item.moreDiscount,
-                    restId: item.resetId,
+                    restId: item.restId,
                     remark: item.remark || ''
                 };
                 if (item.caterOrderId) {
