@@ -644,7 +644,7 @@ export default {
             this.rooms.map((room, index) => {
                 this.lastRoomsToken[index] = JSON.stringify(room);
                 this.initCategories[room.categoryType] = this.initCategories[room.categoryType] ? this.initCategories[room.categoryType] + 1 : 1;
-                this.getRoomsList(room);
+                this.getRoomsList(room, index);
             });
                 // 单独的住宿订单钟点房转正常入住时从新拉取房费
             if (this.order.timeRoomTransform) {
@@ -660,7 +660,7 @@ export default {
         initRegisterRooms(rooms) {
             this.forceChangePrice = false;
             this.lastRoomsToken = {};
-            this.rooms = rooms.map(room => {
+            this.rooms = rooms.map((room, index) => {
                 room.startDate.setHours(12);
                 room.startDate.setMinutes(0);
                 room.endDate = util.diffDate(room.endDate, 1);
@@ -689,7 +689,7 @@ export default {
                     checkType: 0,
                     checkTypes: this.checkType.slice(0)
                 };
-                this.getRoomsList(r);
+                this.getRoomsList(r, index);
                 return r;
             });
             this.modifyRooms(this.rooms);
@@ -750,6 +750,14 @@ export default {
                 if (this.rooms[len - 1].state === 8) {
                     room.roomList.unshift({ id: 0, name: '未排房' });
                 }
+                const roomPreType = this.rooms[len - 1].roomPreType;
+                if (roomPreType !== 0) {
+                    room.roomList.forEach((el, inde) => {
+                        if (el.id === roomPreType) {
+                            room.roomList.slice(inde, 1);
+                        }
+                    });
+                }
                 if (room.roomOrderId) {
                     delete room.roomOrderId;
                     delete room.state;
@@ -795,7 +803,7 @@ export default {
                     this.$set(item, 'disabled', false);
                 }
             }
-            this.getRoomsList(item);
+            this.getRoomsList(item, index);
             this.$nextTick(function() {
                 if (type !== 'roomType') {
                     item.roomType = 0;
@@ -858,15 +866,26 @@ export default {
                 }
             }
         },
-        getRoomsList(room) {
+        getRoomsList(room, index) {
             if (!room.categoryType) {
                 return [];
             }
+            const usedRooms = [];
+            this.rooms.forEach((el, elIndex) => {
+                if (elIndex !== index) {
+                    usedRooms.push({
+                        startDate: util.dateFormat(el.room.startDate),
+                        endDate: util.dateFormat(el.room.endDate),
+                        roomId: el.roomType
+                    });
+                }
+            });
             http.get('/room/getRoomsList', {
                 startDate: util.dateFormat(room.room.startDate),
                 endDate: util.dateFormat(room.room.endDate),
                 roomOrderId: room.roomOrderId,
-                checkType: room.checkType
+                checkType: room.checkType,
+                roomId: room.roomType
             })
                     .then(res => {
                         const categories = res.data.list;
@@ -882,6 +901,9 @@ export default {
                                 id: 0,
                                 name: '未排房'
                             });
+                        }
+                        if (res.data.isReset) {
+                            rooms.roomType = 0;
                         }
                         this.$set(room, 'roomList', rooms);
                         this.$set(room, 'categories', res.data.list);
@@ -904,6 +926,9 @@ export default {
         handleRoomChange(room, index, type) {
             if (JSON.stringify(room) === this.lastRoomsToken[index] && room.checkType !== 1) {
                 return false;
+            }
+            if (!type || type === 'startDate' || type === 'endDate') {
+                this.getRoomsList(room, index);
             }
             this.lastRoomsToken[index] = JSON.stringify(room);
             const duration = util.DateDiff(room.room.startDate, room.room.endDate);
