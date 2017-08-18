@@ -53,12 +53,12 @@
             </div>
         </div>
         <dd-table :columns="col" :data-source="vips" :bordered="true" :notop="true" style="margin:20px 0 10px;"></dd-table>
-        <div class="foot footfix">
+        <div class="report-center-foot">
             <div style="float:left;">
-                <p style="font-size:16px;"><small style='width:16px;'>总房数 : </small> {{roomCount}}</p>
-                <p style="font-size:16px;"><small style="width:16px;">当日房费合计 : </small>{{freeCount}}</p>
+                <span class="report-center-span">总房数 :<b>{{roomCount}}</b></span>
+                <span class="report-center-span">当日房费合计 :<b>{{freeCount}}</b></span>
             </div>
-            <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo" style="float:right;margin-top:20px;"/>
+            <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo" class="report-center-pagination"/>
         </div>
     </div>
 </template>
@@ -120,6 +120,37 @@
             float: left;
             margin-left:20px;
         }
+    }
+    .report-center-foot {
+        margin-top: 10px;
+        background: #fafafa;
+        box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.15);
+        height: 45px;
+        padding: 0 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .report-center-span {
+        display: inline-block;
+        height: 17px;
+        line-height: 17px;
+        font-size: 12px;
+        color: #999;
+        margin-right: 15px;
+        padding-right: 16px;
+        border-right: 1px solid #e6e6e6;
+        &:nth-last-child(1) {
+            border-right:0;
+        }
+        b {
+            color: #666;
+            font-size: 14px;
+            font-weight: normal;
+            margin-left: 4px;
+        }
+    }
+    .report-center-pagination {
     }
 </style>
 <style lang='scss' scoped>

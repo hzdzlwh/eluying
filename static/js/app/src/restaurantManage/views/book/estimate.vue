@@ -15,7 +15,7 @@
                     新增沽清菜品
                 </div>
             </div>
-            <dd-table :columns="col" :data-source="vips" :bordered="true" class="estimate-table"></dd-table>
+            <dd-table :columns="col" :data-source="vips" :bordered="true" :sortType="sort" :sortField="sortField" :onChange="onChange" class="estimate-table"></dd-table>
         </div>
         <div class="restaurant-point-shade" v-if="bookShadow">
             <div class="book-empty-tips" v-if="emptyBookDishes">
@@ -114,6 +114,9 @@
             return {
                 vips: [],
                 newVip: {},
+                sort: Number,
+                sortField: String,
+                onChange: Function,
                 bookShadow: false,
                 emptyBookDishes: false,
                 deleteBookDish: false,
@@ -182,19 +185,19 @@
                     }
                 });
             },
-            sort(col, type) {
-                function compare(property, type) {
-                    return function(obj1, obj2) {
-                        const value1 = obj1[property];
-                        const value2 = obj2[property];
-                        if (type === 0) {
-                            return value1 - value2;
-                        } else if (type === 1) {
-                            return value2 - value1;
-                        }
-                    };
-                }
-                this.vips.sort(compare('reserveNum', type));
+            sortData(type) {
+                this.vips.sort(this.compare('reserveNum', type));
+            },
+            compare(property, type) {
+                return function(obj1, obj2) {
+                    const value1 = obj1[property];
+                    const value2 = obj2[property];
+                    if (type === 0) {
+                        return value1 - value2;
+                    } else if (type === 1) {
+                        return value2 - value1;
+                    }
+                };
             },
             addEstimateDish() {
                 this.bookShadow = true;
@@ -290,6 +293,10 @@
             },
             dishType() {
                 this.startGetData();
+            },
+            sort() {
+                console.log(1);
+                this.sortData(this.sort);
             }
         },
         components: {

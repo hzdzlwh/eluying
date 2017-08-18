@@ -378,7 +378,7 @@
         },
         created() {
             this.startGetData();
-            this.fetchData();
+            this.getData();
             this.getChannelType();
             this.getChannelPerson();
             eventbus.$on('refreshView', this.fetchData);
@@ -626,7 +626,7 @@
                 if (!this.restId) {
                     window.setTimeout(this.startGetData, 1000);
                 } else {
-                    this.getData();
+                    this.fetchData();
                 }
             }
         },
