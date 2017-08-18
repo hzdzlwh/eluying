@@ -11,7 +11,7 @@
         <div class="rest-taday-count">
             <div class="restDetail-title-tip">桌号</div>
             <div class="restDetail-title-display">
-                 <div><span class="restDetail-title-dish">{{openData.boardDetailResps[0].boardName}}{{openData.boardDetailResps[0].boardId}}</span> <span v-if='openData.boardDetailResps.length > 1' class="restDetail-type-tag" :title='selectDishText'>并</span></div>
+                 <div><span class="restDetail-title-dish">{{openData.boardDetailResps[0].boardName}}</span> <span v-if='openData.boardDetailResps.length > 1' class="restDetail-type-tag" :title='selectDishText'>并</span></div>
                 <!-- <div><span class="rest-taday-tag " :class="getState(item.foodState, 'color')">{{getState(item.foodState, 'text')}}</span></div> -->
                  <div v-if='openData.state !== 2 && openData.orderState'><span class="rest-taday-tag " :class='getState("color")' >{{getState("text")}}</span></div>
             </div>
@@ -21,13 +21,13 @@
                     <div>{{openData.peopleNum}}<!-- <inputVaild :value='changeNum' :max='2000' :isInt='true' ></inputVaild> --> <img src="/static/image/icon/edit.png" alt="" @click='editor()'></div>
                 </div>
                 <div class="rest-restDetail-right">
-                    <div class="restDetail-title-tip">{{!isHasOrder ? '用餐时长' :'用餐时间' }}</div>
-                    <div class="restDetail-title-data" v-if='isHasOrder '><DatePicker :value='new Date(openData.creationTime)'  @input='changeBookTime' clearable=false type="datetime" placeholder="选择日期时间" size='small' :editable = false :clearable = false format='yyyy-MM-dd HH:mm' :disabled='!editorPromission'/></div>
-                    <div class="restDetail-title-data" v-if='!isHasOrder'>{{openData.timer}}</div>
+                    <div class="restDetail-title-tip">{{(!isHasOrder || (openData.orderState === 1)) ? '用餐时长' :'用餐时间' }}</div>
+                    <div class="restDetail-title-data" v-if='isHasOrder && (openData.orderState !== 1) '><DatePicker :value='new Date(openData.creationTime)'  @input='changeBookTime' clearable=false type="datetime" placeholder="选择日期时间" size='small' :editable = false :clearable = false format='yyyy-MM-dd HH:mm' :disabled='!editorPromission'/></div>
+                    <div class="restDetail-title-data" v-else>{{openData.timer}}</div>
                 </div>
             </div>
             <div class="rest-restDetail-other" @click='moreShow = !moreShow' v-if='openData.state !== 2 && openData.orderState'>
-                {{openData.customerName}} {{openData.customerPhone}}查看详情 <span >>></span>
+                {{openData.customerName}} （{{openData.customerPhone}}）查看详情 <span >>></span>
             </div>
         </div>  <div style="z-index:3"  class="rest-restDetail-transform" :style='{maxHeight: moreShow ? "400px" : "0"}' v-if='openData.state !== 2 && openData.orderState'>
                         <div class="rest-restDetail-otherDetail"  >
@@ -36,18 +36,18 @@
                         <div><span>手机号：</span><span class="rest-restDetail-span">{{openData.customerPhone || '无'}}</span></div>
                     </div>
                      <div>
-                        <div><span>客户来源：</span><span>{{orderWay[openData.originType]}}</span></div>
+                        <div><span>客户来源：</span><span>{{cateOrderWay[openData.originType]}}</span></div>
                         <div><span>销售员：</span><span class="rest-restDetail-span">{{openData.salerString || '无'}}</span></div>
                     </div>
                      <div>
                         <div><span>整单优惠：</span><span>{{openData.discount === 1 ? '无' : openData.discount}}</span></div>
-                        <div><span>折扣方案：</span><span class="rest-restDetail-span">{{openData.discountRelatedName || '无'}}</span></div>
+                        <div><span>折扣方案：</span><span class="rest-restDetail-span">{{openData.showDiscount || '无'}}</span></div>
                     </div>
                     <div>订单备注：{{openData.remark || '无'}}</div>
-                    <div><span><span style="display: inline-block;width: 4em;text-align: right;">订单号：</span>{{openData.caterOrderId}}</span></div>
+                    <div><span><span style="display: inline-block;width: 4em;text-align: right;">订单号：</span>{{openData.orderNum}}</span></div>
                     <div><span>开台时间：{{openData.operatorDate}}</span></div>
                     <div>
-                        <div><span style="display: inline-block;width: 4em;text-align: right;">操作人</span>{{openData.operatorName}}</div>
+                        <div><span style="display: inline-block;width: 4em;text-align: right;">操作人：</span>{{openData.operatorName}}</div>
                         <div style="color:#178ce6;" v-if='editorPromission'>编辑详情</div>
                     </div>
                 </div>
@@ -62,8 +62,8 @@
                 <tbody >
                 <template v-for='item in openData.itemsMap' v-if=' leftType !== 4 && openData.itemsMap' >
                     <tr @click='changeItem(item); dishClick(item)' :class="{'reset-tr-click' : item.click}"> <td width="150px"><div><span class="rest-restDetail-dishname" :class='{"rest-item-del" : item.serviceState === 1}'> <span  :class='getTriangle(item)'></span><span >{{item.dishName}}</span></span><span class="rest-item-send" v-if='item.serviceState === 2'>送</span></div></td><td width="45px"><div :class='{"rest-item-del" : item.serviceState === 1}'>x{{item.bookNum}}</div></td><td :class='{"rest-item-del" : item.serviceState === 1}' width='80px'>{{item.price}}</td></tr>
-                    <tr v-for='sub in item.subDishList' @click='dishClick(sub)' v-if='item.select' :class='{"rest-item-del" : sub.serviceState === 1,"reset-tr-click" : item.click}' >
-                        <td class="rest-restDetail-trchild" width="150px">{{sub.dishName}}</td><td width='80px'><div>x{{sub.bookNum}}</div></td><td width='80px'></td>
+                    <tr v-for='sub in item.subDishList' @click='dishClick(sub)' v-if='item.select' :class='{"rest-item-del" : sub.serviceState === 1,"reset-tr-click" : sub.click}' >
+                        <td class="rest-restDetail-trchild" width="150px">{{sub.dishName}}</td><td width='50px'><div>x{{sub.bookNum}}</div></td><td width='80px'></td>
                     </tr>
                 </template> 
                 <template v-if='leftType === 4'>
@@ -100,7 +100,7 @@
                 <div class="restDetail-check-item" @click='needpay = !needpay'><span ><span :class="getCheckeStatus(needpay)"></span>应收金额</span> <span>{{findTypePrice(openData.payments, 13)}}</span></div>
                 <div class="restDetail-check-list" v-show='needpay'>
                     <div class="restDetail-check-item"><span>总金额</span> <span>￥{{findTypePrice(openData.payments, 10)}}</span></div>
-                    <div class="restDetail-check-item" v-if='findTypePrice(openData.payments, 5) != 0'><span>折扣金额</span> <span>￥{{findTypePrice(openData.payments, 5)}}</span></div>
+                    <div class="restDetail-check-item" v-if='findTypePrice(openData.payments, 5) != 0'><span>折扣金额</span> <span>￥{{findTypePrice(openData.payments, 25)}}</span></div>
                     <div class="restDetail-check-item" v-if='openData.discount != 0'><span>整单优惠</span> <span>￥{{openData.discount}}</span></div>
                     <div class="restDetail-check-item" v-if='findTypePrice(openData.payments, 17) != 0'><span>零头处理</span> <span>￥{{findTypePrice(openData.payments, 17)}}</span></div>
                 </div>
@@ -108,9 +108,15 @@
                                                 : '实退金额'}}</span> <span>¥{{Math.abs(
                                                 findTypePrice(openData.payments, 14))}}</span></div>
                 <div class="restDetail-check-list" v-show='paied'>
-                    <div class="restDetail-check-item" v-if='openData.payments.some(pay => pay.type === 19)'><span>{{dateFormat(openData.payments.find(pay => pay.type === 19).creationTime)}} {{openData.payments.find(pay => pay.type === 19).payChannel}}抵扣</span> <span>￥{{findTypePrice(openData.payments, 19)}}</span></div>
-                    <div class="restDetail-check-item" v-if='openData.payments.some(pay => pay.type === 20)'><span>{{dateFormat(openData.payments.find(pay => pay.type === 20).creationTime)}} 会员余额</span> <span>￥{{findTypePrice(openData.payments, 20)}}</span></div>
-                    <div class="restDetail-check-item" v-if='openData.payments.some(pay => pay.type === 18)'><span>{{dateFormat(openData.payments.find(pay => pay.type === 18).creationTime)}} 常规</span> <span>￥{{findTypePrice(openData.payments, 18)}}</span></div>
+                    <div class="restDetail-check-item" v-if='openData.payments.some(pay => pay.type === 19)'><span>
+                    <!-- {{dateFormat(openData.payments.find(pay => pay.type === 19).creationTime)}} -->
+                     {{openData.payments.find(pay => pay.type === 19).payChannel}}抵扣</span> <span>￥{{findTypePrice(openData.payments, 19)}}</span></div>
+                    <div class="restDetail-check-item" v-if='openData.payments.some(pay => pay.type === 20)'><span>
+                    <!-- {{dateFormat(openData.payments.find(pay => pay.type === 20).creationTime)}}  -->
+                    会员余额</span> <span>￥{{findTypePrice(openData.payments, 20)}}</span></div>
+                    <div class="restDetail-check-item" v-if='openData.payments.some(pay => pay.type === 18)'><span>
+                    <!-- {{dateFormat(openData.payments.find(pay => pay.type === 18).creationTime)}}  -->
+                    常规</span> <span>￥{{findTypePrice(openData.payments, 18)}}</span></div>
                 </div>
                  <div class="restDetail-check-item" v-if='findTypePrice(openData.payments, 4) != 0'><span><span></span>违约金</span> <span>findTypePrice(openData.payments, 4)</span></div>
                  <div class="restDetail-check-item"><span><span></span>还需收款</span> <span class="order-price-num red" :class="{green : !Number(findTypePrice(openData.payments, 15))}">{{findTypePrice(openData.payments, 15)}}</span></div>
@@ -169,7 +175,7 @@
 import { ORDER_TYPE, ORDER_STATE_TEXT } from '../../ordersManage/constant.js';
 import http from '../../common/http.js';
 import { mapState, mapMutations } from 'vuex';
-import { orderWay } from '../orderWay.js';
+import { orderWay, cateOrderWay } from '../orderWay.js';
 import inputVaild from '../../common/components/inputVaild.vue';
 import count from '../../common/components/counter.vue';
 import util from 'util';
@@ -204,7 +210,8 @@ export default {
             restDate: undefined,
             backDish: undefined,
             addFoodList: [],
-            handlePoint: false
+            handlePoint: false,
+            cateOrderWay
         };
     },
     computed: {

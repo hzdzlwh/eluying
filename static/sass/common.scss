@@ -272,13 +272,14 @@ color:#475669;
                 overflow-y:scroll;  
                 max-height:350px;
                 display:block;
+                &::-webkit-scrollbar{width:0px}
                 .rest-restDetail-trchild{
                     padding-left:25px;
                 }
                 tr{
                     padding:15px 0;
                     height: 48px;
-                    width:100%;
+                    // width:100%;
                     display:table;
                     border-bottom: 1px dashed #99a9bf;
                     table-layout:fixed;  
