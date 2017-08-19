@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-31 10:52:58
 * @Last Modified by:   Tplant
-* @Last Modified time: 2017-08-16 15:31:04
+* @Last Modified time: 2017-08-19 11:22:41
 * @email: 783384903@qq.com
 */
 
@@ -91,12 +91,13 @@ const store = new Vuex.Store({
         }
     },
     actions: {
-        [types.GET_CATER_ORDER_DETAIL]({ commit }, { caterOrderId }) {
+        [types.LOAD_CATER_ORDER_DETAIL]({ commit }, { caterOrderId }) {
             return new Promise((resolve, reject) => {
                 http.get('/catering/getCaterOrderDetail', { caterOrderId })
                     .then((res) => {
                         if (res.code === 1) {
                             commit(types.SET_CATER_ORDER_DETAIL, { caterDetail: res.data });
+                            commit(types.SET_ORDER_DETAIL, { orderDetail: res.data });  // send order detail to caterOrder of common
                             resolve(res);
                         } else {
                             reject(res);

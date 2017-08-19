@@ -72,7 +72,7 @@ import types from '../store/types';
 import http from '../../common/http';
 import util from '../../common/util.js';
 import restBus from '../event.js';
-import bus from '../../common/eventBus';
+// import bus from '../../common/eventBus';
 import { mapState, mapMutations, mapActions } from 'vuex';
 import customerRadio from './customerRadio.vue';
 import DateSelect from '../../accommodation/components/DateSelect';
@@ -87,7 +87,8 @@ export default {
             tableList: [],
             orderState: ['预订', '使用中', '已结账', '', '待处理'],
             FOOD_STATE,
-            rightClickReserveBoard: undefined
+            rightClickReserveBoard: undefined,
+            areasEmpty: true
         };
     },
     created() {
@@ -113,7 +114,7 @@ export default {
             types.SET_ORDER_DETAIL
         ]),
         ...mapActions([
-            types.GET_CATER_ORDER_DETAIL
+            types.LOAD_CATER_ORDER_DETAIL
         ]),
         handleDateChange(date) {
             this.defaultStrDate = date;
@@ -133,7 +134,7 @@ export default {
                         }
                     }
                 } else if (board.boardState === 1 && board.caterOrderId) {                      // 使用中的桌子
-                    this.getCaterOrderDetail(board.caterOrderId);
+                    this[types.LOAD_CATER_ORDER_DETAIL]({ caterOrderId: board.caterOrderId });
                     this[types.SET_LEFT_TYPE]({ leftType: 2 });
                 } else if (board.boardState === 1 && !board.caterOrderId) {                      // 开台未点菜
                     this.getOpenBoardRecords(board.boardId);
@@ -142,7 +143,7 @@ export default {
             }
             if (whichOrder === 'otherOrder') {
                 if (board.state === 0 || board.state === 1) {      // 预订和使用中的桌子
-                    this.getCaterOrderDetail(board.caterOrderId);
+                    this[types.LOAD_CATER_ORDER_DETAIL]({ caterOrderId: board.caterOrderId });
                     this[types.SET_LEFT_TYPE]({ leftType: 2 });
                 } else if (board.state === 7) {                     // 开台未点菜的桌子
                     this.getOpenBoardRecords(board.boardId);
@@ -152,6 +153,16 @@ export default {
         },
         toggleArea(area) {
             area.selected = !area.selected;
+            if (this.areas.find(area => {
+                return area.selected && area.id !== -1;
+            })) {
+                this.areas[0].selected = false;
+            }
+            if (!(this.areas.find(area => {
+                return area.selected;
+            }))) {
+                this.areas[0].selected = true;
+            }
             this.getSeatList();
         },
         onCtxOpen(locals) {
@@ -205,13 +216,17 @@ export default {
             http.get('/board/list', param).then(res => {
                 if (res.code === 1) {
                     this.tableList = [];
-                    this.areas = [{ id: -1, name: '全部区域', selected: true }];
+                    if (this.areasEmpty) {
+                        this.areas = [{ id: -1, name: '全部区域', selected: true }];
+                    }
                     res.data.list.map(item => {
-                        const areaHasOrNot = this.areas.find(area => {
-                            return area.id === item.areaId;
-                        });
-                        if (areaHasOrNot === undefined) {
-                            this.areas.push({ id: item.areaId, name: item.areaName, selected: false });
+                        if (this.areasEmpty) {
+                            const areaHasOrNot = this.areas.find(area => {
+                                return area.id === item.areaId;
+                            });
+                            if (areaHasOrNot === undefined) {
+                                this.areas.push({ id: item.areaId, name: item.areaName, selected: false });
+                            }
                         }
                         var tableHasOrNot = this.tableList.find((table, index) => {
                             return table.areaId === item.areaId;
@@ -226,10 +241,11 @@ export default {
                             tableHasOrNot.boardList.push(item);
                         }
                     });
+                    this.areasEmpty = false;
                 }
             });
         },
-        getCaterOrderDetail(caterOrderId) {
+        /* getCaterOrderDetail(caterOrderId) {
             http.get('/catering/getCaterOrderDetail', { caterOrderId }).then(res => {
                 if (res.code === 1) {
                     this[types.SET_CATER_ORDER_DETAIL]({ caterDetail: res.data });
@@ -237,7 +253,7 @@ export default {
                     bus.$emit('setRestDetail', res.data);
                 }
             });
-        },
+        }, */
         getOpenBoardRecords(boardId) {
             http.get('board/getOpenBoardRecords', { boardId }).then(res => {
                 if (res.code === 1) {

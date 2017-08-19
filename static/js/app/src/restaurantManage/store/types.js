@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-31 11:05:38
 * @Last Modified by:   Tplant
-* @Last Modified time: 2017-08-17 19:59:27
+* @Last Modified time: 2017-08-19 11:17:20
 * @email: 783384903@qq.com
 */
 
@@ -21,5 +21,6 @@ export default {
     'GET_CATER_ORDER_DETAIL': 'getCaterOrderDetail',
     'SET_PROMESSION': 'setPromession',
     'RESET_SELECT_DISH': 'resetSelectDish',
-    'SET_ORDER_DETAIL': 'setOrderDetail'
+    'SET_ORDER_DETAIL': 'setOrderDetail',
+    'LOAD_CATER_ORDER_DETAIL': 'loadCaterOrderDetail'
 };

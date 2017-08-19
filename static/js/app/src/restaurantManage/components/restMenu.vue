@@ -134,7 +134,7 @@ export default {
             });
         },
         orderMenu(food) {
-            if (food.inventoryNum > 0 || food.customerDish) {
+            if (food.inventoryNum > 0 || food.customerDish || food.inventoryNum === null) {
                 this[types.ADD_FOOD]({ food: food });
             }
         },

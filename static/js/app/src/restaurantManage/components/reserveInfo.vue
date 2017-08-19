@@ -110,7 +110,7 @@ import util from '../../common/util.js';
 import restBus from '../event.js';
 import modal from '../../common/modal';
 import types from '../store/types';
-import { mapState, mapMutations } from 'vuex';
+import { mapState, mapMutations, mapActions } from 'vuex';
 export default {
     directives: {
         Clickoutside
@@ -167,6 +167,9 @@ export default {
             types.SET_CATER_ORDER_DETAIL,
             types.SET_LEFT_TYPE,
             types.RESET_SELECT_DISH
+        ]),
+        ...mapActions([
+            types.LOAD_CATER_ORDER_DETAIL
         ]),
         hideModal() {
             this.$emit('hideModal');
@@ -391,7 +394,9 @@ export default {
                 }
                 http.get('/catering/modifyOrder', params).then(res => {
                     if (res.code === 1) {
-                        this.getCaterOrderDetail(this.orderInfo.caterOrderId);
+                        // this.getCaterOrderDetail(this.orderInfo.caterOrderId);
+                        this[types.LOAD_CATER_ORDER_DETAIL]({ caterOrderId: this.orderInfo.caterOrderId });
+                        this[types.SET_LEFT_TYPE]({ leftType: 2 });
                     }
                 });
             } else {    // 非编辑详情
@@ -431,7 +436,9 @@ export default {
                     if (res.code === 1) {
                         this.hideModal();
                         restBus.$emit('refeshView');
-                        this.getCaterOrderDetail(res.data.caterOrderId);
+                        // this.getCaterOrderDetail(res.data.caterOrderId);
+                        this[types.LOAD_CATER_ORDER_DETAIL]({ caterOrderId: res.data.caterOrderId });
+                        this[types.SET_LEFT_TYPE]({ leftType: 2 });
                         this[types.RESET_SELECT_DISH]();
                     }
                 });
@@ -454,14 +461,14 @@ export default {
             this.selectBoard = selectBoard;
             this.reserveType = 'hasBoard';
         },
-        getCaterOrderDetail(caterOrderId) {
+        /* getCaterOrderDetail(caterOrderId) {
             http.get('/catering/getCaterOrderDetail', { caterOrderId }).then(res => {
                 if (res.code === 1) {
                     this[types.SET_CATER_ORDER_DETAIL]({ caterDetail: res.data });
                     this[types.SET_LEFT_TYPE]({ leftType: 2 });
                 }
             });
-        },
+        }, */
         setOrderInfo(orderInfo) {
             this.orderInfo = orderInfo;
             this.reserveType = 'editOrder';
