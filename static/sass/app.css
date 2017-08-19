@@ -35,7 +35,8 @@
     line-height: 68px;
     text-align: left;
     float: right;
-    cursor: pointer; }
+    cursor: pointer;
+    padding-left: 17px; }
   .header .settingsEntry:hover {
     color: #ffffff; }
   .header .settingsEntry.selected {

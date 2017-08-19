@@ -36,7 +36,8 @@ var webpackConf = {
                     path.join(__dirname, './static/js/app/src/ordersManage'),
                     path.join(__dirname, './static/js/app/src/accommodation'),
                     path.join(__dirname, './static/js/app/src/reports'),
-                    path.join(__dirname, './static/js/app/src/restaurantManage')
+                    path.join(__dirname, './static/js/app/src/restaurantManage'),
+                    path.join(__dirname, './static/js/app/src/message')
                 ]
             }
         ],

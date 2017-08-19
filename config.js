@@ -42,7 +42,8 @@ module.exports = {
         'block/room': './static/js/app/src/business/block/room.js',
         'hourly/room': './static/js/app/src/business/hourly/room.js',
         'rights/virtual': './static/js/app/src/rights/virtual/main.js',
-        'restaurantManage/restaurantManage': './static/js/app/src/restaurantManage/main.js'
+        'restaurantManage/restaurantManage': './static/js/app/src/restaurantManage/main.js',
+        'message/message': './static/js/app/src/message/main.js'
     },
     html: ['./static/tpl/feature.html', './static/tpl/customerCase.html'],
     port: 3000,
