@@ -53,7 +53,7 @@
                                 <div class="seat-state yellow" :class="{blue:o.state === 1}">{{FOOD_STATE[o.state]}}</div>
                             </div>
                             <div class="order-list-item">
-                                <div>{{`${o.name}(${o.phone})`}}<span style="margin-left: 8px;">{{o.origin}}</span></div>
+                                <div v-show="o.name && o.phone">{{`${o.name}(${o.phone})`}}<span style="margin-left: 8px;">{{o.origin}}</span></div>
                                 <div>{{o.caterOrderOrigin}}</div>
                             </div>
                         </div>
@@ -242,6 +242,7 @@ export default {
                         }
                     });
                     this.areasEmpty = false;
+                    this[types.RESET_SELECT_DISH]();
                 }
             });
         },

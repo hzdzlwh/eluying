@@ -7,36 +7,67 @@
             </h4>
             <ul>
                 <li>
-                    <span @click="toggleView('orderMessage')">订单消息</span>
+                    <div :class="{active: viewType === 'orderMessage'}">
+                        <img src="/static/image/order-message-icon.png">
+                        <span @click="toggleView('orderMessage')">订单消息(<span>6</span>)</span>
+                    </div>
                 </li>
                 <li>
-                    <span @click="toggleView('systemMessage')">系统消息</span>
+                    <div :class="{active: viewType === 'systemMessage'}">
+                        <img src="/static/image/system-message-icon.png">
+                        <span @click="toggleView('systemMessage')">系统消息(<span>8</span>)</span>
+                    </div>
                 </li>
             </ul>
         </div>
         <div class="message-right">
-            <message-list :visibleType="viewType"></message-list>
-            <counter></counter>
+            <messageList :visibleType="viewType"></messageList>
         </div>
+        <OrderSystem></OrderSystem>
     </div>
 </template>
 
 <script>
 import messageList from './components/messageList';
-import counter from '../common/components/counter';
+import { OrderSystem } from '../common/orderSystem';
 export default{
     data() {
         return {
-            viewType: ''
+            viewType: 'orderMessage'
         };
     },
     created() {
         this.connectWebSocket();
+        this.unAllowNotify();
     },
     components: {
-        counter
+        messageList,
+        OrderSystem
     },
     methods: {
+        notify() {
+            if (Notification.permission === 'granted') {
+                this.popNotice();
+            } else if (Notification.permission !== 'denied') {
+                Notification.requestPermission().then(permission => {
+                });
+            }
+        },
+        popNotice() {
+            if (Notification.permission === 'granted') {
+                const notification = new Notification('hi', {
+                    body: 'hello'
+                });
+                notification.onclick = function() {
+                    console.log(11);
+                };
+            }
+        },
+        unAllowNotify() {
+            if (!window.Notification) {
+                alert('浏览器不支持消息提醒');
+            }
+        },
         toggleView(type) {
             this.viewType = type;
         },
@@ -98,8 +129,25 @@ export default{
             > ul{
                 li{
                     height: 49px;
-                    line-height: 49px;
-                    text-align: center;
+                    padding: 8px 0;
+                    cursor: pointer;
+                    > div{
+                        width: 123px;
+                        height: 32px;
+                        line-height: 32px;
+                        margin: auto;
+                        text-align: center;
+                        &.active{
+                            background:#f6f8f9;
+                            border:1px solid #dddddd;
+                            border-radius:2px;
+                        }
+                    }
+                    span{
+                        span{
+                            color: #f24949;
+                        }
+                    }
                 }
             }
         }
