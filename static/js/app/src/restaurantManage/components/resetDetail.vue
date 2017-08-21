@@ -308,6 +308,7 @@ export default {
                 oprType: this.dishModalType ? 4 : 2
             }).then(res => {
                 this.getOpenData();
+                this.dishChange = undefined;
                 restBus.$emit('refeshView');
             });
         },
@@ -604,6 +605,7 @@ export default {
                 if (el.dishId === index) {
                     if (num > 0) {
                         el.num = num;
+                        this.addFood[ind].num = num;
                     } else {
                         this.addFood.splice(ind, 1);
                         this.addFoodList.splice(ind, 1);
