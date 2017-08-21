@@ -13,7 +13,7 @@
             <div class="restDetail-title-display">
                  <div><span class="restDetail-title-dish">{{openData.boardDetailResps[0].boardName}}</span> <span v-if='openData.boardDetailResps.length > 1' class="restDetail-type-tag" :title='selectDishText'>并</span></div>
                 <!-- <div><span class="rest-taday-tag " :class="getState(item.foodState, 'color')">{{getState(item.foodState, 'text')}}</span></div> -->
-                 <div v-if='openData.state !== 2 && openData.orderState'><span class="rest-taday-tag " :class='getState("color")' >{{getState("text")}}</span></div>
+                 <div v-if='openData.state !== 2 && openData.orderState !== undefined'><span class="rest-taday-tag " :class='getState("color")' >{{getState("text")}}</span></div>
             </div>
             <div>
                 <div class="rest-restDetail-left">
@@ -186,6 +186,7 @@ import { DatePicker } from 'element-ui';
 import keyBoard from '../../common/components/inputKeyboard.vue';
 import changeRemark from './changeRemark.vue';
 import handlePoint from './handlePoint.vue';
+import modal from '../../common/modal.js';
 export default {
     props: {
     },
@@ -264,8 +265,11 @@ export default {
             });
         },
         reject() {
-            http.get('/order/confirmOrder', { caterOrderId: this.openData.caterOrderId, type: 0
-            }).then(res => restBus.$emit('refeshView'));
+            const callBack = function() {
+                http.get('/order/confirmOrder', { caterOrderId: this.openData.caterOrderId, type: 0
+                }).then(res => restBus.$emit('refeshView'));
+            };
+            modal.confirm({ title: '提示', message: '确定拒绝该扫码订单？' }, callBack);
         },
         changeRemarkModal() {
             this.changeRemarkVisible = true;
@@ -354,7 +358,10 @@ export default {
             bus.$emit('showCashier', { type: 'orderDetail' });
         },
         canOrder() {
-            bus.$emit('showCancelOrder');
+            const callBack = function() {
+                bus.$emit('showCancelOrder');
+            };
+            modal.confirm({ title: '提示', message: '确定取消订单' }, callBack);
         },
         closeBoard() {
             const parms = {
