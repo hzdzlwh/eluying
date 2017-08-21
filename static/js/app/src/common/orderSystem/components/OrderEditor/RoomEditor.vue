@@ -690,6 +690,13 @@ export default {
                     checkTypes: this.checkType.slice(0)
                 };
                 this.getRoomsList(r, index);
+                if (index > 0) {
+                    r.roomList.forEach((el, roomIndex) => {
+                        if (el.id === rooms[index - 1].roomId) {
+                            r.roomList.splice(roomIndex, 1);
+                        }
+                    });
+                }
                 return r;
             });
             this.modifyRooms(this.rooms);
