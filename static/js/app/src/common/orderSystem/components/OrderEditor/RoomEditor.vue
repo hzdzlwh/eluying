@@ -874,15 +874,15 @@ export default {
             this.rooms.forEach((el, elIndex) => {
                 if (elIndex !== index) {
                     usedRooms.push({
-                        startDate: util.dateFormat(el.room.startDate),
-                        endDate: util.dateFormat(el.room.endDate),
+                        startDate: util.dateFormatLong(el.room.startDate),
+                        endDate: util.dateFormatLong(el.room.endDate),
                         roomId: el.roomType
                     });
                 }
             });
             http.get('/room/getRoomsList', {
-                startDate: util.dateFormat(room.room.startDate),
-                endDate: util.dateFormat(room.room.endDate),
+                startDate: util.dateFormatLong(room.room.startDate),
+                endDate: util.dateFormatLong(room.room.endDate),
                 roomOrderId: room.roomOrderId,
                 checkType: room.checkType,
                 roomId: room.roomType,
