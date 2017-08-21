@@ -20,7 +20,7 @@
                     </span>
                     <span class="book-set-num">
                         <div class="reduce-dish-btn" @click="reduceDishNum">-</div>
-                        <input type="text" v-model="reserveNum">
+                        <input type="text" v-model="sellClearNum">
                         <div class="increase-dish-btn" @click="increaseDishNum">+</div>
                     </span>
                 </p>
@@ -178,27 +178,30 @@
         },
         data() {
             return {
-                reserveNum: 1,
+                soldOut: Number,
+                sellClearNum: Number,
                 sellClearDish: true
             };
         },
         created() {
-            if (this.info.reserveNum === '已售完') {
+            if (this.info.soldOut === 1) {
                 this.sellClearDish = true;
-                this.reserveNum = this.info.reserveNum;
-            } else if (this.info.reserveNum !== '已售完') {
+                this.soldOut = 1;
+            } else if (this.info.soldOut === 0) {
                 this.sellClearDish = false;
-                this.reserveNum = this.info.reserveNum ? this.info.reserveNum : 1;
+                this.soldOut = 0;
+                this.sellClearNum = this.info.sellClearNum ? this.info.sellClearNum : 1;
             }
         },
         methods: {
             reverseSellClearDish(type) {
                 if (type === 1) {
                     this.sellClearDish = true;
-                    this.reserveNum = '已售完';
+                    this.soldOut = 1;
                 } else if (type === 2) {
                     this.sellClearDish = false;
-                    this.reserveNum = (this.info.reserveNum && this.info.reserveNum !== '已售完') ? this.info.reserveNum : 1;
+                    this.soldOut = 0;
+                    this.sellClearNum = this.sellClearNum ? this.sellClearNum : 1;
                 }
             },
             resetBookDishNum() {
@@ -206,7 +209,7 @@
                 if (!this.sellClearDish) {
                     obj = {
                         oprType: 1,
-                        sellClearNum: this.reserveNum,
+                        sellClearNum: this.sellClearNum,
                         dishId: JSON.stringify([this.info.dishId])
                     };
                 } else if (this.sellClearDish) {
@@ -217,7 +220,7 @@
                 }
                 http.get('/dish/updateSellClearNum', obj).then(res => {
                     if (res.code === 1) {
-                        this.$emit('resetBookDishNum', this.info.dishId, this.reserveNum);
+                        this.$emit('resetBookDishNum', this.info.dishId, this.sellClearNum, this.soldOut);
                     }
                 });
             },
@@ -225,12 +228,12 @@
                 this.$emit('cancerBookDishNum');
             },
             reduceDishNum() {
-                if (this.reserveNum > 1) {
-                    this.reserveNum -= 1;
+                if (this.sellClearNum > 1) {
+                    this.sellClearNum -= 1;
                 }
             },
             increaseDishNum() {
-                this.reserveNum += 1;
+                this.sellClearNum += 1;
             }
         }
     };
