@@ -95,7 +95,7 @@
                 <span class="restDetail-title-tip">合计</span>{{addFoodTotal()}}
             </div>
             </div>
-            <div class="restDetail-foot-check" v-if='openData.payments'>
+            <div class="restDetail-foot-check" v-if='openData.payments && leftType !== 4'>
                 <div class="restDetail-check-item" @click='needpay = !needpay'><span ><span :class="getCheckeStatus(needpay)"></span>应收金额</span> <span>{{findTypePrice(openData.payments, 13)}}</span></div>
                 <div class="restDetail-check-list" v-show='needpay'>
                     <div class="restDetail-check-item"><span>总金额</span> <span>￥{{findTypePrice(openData.payments, 10)}}</span></div>
@@ -321,7 +321,10 @@ export default {
             this.dishChange = dish;
         },
         changeTime(value) {
-            return util.dateFormatLong(value);
+            if (!value) {
+                return '';
+            }
+            return util.dateFormatLong(new Date(value));
         },
         changeBookTime(value) {
             this.changeBook({ orderTime: util.dateFormatLong(value) });

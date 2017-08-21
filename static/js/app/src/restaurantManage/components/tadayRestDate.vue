@@ -170,6 +170,7 @@ import { ORDER_TYPE, ORDER_STATE_TEXT } from '../../ordersManage/constant.js';
 import http from '../../common/http.js';
 import { mapState } from 'vuex';
 import { orderWay } from '../orderWay.js';
+import restBus from '../event.js';
 export default {
     props: {
     },
@@ -230,6 +231,7 @@ export default {
     components: {
     },
     created() {
+        restBus.$on('changeRestId', this.fetchDate);
     },
     mounted() {
         this.startFetchDate();
@@ -237,6 +239,7 @@ export default {
     },
     beforeDestroy() {
         window.clearInterval(window.restinter);
+        restBus.$off('changeRestId', this.fetchDate);
     }
 };
 </script>
