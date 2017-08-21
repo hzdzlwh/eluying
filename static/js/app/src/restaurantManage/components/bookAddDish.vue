@@ -22,7 +22,7 @@
                 <dd-table :columns="col" :data-source="vips" :bordered="true" class="estimate-table"></dd-table>
             </div>
         </div>
-        <resetBookDish v-if="resetBookDish" :info="row" v-on:resetBookDishNum="saverResetBookDish" v-on:cancerBookDishNum="closeResetBookDish"/>
+        <resetBookDish v-if="resetBookDish" :info="row" @resetBookDishNum="saverResetBookDish" @cancerBookDishNum="closeResetBookDish"/>
     </div>
 </template>
 <style lang="scss">
@@ -137,14 +137,14 @@
                     },
                     {
                         title: '预订数量',
-                        dataIndex: 'bookNum',
+                        dataIndex: 'reserveNum',
                         width: 80
                     },
                     {
                         title: '库存数量',
                         width: 80,
                         render: (h, row) => {
-                            return <div class={row.reserveNum === '已售完' ? 'bookDishFontRed' : ''}>{row.reserveNum}</div>;
+                            return <div class={row.soldOut === 1 ? 'bookDishFontRed' : ''}>{row.soldOut === 1 ? '已售完' : row.sellClearNum}</div>;
                         }
                     },
                     {
@@ -186,14 +186,10 @@
                         list.forEach(dishes => {
                             const dishList = dishes.dishes;
                             dishList.forEach(dish => {
-                                const newDish = {};
-                                newDish.type = dishes.dishCategoryName;
-                                newDish.name = dish.dishName;
-                                newDish.bookNum = dish.reserveNum;
-                                newDish.dishId = dish.dishId;
-                                newDish.spell = pySearch(dish.dishName);
-                                newDish.reserveNum = dish.soldOut === 1 ? '已售完' : dish.sellClearNum;
-                                this.getVip.push(newDish);
+                                dish.type = dishes.dishCategoryName;
+                                dish.name = dish.dishName;
+                                dish.spell = pySearch(dish.dishName);
+                                this.getVip.push(dish);
                             });
                         });
                         this.vips = this.getVip;
@@ -220,10 +216,11 @@
             closeResetBookDish() {
                 this.resetBookDish = false;
             },
-            saverResetBookDish(dishId, reserveNum) {
+            saverResetBookDish(dishId, sellClearNum, soldOut) {
                 this.vips.forEach(item => {
                     if (item.dishId === dishId) {
-                        item.reserveNum = reserveNum;
+                        item.sellClearNum = sellClearNum;
+                        item.soldOut = soldOut;
                     }
                 });
                 this.resetBookDish = false;
