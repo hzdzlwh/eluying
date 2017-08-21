@@ -904,7 +904,7 @@ export default {
                             });
                         }
                         if (res.data.isReset) {
-                            rooms.roomType = 0;
+                            this.rooms[index].roomType = 0;
                         }
                         this.$set(room, 'roomList', rooms);
                         this.$set(room, 'categories', res.data.list);
