@@ -33,6 +33,7 @@
                                     <div class="price">￥{{food.dishPrice}}</div>
                                     <div class="inventory" :class="{no:!food.inventoryNum}" v-if="!food.customerDish && food.inventoryNum !== null"><span v-if="food.inventoryNum">剩{{food.inventoryNum}}</span><span v-if="food.inventoryNum === 0">售完</span></div>
                                     <div class="infinite" v-if="food.inventoryNum === null"></div>
+                                    <div>{{getDishOrderNum(food)}}</div>
                                 </div>
                                 <div class="food" v-if="item.dishCategoryId === -2">
                                     <div class="name">自定义菜品</div>
@@ -76,7 +77,7 @@ export default {
         });
     },
     computed: {
-        ...mapState(['restId']),
+        ...mapState(['restId', 'addFood']),
         currentIndex() {
             for (let i = 0; i < this.heightList.length; i ++) {
                 const preHeight = this.heightList[i];
@@ -135,7 +136,11 @@ export default {
         },
         orderMenu(food) {
             if (food.inventoryNum > 0 || food.customerDish || food.inventoryNum === null) {
-                this[types.ADD_FOOD]({ food: food });
+                const selectedFood = { ...food };
+                if (selectedFood.inventoryNum === null) {
+                    selectedFood.inventoryNum = 20000000;
+                }
+                this[types.ADD_FOOD]({ food: selectedFood });
             }
         },
         getMenu() {
@@ -162,7 +167,21 @@ export default {
         },
         hideModal() {
             this.addDishVisible = false;
+        },
+        getDishOrderNum(food) {
+            var res = 0
+            if (this.addFood.length === 0) {
+                return res;
+            }
+            this.addFood.forEach(dish => {
+                if (dish.dishId === food.dishId) {
+                    res = dish.num;
+                }
+            });
+            return res;
         }
+    },
+    watch: {
     },
     components: {
         addDishModal

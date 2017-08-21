@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-31 11:05:38
 * @Last Modified by:   Tplant
-* @Last Modified time: 2017-08-19 11:17:20
+* @Last Modified time: 2017-08-21 17:40:18
 * @email: 783384903@qq.com
 */
 
@@ -12,7 +12,7 @@ export default {
     'SET_DATE': 'setDate',
     'SET_LEFT_TYPE': 'setLeftType',
     'SET_OPEN_DATA': 'setOpenData',
-    'ADD_FOOD': 'addFood',
+    'ADD_FOOD': 'addfood',
     'CANL_FOOD': 'canlFood',
     'CHANGE_FOOD': 'changeFood',
     'SET_SELECT_DISH': 'setSelectDish',

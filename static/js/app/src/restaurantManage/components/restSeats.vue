@@ -22,8 +22,8 @@
                 <customer-radio name="area" value="1" v-model="selectState">已预订</customer-radio>
             </div>
             <div class="order-menu">
-                <div class="order" @click="reserve">预订</div>
-                <div class="menu" @click="orderDish">点菜</div>
+                <div class="order" @click="reserve" v-show="editorPromission">预订</div>
+                <div class="menu" @click="orderDish" v-show="editorPromission">点菜</div>
             </div>
         </div>
         <div class="area-container" v-for="area in tableList">
@@ -42,7 +42,7 @@
                     <div class="reserve-time" v-if="board.time">预{{board.time}}</div>
                     <div class="order-list" v-if="board.caterOrderList.length">
                         <div class="rest-arrow-up"></div>
-                        <div class="seat-name"><span>{{`${board.kindName}${board.kindId}`}}</span></div>
+                        <div class="seat-name"><span>{{board.boardName}}</span></div>
                         <div class="order-info" v-for="o in board.caterOrderList" @click.prevent="getSeatOrder($event, o, 'otherOrder')">
                             <div class="order-list-item">
                                 <div>
@@ -62,7 +62,7 @@
             </div>
         </div>
         <contextmenu id="context-menu" ref="ctxMenu" @ctx-open="onCtxOpen" @ctx-cancel="resetCtxLocals" @ctx-close="onCtxClose">
-            <div class="rest-add-order" @click="addRestOrder">新增预订</div>
+            <div class="rest-add-order" @click="addRestOrder" v-show="editorPromission">新增预订</div>
         </contextmenu>
     </div>
  </template>
@@ -99,7 +99,8 @@ export default {
         ...mapState([
             'date',
             'restId',
-            'selectDish'
+            'selectDish',
+            'editorPromission'
         ])
     },
     methods: {
@@ -111,7 +112,8 @@ export default {
             types.SET_CATER_ORDER_DETAIL,
             types.SET_OPEN_DATA,
             types.RESET_SELECT_DISH,
-            types.SET_ORDER_DETAIL
+            types.SET_ORDER_DETAIL,
+            types.SET_PROMESSION
         ]),
         ...mapActions([
             types.LOAD_CATER_ORDER_DETAIL
@@ -243,6 +245,7 @@ export default {
                     });
                     this.areasEmpty = false;
                     this[types.RESET_SELECT_DISH]();
+                    this[types.SET_PROMESSION]({ flag: res.data.restPermission });
                 }
             });
         },
@@ -282,6 +285,8 @@ export default {
             this.getSeatList();
         },
         restId(newValue) {
+            this.areasEmpty = true;
+            this.areas = [];
             this.getSeatList();
         },
         date(newValue) {
