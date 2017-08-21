@@ -750,11 +750,11 @@ export default {
                 if (this.rooms[len - 1].state === 8) {
                     room.roomList.unshift({ id: 0, name: '未排房' });
                 }
-                const roomPreType = this.rooms[len - 1].roomPreType;
+                const roomPreType = this.rooms[len - 1].roomType;
                 if (roomPreType !== 0) {
                     room.roomList.forEach((el, inde) => {
                         if (el.id === roomPreType) {
-                            room.roomList.slice(inde, 1);
+                            room.roomList.splice(inde, 1);
                         }
                     });
                 }
