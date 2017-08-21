@@ -250,6 +250,16 @@ export default {
             'canlFood',
             'setOpenData'
         ]),
+        getOpenData() {
+            if (this.openData.caterOrderId) {
+                http.get('/catering/getCaterOrderDetail', { caterOrderId: this.openData.caterOrderId }).then(res => this.setOpenData({ openData: res.data }));
+                return;
+            }
+            if (this.openData.openBoards.length) {
+                http.get('/board/getOpenBoardRecords', { boardId: this.openData.openBoards[0] }).then(res => this.setOpenData({ openData: res.data }));
+                return;
+            }
+        },
         printRest() {
             this.handlePoint = true;
         },
@@ -261,13 +271,17 @@ export default {
         },
         resetOrder() {
             http.get('/order/resettle', { orderId: this.openData.caterOrderId, type: 0 }).then(res => {
+                this.getOpenData();
                 restBus.$emit('refeshView');
             });
         },
         reject() {
             const callBack = function() {
                 http.get('/order/confirmOrder', { caterOrderId: this.openData.caterOrderId, type: 0
-                }).then(res => restBus.$emit('refeshView'));
+                }).then(res => {
+                    restBus.$emit('refeshView');
+                    this.getOpenData();
+                });
             };
             modal.confirm({ title: '提示', message: '确定拒绝该扫码订单？' }, callBack);
         },
@@ -279,6 +293,7 @@ export default {
         },
         changeRemark(val) {
             http.get('/catering/modifyDishRemark', { caterOrderId: this.openData.caterOrderId, remark: val, serviceId: this.dishChange.serviceId }).then(res => {
+                this.getOpenData();
                 restBus.$emit('refeshView');
             });
         },
@@ -292,13 +307,14 @@ export default {
                 dishes: JSON.stringify(dishes),
                 oprType: this.dishModalType ? 4 : 2
             }).then(res => {
+                this.getOpenData();
                 restBus.$emit('refeshView');
             });
         },
         dishModalChange(type) {
             this.dishModalVisible = true;
             this.dishModalType = type;
-            restBus.$emit('refeshView');
+            // restBus.$emit('refeshView');
         },
         dishClick(dish) {
             if (dish.serviceState === 1 && (this.openData.orderState === 1 || (this.openData.orderState === 2 && this.openData.itemsMap.length && this.openData.itemsMap) || this.openData.orderState === 4 || this.openData.orderState === 8)) {
@@ -342,6 +358,7 @@ export default {
             }
             parms = Object.assign(parms, parm);
             http.get('/catering/modifyPeopleNum', parms).then(res => {
+                this.getOpenData();
                 restBus.$emit('refeshView');
             });
         },
@@ -352,10 +369,16 @@ export default {
             restBus.$emit('changeBoard', { data: this.openData });
         },
         openBoardAndCook() {
-            http.get('/board/openBoardAndCook', { restId: this.restId, caterOrderId: this.openData.caterOrderId }).then(res => restBus.$emit('refeshView'));
+            http.get('/board/openBoardAndCook', { restId: this.restId, caterOrderId: this.openData.caterOrderId }).then(res => {
+                restBus.$emit('refeshView');
+                this.getOpenData();
+            });
         },
         agreeAndCook() {
-            http.get('/order/confirmOrder', { caterOrderId: this.openData.caterOrderId, type: 1 }).then(res => restBus.$emit('refeshView'));
+            http.get('/order/confirmOrder', { caterOrderId: this.openData.caterOrderId, type: 1 }).then(res => {
+                restBus.$emit('refeshView');
+                this.getOpenData();
+            });
         },
         crash() {
             bus.$emit('showCashier', { type: 'orderDetail' });
@@ -363,6 +386,7 @@ export default {
         canOrder() {
             const callBack = function() {
                 bus.$emit('showCancelOrder');
+                this.getOpenData();
             };
             modal.confirm({ title: '提示', message: '确定取消订单' }, callBack);
         },
