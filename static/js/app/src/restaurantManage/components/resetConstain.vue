@@ -11,7 +11,7 @@
      <div class="rest-taday-count">
            <div class="restDetail-title-tip">桌号</div>
             <div class="restDetail-title-display">
-                <div><span class="restDetail-title-dish">{{selectDish[0].boardName}}{{selectDish[0].boardName}}</span> <span v-if='selectDish.length > 1' class="restDetail-type-tag" :title='selectDishText'>并</span></div>
+                <div><span class="restDetail-title-dish">{{selectDish[0].boardName}}</span> <span v-if='selectDish.length > 1' class="restDetail-type-tag" :title='selectDishText'>并</span></div>
                 <!-- <div><span class="rest-taday-tag " :class="getState(item.foodState, 'color')">{{getState(item.foodState, 'text')}}</span></div> -->
             </div>
             <div class="rest-btn-head" v-show='editorPromission'><button class="reset-btn-base reset-btn-start" @click='getNum'>开台</button><button class="reset-btn-base reset-btn-book" @click="reserve">预订</button></div>

@@ -276,6 +276,7 @@ padding:16px;
             },
             refesh() {
                 this[types.GET_CATER_ORDER_DETAIL]({ orderId: this.order.caterOrderId });
+                this.dishChange = undefined;
             },
             hideDishModal() {
                 this.dishModalVisible = false;

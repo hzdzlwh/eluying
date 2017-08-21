@@ -15,7 +15,7 @@
                     新增沽清菜品
                 </div>
             </div>
-            <dd-table :columns="col" :data-source="vips" :bordered="true" :sortType="sort" :sortField="sortField" :onChange="onChange" class="estimate-table"></dd-table>
+            <dd-table :columns="col" :data-source="vips" :bordered="true" :sortField='sort.sortField' :sortType='sort.sortType' :onChange='changeSort' class="estimate-table"></dd-table>
         </div>
         <div class="restaurant-point-shade" v-if="bookShadow">
             <div class="book-empty-tips" v-if="emptyBookDishes">
@@ -114,9 +114,7 @@
             return {
                 vips: [],
                 newVip: {},
-                sort: Number,
-                sortField: String,
-                onChange: Function,
+                sort: {},
                 bookShadow: false,
                 emptyBookDishes: false,
                 deleteBookDish: false,
@@ -136,7 +134,7 @@
                     {
                         title: '库存数量',
                         render: (h, row) => {
-                            return <div class={row.reserveNum === '已售完' ? 'bookDishFontRed' : ''}>{row.reserveNum}</div>;
+                            return <div class={row.soldOut === 1 ? 'bookDishFontRed' : ''}>{row.soldOut === 1 ? '已售完' : row.sellClearNum}</div>;
                         },
                         sorter: true
                     },
@@ -173,31 +171,37 @@
                         list.forEach(dishes => {
                             const dishList = dishes.dishes;
                             dishList.forEach(dish => {
-                                const newDish = {};
-                                newDish.type = dishes.dishCategoryName;
-                                newDish.name = dish.dishName;
-                                newDish.dishId = dish.dishId;
-                                newDish.bookNum = dish.reserveNum;
-                                newDish.reserveNum = dish.soldOut === 1 ? '已售完' : dish.sellClearNum;
-                                this.vips.push(newDish);
+                                dish.type = dishes.dishCategoryName;
+                                dish.name = dish.dishName;
+                                this.vips.push(dish);
                             });
                         });
                     }
                 });
             },
-            sortData(type) {
-                this.vips.sort(this.compare('reserveNum', type));
+            changeSort: function(value) {
+                this.sort = value;
             },
-            compare(property, type) {
-                return function(obj1, obj2) {
-                    const value1 = obj1[property];
-                    const value2 = obj2[property];
-                    if (type === 0) {
-                        return value1 - value2;
-                    } else if (type === 1) {
-                        return value2 - value1;
+            sortData(arr, type) {
+                for (let unfix = arr.length - 1; unfix > 0; unfix --) {
+                    for (let i = 0; i < unfix; i ++) {
+                        const value1 = arr[i].sellClearNum;
+                        const value2 = arr[i + 1].sellClearNum;
+                        const temp = arr[i];
+                        if (type === 0) {
+                            if (value1 > value2) {
+                                arr.splice(i, 1);
+                                arr.splice(i + 1, 0, temp);
+                            }
+                        } else if (type === 1) {
+                            if (value1 < value2) {
+                                arr.splice(i, 1);
+                                arr.splice(i + 1, 0, temp);
+                            }
+                        }
                     }
-                };
+                }
+                return arr;
             },
             addEstimateDish() {
                 this.bookShadow = true;
@@ -231,15 +235,19 @@
                 this.bookShadow = false;
             },
             updataVips(arr) {
-                this.vips.forEach(item => {
-                    this.newVip = {};
-                    if (item.dishId === arr[0].dishId) {
-                        item.reserveNum = arr[0].reserveNum;
+                let index = 0;
+                for (let i = 0; i < this.vips.length; i ++) {
+                    if (this.vips[i].dishId === arr[0].dishId) {
+                        this.vips[i].sellClearNum = arr[0].sellClearNum;
+                        this.vips[i].soldOut = arr[0].soldOut;
+                        break;
                     } else {
-                        this.newVip = arr[0];
+                        index ++;
                     }
-                });
-                this.vips.push(this.newVip);
+                }
+                if (index === this.vips.length) {
+                    this.vips.push(arr[0]);
+                }
             },
             editBookDish(row) {
                 this.resetBookDish = true;
@@ -248,10 +256,11 @@
             closeResetBookDish() {
                 this.resetBookDish = false;
             },
-            saverResetBookDish(dishId, reserveNum) {
+            saverResetBookDish(dishId, sellClearNum, soldOut) {
                 this.vips.forEach(item => {
                     if (item.dishId === dishId) {
-                        item.reserveNum = reserveNum;
+                        item.sellClearNum = sellClearNum;
+                        item.soldOut = soldOut;
                     }
                 });
                 this.resetBookDish = false;
@@ -294,9 +303,8 @@
             dishType() {
                 this.startGetData();
             },
-            sort() {
-                console.log(1);
-                this.sortData(this.sort);
+            sort: function() {
+                this.sortData(this.vips, this.sort.sortType);
             }
         },
         components: {

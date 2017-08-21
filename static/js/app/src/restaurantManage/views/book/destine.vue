@@ -10,7 +10,7 @@
                     </dd-select>
                 </div>
             </div>
-            <dd-table :columns="col" :data-source="vips" :bordered="true" class="destine-table"></dd-table>
+            <dd-table :columns="col" :data-source="vips" :bordered="true" :sortField='sort.sortField' :sortType='sort.sortType' :onChange='changeSort' class="destine-table"></dd-table>
         </div>
     </div>
 </template>
@@ -60,6 +60,7 @@
             return {
                 date: '',
                 vips: [],
+                sort: {},
                 col: [
                     {
                         title: '菜品分类',
@@ -88,6 +89,23 @@
             this.startGetDish();
         },
         methods: {
+            sortData(arr, type) {
+                arr.sort(this.sortBy('reserveNum', type));
+            },
+            sortBy(name, type) {
+                return function(o, p) {
+                    const a = o[name];
+                    const b = p[name];
+                    if (type === 1) {
+                        return a - b;
+                    } else if (type === 0) {
+                        return b - a;
+                    }
+                };
+            },
+            changeSort: function(value) {
+                this.sort = value;
+            },
             disabledDate(date) {
                 return util.DateDiff(new Date(), date) < 0;
             },
@@ -148,6 +166,9 @@
             },
             dishType() {
                 this.getData();
+            },
+            sort: function() {
+                this.sortData(this.vips, this.sort.sortType);
             }
         },
         components: {

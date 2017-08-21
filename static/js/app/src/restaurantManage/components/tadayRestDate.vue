@@ -11,19 +11,19 @@
         <div class="rest-taday-count">
             <div><span class="rest-taday-tip">今日营业额</span></div>
             <div class="rest-taday-num">￥{{DayDate.priceSum}}</div>
-            <div class="rest-taday-otherDate rest-taday-headleft">今日订单总数<div >{{DayDate.peopleCount}}</div></div>
-            <div class="rest-taday-otherDate rest-taday-headright">今日到店人数<div >{{DayDate.orderCount}}</div></div>
+            <div class="rest-taday-otherDate rest-taday-headleft">今日订单总数<div >{{DayDate.orderCount}}</div></div>
+            <div class="rest-taday-otherDate rest-taday-headright">今日到店人数<div >{{DayDate.peopleCount}}</div></div>
         </div>
        <div class="rest-taday-new">
         <div class="rest-taday-title">
-            新订单 {{DayDate.newOrders.length}}
+            最新订单
         </div>
             <div class="rest-taday-list">
                 <div class="rest-taday-item" v-for='item in DayDate.newOrders' :key='item.orderNum' v-if='DayDate.newOrders.length'>
                 <div>
                     <div><span class="rest-taday-smallTip">
                     <!-- {{orderWay[item.orderWay]}} -->{{orderWay[item.orderWay]}}
-                    </span>  <span>桌位{{getBoard(item)[0] || "无"}}<span v-if='getBoard().length > 1' class="restDetail-type-tag" >并</span> - {{item.peopleNum}}人</span> </div>
+                    </span>  <span>桌号{{getBoard(item)[0] || "无"}}<span v-if='getBoard(item).length > 1' class="restDetail-type-tag" >并</span> - {{item.peopleNum}}人</span> </div>
                     <div class="rest-taday-smallTip">订单号：{{item.orderNum}}</div>
                 </div>
                 <div><span class="rest-taday-tag " :class="getState(item.foodState, 'color')">{{getState(item.foodState, 'text')}}</span></div>
@@ -170,6 +170,7 @@ import { ORDER_TYPE, ORDER_STATE_TEXT } from '../../ordersManage/constant.js';
 import http from '../../common/http.js';
 import { mapState } from 'vuex';
 import { orderWay } from '../orderWay.js';
+import restBus from '../event.js';
 export default {
     props: {
     },
@@ -230,6 +231,7 @@ export default {
     components: {
     },
     created() {
+        restBus.$on('changeRestId', this.fetchDate);
     },
     mounted() {
         this.startFetchDate();
@@ -237,6 +239,7 @@ export default {
     },
     beforeDestroy() {
         window.clearInterval(window.restinter);
+        restBus.$off('changeRestId', this.fetchDate);
     }
 };
 </script>

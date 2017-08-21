@@ -13,7 +13,7 @@
             <div class="restDetail-title-display">
                  <div><span class="restDetail-title-dish">{{openData.boardDetailResps[0].boardName}}</span> <span v-if='openData.boardDetailResps.length > 1' class="restDetail-type-tag" :title='selectDishText'>并</span></div>
                 <!-- <div><span class="rest-taday-tag " :class="getState(item.foodState, 'color')">{{getState(item.foodState, 'text')}}</span></div> -->
-                 <div v-if='openData.state !== 2 && openData.orderState'><span class="rest-taday-tag " :class='getState("color")' >{{getState("text")}}</span></div>
+                 <div v-if='openData.state !== 2 && openData.orderState !== undefined'><span class="rest-taday-tag " :class='getState("color")' >{{getState("text")}}</span></div>
             </div>
             <div>
                 <div class="rest-restDetail-left">
@@ -95,7 +95,7 @@
                 <span class="restDetail-title-tip">合计</span>{{addFoodTotal()}}
             </div>
             </div>
-            <div class="restDetail-foot-check" v-if='openData.payments'>
+            <div class="restDetail-foot-check" v-if='openData.payments && leftType !== 4'>
                 <div class="restDetail-check-item" @click='needpay = !needpay'><span ><span :class="getCheckeStatus(needpay)"></span>应收金额</span> <span>{{findTypePrice(openData.payments, 13)}}</span></div>
                 <div class="restDetail-check-list" v-show='needpay'>
                     <div class="restDetail-check-item"><span>总金额</span> <span>￥{{findTypePrice(openData.payments, 10)}}</span></div>
@@ -186,6 +186,7 @@ import { DatePicker } from 'element-ui';
 import keyBoard from '../../common/components/inputKeyboard.vue';
 import changeRemark from './changeRemark.vue';
 import handlePoint from './handlePoint.vue';
+import modal from '../../common/modal.js';
 export default {
     props: {
     },
@@ -249,6 +250,16 @@ export default {
             'canlFood',
             'setOpenData'
         ]),
+        getOpenData() {
+            if (this.openData.caterOrderId) {
+                http.get('/catering/getCaterOrderDetail', { caterOrderId: this.openData.caterOrderId }).then(res => this.setOpenData({ openData: res.data }));
+                return;
+            }
+            if (this.openData.openBoards.length) {
+                http.get('/board/getOpenBoardRecords', { boardId: this.openData.openBoards[0] }).then(res => this.setOpenData({ openData: res.data }));
+                return;
+            }
+        },
         printRest() {
             this.handlePoint = true;
         },
@@ -260,12 +271,19 @@ export default {
         },
         resetOrder() {
             http.get('/order/resettle', { orderId: this.openData.caterOrderId, type: 0 }).then(res => {
+                this.getOpenData();
                 restBus.$emit('refeshView');
             });
         },
         reject() {
-            http.get('/order/confirmOrder', { caterOrderId: this.openData.caterOrderId, type: 0
-            }).then(res => restBus.$emit('refeshView'));
+            const callBack = function() {
+                http.get('/order/confirmOrder', { caterOrderId: this.openData.caterOrderId, type: 0
+                }).then(res => {
+                    restBus.$emit('refeshView');
+                    this.getOpenData();
+                });
+            };
+            modal.confirm({ title: '提示', message: '确定拒绝该扫码订单？' }, callBack);
         },
         changeRemarkModal() {
             this.changeRemarkVisible = true;
@@ -275,6 +293,7 @@ export default {
         },
         changeRemark(val) {
             http.get('/catering/modifyDishRemark', { caterOrderId: this.openData.caterOrderId, remark: val, serviceId: this.dishChange.serviceId }).then(res => {
+                this.getOpenData();
                 restBus.$emit('refeshView');
             });
         },
@@ -288,13 +307,15 @@ export default {
                 dishes: JSON.stringify(dishes),
                 oprType: this.dishModalType ? 4 : 2
             }).then(res => {
+                this.getOpenData();
+                this.dishChange = undefined;
                 restBus.$emit('refeshView');
             });
         },
         dishModalChange(type) {
             this.dishModalVisible = true;
             this.dishModalType = type;
-            restBus.$emit('refeshView');
+            // restBus.$emit('refeshView');
         },
         dishClick(dish) {
             if (dish.serviceState === 1 && (this.openData.orderState === 1 || (this.openData.orderState === 2 && this.openData.itemsMap.length && this.openData.itemsMap) || this.openData.orderState === 4 || this.openData.orderState === 8)) {
@@ -317,7 +338,10 @@ export default {
             this.dishChange = dish;
         },
         changeTime(value) {
-            return util.dateFormatLong(value);
+            if (!value) {
+                return '';
+            }
+            return util.dateFormatLong(new Date(value));
         },
         changeBookTime(value) {
             this.changeBook({ orderTime: util.dateFormatLong(value) });
@@ -335,6 +359,7 @@ export default {
             }
             parms = Object.assign(parms, parm);
             http.get('/catering/modifyPeopleNum', parms).then(res => {
+                this.getOpenData();
                 restBus.$emit('refeshView');
             });
         },
@@ -345,16 +370,26 @@ export default {
             restBus.$emit('changeBoard', { data: this.openData });
         },
         openBoardAndCook() {
-            http.get('/board/openBoardAndCook', { restId: this.restId, caterOrderId: this.openData.caterOrderId }).then(res => restBus.$emit('refeshView'));
+            http.get('/board/openBoardAndCook', { restId: this.restId, caterOrderId: this.openData.caterOrderId }).then(res => {
+                restBus.$emit('refeshView');
+                this.getOpenData();
+            });
         },
         agreeAndCook() {
-            http.get('/order/confirmOrder', { caterOrderId: this.openData.caterOrderId, type: 1 }).then(res => restBus.$emit('refeshView'));
+            http.get('/order/confirmOrder', { caterOrderId: this.openData.caterOrderId, type: 1 }).then(res => {
+                restBus.$emit('refeshView');
+                this.getOpenData();
+            });
         },
         crash() {
             bus.$emit('showCashier', { type: 'orderDetail' });
         },
         canOrder() {
-            bus.$emit('showCancelOrder');
+            const callBack = function() {
+                bus.$emit('showCancelOrder');
+                this.getOpenData();
+            };
+            modal.confirm({ title: '提示', message: '确定取消订单' }, callBack);
         },
         closeBoard() {
             const parms = {
@@ -570,6 +605,7 @@ export default {
                 if (el.dishId === index) {
                     if (num > 0) {
                         el.num = num;
+                        this.addFood[ind].num = num;
                     } else {
                         this.addFood.splice(ind, 1);
                         this.addFoodList.splice(ind, 1);
@@ -618,6 +654,9 @@ export default {
         changeRemark,
         handlePoint
     },
+    create() {
+        bus.$on('onShowDetail', this.getOpenData());
+    },
     mounted() {
         if (this.openData && !this.openData.isHasOrder) {
             this.timer();
@@ -625,6 +664,7 @@ export default {
         }
     },
     beforeDestroy() {
+        bus.$off('onShowDetail', this.getOpenData());
         window.clearInterval(window.inter);
     }
 

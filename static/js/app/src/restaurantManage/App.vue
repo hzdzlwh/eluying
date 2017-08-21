@@ -59,6 +59,7 @@
             height: 27px;
             padding-right: 10px;
             .restmange-list-select{
+                cursor:pointer;
                 text-align: right;
                 padding-right: 23px;
                 line-height: 26px;
@@ -114,21 +115,23 @@
             cursor: pointer;
             position: relative;
             &:hover{
-                color:#666
+                color:#178ce6;
             }
         }
         .active{
-            &:after{
-            content: '';
-            position: absolute;
-            bottom: 0;
-            right: 50%;
-            width: 0;
-            height: 0;
-            border-left: 5px solid transparent;
-            border-right: 5px solid transparent;
-            border-bottom: 6px solid #323422;
-            }
+            // &:after{
+            // content: '';
+            // position: absolute;
+            // bottom: 0;
+            // right: 50%;
+            // width: 0;
+            // height: 0;
+            // border-left: 5px solid transparent;
+            // border-right: 5px solid transparent;
+            // border-bottom: 6px solid #323422;
+            // }
+            color:#178ce6;
+            border-bottom: 3px solid #178ce6;
         }
     }
     .restaurant-container{
@@ -141,6 +144,7 @@
 import { mapState, mapMutations } from 'vuex';
 import http from '../common/http.js';
 import Clickoutside from 'dd-vue-component/src/utils/clickoutside';
+import restBus from './event.js';
 import {
     DdSelect,
     DdOption
@@ -167,6 +171,7 @@ export default {
         ]),
         setRestId(id) {
             this.restId = id;
+            restBus.$emit('changeRestId');
         },
         changeMenu() {
             if (this.menuHeight === '400px') {
