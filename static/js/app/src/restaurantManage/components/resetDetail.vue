@@ -652,6 +652,9 @@ export default {
         changeRemark,
         handlePoint
     },
+    create() {
+        bus.$on('onShowDetail', this.getOpenData());
+    },
     mounted() {
         if (this.openData && !this.openData.isHasOrder) {
             this.timer();
@@ -659,6 +662,7 @@ export default {
         }
     },
     beforeDestroy() {
+        bus.$off('onShowDetail', this.getOpenData());
         window.clearInterval(window.inter);
     }
 
