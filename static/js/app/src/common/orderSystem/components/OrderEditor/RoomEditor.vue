@@ -785,16 +785,16 @@ export default {
                 if (item.checkType === 1) {
                     item.room.endDate = new Date(item.room.startDate.getTime() + 1000 * 60 * 60 * (item.timeAmount || 1));
                 }
-                http.get('/room/getRoomsList', {
-                    checkType: item.checkType,
-                    endDate: util.dateFormatLong(item.room.endDate),
-                    startDate: util.dateFormatLong(item.room.startDate)
-                })
-                    .then(res => {
-                        if (this.checkState !== 'finish') {
-                            item.categories = res.data.list;
-                        }
-                    });
+                // http.get('/room/getRoomsList', {
+                //     checkType: item.checkType,
+                //     endDate: util.dateFormatLong(item.room.endDate),
+                //     startDate: util.dateFormatLong(item.room.startDate)
+                // })
+                //     .then(res => {
+                //         if (this.checkState !== 'finish') {
+                //             item.categories = res.data.list;
+                //         }
+                //     });
                     // set new property to item for disable and none manage house (when item.state === 0)
                 if (item.state === 0 && item.checkType === 1) {
                     this.$set(item, 'disabled', true);
@@ -885,7 +885,8 @@ export default {
                 endDate: util.dateFormat(room.room.endDate),
                 roomOrderId: room.roomOrderId,
                 checkType: room.checkType,
-                roomId: room.roomType
+                roomId: room.roomType,
+                usedRooms: JSON.stringify(usedRooms)
             })
                     .then(res => {
                         const categories = res.data.list;
