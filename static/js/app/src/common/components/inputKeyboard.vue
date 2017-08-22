@@ -4,7 +4,7 @@
                 <div class="modal-content">
                     <div class="roomModals-header">
                         <div class="header-text">{{dish}}</div>
-                            <inpuVaild :isInt='true' v-model='val' :className='"reset-keyboard-num"' :max='2000' />
+                            <inpuVaild :isInt='true' v-model='val' :className='"reset-keyboard-num"' :max='1000' />
                             </div>
                     <div class="roomModals-body">
                         <div class="content-item">
