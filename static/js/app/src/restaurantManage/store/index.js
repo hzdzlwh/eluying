@@ -2,7 +2,7 @@
 * @Author: lxj
 * @Date:   2017-07-31 10:52:58
 * @Last Modified by:   Tplant
-* @Last Modified time: 2017-08-22 09:59:52
+* @Last Modified time: 2017-08-22 12:50:56
 * @email: 783384903@qq.com
 */
 
@@ -45,11 +45,7 @@ const store = new Vuex.Store({
         },
         [types.ADD_FOOD](state, { food }) {
             const selectFood = state.addFood.find((el, index) => {
-                if (el.subDishId) {
-                    return el.subDishId === food.subDishId;
-                } else {
-                    return el.dishId === food.dishId;
-                }
+                return el.dishId === food.dishId;
             });
             if (selectFood) {
                 selectFood.num = selectFood.num + 1;
