@@ -16,7 +16,7 @@
                     <button type="button" class="close" @click="hideModal"><span>&times;</span></button>
                 </div>
                 <div class="modal-body" >
-                    <div>{{data.dishName}}可{{type ? '赠送' :'退菜' }}数量：{{data.bookNum}}</div>
+                    <div><span style="margin-right:20px;">{{data.dishName}}</span>可{{type ? '赠送' :'退菜' }}数量：{{data.bookNum}}</div>
                     <div><span>{{type ? '赠送' :'退菜' }}数量：</span>
                     <count :min = 0 :num='Num' :max='data.bookNum' :onNumChange='onNumChange' :id='1'></count>
                     </div>

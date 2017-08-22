@@ -59,6 +59,7 @@ export default {
             if (newVale) {
                 $('#changeRemark').modal('show');
             } else {
+                this.Str = this.text;
                 $('#changeRemark').modal('hide');
             }
         },

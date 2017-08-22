@@ -99,8 +99,8 @@
                 <div class="restDetail-check-item" @click='needpay = !needpay'><span ><span :class="getCheckeStatus(needpay)"></span>应收金额</span> <span>{{findTypePrice(openData.payments, 13)}}</span></div>
                 <div class="restDetail-check-list" v-show='needpay'>
                     <div class="restDetail-check-item"><span>总金额</span> <span>￥{{findTypePrice(openData.payments, 10)}}</span></div>
-                    <div class="restDetail-check-item" v-if='findTypePrice(openData.payments, 5) != 0'><span>折扣金额</span> <span>￥{{findTypePrice(openData.payments, 25)}}</span></div>
-                    <div class="restDetail-check-item" v-if='openData.discount != 0'><span>整单优惠</span> <span>￥{{openData.discount}}</span></div>
+                    <div class="restDetail-check-item" v-if='findTypePrice(openData.payments, 5) != 0'><span>折扣金额</span> <span>￥-{{findTypePrice(openData.payments, 25)}}</span></div>
+                    <div class="restDetail-check-item" v-if='openData.discount != 0'><span>整单优惠</span> <span>￥-{{openData.discount}}</span></div>
                     <div class="restDetail-check-item" v-if='findTypePrice(openData.payments, 17) != 0'><span>零头处理</span> <span>￥{{findTypePrice(openData.payments, 17)}}</span></div>
                 </div>
                  <div class="restDetail-check-item" @click='paied = !paied'><span ><span :class="getCheckeStatus(paied)"></span>{{findTypePrice(openData.payments, 14) >= 0 ? '实收金额'
@@ -240,7 +240,7 @@ export default {
                     if (index !== 0) {
                         str += '\r\n';
                     }
-                    str += el.boardName + el.boardId;
+                    str += el.boardName;
                 });
                 return str;
             }
@@ -316,6 +316,9 @@ export default {
         changeRemark(val) {
             http.get('/catering/modifyDishRemark', { caterOrderId: this.openData.caterOrderId, remark: val, serviceId: this.dishChange.serviceId }).then(res => {
                 this.getOpenData();
+                if (this.dishChange) {
+                    this.dishChange = undefined;
+                }
                 restBus.$emit('refeshView');
             });
         },
