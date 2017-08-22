@@ -138,6 +138,7 @@ export default {
             name: '',
             phone: '',
             vipCardId: undefined,
+            vipCardInfo: {},
             vipCardsAndLevel: [],
             saleList: [],
             saleId: -1,
@@ -479,6 +480,13 @@ export default {
         },
         setReserveType(type) {
             this.reserveType = type;
+        },
+        getRoomDiscount(discounts) {
+            if (!discounts) {
+                return 1;
+            }
+            const discount = discounts.find(i => i.nodeType === 0);
+            return discount ? discount.discount : 1;
         }
     },
     watch: {
@@ -510,6 +518,74 @@ export default {
             if (originType !== -5 && originType !== -4) {
                 // this.vipCardId = 0;
                 this.vipDiscountDetail = {};
+            }
+
+            if (!origin || (origin.id !== -4 && origin.id !== -5)) {
+                this.vipCardInfo = {};
+            }
+        },
+        vipCardId(vipCardId) {
+            if (vipCardId === -1) {
+                const vip = this.vipCardsAndLevel[0].levels[0];
+                this.vipCardInfo = {
+                    name: vip.name,
+                    discount: (this.getRoomDiscount(vip.discountList) * 10).toFixed(1),
+                    id: -4,
+                    tag: '会员折扣'
+                };
+                /* this.$set(this.vipDiscountDetail, 'vipDetail', {
+                    discountList: vip.discountList,
+                    level: vip.name,
+                    id: vip.vipId
+                });
+                this.$set(this.vipDiscountDetail, 'tag', '会员');*/
+                this.vipDiscountDetail = {
+                    ...this.vipDiscountDetail,
+                    vipDetail: {
+                        discountList: vip.discountList,
+                        level: vip.name,
+                        id: vip.vipId
+                    },
+                    tag: vip.name
+                };
+            }
+
+            if (vipCardId > 0) {
+                const card = this.vipCardsAndLevel[1].levels.find(i => i.id === this.vipCardId);
+                this.vipCardInfo = {
+                    name: card.name,
+                    serialNum: card.serialNum,
+                    discount: (this.getRoomDiscount(card.discountList) * 10).toFixed(1),
+                    id: -4,
+                    tag: '会员卡折扣'
+                };
+
+                /* this.$set(this.vipDiscountDetail, 'vipDetail', {
+                    discountList: card.discountList
+                });
+                this.$set(this.vipDiscountDetail, 'tag', card.name);*/
+                this.vipDiscountDetail = {
+                    ...this.vipDiscountDetail,
+                    vipDetail: {
+                        discountList: card.discountList
+                    },
+                    tag: card.name
+                };
+            }
+
+            if (vipCardId === 0) {
+                this.vipCardInfo = {};
+                /* this.$set(this.vipDiscountDetail, 'vipDetail', {
+                    discountList: []
+                });
+                this.$set(this.vipDiscountDetail, 'tag', '');*/
+                this.vipDiscountDetail = {
+                    ...this.vipDiscountDetail,
+                    vipDetail: {
+                        discountList: []
+                    },
+                    tag: ''
+                };
             }
         },
         relevanceOrder(newValue) {

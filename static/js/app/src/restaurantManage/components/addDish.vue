@@ -44,7 +44,8 @@ export default {
     data() {
         return {
             dishName: '',
-            dishPrice: undefined
+            dishPrice: undefined,
+            dishId: -1
         };
     },
     methods: {
@@ -54,7 +55,8 @@ export default {
             this.dishName = '';
         },
         addDish() {
-            this.$emit('addDish', { dishName: this.dishName, dishPrice: this.dishPrice, customerDish: true });
+            this.$emit('addDish', { dishName: this.dishName, dishPrice: this.dishPrice, customerDish: true, dishId: this.dishId });
+            this.dishId -= 1;
             this.hideModal();
         }
     },

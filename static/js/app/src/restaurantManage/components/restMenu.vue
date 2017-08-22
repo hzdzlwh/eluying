@@ -33,11 +33,11 @@
                                     <div class="price">￥{{food.dishPrice}}</div>
                                     <div class="inventory" :class="{no:!food.inventoryNum}" v-if="!food.customerDish && food.inventoryNum !== null"><span v-if="food.inventoryNum">剩{{food.inventoryNum}}</span><span v-if="food.inventoryNum === 0">售完</span></div>
                                     <div class="infinite" v-if="food.inventoryNum === null"></div>
-                                    <div>{{getDishOrderNum(food)}}</div>
+                                    <div class="order-num" v-if="getDishOrderNum(food) > 0">{{getDishOrderNum(food)}}</div>
                                 </div>
-                                <div class="food" v-if="item.dishCategoryId === -2">
+                                <div class="food" v-if="item.dishCategoryId === -2" @click="newDish">
                                     <div class="name">自定义菜品</div>
-                                    <div class="price add-dish"><span class="add" @click="newDish">+</span></div>
+                                    <div class="price add-dish"><span class="add">+</span></div>
                                 </div>
                             </div>
                         </div>
@@ -169,7 +169,7 @@ export default {
             this.addDishVisible = false;
         },
         getDishOrderNum(food) {
-            var res = 0
+            var res = 0;
             if (this.addFood.length === 0) {
                 return res;
             }
@@ -373,6 +373,17 @@ export default {
                                 }
                                 .infinite{
                                     background: #fff;
+                                }
+                                .order-num{
+                                    position: absolute;
+                                    width: 20px;
+                                    height: 20px;
+                                    top: -7px;
+                                    left: 104px;
+                                    background: #f24949;
+                                    border-radius: 50%;
+                                    text-align: center;
+                                    color: #fff;
                                 }
                             }
                         }

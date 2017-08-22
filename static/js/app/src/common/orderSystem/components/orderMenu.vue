@@ -40,11 +40,12 @@
                                         <div v-for="food in item.dishes" class="food" @click="orderMenu(food)">
                                             <div class="name">{{food.dishName}}</div>
                                             <div class="price">￥{{food.dishPrice}}</div>
-                                            <div class="inventory" :class="{no:!food.inventoryNum}" v-if="!food.customerDish"><span v-if="food.inventoryNum">剩{{food.inventoryNum}}</span><span v-else>售完</span></div>
+                                            <div class="inventory" :class="{no:!food.inventoryNum}" v-if="!food.customerDish && food.inventoryNum !== null"><span v-if="food.inventoryNum">剩{{food.inventoryNum}}</span><span v-if="food.inventoryNum === 0">售完</span></div>
+                                            <div v-if="getDishOrderNum(food) > 0" class="order-num">{{getDishOrderNum(food)}}</div>
                                         </div>
-                                        <div class="food" v-if="item.dishCategoryId === -2">
+                                        <div class="food" v-if="item.dishCategoryId === -2" @click="addCustomerDish">
                                             <div class="name">自定义菜品</div>
-                                            <div class="price add-dish"><span class="add" @click="addCustomerDish">+</span></div>
+                                            <div class="price add-dish"><span class="add">+</span></div>
                                         </div>
                                     </div>
                                 </div>
@@ -220,7 +221,7 @@ export default{
             this.selectFood = [];
         },
         orderMenu(food) {
-            if (food.inventoryNum > 0) {
+            if (food.inventoryNum > 0 || food.inventoryNum === null || food.customerDish) {
                 const isHasFood = this.selectFood.find(el => {
                     return el.dishId === food.dishId;
                 });
@@ -229,7 +230,7 @@ export default{
                 } else {
                     const cacheFood = { ...food };
                     cacheFood.bookNum = 1;
-                    cacheFood.price = cacheFood.dishPrice
+                    cacheFood.price = cacheFood.dishPrice;
                     this.selectFood.push(cacheFood);
                 }
             }
@@ -281,6 +282,18 @@ export default{
                     this.hideModal();
                 }
             });
+        },
+        getDishOrderNum(food) {
+            var res = 0
+            if (this.selectFood.length === 0) {
+                return res;
+            }
+            this.selectFood.forEach(dish => {
+                if (dish.dishId === food.dishId) {
+                    res = dish.bookNum;
+                }
+            });
+            return res;
         }
     },
     watch: {
@@ -459,6 +472,17 @@ export default{
                                                 &.no{
                                                     background: #f24949;
                                                 }
+                                            }
+                                            .order-num{
+                                                position: absolute;
+                                                width: 20px;
+                                                height: 20px;
+                                                top: -7px;
+                                                left: 104px;
+                                                background: #f24949;
+                                                border-radius: 50%;
+                                                text-align: center;
+                                                color: #fff;
                                             }
                                         }
                                     }
