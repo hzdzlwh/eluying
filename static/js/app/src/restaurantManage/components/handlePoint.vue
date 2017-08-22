@@ -125,7 +125,7 @@
                     {
                         title: '',
                         render: (h, row) => {
-                            return <div class='restaurant-point-btn' onClick={() => this.oppenAutoPoint(row)}>打印</div>;
+                            return <div class={'restaurant-point-btn'} onClick={() => this.oppenAutoPoint(row)}>打印</div>;
                         },
                         width: 80
                     }
