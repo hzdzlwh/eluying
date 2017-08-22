@@ -689,8 +689,18 @@ export default {
                     checkType: 0,
                     checkTypes: this.checkType.slice(0)
                 };
-                this.getRoomsList(r, index);
+                // this.getRoomsList(r, index).then();
+                // if (index > 0) {
+                //     r.roomList.forEach((el, roomIndex) => {
+                //         if (el.id === rooms[index - 1].roomId) {
+                //             r.roomList.splice(roomIndex, 1);
+                //         }
+                //     });
+                // }
                 return r;
+            });
+            this.rooms.forEach((r, index) => {
+                this.getRoomsList(r, index);
             });
             this.modifyRooms(this.rooms);
         },
@@ -874,15 +884,15 @@ export default {
             this.rooms.forEach((el, elIndex) => {
                 if (elIndex !== index) {
                     usedRooms.push({
-                        startDate: util.dateFormat(el.room.startDate),
-                        endDate: util.dateFormat(el.room.endDate),
+                        startDate: util.dateFormatLong(el.room.startDate),
+                        endDate: util.dateFormatLong(el.room.endDate),
                         roomId: el.roomType
                     });
                 }
             });
-            http.get('/room/getRoomsList', {
-                startDate: util.dateFormat(room.room.startDate),
-                endDate: util.dateFormat(room.room.endDate),
+            return http.get('/room/getRoomsList', {
+                startDate: util.dateFormatLong(room.room.startDate),
+                endDate: util.dateFormatLong(room.room.endDate),
                 roomOrderId: room.roomOrderId,
                 checkType: room.checkType,
                 roomId: room.roomType,
@@ -904,7 +914,7 @@ export default {
                             });
                         }
                         if (res.data.isReset) {
-                            rooms.roomType = 0;
+                            this.rooms[index].roomType = 0;
                         }
                         this.$set(room, 'roomList', rooms);
                         this.$set(room, 'categories', res.data.list);
