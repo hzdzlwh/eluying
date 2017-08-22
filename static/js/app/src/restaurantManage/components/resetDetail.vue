@@ -74,7 +74,7 @@
             </table>
             <div v-if='leftType === 4'>
             <p class="rest-text-title"><span>备注信息</span></p>
-            <textarea name="remark" placeholder="请输入备注信息" maxlength="500" v-model="remark" class="dd-input" style="z-index:1">
+            <textarea name="remark" placeholder="请输入备注信息" maxlength="500" v-model="remark" class="dd-input" style="z-index:1;resize: none"  >
                                 </textarea>
             </div>
         </div>
@@ -255,7 +255,7 @@ export default {
                 http.get('/catering/getCaterOrderDetail', { caterOrderId: this.openData.caterOrderId }).then(res => this.setOpenData({ openData: res.data }));
                 return;
             }
-            if (this.openData.openBoards.length) {
+            if (this.openData.openBoards && this.openData.openBoards.length) {
                 http.get('/board/getOpenBoardRecords', { boardId: this.openData.openBoards[0] }).then(res => this.setOpenData({ openData: res.data }));
                 return;
             }
