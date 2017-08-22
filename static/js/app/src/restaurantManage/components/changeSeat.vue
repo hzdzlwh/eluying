@@ -140,22 +140,36 @@ export default {
             });
         },
         changeSeat() {
-            const params = { orderId: this.openData.orderId, caterOrderId: this.openData.caterOrderId, restId: this.restId };
-            params.boardIds = [];
-            this.tableList.forEach(area => {
-                area.boardList.forEach(board => {
-                    if (board.selected) {
-                        params.boardIds.push(board.boardId);
+            if (!this.openData.orderId) {      // 开台的换桌
+                const params = { peopleNum: this.openData.peopleNum, restId: this.restId, boardLogIds: JSON.stringify(this.openData.list), boardIds: [] };
+                this.selectedBoard.forEach(board => {
+                    params.boardIds.push(board.boardId);
+                });
+                params.boardIds = JSON.stringify(params.boardIds);
+                http.get('/board/openBoard', params).then(res => {
+                    if (res.code === 1) {
+                        this.hideModal();
+                        restBus.$emit('refeshView');
                     }
                 });
-            });
-            params.boardIds = JSON.stringify(params.boardIds);
-            http.get('/catering/selectBoards', params).then(res => {
-                if (res.code === 1) {
-                    this.hideModal();
-                    restBus.$emit('refeshView');
-                }
-            });
+            } else {                           // 使用中的桌子换桌
+                const params = { orderId: this.openData.orderId, caterOrderId: this.openData.caterOrderId, restId: this.restId };
+                params.boardIds = [];
+                this.tableList.forEach(area => {
+                    area.boardList.forEach(board => {
+                        if (board.selected) {
+                            params.boardIds.push(board.boardId);
+                        }
+                    });
+                });
+                params.boardIds = JSON.stringify(params.boardIds);
+                http.get('/catering/selectBoards', params).then(res => {
+                    if (res.code === 1) {
+                        this.hideModal();
+                        restBus.$emit('refeshView');
+                    }
+                });
+            }
         },
         selectSeat(board) {
             if (this.openData.orderState === 0) {    // 预约订单 可以选所有状态桌子
@@ -171,6 +185,7 @@ export default {
                 http.get('/board/list', { date: this.date, restId: this.restId, isChange: true }).then(res => {
                     if (res.code === 1) {
                         this.tableList = [];
+                        this.areas = [];
                         var borarList = res.data.list;
                         if (this.openData) {
                             this.openData.boardDetailResps.forEach(el => {
