@@ -169,7 +169,7 @@ export default {
             this.addDishVisible = false;
         },
         getDishOrderNum(food) {
-            var res = 0
+            var res = 0;
             if (this.addFood.length === 0) {
                 return res;
             }
