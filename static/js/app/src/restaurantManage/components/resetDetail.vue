@@ -11,7 +11,7 @@
         <div class="rest-taday-count">
             <div class="restDetail-title-tip">桌号</div>
             <div class="restDetail-title-display">
-                 <div v-if='openData.boardDetailResps[0] !== undefined'><span class="restDetail-title-dish">{{openData.boardDetailResps[0].boardName}}</span> <span v-if='openData.boardDetailResps.length > 1' class="restDetail-type-tag" :title='selectDishText'>并</span></div>
+                 <div v-if='boardModalName'><span class="restDetail-title-dish">{{boardModalName}}</span> <span v-if='(openData.boardDetailResps &&openData.boardDetailResps.length > 1) || (openData.openBoards &&openData.openBoards.length > 1)' class="restDetail-type-tag" :title='selectDishText'>并</span></div>
                 <!-- <div><span class="rest-taday-tag " :class="getState(item.foodState, 'color')">{{getState(item.foodState, 'text')}}</span></div> -->
                  <div v-if='openData.state !== 2 && openData.orderState !== undefined'><span class="rest-taday-tag " :class='getState("color")' >{{getState("text")}}</span></div>
             </div>
@@ -225,15 +225,27 @@ export default {
             'editorPromission'
         ]),
         boardModalName() {
-            if (this.openData.boardDetailResps[0]) {
+            if (this.openData.boardDetailResps && this.openData.boardDetailResps[0]) {
                 return this.openData.boardDetailResps[0].boardName;
+            }
+            if (this.openData.openBoards && this.openData.openBoards[0]) {
+                return this.openData.openBoards[0].boardName;
             }
             return '';
         },
         selectDishText() {
             let str = '';
-            if (this.openData.boardDetailResps.length) {
+            if (this.openData.boardDetailResps && this.openData.boardDetailResps.length) {
                 this.openData.boardDetailResps.forEach((el, index) => {
+                    if (index !== 0) {
+                        str += '\r\n';
+                    }
+                    str += el.boardName + el.boardId;
+                });
+                return str;
+            }
+            if (this.openData.openBoards && this.openData.openBoards.length) {
+                this.openData.openBoards.forEach((el, index) => {
                     if (index !== 0) {
                         str += '\r\n';
                     }
@@ -263,6 +275,10 @@ export default {
             }
             if (this.openData.openBoards && this.openData.openBoards.length) {
                 http.get('/board/getOpenBoardRecords', { boardId: this.openData.openBoards[0] }).then(res => this.setOpenData({ openData: res.data }));
+                return;
+            }
+            if (this.openData.boardDetailResps && this.openData.boardDetailResps.length) {
+                http.get('/board/getOpenBoardRecords', { boardId: this.openData.boardDetailResps[0].boardId }).then(res => this.setOpenData({ openData: res.data }));
                 return;
             }
         },
@@ -365,9 +381,9 @@ export default {
             }
             parms = Object.assign(parms, parm);
             http.get('/catering/modifyPeopleNum', parms).then(res => {
-                this.getOpenData();
                 restBus.$emit('refeshView');
-            });
+                return;
+            }).then(() => this.getOpenData());
         },
         hidebookInfo() {
             this.bookInfoVisible = false;

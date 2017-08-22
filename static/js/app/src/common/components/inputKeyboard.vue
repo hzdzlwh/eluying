@@ -135,8 +135,8 @@ export default {
             }
             if (e.target.innerText && !isNaN(Number(e.target.innerText))) {
                 const num = Number(this.val + e.target.innerText);
-                if (num > 2000) {
-                    this.val = 2000;
+                if (num > 1000) {
+                    this.val = 1000;
                 } else {
                     this.val = num;
                 }
