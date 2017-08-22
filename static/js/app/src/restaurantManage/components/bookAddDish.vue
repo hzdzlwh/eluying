@@ -320,7 +320,7 @@
         },
         watch: {
             dishType() {
-                this.startGetData();
+                this.getData();
             }
         },
         components: {

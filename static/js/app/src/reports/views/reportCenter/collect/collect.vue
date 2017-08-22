@@ -37,7 +37,6 @@
         data() {
             return {
                 collectList,
-                componentName: this.$route.params.id,
                 currentView: ''
             };
         },
@@ -46,8 +45,15 @@
                 .then(res => {
                     if (res.code === 1) {
                         const centerList = res.data.list;
+                        this.$router.options.routes[2].children[0].children.splice(1, this.$router.options.routes[2].children[0].children.length - 1);
                         if (centerList.length) {
+                            this.$router.push('/reportCenter/collect/' + res.data.list[0]);
+                            centerList.map((id) => {
+                                this.$router.options.routes[2].children[0].children.push({ meta: { name: collectList[id].name, id: id }, path: '' });
+                            });
                             this.currentView = collectList[centerList[0]].component;
+                        } else {
+                            this.currentView = 'noCollect';
                         }
                     } else {
                         window.alert('请求失败');
