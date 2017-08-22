@@ -689,7 +689,7 @@ export default {
                     checkType: 0,
                     checkTypes: this.checkType.slice(0)
                 };
-                this.getRoomsList(r, index);
+                // this.getRoomsList(r, index).then();
                 // if (index > 0) {
                 //     r.roomList.forEach((el, roomIndex) => {
                 //         if (el.id === rooms[index - 1].roomId) {
@@ -698,6 +698,9 @@ export default {
                 //     });
                 // }
                 return r;
+            });
+            this.rooms.forEach((r, index) => {
+                this.getRoomsList(r, index);
             });
             this.modifyRooms(this.rooms);
         },
@@ -887,7 +890,7 @@ export default {
                     });
                 }
             });
-            http.get('/room/getRoomsList', {
+            return http.get('/room/getRoomsList', {
                 startDate: util.dateFormatLong(room.room.startDate),
                 endDate: util.dateFormatLong(room.room.endDate),
                 roomOrderId: room.roomOrderId,
