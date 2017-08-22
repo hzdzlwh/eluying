@@ -26,35 +26,39 @@
                 <div class="menu" @click="orderDish" v-show="editorPromission">点菜</div>
             </div>
         </div>
-        <div class="area-container" v-for="area in tableList">
-            <h3>{{area.areaName}}</h3>
-            <div class="seats-container">
-                <div v-for="(board, index) in area.boardList" class="seat" :class="{leisure: board.boardState === 0,
-                    using: board.boardState === 1 && board.caterOrderId,
-                    'open-table': board.boardState === 1 && !board.caterOrderId,
-                    'select-table': board.selected}" @click="getSeatOrder($event, board, 'currentOrder')" @contextmenu.prevent="$refs.ctxMenu.open($event, board)">
-                    <div class="state-twoCode" :class="{'state-twoCode-right': board.orderState !== 2 && board.orderState !== 4 }">
-                        <div class="state" :class="{'state-pending': board.orderState === 4 }" v-if="board.orderState === 2 || board.orderState === 4">{{orderState[board.orderState]}}</div>
-                        <div class="two-dimensionalcode" v-if="board.hasScan"></div>
-                    </div>
-                    <div class="seat-num">{{board.boardName}}</div>
-                    <div class="eating-time" v-if="board.orderState === 1">{{board.duration}}</div>
-                    <div class="reserve-time" v-if="board.time">预{{board.time}}</div>
-                    <div class="order-list" v-if="board.caterOrderList.length">
-                        <div class="rest-arrow-up"></div>
-                        <div class="seat-name"><span>{{board.boardName}}</span></div>
-                        <div class="order-info" v-for="o in board.caterOrderList" @click.prevent="getSeatOrder($event, o, 'otherOrder')">
-                            <div class="order-list-item">
-                                <div>
-                                    <span>人数: {{o.peopleNum}}</span>
-                                    <span style="margin-left: 32px;" v-if="o.state === 0">用餐时间: {{o.diningTime}}</span>
-                                    <span style="margin-left: 32px;" v-else>用餐时长: {{o.duration}}</span>
-                                </div>
-                                <div class="seat-state yellow" :class="{blue:o.state === 1}">{{FOOD_STATE[o.state]}}</div>
+        <div class="scroller-container" ref="scrollerContainer">
+            <div class="scroller">
+                <div class="area-container" v-for="area in tableList">
+                    <h3>{{area.areaName}}</h3>
+                    <div class="seats-container">
+                        <div v-for="(board, index) in area.boardList" class="seat" :class="{leisure: board.boardState === 0,
+                            using: board.boardState === 1 && board.caterOrderId,
+                            'open-table': board.boardState === 1 && !board.caterOrderId,
+                            'select-table': board.selected}" @click="getSeatOrder($event, board, 'currentOrder')" @contextmenu.prevent="$refs.ctxMenu.open($event, board)">
+                            <div class="state-twoCode" :class="{'state-twoCode-right': board.orderState !== 2 && board.orderState !== 4 }">
+                                <div class="state" :class="{'state-pending': board.orderState === 4 }" v-if="board.orderState === 2 || board.orderState === 4">{{orderState[board.orderState]}}</div>
+                                <div class="two-dimensionalcode" v-if="board.hasScan"></div>
                             </div>
-                            <div class="order-list-item">
-                                <div v-show="o.name && o.phone">{{`${o.name}(${o.phone})`}}<span style="margin-left: 8px;">{{o.origin}}</span></div>
-                                <div>{{o.caterOrderOrigin}}</div>
+                            <div class="seat-num">{{board.boardName}}</div>
+                            <div class="eating-time" v-if="board.orderState === 1">{{board.duration}}</div>
+                            <div class="reserve-time" v-if="board.time">预{{board.time}}</div>
+                            <div class="order-list" v-if="board.caterOrderList.length">
+                                <div class="rest-arrow-up"></div>
+                                <div class="seat-name"><span>{{board.boardName}}</span></div>
+                                <div class="order-info" v-for="o in board.caterOrderList" @click.prevent="getSeatOrder($event, o, 'otherOrder')">
+                                    <div class="order-list-item">
+                                        <div>
+                                            <span>人数: {{o.peopleNum}}</span>
+                                            <span style="margin-left: 32px;" v-if="o.state === 0">用餐时间: {{o.diningTime}}</span>
+                                            <span style="margin-left: 32px;" v-else>用餐时长: {{o.duration}}</span>
+                                        </div>
+                                        <div class="seat-state yellow" :class="{blue:o.state === 1}">{{FOOD_STATE[o.state]}}</div>
+                                    </div>
+                                    <div class="order-list-item">
+                                        <div v-show="o.name && o.phone">{{`${o.name}(${o.phone})`}}<span style="margin-left: 8px;">{{o.origin}}</span></div>
+                                        <div>{{o.caterOrderOrigin}}</div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -72,12 +76,13 @@ import types from '../store/types';
 import http from '../../common/http';
 import util from '../../common/util.js';
 import restBus from '../event.js';
-// import bus from '../../common/eventBus';
+import bus from '../../common/eventBus';
 import { mapState, mapMutations, mapActions } from 'vuex';
 import customerRadio from './customerRadio.vue';
 import DateSelect from '../../accommodation/components/DateSelect';
 import contextmenu from '../../common/components/contextmenu';
 import { FOOD_STATE } from '../../ordersManage/constant.js';
+import IScroll from 'iscroll';
 export default {
     data() {
         return {
@@ -94,6 +99,7 @@ export default {
     created() {
         this.startFetchDate();
         restBus.$on('refeshView', this.getSeatList);
+        bus.$on('refreshView', this.getSeatList);
     },
     computed: {
         ...mapState([
@@ -159,6 +165,14 @@ export default {
                 return area.selected && area.id !== -1;
             })) {
                 this.areas[0].selected = false;
+            }
+            if (area.id === -1) {
+                this.areas.forEach(area => {
+                    if (area.id !== -1) {
+                        area.selected = false;
+                    }
+                });
+                this.areas[0].selected = true;
             }
             if (!(this.areas.find(area => {
                 return area.selected;
@@ -246,6 +260,9 @@ export default {
                     this.areasEmpty = false;
                     this[types.RESET_SELECT_DISH]();
                     this[types.SET_PROMESSION]({ flag: res.data.restPermission });
+                    this.$nextTick(() => {
+                        this.initScroll();
+                    });
                 }
             });
         },
@@ -273,6 +290,10 @@ export default {
             } else {
                 this.getSeatList();
             }
+        },
+        initScroll() {
+            this.$refs.scrollerContainer.style.height = (window.innerHeight - 336) + 'px';
+            this.scroll = new IScroll(this.$refs.scrollerContainer, { probeType: 3, mouseWheel: true, scrollbars: false });
         }
     },
     watch: {
@@ -548,6 +569,9 @@ export default {
                 }
             }
         }
+        &:first-child{
+            margin-top: 0;
+        }
         
     }
     #context-menu{
@@ -558,6 +582,34 @@ export default {
             line-height: 32px;
             z-index: 1;
             cursor: pointer;
+        }
+    }
+    .scroller-container{
+        margin-top: 24px;
+        position: absolute;
+        z-index: 1;
+        width: 792px;
+        overflow: hidden;
+        .scroller{
+            position: absolute;
+            z-index: 1;
+            -webkit-tap-highlight-color: rgba(0,0,0,0);
+            width: 100%;
+            -webkit-transform: translateZ(0);
+            -moz-transform: translateZ(0);
+            -ms-transform: translateZ(0);
+            -o-transform: translateZ(0);
+            transform: translateZ(0);
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-text-size-adjust: none;
+            -moz-text-size-adjust: none;
+            -ms-text-size-adjust: none;
+            -o-text-size-adjust: none;
+            text-size-adjust: none;
         }
     }
  </style>

@@ -24,6 +24,7 @@
             <messageList :visibleType="viewType"></messageList>
         </div>
         <OrderSystem></OrderSystem>
+        <button @click="notify">xx</button>
     </div>
 </template>
 

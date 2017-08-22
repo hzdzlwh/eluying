@@ -16,11 +16,15 @@
             </ul>
             <div class="tab-content">
                 <div class="tab-pane fade in active" id="read">
-                    read
+                    <ul>
+                        <li v-for="item in readList"></li>
+                    </ul>
                     <dd-pagination @currentchange="" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo" />
                 </div>
                 <div class="tab-pane fade in" id="unread">
-                    unread
+                    <ul>
+                        <li></li>
+                    </ul>
                     <dd-pagination @currentchange="" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo" />
                 </div>
             </div>
@@ -49,23 +53,53 @@ export default{
         };
     },
     created() {
-        this.getUnreadMsg();
-        this.getReadMsg();
+        this.getUnreadOrderMsg();
+        this.getReadOrderMsg();
+        this.getUnreadSystemMsg();
+        this.getReadSystemMsg();
+    },
+    computed: {
+        readList() {
+            if (this.visibleType === 'orderMessage') {
+                return this.readOrderMsg;
+            } else if (this.visibleType === 'systemMessage') {
+                return this.readSystemMsg;
+            }
+        },
+        unreadList() {
+            if (this.visibleType === 'orderMessage') {
+                return this.unreadOrderMsg;
+            } else if (this.visibleType === 'systemMessage') {
+                return this.unreadSystemMsg;
+            }
+        }
     },
     methods: {
-        getUnreadMsg() {
-            http.get('/msg/list', { page: 1, status: 0 }).then(res => {
+        getUnreadOrderMsg() {
+            http.get('/msg/list', { page: 1, status: 0, pageLimit: 10 }).then(res => {
                 if (res.code === 1) {
                     this.unreadOrderMsg = res.data.orderMsgList;
-                    this.unreadSystemMsg = res.data.systemMsg;
                 }
             });
         },
-        getReadMsg() {
-            http.get('/msg/list', { page: 1, status: 1 }).then(res => {
+        getReadOrderMsg() {
+            http.get('/msg/list', { page: 1, status: 1, pageLimit: 10 }).then(res => {
                 if (res.code === 1) {
                     this.readOrderMsg = res.data.orderMsgList;
-                    this.readSystemMsg = res.data.systemMsg;
+                }
+            });
+        },
+        getUnreadSystemMsg() {
+            http.get('/msg/systemMsgList', { page: 1, status: 0, pageLimit: 10 }).then(res => {
+                if (res.code === 1) {
+                    this.unreadSystemMsg = res.data.list;
+                }
+            });
+        },
+        getReadSystemMsg() {
+            http.get('/msg/systemMsgList', { page: 1, status: 1, pageLimit: 10 }).then(res => {
+                if (res.code === 1) {
+                    this.readSystemMsg = res.data.list;
                 }
             });
         }

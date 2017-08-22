@@ -31,7 +31,7 @@
                         <span class="relevance-order" @click="cancelConnect" v-if="!!relevanceOrder">取消关联</span>
                         <span class="relevance-order" @click="showRelevanceOrder" v-else>关联订单</span>
                     </div>
-                    <div><span style="display:inline-block;width:70px;text-align:right;">手机号：</span><input type="number" class="dd-input" style="width:200px;" v-model="phone" @input="changeVipList(2)" :disabled="!!relevanceOrder"></div>
+                    <div><span style="display:inline-block;width:70px;text-align:right;"><span class="write-alert">*</span>手机号：</span><input type="number" class="dd-input" style="width:200px;" v-model="phone" @input="changeVipList(2)" :disabled="!!relevanceOrder"></div>
                     <div class="item">
                         <span>客户来源：</span>
                         <div style="width:200px;">
@@ -67,8 +67,9 @@
                             </dd-select>
                         </div>
                     </div>
-                    <div><span>就餐人数：</span><input type="number" max="1000" class="dd-input" style="width:200px;" v-model.number="eatNum"></div>
+                    <div><span class="write-alert">*</span><span>就餐人数：</span><input type="number" max="1000" class="dd-input" style="width:200px;" v-model.number="eatNum" @input="eatingNumLimit"></div>
                     <div class="item">
+                        <span class="write-alert">*</span>
                         <span style="display:inline-block;width:70px;text-align:right;">用餐时间：</span>
                         <div>
                             <DatePicker v-model='date' @change='' :clearable='false' type="datetime" placeholder="选择日期时间" format='yyyy-MM-dd HH:mm'></DatePicker>
@@ -89,7 +90,7 @@
                     </div>
                     <div class="order-remark">
                         <span>订单备注：</span>
-                        <textarea style="width:300px;height:80px;" v-model="remark"></textarea>
+                        <textarea style="width:300px;height:80px;" v-model="remark" maxlength="500"></textarea>
                     </div>
                 </div>
                 <div class="modal-foot">
@@ -142,7 +143,7 @@ export default {
             vipCardsAndLevel: [],
             saleList: [],
             saleId: -1,
-            eatNum: undefined,
+            eatNum: 1,
             remark: '',
             selectBoard: undefined,
             orderInfo: undefined,
@@ -487,6 +488,11 @@ export default {
             }
             const discount = discounts.find(i => i.nodeType === 0);
             return discount ? discount.discount : 1;
+        },
+        eatingNumLimit() {
+            if (this.eatNum > 1000) {
+                this.eatNum = 1000;
+            }
         }
     },
     watch: {
@@ -662,6 +668,9 @@ export default {
                 position: absolute;
                 background: #fafafa;
                 z-index: 2;
+            }
+            .write-alert{
+                color: #f24949;
             }
         }
         .modal-foot{

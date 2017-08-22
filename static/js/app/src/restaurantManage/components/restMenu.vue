@@ -135,7 +135,14 @@ export default {
             });
         },
         orderMenu(food) {
-            if (food.inventoryNum > 0 || food.customerDish || food.inventoryNum === null) {
+            if (food.inventoryNum > 0 && food.inventoryNum > this.getDishOrderNum(food)) {
+                const selectedFood = { ...food };
+                if (selectedFood.inventoryNum === null) {
+                    selectedFood.inventoryNum = 20000000;
+                }
+                this[types.ADD_FOOD]({ food: selectedFood });
+            }
+            if (food.inventoryNum === null || food.customerDish) {
                 const selectedFood = { ...food };
                 if (selectedFood.inventoryNum === null) {
                     selectedFood.inventoryNum = 20000000;
@@ -360,7 +367,7 @@ export default {
                                     top: 50px;
                                     right: 0;
                                     height: 16px;
-                                    width: 40px;
+                                    width: 47px;
                                     line-height: 16px;
                                     padding: 0 7px;
                                     border-radius: 8px 0 0 8px;

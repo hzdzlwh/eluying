@@ -75,7 +75,7 @@
                                         <ul class="scroller">
                                             <li v-for="food in selectFood">
                                                 <span class="food-name">{{food.dishName}}</span>
-                                                <count :del=true :min = -1 :num='food.bookNum' :onNumChange='onNumChange' :id='food.dishId'></count>
+                                                <count :del=true :min = -1 :max="food.inventoryNum === null ? 20000000:food.inventoryNum" :num='food.bookNum' :onNumChange='onNumChange' :id='food.dishId'></count>
                                                 <span class="food-price">{{food.bookNum * food.price}}</span>
                                             </li>
                                         </ul>
@@ -221,7 +221,33 @@ export default{
             this.selectFood = [];
         },
         orderMenu(food) {
-            if (food.inventoryNum > 0 || food.inventoryNum === null || food.customerDish) {
+            /* if (food.inventoryNum > 0 || food.inventoryNum === null || food.customerDish) {
+                const isHasFood = this.selectFood.find(el => {
+                    return el.dishId === food.dishId;
+                });
+                if (isHasFood) {
+                    isHasFood.bookNum += 1;
+                } else {
+                    const cacheFood = { ...food };
+                    cacheFood.bookNum = 1;
+                    cacheFood.price = cacheFood.dishPrice;
+                    this.selectFood.push(cacheFood);
+                }
+            } */
+            if (food.inventoryNum === null || food.customerDish) {
+                const isHasFood = this.selectFood.find(el => {
+                    return el.dishId === food.dishId;
+                });
+                if (isHasFood) {
+                    isHasFood.bookNum += 1;
+                } else {
+                    const cacheFood = { ...food };
+                    cacheFood.bookNum = 1;
+                    cacheFood.price = cacheFood.dishPrice;
+                    this.selectFood.push(cacheFood);
+                }
+            }
+            if (food.inventoryNum > 0 && food.inventoryNum > this.getDishOrderNum(food)) {
                 const isHasFood = this.selectFood.find(el => {
                     return el.dishId === food.dishId;
                 });
