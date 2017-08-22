@@ -11,7 +11,7 @@
         <div class="rest-taday-count">
             <div class="restDetail-title-tip">桌号</div>
             <div class="restDetail-title-display">
-                 <div><span class="restDetail-title-dish">{{openData.boardDetailResps[0].boardName}}</span> <span v-if='openData.boardDetailResps.length > 1' class="restDetail-type-tag" :title='selectDishText'>并</span></div>
+                 <div v-if='openData.boardDetailResps[0] !== undefined'><span class="restDetail-title-dish">{{openData.boardDetailResps[0].boardName}}</span> <span v-if='openData.boardDetailResps.length > 1' class="restDetail-type-tag" :title='selectDishText'>并</span></div>
                 <!-- <div><span class="rest-taday-tag " :class="getState(item.foodState, 'color')">{{getState(item.foodState, 'text')}}</span></div> -->
                  <div v-if='openData.state !== 2 && openData.orderState !== undefined'><span class="rest-taday-tag " :class='getState("color")' >{{getState("text")}}</span></div>
             </div>
@@ -26,10 +26,10 @@
                     <div class="restDetail-title-data" v-if='!isHasOrder || (openData.orderState == 1)'>{{openData.timer}}</div>
                 </div>
             </div>
-            <div class="rest-restDetail-other" @click='moreShow = !moreShow' v-if='openData.state !== 2 && openData.orderState'>
+            <div class="rest-restDetail-other" @click='moreShow = !moreShow' v-if='openData.state !== 2 && openData.orderState !== undefined'>
                 {{openData.customerName}} （{{openData.customerPhone}}）查看详情 <span >>></span>
             </div>
-          <div style="z-index:3"  class="rest-restDetail-transform" :style='{maxHeight: moreShow ? "400px" : "0"}' v-if='openData.state !== 2 && openData.orderState'>
+          <div style="z-index:3"  class="rest-restDetail-transform" :style='{maxHeight: moreShow ? "400px" : "0"}' v-if='openData.state !== 2 && openData.orderState !== undefined'>
                         <div class="rest-restDetail-otherDetail"  >
                     <div>
                         <div><span>客户姓名：</span><span>{{openData.customerName || '无'}}</span></div>
@@ -162,7 +162,7 @@
         <changeRemark :visible='changeRemarkVisible':text='dishChange ? dishChange.remark : undefined' @changeRemark='changeRemark' @hideModal='changeRemarkHide'></changeRemark>
         <dishModal :visible='dishModalVisible' :type='dishModalType' :data='dishChange' @hideModal='hideDishModal' @dishChange='dishChangeSub'></dishModal>
 <!--         <bookInfo :visible='bookInfoVisible' :num='bookPeopleNUm' :data='bookData' @hideModal='hidebookInfo' :type='isHasOrder' @changeBook='changeBook'></bookInfo> -->
-<keyBoard :visible ='bookInfoVisible' @close='hidebookInfo' :num ='openData.peopleNum' :dish='openData.boardDetailResps[0].boardName + openData.boardDetailResps[0].boardId' v-if='openData' @numChange='changeBookNum'></keyBoard>
+<keyBoard :visible ='bookInfoVisible' @close='hidebookInfo' :num ='openData.peopleNum' :dish='boardModalName' v-if='openData' @numChange='changeBookNum'></keyBoard>
         <handlePoint v-if="handlePoint" :caterOrderId="openData.caterOrderId" :restId="restId" @closeHandlePoint="() => {this.handlePoint = false;}"/>
     </div>
 </template>
@@ -224,6 +224,12 @@ export default {
             'addFood',
             'editorPromission'
         ]),
+        boardModalName() {
+            if (this.openData.boardDetailResps[0]) {
+                return this.openData.boardDetailResps[0].boardName;
+            }
+            return '';
+        },
         selectDishText() {
             let str = '';
             if (this.openData.boardDetailResps.length) {
@@ -389,7 +395,7 @@ export default {
                 bus.$emit('showCancelOrder');
                 this.getOpenData();
             };
-            modal.confirm({ title: '提示', message: '确定取消订单' }, callBack);
+            modal.confirm({ title: '提示', message: '确定取消订单?' }, callBack);
         },
         closeBoard() {
             const parms = {
