@@ -74,7 +74,7 @@
                     },
                     {
                         title: '预订数量',
-                        dataIndex: 'bookNum',
+                        dataIndex: 'reserveNum',
                         width: 60,
                         sorter: true
                     }

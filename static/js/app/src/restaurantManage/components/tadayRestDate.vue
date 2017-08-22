@@ -23,7 +23,7 @@
                 <div>
                     <div><span class="rest-taday-smallTip">
                     <!-- {{orderWay[item.orderWay]}} -->{{orderWay[item.orderWay]}}
-                    </span>  <span>桌号{{getBoard(item)[0] || "无"}}<span v-if='getBoard(item).length > 1' class="restDetail-type-tag" >并</span> - {{item.peopleNum}}人</span> </div>
+                    </span>  <span>桌号：{{getBoard(item)[0] || "无"}}<span v-if='getBoard(item).length > 1' class="restDetail-type-tag" >（并）</span> - 人数{{item.peopleNum}}</span> </div>
                     <div class="rest-taday-smallTip">订单号：{{item.orderNum}}</div>
                 </div>
                 <div><span class="rest-taday-tag " :class="getState(item.foodState, 'color')">{{getState(item.foodState, 'text')}}</span></div>
