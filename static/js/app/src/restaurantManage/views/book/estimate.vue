@@ -122,7 +122,8 @@
                 resetBookDish: false,
                 row: {},
                 index: 0,
-                col: [
+                col: [],
+                col1: [
                     {
                         title: '菜品分类',
                         dataIndex: 'type'
@@ -146,6 +147,73 @@
                                 <span class="bookDishFontBlue" style="margin-left:10px;" onClick={() => this.delectBookDish(row, h)}>删除</span>
                             </span>
                     }
+                ],
+                col2: [
+                    {
+                        title: '菜品分类',
+                        dataIndex: 'type'
+                    },
+                    {
+                        title: '菜品名称',
+                        dataIndex: 'name'
+                    },
+                    {
+                        title: '预订数量',
+                        dataIndex: 'reserveNum'
+                    },
+                    {
+                        title: '库存数量',
+                        render: (h, row) => {
+                            return <div class={row.soldOut === 1 ? 'bookDishFontRed' : ''}>{row.soldOut === 1 ? '已售完' : row.sellClearNum}</div>;
+                        },
+                        sorter: true
+                    },
+                    {
+                        title: '操作',
+                        render: (h, row) =>
+                            <span>
+                                <span class="bookDishFontBlue" onClick={() => this.editBookDish(row)}>编辑</span>
+                                <span class="bookDishFontBlue" style="margin-left:10px;" onClick={() => this.delectBookDish(row, h)}>删除</span>
+                            </span>
+                    }
+                ],
+                col3: [
+                    {
+                        title: '菜品分类',
+                        dataIndex: 'type'
+                    },
+                    {
+                        title: '菜品名称',
+                        dataIndex: 'name'
+                    },
+                    {
+                        title: '库存数量',
+                        render: (h, row) => {
+                            return <div class={row.soldOut === 1 ? 'bookDishFontRed' : ''}>{row.soldOut === 1 ? '已售完' : row.sellClearNum}</div>;
+                        },
+                        sorter: true
+                    }
+                ],
+                col4: [
+                    {
+                        title: '菜品分类',
+                        dataIndex: 'type'
+                    },
+                    {
+                        title: '菜品名称',
+                        dataIndex: 'name'
+                    },
+                    {
+                        title: '预订数量',
+                        dataIndex: 'reserveNum'
+                    },
+                    {
+                        title: '库存数量',
+                        render: (h, row) => {
+                            return <div class={row.soldOut === 1 ? 'bookDishFontRed' : ''}>{row.soldOut === 1 ? '已售完' : row.sellClearNum}</div>;
+                        },
+                        sorter: true
+                    }
                 ]
             };
         },
@@ -166,6 +234,11 @@
                 }
                 http.get('/dish/getSellClearMenu', obj).then(res => {
                     if (res.code === 1) {
+                        if (res.data.reservePreOrder === 1 && res.data.restPermission) {
+                            this.col = this.col2;
+                        } else if (res.data.reservePreOrder === 0 && res.data.restPermission) {
+                            this.col = this.col1;
+                        }
                         const list = res.data.list;
                         this.vips = [];
                         list.forEach(dishes => {

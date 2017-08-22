@@ -26,9 +26,9 @@
         <dd-table :columns="col" :data-source="vips" :bordered="true" style="margin:20px 0 10px;"></dd-table>
         <div class="report-center-foot">
             <div style="float:left;">
-                <span class="report-center-span">订单总数 :<b>{{orderNum}}</b></span>
-                <span class="report-center-span">应收金额 :￥ <b> {{receiptNum}}</b></span>
-                <span class="report-center-span">实收金额 : ￥<b> {{receiptFree}}</b></span>
+                <span class="report-center-span">共<b>{{orderNum}}</b>个订单</span>
+                <span class="report-center-span">合计应收金额￥<b>{{receiptNum}}</b></span>
+                <span class="report-center-span">实收金额￥<b>{{receiptFree}}</b></span>
             </div>
             <dd-pagination @currentchange="handlePageChange" :visible-pager-count="6" :show-one-page="false" :page-count="pages" :current-page="pageNo" class="report-center-pagination"/>
         </div>
@@ -89,17 +89,17 @@
                     {
                         title: '总金额',
                         dataIndex: 'originTotalPrice',
-                        width: 60
+                        width: 80
                     },
                     {
                         title: '折扣金额',
                         dataIndex: 'vipDiscount',
-                        width: 60
+                        width: 80
                     },
                     {
                         title: '整单优惠',
                         dataIndex: 'discount',
-                        width: 60
+                        width: 80
                     },
                     {
                         title: '零头处理',
@@ -109,17 +109,17 @@
                     {
                         title: '应收金额',
                         dataIndex: 'totalPrice',
-                        width: 60
+                        width: 100
                     },
                     {
                         title: '违约金',
                         dataIndex: 'penalty',
-                        width: 60
+                        width: 80
                     },
                     {
                         title: '实收金额',
                         dataIndex: 'payment',
-                        width: 60
+                        width: 80
                     },
                     {
                         title: '收款明细',

@@ -301,13 +301,12 @@
                 col: [
                     {
                         title: '订单号',
-                        dataIndex: 'serialNum',
+                        render: (h, row) =>
+                            <div>
+                                <p>{row.serialNum}</p>
+                                <p class="bookDishFontRed">{row.creationTime}</p>
+                            </div>,
                         width: 180
-                    },
-                    {
-                        title: '创建时间',
-                        dataIndex: 'creationTime',
-                        width: 120
                     },
                     {
                         title: '桌号',

@@ -201,7 +201,7 @@
                 } else if (type === 2) {
                     this.sellClearDish = false;
                     this.soldOut = 0;
-                    this.sellClearNum = this.sellClearNum ? this.sellClearNum : 1;
+                    this.sellClearNum = this.info.sellClearNum ? this.info.sellClearNum : 1;
                 }
             },
             resetBookDishNum() {
