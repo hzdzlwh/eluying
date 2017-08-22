@@ -261,8 +261,7 @@
         watch: {
             date() {
                 this.getData();
-            },
-            '$toute': 'beforeRouteEnter'
+            }
         },
         created() {
             this.today = util.dateFormat(new Date());
@@ -276,8 +275,10 @@
             collectUrl(num) {
                 if (num === 0) {
                     http.get('/stat/addToCollect', { statValue: 301 }).then(res => {
-                        this.collectNum = 1;
-                        this.collectName = '已收藏';
+                        if (res.code === 1) {
+                            this.collectNum = 1;
+                            this.collectName = '已收藏';
+                        }
                     });
                 } else if (num === 1) {
                     http.get('/stat/removeFromCollection', { statValue: 301 }).then(res => {

@@ -27,9 +27,9 @@
             <div class="add-button fr">
                 <div class="dd-dropdown">
                     <DdDropdown text="导出明细" trigger="click" style="z-index:12;">
-                        <dd-dropdown-item>
-                            <span><a :href="outPutText(1)" download>导出PDF</a></span>
-                        </dd-dropdown-item>
+                        <!--<dd-dropdown-item>-->
+                            <!--<span><a :href="outPutText(1)" download>导出PDF</a></span>-->
+                        <!--</dd-dropdown-item>-->
                         <dd-dropdown-item>
                             <span><a :href="outPutText(0)" download>导出Excel</a></span>
                         </dd-dropdown-item>
@@ -304,7 +304,7 @@
                         render: (h, row) =>
                             <div>
                                 <p>{row.serialNum}</p>
-                                <p class="bookDishFontRed">{row.creationTime}</p>
+                                <p>{row.creationTime}</p>
                             </div>,
                         width: 180
                     },
@@ -492,7 +492,7 @@
                 };
                 if (this.tag === -1) {
                     if (this.state === -1) {
-                        obj.status = JSON.stringify([3, 4, 5]);
+                        obj.status = JSON.stringify([0, 1, 2, 3, 4, 5, 6, 8]);
                     } else if (this.state !== -1) {
                         obj.status = JSON.stringify([this.state]);
                     }

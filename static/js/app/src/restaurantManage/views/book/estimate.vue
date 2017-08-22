@@ -7,10 +7,10 @@
                         <dd-option :key="item.id" v-for="item in dishTypeAll" :value="item.dishType" :label="item.name"></dd-option>
                     </dd-select>
                 </div>
-                <div class="estimate-delete-dishes bookDishFontBlue" @click="emptyEstimateDish">
+                <div v-if="restPermission" class="estimate-delete-dishes bookDishFontBlue" @click="emptyEstimateDish">
                     清空
                 </div>
-                <div class="estimate-add-dish bookDishFontBlue" @click="addEstimateDish">
+                <div v-if="restPermission" class="estimate-add-dish bookDishFontBlue" @click="addEstimateDish">
                     <span class="estimate-add-icon"></span>
                     新增沽清菜品
                 </div>
@@ -120,6 +120,7 @@
                 deleteBookDish: false,
                 addBookDish: false,
                 resetBookDish: false,
+                restPermission: false,
                 row: {},
                 index: 0,
                 col: [],
@@ -234,10 +235,20 @@
                 }
                 http.get('/dish/getSellClearMenu', obj).then(res => {
                     if (res.code === 1) {
-                        if (res.data.reservePreOrder === 1 && res.data.restPermission) {
-                            this.col = this.col2;
-                        } else if (res.data.reservePreOrder === 0 && res.data.restPermission) {
-                            this.col = this.col1;
+                        if (res.data.restPermission) {
+                            this.restPermission = true;
+                            if (res.data.reservePreOrder === 1) {
+                                this.col = this.col2;
+                            } else if (res.data.reservePreOrder === 0) {
+                                this.col = this.col1;
+                            }
+                        } else if (!res.data.restPermission) {
+                            this.restPermission = false;
+                            if (res.data.reservePreOrder === 1) {
+                                this.col = this.col4;
+                            } else if (res.data.reservePreOrder === 0) {
+                                this.col = this.col3;
+                            }
                         }
                         const list = res.data.list;
                         this.vips = [];

@@ -86,7 +86,6 @@
         },
         created() {
             this.date = util.dateFormat(new Date());
-            this.startGetDish();
         },
         methods: {
             sortData(arr, type) {
@@ -129,18 +128,15 @@
                         list.forEach(dishes => {
                             const dishList = dishes.dishes;
                             dishList.forEach(dish => {
-                                const newDish = {};
-                                newDish.type = dishes.dishCategoryName;
-                                newDish.name = dish.dishName;
-                                newDish.bookNum = dish.reserveNum;
-                                newDish.reserveNum = dish.soldOut === 1 ? '已售完' : dish.sellClearNum;
-                                this.vips.push(newDish);
+                                dish.type = dishes.dishCategoryName;
+                                dish.name = dish.dishName;
+                                this.vips.push(dish);
                             });
                         });
                     }
                 });
             },
-            startGetDate() {
+            startGetData() {
                 if (!this.restId) {
                     window.setTimeout(this.startGetDate, 1000);
                 } else {
@@ -158,14 +154,15 @@
         watch: {
             date() {
                 this.startGetDish();
+                this.startGetData();
             },
             restId() {
                 this.date = util.dateFormat(new Date());
-                this.getDishType();
-                this.getData();
+                this.startGetDish();
+                this.startGetData();
             },
             dishType() {
-                this.getData();
+                this.startGetData();
             },
             sort: function() {
                 this.sortData(this.vips, this.sort.sortType);

@@ -339,19 +339,18 @@ export const routes = [
                 meta: {
                     name: '收藏'
                 },
-                component: noCollect,
-                redirect: '',
+                component: collect,
                 children: [
                     {
                         path: '',
-                        component: collect,
+                        component: noCollect,
                         meta: {
                             name: 'collect'
                         }
                     },
                     {
                         path: ':id',
-                        component: collect,
+                        component: noCollect,
                         meta: {
                             name: 'collect'
                         }

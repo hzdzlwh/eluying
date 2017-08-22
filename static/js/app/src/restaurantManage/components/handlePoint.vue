@@ -26,6 +26,20 @@
         <automaticPoint v-if="automaticPoint" @closeAutomaticPoint="() => {this.automaticPoint = false;}" :caterOrderId="caterOrderId" :restId="restId" :operationId="operationId"/>
     </div>
 </template>
+<style lang="scss">
+    .restaurant-point-btn {
+        display: block;
+        float: left;
+        margin-left: 20px;
+        width: 48px;
+        line-height: 24px;
+        border: 1px solid #178ce6;
+        border-radius: 2px;
+        text-align:center;
+        color: #178ce6;
+        cursor:pointer;
+    }
+</style>
 <style lang="scss" scoped>
     .restaurant-point-popup {
         background:#fafafa;
@@ -63,18 +77,6 @@
                 }
                 .restaurant-current-status {
                     margin-left: 10px;
-                }
-                .restaurant-point-btn {
-                    display: block;
-                    float: left;
-                    margin-left: 20px;
-                    width: 48px;
-                    line-height: 24px;
-                    border: 1px solid #178ce6;
-                    border-radius: 2px;
-                    text-align:center;
-                    color: #178ce6;
-                    cursor:pointer;
                 }
             }
             .restaurant-point-subtitle {
@@ -123,7 +125,7 @@
                     {
                         title: '',
                         render: (h, row) => {
-                            return <div class={'bookDishFontBlue'} onClick={() => this.oppenAutoPoint(row)}>打印</div>;
+                            return <div class={'restaurant-point-btn'} onClick={() => this.oppenAutoPoint(row)}>打印</div>;
                         },
                         width: 80
                     }
