@@ -252,6 +252,22 @@
                         name: '全部订单状态'
                     },
                     {
+                        id: 0,
+                        name: '预约'
+                    },
+                    {
+                        id: 1,
+                        name: '使用中'
+                    },
+                    {
+                        id: 2,
+                        name: '完结'
+                    },
+                    {
+                        id: 8,
+                        name: '反结帐'
+                    },
+                    {
                         id: 4,
                         name: '待处理'
                     },
@@ -492,7 +508,7 @@
                 };
                 if (this.tag === -1) {
                     if (this.state === -1) {
-                        obj.status = JSON.stringify([0, 1, 2, 3, 4, 5, 6, 8]);
+                        obj.status = JSON.stringify([0, 1, 2, 3, 4, 5, 8]);
                     } else if (this.state !== -1) {
                         obj.status = JSON.stringify([this.state]);
                     }
