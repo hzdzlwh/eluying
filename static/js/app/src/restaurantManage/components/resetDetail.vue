@@ -60,7 +60,7 @@
                 <table class="rest-restDetail-table">
                 <tbody >
                 <template v-for='item in openData.itemsMap' v-if=' leftType !== 4 && openData.itemsMap' >
-                    <tr @click='changeItem(item); dishClick(item)' :class="{'reset-tr-click' : item.click}"> <td width="150px"><div><span class="rest-restDetail-dishname" :class='{"rest-item-del" : item.serviceState === 1}'> <span  :class='getTriangle(item)'></span><span >{{item.dishName}}</span></span><span class="rest-item-send" v-if='item.serviceState === 2'>送</span></div></td><td width="45px"><div :class='{"rest-item-del" : item.serviceState === 1}'>x{{item.bookNum}}</div></td><td :class='{"rest-item-del" : item.serviceState === 1}' width='80px'>{{item.price}}</td></tr>
+                    <tr @click='changeItem(item); dishClick(item)' :class="{'reset-tr-click' : item.click}"> <td width="150px"><div><span class="rest-restDetail-dishname" :class='{"rest-item-del" : item.serviceState === 1}'> <span  :class='getTriangle(item)'></span><span >{{item.dishName}}</span></span><span class="rest-item-send" v-if='item.serviceState === 2'>送</span><span v-if='item.isDiscount' class="rest-taday-tag  yellow" style="width: 20px;margin-left: 12px;">折</span></div></td><td width="45px"><div :class='{"rest-item-del" : item.serviceState === 1}'>x{{item.bookNum}}</div></td><td :class='{"rest-item-del" : item.serviceState === 1}' width='80px'>{{item.price}}</td></tr>
                     <tr v-for='sub in item.subDishList' @click='dishClick(sub)' v-if='item.select' :class='{"rest-item-del" : sub.serviceState === 1,"reset-tr-click" : sub.click}' >
                         <td class="rest-restDetail-trchild" width="150px">{{sub.dishName}}</td><td width='50px'><div>x{{sub.bookNum}}</div></td><td width='80px'></td>
                     </tr>
@@ -88,11 +88,11 @@
                 共{{(addFoodList.length) || 0}}项
             </div>
             <div class="rest-restDetail-dishcount" v-if='leftType !== 4'>
-                <span class="restDetail-title-tip">合计</span>{{openData.totalPrice || 0}}
-                <div><s class="restDetail-title-tip" v-if='openData.showDiscount'>{{openData.originTotalPrice || 0}}</s><span class="rest-restDetail-tag">{{openData.showDiscount}}</span></div>
+                <span class="restDetail-title-tip">合计</span>¥{{openData.totalPrice || 0}}
+                <div><s class="restDetail-title-tip" v-if='openData.showDiscount'>¥{{openData.originTotalPrice || 0}}</s><span class="rest-restDetail-tag">{{openData.showDiscount}}</span></div>
             </div>
             <div class="rest-restDetail-dishcount" v-if='leftType === 4'>
-                <span class="restDetail-title-tip">合计</span>{{addFoodTotal()}}
+                <span class="restDetail-title-tip">合计</span>¥{{addFoodTotal()}}
             </div>
             </div>
             <div class="restDetail-foot-check" v-if='openData.payments && leftType !== 4'>
@@ -118,7 +118,7 @@
                     常规</span> <span>￥{{findTypePrice(openData.payments, 18)}}</span></div>
                 </div>
                  <div class="restDetail-check-item" v-if='findTypePrice(openData.payments, 4) != 0'><span><span></span>违约金</span> <span>findTypePrice(openData.payments, 4)</span></div>
-                 <div class="restDetail-check-item"><span><span></span>还需收款</span> <span class="order-price-num red" :class="{green : !Number(findTypePrice(openData.payments, 15))}">{{findTypePrice(openData.payments, 15)}}</span></div>
+                 <div class="restDetail-check-item"><span><span></span>还需收款</span> <span class="order-price-num red" :class="{green : !Number(findTypePrice(openData.payments, 15))}">¥{{findTypePrice(openData.payments, 15)}}</span></div>
             </div>
 
         </div>
@@ -211,7 +211,8 @@ export default {
             backDish: undefined,
             addFoodList: [],
             handlePoint: false,
-            cateOrderWay
+            cateOrderWay,
+            dishChangeFlag: 0
         };
     },
     computed: {
@@ -282,6 +283,13 @@ export default {
                 return;
             }
         },
+        dishFlag() {
+            if (!this.dishChangeFlag) {
+                this.dishChange = undefined;
+            } else {
+                this.dishChangeFlag = this.dishChangeFlag - 1;
+            }
+        },
         printRest() {
             this.handlePoint = true;
         },
@@ -314,10 +322,11 @@ export default {
             this.changeRemarkVisible = false;
         },
         changeRemark(val) {
+            this.dishChangeFlag = 2;
             http.get('/catering/modifyDishRemark', { caterOrderId: this.openData.caterOrderId, remark: val, serviceId: this.dishChange.serviceId }).then(res => {
                 this.getOpenData();
                 if (this.dishChange) {
-                    this.dishChange = undefined;
+                    this.dishChange.remark = val;
                 }
                 restBus.$emit('refeshView');
             });
@@ -412,7 +421,7 @@ export default {
         canOrder() {
             const callBack = function() {
                 bus.$emit('showCancelOrder');
-                this.getOpenData();
+                // this.getOpenData();
             };
             modal.confirm({ title: '提示', message: '确定取消订单?' }, callBack);
         },
@@ -482,7 +491,7 @@ export default {
                 }
                 ).then(data => {
                 // this.setLeftType({ leftType: 2 });
-                    bus.$emit('setRestDetail', data.data);
+                    // bus.$emit('setRestDetail', data.data);
                     this.setOpenData({ openData: data.data });
                     this.canlAddFood();
                 });
@@ -525,7 +534,7 @@ export default {
                 return http.get('/catering/getCaterOrderDetail', { caterOrderId: id });
             }).then(data => {
                 // this.setLeftType({ leftType: 2 });
-                bus.$emit('setRestDetail', data.data);
+                // bus.$emit('setRestDetail', data.data);
                 this.setOpenData({ openData: data.data });
                 this.canlAddFood();
             });
@@ -663,6 +672,7 @@ export default {
             // this.addFoodList = val;
         },
         openData(val) {
+            this.dishFlag();
             if (this.openData && !this.openData.isHasOrder) {
                 this.timer();
                 window.inter = window.setInterval(this.timer, 1000 * 60);
@@ -679,8 +689,8 @@ export default {
         changeRemark,
         handlePoint
     },
-    create() {
-        bus.$on('onShowDetail', this.getOpenData());
+    created() {
+        bus.$on('refreshView', this.getOpenData);
     },
     mounted() {
         if (this.openData && !this.openData.isHasOrder) {
@@ -689,7 +699,7 @@ export default {
         }
     },
     beforeDestroy() {
-        bus.$off('onShowDetail', this.getOpenData());
+        bus.$off('refreshView', this.getOpenData);
         window.clearInterval(window.inter);
     }
 

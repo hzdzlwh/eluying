@@ -362,10 +362,10 @@
                 } else {
                     foodItems = order.foodItems ? order.foodItems : [];
                 }
-               return foodItems;
+                return foodItems;
             },
             getRestList() {
-                http.get('/restaurant/listSimple').then(res => {
+                http.get('/restaurant/listSimple', { authority: 4 }).then(res => {
                     this.resets = res.data.list;
                 });
             },
