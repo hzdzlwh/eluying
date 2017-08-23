@@ -78,7 +78,7 @@ border-radius:4px;padding:15px;">
             <div style="color:#475669">菜品备注：{{dishChange.remark || '无'}} <span style="color: #82beff;margin-left: 10px;cursor: pointer;" @click='changeRemarkModal'>修改</span></div>
             <div>&#12288;点菜员：{{dishChange.operatorName || '无'}}</div>
             <div>下单时间：{{getCreatTime(dishChange.creationTime)}}</div>
-            <div><div class="resetMange-btn-base" style="margin-right:20px;" @click='dishSendOrBack(0)' v-if='dishChange.serviceState === 0'>退菜</div><div class="resetMange-btn-base" @click='dishSendOrBack(1)' v-if='dishChange.isSend && dishChange.serviceState !== 2'>赠送</div></div>
+            <div><div class="resetMange-btn-base" style="margin-right:20px;" @click='dishSendOrBack(0)' v-if='dishChange.serviceState === 0 || dishChange.serviceState === 2'>退菜</div><div class="resetMange-btn-base" @click='dishSendOrBack(1)' v-if='dishChange.isSend && dishChange.serviceState !== 2'>赠送</div></div>
         </div>
             </div>
             </div>
@@ -321,7 +321,7 @@ padding:16px;
                 }
             },
             dishClick(dish) {
-                if (dish.serviceState === 1 && (this.order.orderState === 1 || (this.order.orderState === 2 && this.order.itemsMap.length && this.order.itemsMap) || this.order.orderState === 4 || this.order.orderState === 8)) {
+                if (dish.serviceState === 1 || !(this.order.orderState === 1 || (this.order.orderState === 2 && this.order.itemsMap.length && this.order.itemsMap) || this.order.orderState === 4 || this.order.orderState === 8)) {
                     return;
                 }
                 const dishClick = !dish.click;

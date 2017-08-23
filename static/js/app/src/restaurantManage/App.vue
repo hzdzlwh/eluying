@@ -163,6 +163,7 @@ export default {
     watch: {
         restId(val) {
             this.setRest({ restId: val });
+            window.localStorage.setItem('restId', val);
         }
     },
     methods: {
@@ -186,7 +187,7 @@ export default {
         },
         getName(restId) {
             if (restId) {
-                const selected = this.restaurantList.find(item => item.restId === restId);
+                const selected = this.restaurantList.find(item => item.restId === Number(restId));
                 return selected.restName;
             }
         },
@@ -195,7 +196,16 @@ export default {
                 this.restaurantList = res.data.list;
                 const initId = res.data.list[0].restId;
                 if (!this.RestState) {
-                    this.setRest({ restId: initId });
+                    const sessionRestId = window.localStorage.getItem(
+                    'restId');
+                    if (sessionRestId && res.data.list.find(el => {
+                        return el.restId === Number(sessionRestId);
+                    })) {
+                        this.setRest({ restId: sessionRestId });
+                    } else {
+                        this.setRest({ restId: initId });
+                        window.localStorage.setItem('restId', initId);
+                    }
                 }
                 this.restId = this.RestState;
             });
@@ -210,6 +220,9 @@ export default {
     },
     created() {
         this.getRestList();
+    },
+    beforeDestroy() {
+        // window.localStorage.setItem('restId', undefined);
     }
 };
 </script>
