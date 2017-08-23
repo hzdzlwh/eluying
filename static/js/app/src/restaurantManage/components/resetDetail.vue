@@ -7,7 +7,7 @@
 */
 
 <template>
-    <div class="rest-taday-contain" style="height:auto" v-if='openData'>
+    <div class="rest-taday-contain" style="height:auto" v-if='openData !== undefined'>
         <div class="rest-taday-count">
             <div class="restDetail-title-tip">桌号</div>
             <div class="restDetail-title-display">
@@ -26,8 +26,8 @@
                     <div class="restDetail-title-data" v-if='!isHasOrder || (openData.orderState == 1)'>{{openData.timer}}</div>
                 </div>
             </div>
-            <div class="rest-restDetail-other" @click='moreShow = !moreShow' v-if='openData.state !== 2 && openData.orderState !== undefined'>
-                {{openData.customerName}} （{{openData.customerPhone}}）查看详情 <span >>></span>
+            <div  :class="{'rest-restDetail-otherclose' : moreShow, 'rest-restDetail-other': !moreShow}" @click='moreShow = !moreShow' v-if='openData.state !== 2 && openData.orderState !== undefined'>
+                {{openData.customerName}} （{{openData.customerPhone}}）{{moreShow ? '收起' : '查看'}}详情 <span >>></span>
             </div>
           <div style="z-index:3"  class="rest-restDetail-transform" :style='{maxHeight: moreShow ? "400px" : "0"}' v-if='openData.state !== 2 && openData.orderState !== undefined'>
                         <div class="rest-restDetail-otherDetail"  >
@@ -147,7 +147,7 @@
             <div>下单时间：{{changeTime(dishChange.creationTime)}}</div>
         </div>
             <div class="resetChange-foot-btn" v-show='editorPromission'>
-                <div class="resetMange-btn-base " v-if='dishChange.serviceState === 0' @click='dishModalChange(0)'>退菜</div>
+                <div class="resetMange-btn-base " v-if='dishChange.serviceState === 0 || dishChange.serviceState === 2' @click='dishModalChange(0)'>退菜</div>
                 <div class="resetMange-btn-base " v-if='dishChange.isSend && dishChange.serviceState !== 2' @click='dishModalChange(1)'>赠送</div>
             </div>
             <div class="">
@@ -352,7 +352,7 @@ export default {
             // restBus.$emit('refeshView');
         },
         dishClick(dish) {
-            if (dish.serviceState === 1 && (this.openData.orderState === 1 || (this.openData.orderState === 2 && this.openData.itemsMap.length && this.openData.itemsMap) || this.openData.orderState === 4 || this.openData.orderState === 8)) {
+            if (dish.serviceState === 1 || !(this.openData.orderState === 1 || (this.openData.orderState === 2 && this.openData.itemsMap.length && this.openData.itemsMap) || this.openData.orderState === 4 || this.openData.orderState === 8)) {
                 return;
             }
             const dishClick = !dish.click;

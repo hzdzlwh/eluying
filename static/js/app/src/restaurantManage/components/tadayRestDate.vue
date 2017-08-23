@@ -19,7 +19,7 @@
             最新订单
         </div>
             <div class="rest-taday-list">
-                <div class="rest-taday-item" v-for='item in DayDate.newOrders' :key='item.orderNum' v-if='DayDate.newOrders.length'>
+                <div class="rest-taday-item" v-for='item in DayDate.newOrders' :key='item.orderNum' v-if='DayDate.newOrders.length' @click='setDetail(item)'>
                 <div>
                     <div><span class="rest-taday-smallTip">
                     <!-- {{orderWay[item.orderWay]}} -->{{orderWay[item.orderWay]}}
@@ -166,9 +166,10 @@
 }
 </style>
 <script>
+import types from '../store/types';
 import { ORDER_TYPE, ORDER_STATE_TEXT } from '../../ordersManage/constant.js';
 import http from '../../common/http.js';
-import { mapState } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 import { orderWay } from '../orderWay.js';
 import restBus from '../event.js';
 export default {
@@ -187,6 +188,26 @@ export default {
         'date'
     ]),
     methods: {
+        ...mapMutations([
+            types.SET_LEFT_TYPE,
+            types.SET_OPEN_DATA
+        ]),
+        setDetail(item) {
+            if (item.foodOrderId) {
+                http.get('/catering/getCaterOrderDetail', { caterOrderId: item.foodOrderId }).then(res => {
+                    this.setOpenData({ openData: res.data });
+                    this.setLeftType({ leftType: 2 });
+                });
+                return;
+            }
+            if (item.borardList && item.borardList.length) {
+                http.get('/board/getOpenBoardRecords', { boardId: item.borardList[0] }).then(res => {
+                    this.setOpenData({ openData: res.data });
+                    this.setLeftType({ leftType: 2 });
+                });
+                return;
+            }
+        },
         getState(id, type) {
             return this.ORDER_STATE_TEXT[this.ORDER_TYPE.CATERING][id][type];
         },
