@@ -409,15 +409,25 @@ export default {
         },
         openBoardAndCook() {
             http.get('/board/openBoardAndCook', { restId: this.restId, caterOrderId: this.openData.caterOrderId }).then(res => {
-                restBus.$emit('refeshView');
-                this.getOpenData();
+                this.automaticPoint = true;
             });
+        },
+        openBoardAndCookPoint() {
+            this.automaticPoint = false;
+            restBus.$emit('refeshView');
+            this.getOpenData();
         },
         agreeAndCook() {
             http.get('/order/confirmOrder', { caterOrderId: this.openData.caterOrderId, type: 1 }).then(res => {
-                restBus.$emit('refeshView');
-                this.getOpenData();
+                if (res.code === 1) {
+                    console.log(111111);
+                    this.automaticPoint = true;
+                }
             });
+        },
+        agreenAndCookPoint() {
+            restBus.$emit('refeshView');
+            this.getOpenData();
         },
         crash() {
             bus.$emit('showCashier', { type: 'orderDetail' });
@@ -452,7 +462,11 @@ export default {
             });
         },
         submitAddFood() {
-            this.automaticPoint = true;
+            if (this.openData.orderState !== 0) {
+                this.automaticPoint = true;
+            } else if (this.openData.orderState === 0) {
+                this.submitAddFoodPoint();
+            }
         },
         submitAddFoodPoint() {
             this.automaticPoint = false;
@@ -530,7 +544,6 @@ export default {
                 parms.boardLogIds = JSON.stringify(this.openData.list);
             }
             parms.restId = this.restId;
-            this.automaticPoint = true;
             if (!this.isHasOrder) {
                 parms.operationType = 1;
             } else {
