@@ -297,10 +297,12 @@ export default {
         }
     },
     watch: {
-        defaultStrDate(newValue) {
-            this[types.SET_DATE]({ date: newValue });
-            this[types.SET_LEFT_TYPE]({ leftType: 0 });
-            this[types.RESET_SELECT_DISH]();
+        defaultStrDate(newValue, oldValue) {
+            if (oldValue) {
+                this[types.SET_DATE]({ date: newValue });
+                this[types.SET_LEFT_TYPE]({ leftType: 0 });
+                this[types.RESET_SELECT_DISH]();
+            }
         },
         selectState() {
             this.getSeatList();
