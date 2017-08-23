@@ -397,8 +397,11 @@ export default {
                 http.get('/catering/modifyOrder', params).then(res => {
                     if (res.code === 1) {
                         // this.getCaterOrderDetail(this.orderInfo.caterOrderId);
+                        restBus.$emit('refeshView');
+                        console.log(this.orderInfo);
                         this[types.LOAD_CATER_ORDER_DETAIL]({ caterOrderId: this.orderInfo.caterOrderId });
                         this[types.SET_LEFT_TYPE]({ leftType: 2 });
+                        this.hideModal();
                     }
                 });
             } else {    // 非编辑详情

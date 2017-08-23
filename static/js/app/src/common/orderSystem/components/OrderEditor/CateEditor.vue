@@ -348,7 +348,7 @@
                 const order = Object.assign({}, this.order);
                 let foodItems = [];
                 if (order.caterOrderId) {
-                    const obj = {};
+                    const obj = Object.assign({}, order);
                     obj.restName = order.restName;
                     obj.boardDetailResps = order.boardDetailResps.map(board => {
                         return board.boardName;
@@ -362,10 +362,10 @@
                 } else {
                     foodItems = order.foodItems ? order.foodItems : [];
                 }
-               return foodItems;
+                return foodItems;
             },
             getRestList() {
-                http.get('/restaurant/listSimple').then(res => {
+                http.get('/restaurant/listSimple', { authority: 4 }).then(res => {
                     this.resets = res.data.list;
                 });
             },
@@ -441,9 +441,9 @@
                             discountPrice: fo.discount,
                             quickDiscountId: fo.moreDiscount,
                             restId: fo.restId,
-                            dishes: fo.dishesResps
+                            dishes: fo.dishesResps || fo.itemsMap
                         };
-                        if (fo.dishes) {
+                        if (fo.dishes || fo.dishCount) {
                             parm.dishes = JSON.stringify(fo.itemsMap.map(item => {
                                 return {
                                     bookNum: item.bookNum,

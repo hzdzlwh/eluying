@@ -6,16 +6,16 @@
                 <span>消息中心</span>
             </h4>
             <ul>
-                <li>
+                <li @click="toggleView('orderMessage')">
                     <div :class="{active: viewType === 'orderMessage'}">
                         <img src="/static/image/order-message-icon.png">
-                        <span @click="toggleView('orderMessage')">订单消息(<span>6</span>)</span>
+                        <span>订单消息</span>
                     </div>
                 </li>
-                <li>
+                <li @click="toggleView('systemMessage')">
                     <div :class="{active: viewType === 'systemMessage'}">
                         <img src="/static/image/system-message-icon.png">
-                        <span @click="toggleView('systemMessage')">系统消息(<span>8</span>)</span>
+                        <span>系统消息</span>
                     </div>
                 </li>
             </ul>
@@ -24,17 +24,25 @@
             <messageList :visibleType="viewType"></messageList>
         </div>
         <OrderSystem></OrderSystem>
-        <button @click="notify">xx</button>
     </div>
 </template>
 
 <script>
+import bus from '../common/eventBus';
 import messageList from './components/messageList';
 import { OrderSystem } from '../common/orderSystem';
 export default{
     data() {
         return {
-            viewType: 'orderMessage'
+            viewType: 'orderMessage',
+            msgData: {},
+            orderMegType: [
+                '系统消息',
+                '直销网站订单消息',
+                '团队接单订单消息',
+                '餐饮扫码下单消息',
+                '销售下单'
+            ]
         };
     },
     created() {
@@ -46,21 +54,25 @@ export default{
         OrderSystem
     },
     methods: {
-        notify() {
+        notify(data) {
             if (Notification.permission === 'granted') {
-                this.popNotice();
+                this.popNotice(data);
             } else if (Notification.permission !== 'denied') {
                 Notification.requestPermission().then(permission => {
                 });
             }
         },
-        popNotice() {
+        popNotice(data) {
+            var _this = this;
             if (Notification.permission === 'granted') {
                 const notification = new Notification('hi', {
-                    body: 'hello'
+                    body: this.orderMegType[data.msgType] + '' + data.content
                 });
                 notification.onclick = function() {
-                    console.log(11);
+                    if (_this.data.msgType !== 0) {   // 订单消息
+                        bus.$emit('onShowDetail', { type: _this.data.orderType, orderId: _this.data.orderId });
+                    }
+                    notification.close();
                 };
             }
         },
@@ -82,10 +94,11 @@ export default{
         },
         wSonOpen() {
             console.log('open');
-            this.webSocket.send({ 'uid': 124 });
+            this.webSocket.send(JSON.stringify({ 'uid': localStorage.getItem('uid') }));
         },
-        wSonMessage() {
-            console.log('message');
+        wSonMessage(event) {
+            this.notify(event.data);
+            this.msgData = event.data;
         },
         wSonClose() {
             console.log('close');

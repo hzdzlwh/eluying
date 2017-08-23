@@ -297,10 +297,12 @@ export default {
         }
     },
     watch: {
-        defaultStrDate(newValue) {
-            this[types.SET_DATE]({ date: newValue });
-            this[types.SET_LEFT_TYPE]({ leftType: 0 });
-            this[types.RESET_SELECT_DISH]();
+        defaultStrDate(newValue, oldValue) {
+            if (oldValue) {
+                this[types.SET_DATE]({ date: newValue });
+                this[types.SET_LEFT_TYPE]({ leftType: 0 });
+                this[types.RESET_SELECT_DISH]();
+            }
         },
         selectState() {
             this.getSeatList();
@@ -556,6 +558,54 @@ export default {
                 &:hover{
                     .order-list{
                         display: block;
+                    }
+                }
+                &:nth-child(8n+6):hover {
+                    .order-list{
+                        left: -254px;
+                        .rest-arrow-up{
+                            position: absolute;
+                            left: 300px;
+                            top: -10px;
+                            width: 0;
+                            height: 0;
+                            border-left: 10px solid transparent;
+                            border-right: 10px solid transparent;
+                            border-bottom: 10px solid #fafafa;
+                            line-height: 0;
+                        }
+                    }
+                }
+                &:nth-child(8n+7):hover {
+                    .order-list{
+                        left: -254px;
+                        .rest-arrow-up{
+                            position: absolute;
+                            left: 300px;
+                            top: -10px;
+                            width: 0;
+                            height: 0;
+                            border-left: 10px solid transparent;
+                            border-right: 10px solid transparent;
+                            border-bottom: 10px solid #fafafa;
+                            line-height: 0;
+                        }
+                    }
+                }
+                &:nth-child(8n):hover {
+                    .order-list{
+                        left: -254px;
+                        .rest-arrow-up{
+                            position: absolute;
+                            left: 300px;
+                            top: -10px;
+                            width: 0;
+                            height: 0;
+                            border-left: 10px solid transparent;
+                            border-right: 10px solid transparent;
+                            border-bottom: 10px solid #fafafa;
+                            line-height: 0;
+                        }
                     }
                 }
                 &.leisure{
