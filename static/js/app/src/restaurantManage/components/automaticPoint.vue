@@ -6,7 +6,7 @@
                 <div class="close-point" @click="closePoint">x</div>
             </div>
             <div class="point-popup-container">
-                <div class="front-pointer">
+                <div class="front-pointer" v-if="frontPointers.length">
                     <p class="point-title">前台打印机</p>
                     <p v-for="(pointer, index) in frontPointers" class="point-items">
                         <span class="printer-label">
@@ -19,13 +19,13 @@
                             <span v-else-if="pointer.status === 2">离线</span>
                             <span v-else-if="pointer.status === 3">缺纸</span>
                         </span>
-                        <span class="printer-log">
+                        <span class="printer-log" v-if="pointer.printedNum !== -1">
                             历史已打次数：
                             <span>{{pointer.printedNum}}</span>
                         </span>
                     </p>
                 </div>
-                <div class="back-pointer">
+                <div class="back-pointer" v-if="backPointers.length">
                     <p class="point-title">后厨打印机</p>
                     <p v-for="(pointer, index) in backPointers" class="point-items">
                         <span class="printer-label">
