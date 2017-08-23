@@ -163,6 +163,7 @@
         <dishModal :visible='dishModalVisible' :type='dishModalType' :data='dishChange' @hideModal='hideDishModal' @dishChange='dishChangeSub'></dishModal>
 <!--         <bookInfo :visible='bookInfoVisible' :num='bookPeopleNUm' :data='bookData' @hideModal='hidebookInfo' :type='isHasOrder' @changeBook='changeBook'></bookInfo> -->
 <keyBoard :visible ='bookInfoVisible' @close='hidebookInfo' :num ='openData.peopleNum' :dish='boardModalName' v-if='openData' @numChange='changeBookNum'></keyBoard>
+        <automaticPoint v-if="automaticPoint" :restId="restId" :caterOrderId="openData.caterOrderId" :operationId="operationId" @closeAutomaticPoint="submitAddFoodPoint"></automaticPoint>
         <handlePoint v-if="handlePoint" :caterOrderId="openData.caterOrderId" :restId="restId" @closeHandlePoint="() => {this.handlePoint = false;}"/>
     </div>
 </template>
@@ -186,6 +187,7 @@ import { DatePicker } from 'element-ui';
 import keyBoard from '../../common/components/inputKeyboard.vue';
 import changeRemark from './changeRemark.vue';
 import handlePoint from './handlePoint.vue';
+import automaticPoint from './automaticPoint.vue';
 import modal from '../../common/modal.js';
 export default {
     props: {
@@ -212,6 +214,8 @@ export default {
             addFoodList: [],
             handlePoint: false,
             cateOrderWay,
+            operationId: -1,
+            automaticPoint: false,
             dishChangeFlag: 0
         };
     },
@@ -448,6 +452,10 @@ export default {
             });
         },
         submitAddFood() {
+            this.automaticPoint = true;
+        },
+        submitAddFoodPoint() {
+            this.automaticPoint = false;
             if (!this.openData.boardDetailResps[0].boardId) {       // 无桌位下单
                 const params = {};
                 params.boardList = JSON.stringify([]);
@@ -522,6 +530,7 @@ export default {
                 parms.boardLogIds = JSON.stringify(this.openData.list);
             }
             parms.restId = this.restId;
+            this.automaticPoint = true;
             if (!this.isHasOrder) {
                 parms.operationType = 1;
             } else {
@@ -687,7 +696,8 @@ export default {
         keyBoard,
         DatePicker,
         changeRemark,
-        handlePoint
+        handlePoint,
+        automaticPoint
     },
     created() {
         bus.$on('refreshView', this.getOpenData);
