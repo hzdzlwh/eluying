@@ -66,7 +66,7 @@
                     </tr>
                 </template> 
                 <template v-if='leftType === 4'>
-                    <tr v-for='(item,index) in addFoodList'>
+                    <tr v-for='(item,index) in addFood'>
                         <td class="rest-restDetail-trchild" :width='leftType === 4 ? "100px" : "150px"'>{{item.dishName}}</td><td width="45px"><div style='width:70px;'><count :del=true :min = -1 :num='item.num' :max='item.inventoryNum' @numChange='onNumChange' :id='item.dishId'></count></div></td><td width='80px'>{{(item.num * item.dishPrice).toFixed(2)}}</td>
                     </tr>
                 </template>
@@ -85,7 +85,7 @@
                 共{{(openData.itemsMap && openData.itemsMap.length) || 0}}项
             </div>
             <div class="restDetail-title-tip"v-if='leftType === 4' >
-                共{{(addFoodList.length) || 0}}项
+                共{{(addFood.length) || 0}}项
             </div>
             <div class="rest-restDetail-dishcount" v-if='leftType !== 4'>
                 <span class="restDetail-title-tip">合计</span>¥{{openData.totalPrice || 0}}
@@ -452,8 +452,8 @@ export default {
                 const params = {};
                 params.boardList = JSON.stringify([]);
                 params.dishItems = [];
-                if (this.addFoodList.length > 0) {
-                    this.addFoodList.forEach(food => {
+                if (this.addFood.length > 0) {
+                    this.addFood.forEach(food => {
                         if (food.customerDish) {    // 自定义菜
                             params.dishItems.push({ bookNum: food.num, dishName: food.dishName, price: food.price });
                         } else {    // 非自定义菜
@@ -471,7 +471,7 @@ export default {
                 return;
             }
             if (this.openData.caterOrderId && this.openData.itemsMap.length) {
-                const addFoodDishList = this.addFoodList.map(el => {
+                const addFoodDishList = this.addFood.map(el => {
                     return {
                         bookNum: el.num,
                         dishId: el.dishId,
@@ -501,7 +501,7 @@ export default {
                 remark: this.remark,
                 totalPrice: this.addFoodTotal()
             };
-            const addFoodDishList = this.addFoodList.map(el => {
+            const addFoodDishList = this.addFood.map(el => {
                 return {
                     bookNum: el.num,
                     dishId: el.dishId,
@@ -542,15 +542,15 @@ export default {
         canlAddFood() {
             this.canlFood();
             this.remark = '';
-            this.addFoodList = [];
+            this.canlFood();
             this.setLeftType({ leftType: 2 });
         },
         addFoodTotal() {
-            if (!this.addFoodList || !this.addFoodList.length) {
+            if (!this.addFood || !this.addFood.length) {
                 return 0;
             }
             let price = 0;
-            this.addFoodList.forEach(el => {
+            this.addFood.forEach(el => {
                 price += Number((el.dishPrice * el.num).toFixed(2));
             });
             // const price = this.addFood.reduce((pre, cur) => {
@@ -634,8 +634,8 @@ export default {
             return (item.num * item.dishPrice).toFixed(2);
         },
         onNumChange(type, index, num) {
-            // this.changeFood({ food: { dishId: index, num: num } });
-            this.addFoodList.forEach((el, ind) => {
+            this.changeFood({ food: { dishId: index, num: num } });
+            /* this.addFoodList.forEach((el, ind) => {
                 if (el.dishId === index) {
                     if (num > 0) {
                         el.num = num;
@@ -645,7 +645,7 @@ export default {
                         this.addFoodList.splice(ind, 1);
                     }
                 }
-            });
+            }); */
         },
         editOrder() {
             this.$emit('editOrder');
@@ -662,13 +662,13 @@ export default {
             }
         },
         addFood(val) {
-            val.forEach(el => {
+            /* val.forEach(el => {
                 if (!this.addFoodList.some(list => {
                     return list.dishId === el.dishId;
                 })) {
                     this.addFoodList.push(Object.assign({}, el));
                 }
-            });
+            }); */
             // this.addFoodList = val;
         },
         openData(val) {
